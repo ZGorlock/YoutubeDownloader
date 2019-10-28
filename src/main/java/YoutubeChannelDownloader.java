@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +39,10 @@ public class YoutubeChannelDownloader {
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
     private enum Channel {
-        TRAP_CITY ("TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap City/Songs"), new File("E:/Music/Trap City/Trap City.m3u"));
+        TRAP_CITY ("TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), new File("E:/Music/Trap/Trap.m3u")),
+        SKY_BASS ("SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), new File("E:/Music/Trap/Trap.m3u")),
+        TRAP_NATION ("TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), new File("E:/Music/Trap/Trap.m3u")),
+        BASS_NATION ("BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), new File("E:/Music/Trap/Trap.m3u"));
         
         private String name;
         private String playlistId;
@@ -62,30 +62,62 @@ public class YoutubeChannelDownloader {
         }
     }
     
-    private static final Channel channel = Channel.TRAP_CITY;
+    private static final boolean doAllChannels = true;
+    private static Channel channel = null;
+    
     private static final boolean saveAsMp3 = true;
     private static final boolean addToPlaylist = true;
-    
-    private static final String PLAYLIST_ID = channel.playlistId;
-    private static final File OUTPUT_FOLDER = channel.outputFolder;
-    private static final File PLAYLIST_M3U = channel.playlistFile;
-    
-    private static final File DATA_FILE = new File(channel.name + "-data.txt");
-    private static final File SAVE_FILE = new File(channel.name + "-save.txt");
-    private static final File QUEUE_FILE = new File(channel.name + "-queue.txt");
-    private static final File BLOCKED_FILE = new File(channel.name + "-blocked.txt");
     
     private static Runtime runtime = Runtime.getRuntime();
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     
     private static Map<String, Video> videoMap = new HashMap<>();
     
+    private static String playlistId;
+    private static File outputFolder;
+    private static File playlistM3u;
+    
+    private static File dataFile;
+    private static File saveFile;
+    private static File queueFile;
+    private static File blockedFile;
+    
     
     public static void main(String[] args) throws Exception {
+        if (doAllChannels) {
+            for (Channel currentChannel : Channel.values()) {
+                setChannel(currentChannel);
+                processChannel();
+            }
+        } else if (channel != null) {
+            setChannel(channel);
+            processChannel();
+        }
+    }
+    
+    private static void setChannel(Channel thisChannel) {
+        channel = thisChannel;
+    
+        playlistId = channel.playlistId;
+        outputFolder = channel.outputFolder;
+        playlistM3u = channel.playlistFile;
+    
+        dataFile = new File("data/" + channel.name + "-data.txt");
+        saveFile = new File("data/" + channel.name + "-save.txt");
+        queueFile = new File("data/" + channel.name + "-queue.txt");
+        blockedFile = new File("data/" + channel.name + "-blocked.txt");
+    }
+    
+    private static void processChannel() throws Exception {
+        System.out.println("Processing Channel: " + channel.name);
+        System.out.println();
+        
         getChannelData();
         processChannelData();
         produceQueue();
         downloadVideos();
+        
+        System.out.println();
     }
     
     
@@ -93,7 +125,7 @@ public class YoutubeChannelDownloader {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");
-        parameters.put("playlistId", PLAYLIST_ID);
+        parameters.put("playlistId", playlistId);
         parameters.put("key", API_KEY);
     
         StringBuilder data = new StringBuilder("[").append(System.lineSeparator());
@@ -125,11 +157,12 @@ public class YoutubeChannelDownloader {
         } while (more);
         data.append("]");
     
-        FileUtils.writeStringToFile(DATA_FILE, data.toString(), "UTF-8", false);
+        FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
     }
     
     private static void processChannelData() throws Exception {
-        String data = FileUtils.readFileToString(DATA_FILE, "UTF-8");
+        String data = FileUtils.readFileToString(dataFile, "UTF-8");
+        videoMap.clear();
         JSONParser parser = new JSONParser();
         JSONArray dataJson = (JSONArray) parser.parse(data);
         for (Object dataChunk : dataJson) {
@@ -147,7 +180,7 @@ public class YoutubeChannelDownloader {
                 video.videoId = videoId;
                 video.title = cleanTitle(title);
                 video.url = VIDEO_BASE + videoId;
-                video.output = new File(OUTPUT_FOLDER, video.title + (saveAsMp3 ? ".mp3" : ".mp4"));
+                video.output = new File(outputFolder, video.title + (saveAsMp3 ? ".mp3" : ".mp4"));
                 
                 boolean exists = false;
                 for (Video v : videoMap.values()) {
@@ -170,8 +203,8 @@ public class YoutubeChannelDownloader {
             return;
         }
         
-        List<String> save = SAVE_FILE.exists() ? FileUtils.readLines(SAVE_FILE, "UTF-8") : new ArrayList<>();
-        List<String> blocked = BLOCKED_FILE.exists() ? FileUtils.readLines(BLOCKED_FILE, "UTF-8") : new ArrayList<>();
+        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
+        List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
         videoMap.forEach((key, value) -> {
             if ((!save.contains(key) || !value.output.exists()) && !blocked.contains(key)) {
@@ -182,9 +215,9 @@ public class YoutubeChannelDownloader {
                 save.add(key);
             }
         });
-        FileUtils.writeLines(QUEUE_FILE, queue);
-        FileUtils.writeLines(SAVE_FILE, save);
-        FileUtils.writeLines(BLOCKED_FILE, blocked);
+        FileUtils.writeLines(queueFile, queue);
+        FileUtils.writeLines(saveFile, save);
+        FileUtils.writeLines(blockedFile, blocked);
     }
     
     private static void downloadVideos() throws Exception {
@@ -193,9 +226,9 @@ public class YoutubeChannelDownloader {
             return;
         }
         
-        List<String> queue = QUEUE_FILE.exists() ? FileUtils.readLines(QUEUE_FILE, "UTF-8") : new ArrayList<>();
-        List<String> save = SAVE_FILE.exists() ? FileUtils.readLines(SAVE_FILE, "UTF-8") : new ArrayList<>();
-        List<String> blocked = BLOCKED_FILE.exists() ? FileUtils.readLines(BLOCKED_FILE, "UTF-8") : new ArrayList<>();
+        List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
+        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
+        List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         
         List<String> working = new ArrayList<>(queue);
         for (String videoId : working) {
@@ -204,7 +237,7 @@ public class YoutubeChannelDownloader {
             System.out.println("Downloading: " + video.title);
             if (downloadYoutubeVideo(videoId, video.output, saveAsMp3)) {
                 if (saveAsMp3 && addToPlaylist) {
-                    FileUtils.write(PLAYLIST_M3U, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
+                    FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
                 }
                 
                 queue.remove(videoId);
@@ -214,9 +247,9 @@ public class YoutubeChannelDownloader {
                 blocked.add(videoId);
             }
             
-            FileUtils.writeLines(QUEUE_FILE, queue);
-            FileUtils.writeLines(SAVE_FILE, save);
-            FileUtils.writeLines(BLOCKED_FILE, blocked);
+            FileUtils.writeLines(queueFile, queue);
+            FileUtils.writeLines(saveFile, save);
+            FileUtils.writeLines(blockedFile, blocked);
         }
     }
     
@@ -255,7 +288,10 @@ public class YoutubeChannelDownloader {
                     .replace("\"", "'")
                     .replace("<", "-")
                     .replace(">", "-")
-                    .replace("|", "-");
+                    .replace("|", "-")
+                    .replace("‒", "-")
+                    .replaceAll("[^\\x00-\\x7F]", "")
+                    .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
     }
     
     private static String executeProcess(String cmd) {
@@ -284,13 +320,6 @@ public class YoutubeChannelDownloader {
         } catch (Exception e) {
             return "Failed";
         }
-    }
-    
-    private static void rewritePlaylist() throws Exception {
-        List<String> list = new ArrayList<>();
-        Files.list(OUTPUT_FOLDER.toPath()).forEach(var -> list.add(Paths.get(var.toString()).toFile().getAbsolutePath()));
-        Collections.shuffle(list);
-        FileUtils.writeLines(PLAYLIST_M3U, list);
     }
     
     
