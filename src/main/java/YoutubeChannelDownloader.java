@@ -38,35 +38,40 @@ public class YoutubeChannelDownloader {
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
+    //To get the playlistId for a Youtube Channel:
+    //1. Go to the Youtube Channel
+    //2. View the Page Source
+    //3. Search for "externalId" and copy that value
+    //4. Replace the second character from a 'C' to a 'U'
     private enum Channel {
-        TRAP_CITY ("TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), new File("E:/Music/Trap/Trap.m3u")),
-        SKY_BASS ("SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), new File("E:/Music/Trap/Trap.m3u")),
-        TRAP_NATION ("TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), new File("E:/Music/Trap/Trap.m3u")),
-        BASS_NATION ("BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), new File("E:/Music/Trap/Trap.m3u"));
+        TRAP_CITY ("TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
+        SKY_BASS ("SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
+        TRAP_NATION ("TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+        BASS_NATION ("BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u"));
         
         private String name;
         private String playlistId;
         private File outputFolder;
+        private boolean saveAsMp3;
         private File playlistFile;
         
-        Channel(String name, String playlistId, File outputFolder, File playlistFile) {
+        Channel(String name, String playlistId, File outputFolder, boolean saveAsMp3, File playlistFile) {
             this.name = name;
             this.playlistId = playlistId;
             this.outputFolder = outputFolder;
+            this.saveAsMp3 = saveAsMp3;
             this.playlistFile = playlistFile;
         }
-        Channel(String name, String playlistId, File outputFolder) {
+        Channel(String name, String playlistId, File outputFolder, boolean saveAsMp3) {
             this.name = name;
             this.playlistId = playlistId;
             this.outputFolder = outputFolder;
+            this.saveAsMp3 = saveAsMp3;
         }
     }
     
     private static final boolean doAllChannels = true;
     private static Channel channel = null;
-    
-    private static final boolean saveAsMp3 = true;
-    private static final boolean addToPlaylist = true;
     
     private static Runtime runtime = Runtime.getRuntime();
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -180,7 +185,7 @@ public class YoutubeChannelDownloader {
                 video.videoId = videoId;
                 video.title = cleanTitle(title);
                 video.url = VIDEO_BASE + videoId;
-                video.output = new File(outputFolder, video.title + (saveAsMp3 ? ".mp3" : ".mp4"));
+                video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                 
                 boolean exists = false;
                 for (Video v : videoMap.values()) {
@@ -235,8 +240,8 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
-            if (downloadYoutubeVideo(videoId, video.output, saveAsMp3)) {
-                if (saveAsMp3 && addToPlaylist) {
+            if (downloadYoutubeVideo(videoId, video.output, channel.saveAsMp3)) {
+                if (channel.saveAsMp3 && (channel.playlistFile != null)) {
                     FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
                 }
                 
