@@ -38,31 +38,38 @@ public class YoutubeChannelDownloader {
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
+    private static final boolean outputCommand = true;
+    
     //To get the playlistId for a Youtube Channel:
     //1. Go to the Youtube Channel
     //2. View the Page Source
     //3. Search for "externalId" and copy that value
     //4. Replace the second character from a 'C' to a 'U'
     private enum Channel {
-        TRAP_CITY ("TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
-        SKY_BASS ("SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
-        TRAP_NATION ("TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
-        BASS_NATION ("BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u"));
+        TRAP_CITY           (true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
+        SKY_BASS            (true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
+        TRAP_NATION         (true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+        BASS_NATION         (true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
         
+        BRAVE_WILDERNESS    (false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
+        
+        private boolean active; 
         private String name;
         private String playlistId;
         private File outputFolder;
         private boolean saveAsMp3;
         private File playlistFile;
         
-        Channel(String name, String playlistId, File outputFolder, boolean saveAsMp3, File playlistFile) {
+        Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3, File playlistFile) {
+            this.active = active;
             this.name = name;
             this.playlistId = playlistId;
             this.outputFolder = outputFolder;
             this.saveAsMp3 = saveAsMp3;
             this.playlistFile = playlistFile;
         }
-        Channel(String name, String playlistId, File outputFolder, boolean saveAsMp3) {
+        Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3) {
+            this.active = active;
             this.name = name;
             this.playlistId = playlistId;
             this.outputFolder = outputFolder;
@@ -263,10 +270,16 @@ public class YoutubeChannelDownloader {
         String outputPath = output.getAbsolutePath();
         outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
         
-        String result = executeProcess("youtube-dl.exe " +
-                       "--output \"" + outputPath + ".%(ext)s\" " +
-                       (asMp3 ? "--extract-audio --audio-format mp3 " : "") +
-                       VIDEO_BASE + videoId);
+        String cmd = "youtube-dl.exe " +
+                     "--output \"" + outputPath + ".%(ext)s\" " +
+                     "--geo-bypass " +
+                     (asMp3 ? "--extract-audio --audio-format mp3 " :
+                      "--format best ") +
+                     VIDEO_BASE + videoId;
+        if (outputCommand) {
+            System.out.println(cmd);
+        }
+        String result = executeProcess(cmd);
         
         return result.split("\r\n").length > 2;
     }
