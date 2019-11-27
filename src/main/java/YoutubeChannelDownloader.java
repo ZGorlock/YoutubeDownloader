@@ -98,10 +98,12 @@ public class YoutubeChannelDownloader {
     public static void main(String[] args) throws Exception {
         if (doAllChannels) {
             for (Channel currentChannel : Channel.values()) {
-                setChannel(currentChannel);
-                processChannel();
+                if (currentChannel.active) {
+                    setChannel(currentChannel);
+                    processChannel();
+                }
             }
-        } else if (channel != null) {
+        } else if (channel != null && channel.active) {
             setChannel(channel);
             processChannel();
         }
