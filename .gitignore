@@ -1,6 +1,11 @@
-# Created by .ignore support plugin (hsz.mobi)
-/.idea
-/target
-*.txt
+/.idea/libraries
+/.idea/workspace.xml
+**/*.iws
+
+**/bin/
+**/target/
+**/out/
+
+**/data/
 /apiKey
 apiKey
