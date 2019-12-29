@@ -46,10 +46,10 @@ public class YoutubeChannelDownloader {
     //3. Search for "externalId" and copy that value
     //4. Replace the second character from a 'C' to a 'U'
     private enum Channel {
-        TRAP_CITY           (true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/My Music/Trap/Trap City"), true, new File("E:/My Music/Trap/Trap.m3u")),
-        SKY_BASS            (true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/My Music/Trap/Sky Bass"), true, new File("E:/My Music/Trap/Trap.m3u")),
-        TRAP_NATION         (true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/My Music/Trap/Trap Nation"), true, new File("E:/My Music/Trap/Trap.m3u")),
-        BASS_NATION         (true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/My Music/Trap/Bass Nation"), true, new File("E:/My Music/Trap/Trap.m3u")),
+        TRAP_CITY           (true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")), 
+        SKY_BASS            (true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
+        TRAP_NATION         (true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+        BASS_NATION         (true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
         
         BRAVE_WILDERNESS    (false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
         
