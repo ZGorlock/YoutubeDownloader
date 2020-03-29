@@ -251,7 +251,10 @@ public class YoutubeChannelDownloader {
             System.out.println("Downloading: " + video.title);
             if (downloadYoutubeVideo(videoId, video.output, channel.saveAsMp3)) {
                 if (channel.saveAsMp3 && (channel.playlistFile != null)) {
-                    FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
+                    List<String> current = FileUtils.readLines(playlistM3u, "UTF-8");
+                    if (!current.contains(video.output.getAbsolutePath())) {
+                        FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
+                    }
                 }
                 
                 queue.remove(videoId);
