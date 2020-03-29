@@ -23,6 +23,7 @@ import org.json.simple.parser.JSONParser;
 public class YoutubeChannelDownloader {
     
     private static String API_KEY = "";
+    
     static {
         try {
             API_KEY = FileUtils.readFileToString(new File("apiKey"), "UTF-8");
@@ -36,6 +37,7 @@ public class YoutubeChannelDownloader {
     }
     
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
+    
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
     private static final boolean outputCommand = true;
@@ -46,18 +48,24 @@ public class YoutubeChannelDownloader {
     //3. Search for "externalId" and copy that value
     //4. Replace the second character from a 'C' to a 'U'
     private enum Channel {
-        TRAP_CITY           (true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")), 
-        SKY_BASS            (true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
-        TRAP_NATION         (true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
-        BASS_NATION         (true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
         
-        BRAVE_WILDERNESS    (false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
+        TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
+        SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
+        TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+        BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
         
-        private boolean active; 
+        BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
+        
+        private boolean active;
+        
         private String name;
+        
         private String playlistId;
+        
         private File outputFolder;
+        
         private boolean saveAsMp3;
+        
         private File playlistFile;
         
         Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3, File playlistFile) {
@@ -68,6 +76,7 @@ public class YoutubeChannelDownloader {
             this.saveAsMp3 = saveAsMp3;
             this.playlistFile = playlistFile;
         }
+        
         Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3) {
             this.active = active;
             this.name = name;
@@ -75,25 +84,32 @@ public class YoutubeChannelDownloader {
             this.outputFolder = outputFolder;
             this.saveAsMp3 = saveAsMp3;
         }
+        
     }
     
     private static final boolean doAllChannels = true;
+    
     private static Channel channel = null;
     
     private static Runtime runtime = Runtime.getRuntime();
+    
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     
     private static Map<String, Video> videoMap = new HashMap<>();
     
     private static String playlistId;
+    
     private static File outputFolder;
+    
     private static File playlistM3u;
     
     private static File dataFile;
-    private static File saveFile;
-    private static File queueFile;
-    private static File blockedFile;
     
+    private static File saveFile;
+    
+    private static File queueFile;
+    
+    private static File blockedFile;
     
     public static void main(String[] args) throws Exception {
         if (doAllChannels) {
@@ -111,11 +127,11 @@ public class YoutubeChannelDownloader {
     
     private static void setChannel(Channel thisChannel) {
         channel = thisChannel;
-    
+        
         playlistId = channel.playlistId;
         outputFolder = channel.outputFolder;
         playlistM3u = channel.playlistFile;
-    
+        
         dataFile = new File("data/" + channel.name + "-data.txt");
         saveFile = new File("data/" + channel.name + "-save.txt");
         queueFile = new File("data/" + channel.name + "-queue.txt");
@@ -134,26 +150,25 @@ public class YoutubeChannelDownloader {
         System.out.println();
     }
     
-    
     private static void getChannelData() throws Exception {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");
         parameters.put("playlistId", playlistId);
         parameters.put("key", API_KEY);
-    
+        
         StringBuilder data = new StringBuilder("[").append(System.lineSeparator());
         boolean more;
         boolean first = true;
         do {
             HttpGet request = new HttpGet(REQUEST_BASE + buildParameterString(parameters));
             request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
-        
+            
             try (CloseableHttpResponse response = httpClient.execute(request)) {
                 HttpEntity entity = response.getEntity();
                 Header headers = entity.getContentType();
                 String result = EntityUtils.toString(entity);
-            
+                
                 more = false;
                 JSONParser parser = new JSONParser();
                 JSONObject resultJson = (JSONObject) parser.parse(result);
@@ -161,7 +176,7 @@ public class YoutubeChannelDownloader {
                     parameters.put("pageToken", (String) resultJson.get("nextPageToken"));
                     more = true;
                 }
-            
+                
                 if (!first) {
                     data.append(",");
                 }
@@ -170,7 +185,7 @@ public class YoutubeChannelDownloader {
             }
         } while (more);
         data.append("]");
-    
+        
         FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
     }
     
@@ -270,17 +285,16 @@ public class YoutubeChannelDownloader {
         }
     }
     
-    
     private static boolean downloadYoutubeVideo(String videoId, File output, boolean asMp3) throws Exception {
         String outputPath = output.getAbsolutePath();
         outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
         
         String cmd = "youtube-dl.exe " +
-                     "--output \"" + outputPath + ".%(ext)s\" " +
-                     "--geo-bypass " +
-                     (asMp3 ? "--extract-audio --audio-format mp3 " :
-                      "--format best ") +
-                     VIDEO_BASE + videoId;
+                "--output \"" + outputPath + ".%(ext)s\" " +
+                "--geo-bypass " +
+                (asMp3 ? "--extract-audio --audio-format mp3 " :
+                 "--format best ") +
+                VIDEO_BASE + videoId;
         if (outputCommand) {
             System.out.println(cmd);
         }
@@ -320,7 +334,7 @@ public class YoutubeChannelDownloader {
     private static String executeProcess(String cmd) {
         try {
             ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
-        
+            
             Process process = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
             
@@ -337,20 +351,24 @@ public class YoutubeChannelDownloader {
             process.waitFor();
             r.close();
             process.destroy();
-        
+            
             return response.toString();
-        
+            
         } catch (Exception e) {
             return "Failed";
         }
     }
     
-    
     private static class Video {
+        
         public String videoId;
+        
         public String title;
+        
         public String url;
+        
         public File output;
+        
     }
     
 }
