@@ -5,14 +5,12 @@
  */
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.commons.io.FileUtils;
 
 public class YoutubeDownloader {
     
@@ -31,7 +29,7 @@ public class YoutubeDownloader {
             return;
         }
         if (downloadQueue.exists()) {
-            download.addAll(FileUtils.readLines(downloadQueue, StandardCharsets.UTF_8));
+            download.addAll(Files.readAllLines(downloadQueue.toPath()));
         }
         
         Scanner in = new Scanner(System.in);
@@ -40,19 +38,18 @@ public class YoutubeDownloader {
             for (String video : work) {
                 System.out.println("Downloading: " + video);
                 Matcher videoUrlMatcher = videoUrlPattern.matcher(video);
-                if (!videoUrlMatcher.matches()) {
-                    continue;
+                if (videoUrlMatcher.matches()) {
+                    String id = videoUrlMatcher.group("id");
+                    YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), false, true);
                 }
-                String id = videoUrlMatcher.group("id");
-                YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), false, false);
                 download.remove(video);
             }
-            FileUtils.writeLines(downloadQueue, download);
+            Files.write(downloadQueue.toPath(), download);
             
             String input = in.nextLine();
             if (!input.isEmpty()) {
                 download.add(input);
-                FileUtils.writeLines(downloadQueue, download);
+                Files.write(downloadQueue.toPath(), download);
             }
         }
     }
