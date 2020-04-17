@@ -1,8 +1,6 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,17 +123,28 @@ public class YoutubeChannelDownloader {
         }
     }
     
-    private static void setChannel(Channel thisChannel) {
+    private static void setChannel(Channel thisChannel) throws Exception {
         channel = thisChannel;
         
         playlistId = channel.playlistId;
         outputFolder = channel.outputFolder;
         playlistM3u = channel.playlistFile;
         
-        dataFile = new File("data/" + channel.name + "-data.txt");
-        saveFile = new File("data/" + channel.name + "-save.txt");
-        queueFile = new File("data/" + channel.name + "-queue.txt");
-        blockedFile = new File("data/" + channel.name + "-blocked.txt");
+        dataFile = new File("data/channel/" + channel.name + "-data.txt");
+        saveFile = new File("data/channel/" + channel.name + "-save.txt");
+        queueFile = new File("data/channel/" + channel.name + "-queue.txt");
+        blockedFile = new File("data/channel/" + channel.name + "-blocked.txt");
+        
+        for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
+            File oldFile = new File(cleanupFile.getAbsolutePath().replace("\\", "/").replace("/channel/", "/"));
+            if (oldFile.exists()) {
+                if (cleanupFile.exists()) {
+                    FileUtils.deleteQuietly(oldFile);
+                } else {
+                    FileUtils.moveFile(oldFile, cleanupFile);
+                }
+            }
+        }
     }
     
     private static void processChannel() throws Exception {
@@ -161,7 +170,7 @@ public class YoutubeChannelDownloader {
         boolean more;
         boolean first = true;
         do {
-            HttpGet request = new HttpGet(REQUEST_BASE + buildParameterString(parameters));
+            HttpGet request = new HttpGet(REQUEST_BASE + YoutubeUtils.buildParameterString(parameters));
             request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
             
             try (CloseableHttpResponse response = httpClient.execute(request)) {
@@ -207,7 +216,7 @@ public class YoutubeChannelDownloader {
                 
                 Video video = new Video();
                 video.videoId = videoId;
-                video.title = cleanTitle(title);
+                video.title = YoutubeUtils.cleanTitle(title);
                 video.url = VIDEO_BASE + videoId;
                 video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                 
@@ -264,7 +273,7 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
-            if (downloadYoutubeVideo(videoId, video.output, channel.saveAsMp3)) {
+            if (YoutubeUtils.downloadYoutubeVideo(VIDEO_BASE + videoId, video.output, channel.saveAsMp3, outputCommand)) {
                 if (channel.saveAsMp3 && (channel.playlistFile != null)) {
                     List<String> current = FileUtils.readLines(playlistM3u, "UTF-8");
                     if (!current.contains(video.output.getAbsolutePath())) {
@@ -282,80 +291,6 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(queueFile, queue);
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
-        }
-    }
-    
-    private static boolean downloadYoutubeVideo(String videoId, File output, boolean asMp3) throws Exception {
-        String outputPath = output.getAbsolutePath();
-        outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
-        
-        String cmd = "youtube-dl.exe " +
-                "--output \"" + outputPath + ".%(ext)s\" " +
-                "--geo-bypass " +
-                (asMp3 ? "--extract-audio --audio-format mp3 " :
-                 "--format best ") +
-                VIDEO_BASE + videoId;
-        if (outputCommand) {
-            System.out.println(cmd);
-        }
-        String result = executeProcess(cmd);
-        
-        return result.split("\r\n").length > 2;
-    }
-    
-    private static String buildParameterString(Map<String, String> parameters) throws Exception {
-        StringBuilder parameterString = new StringBuilder("?");
-        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            if (parameterString.length() > 1) {
-                parameterString.append("&");
-            }
-            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), "UTF-8"))
-                           .append("=")
-                           .append(URLEncoder.encode(parameterEntry.getValue(), "UTF-8"));
-        }
-        return parameterString.toString();
-    }
-    
-    private static String cleanTitle(String title) {
-        return title.replace("\\", "-")
-                    .replace("/", "-")
-                    .replace(":", "-")
-                    .replace("*", "-")
-                    .replace("?", "")
-                    .replace("\"", "'")
-                    .replace("<", "-")
-                    .replace(">", "-")
-                    .replace("|", "-")
-                    .replace("‒", "-")
-                    .replaceAll("[^\\x00-\\x7F]", "")
-                    .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
-    }
-    
-    private static String executeProcess(String cmd) {
-        try {
-            ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
-            
-            Process process = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            
-            StringBuilder response = new StringBuilder();
-            String line;
-            while (true) {
-                line = r.readLine();
-                if (line == null) {
-                    break;
-                }
-                response.append(line).append(System.lineSeparator());
-            }
-            
-            process.waitFor();
-            r.close();
-            process.destroy();
-            
-            return response.toString();
-            
-        } catch (Exception e) {
-            return "Failed";
         }
     }
     
