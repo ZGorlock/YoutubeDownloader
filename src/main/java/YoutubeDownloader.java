@@ -22,6 +22,10 @@ public class YoutubeDownloader {
     
     private static final Pattern videoUrlPattern = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
     
+    private static final boolean logCommand = true;
+    
+    private static final boolean logWork = false;
+    
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws Exception {
         if (!outputDir.exists() && !outputDir.mkdirs()) {
@@ -40,9 +44,10 @@ public class YoutubeDownloader {
                 Matcher videoUrlMatcher = videoUrlPattern.matcher(video);
                 if (videoUrlMatcher.matches()) {
                     String id = videoUrlMatcher.group("id");
-                    YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), false, true);
+                    YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), false, logCommand, logWork);
                 }
                 download.remove(video);
+                System.out.println("Done");
             }
             Files.write(downloadQueue.toPath(), download);
             

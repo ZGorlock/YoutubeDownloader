@@ -2,6 +2,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,9 @@ public class YoutubeChannelDownloader {
     
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
-    private static final boolean outputCommand = true;
+    private static final boolean logCommand = true;
+    
+    private static final boolean logWork = false;
     
     //To get the playlistId for a Youtube Channel:
     //1. Go to the Youtube Channel
@@ -51,6 +54,8 @@ public class YoutubeChannelDownloader {
         SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
         TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
         BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+        
+        THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", new File("E:/Music/Meditation/The Comet Is Coming"), true, new File("E:/Music/Meditation/The Comet Is Coming.m3u")),
         
         BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
         
@@ -93,7 +98,7 @@ public class YoutubeChannelDownloader {
     
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     
-    private static Map<String, Video> videoMap = new HashMap<>();
+    private static Map<String, Video> videoMap = new LinkedHashMap<>();
     
     private static String playlistId;
     
@@ -245,12 +250,12 @@ public class YoutubeChannelDownloader {
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
         videoMap.forEach((key, value) -> {
+            if (!save.contains(key) && value.output.exists()) {
+                save.add(key);
+            }
             if ((!save.contains(key) || !value.output.exists()) && !blocked.contains(key)) {
                 queue.add(key);
                 save.remove(key);
-            }
-            if (!save.contains(key) && value.output.exists()) {
-                save.add(key);
             }
         });
         FileUtils.writeLines(queueFile, queue);
@@ -273,9 +278,9 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
-            if (YoutubeUtils.downloadYoutubeVideo(VIDEO_BASE + videoId, video.output, channel.saveAsMp3, outputCommand)) {
+            if (YoutubeUtils.downloadYoutubeVideo(VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
                 if (channel.saveAsMp3 && (channel.playlistFile != null)) {
-                    List<String> current = FileUtils.readLines(playlistM3u, "UTF-8");
+                    List<String> current = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
                     if (!current.contains(video.output.getAbsolutePath())) {
                         FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
                     }
