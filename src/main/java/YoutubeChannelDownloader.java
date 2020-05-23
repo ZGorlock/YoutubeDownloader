@@ -57,6 +57,8 @@ public class YoutubeChannelDownloader {
         
         THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", new File("E:/Music/Meditation/The Comet Is Coming"), true, new File("E:/Music/Meditation/The Comet Is Coming.m3u")),
         
+        OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", new File("E:/Music/Runescape/OSRS Beatz"), true, new File("E:/Music/Runescape/OSRS Beatz/OSRS Beatz.m3u")),
+        
         BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
         
         private boolean active;
@@ -258,6 +260,8 @@ public class YoutubeChannelDownloader {
                 save.remove(key);
             }
         });
+        performSpecialConditions(queue, blocked);
+        
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
         FileUtils.writeLines(blockedFile, blocked);
@@ -272,6 +276,19 @@ public class YoutubeChannelDownloader {
         List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
+        
+        if (channel.saveAsMp3 && (channel.playlistFile != null)) {
+            List<String> current = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
+            for (String saved : save) {
+                if (!videoMap.containsKey(saved)) {
+                    continue;
+                }
+                String playlistEntry = videoMap.get(saved).output.getAbsolutePath();
+                if (!current.contains(playlistEntry)) {
+                    FileUtils.write(playlistM3u, playlistEntry + System.lineSeparator(), "UTF-8", true);
+                }
+            }
+        }
         
         List<String> working = new ArrayList<>(queue);
         for (String videoId : working) {
@@ -296,6 +313,22 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(queueFile, queue);
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
+        }
+    }
+    
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
+    private static void performSpecialConditions(List<String> queue, List<String> blocked) {
+        switch (channel) {
+            case OSRS_BEATZ:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("runescape")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
         }
     }
     
