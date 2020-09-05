@@ -1,6 +1,8 @@
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,7 +61,12 @@ public class YoutubeChannelDownloader {
         
         OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", new File("E:/Music/Runescape/OSRS Beatz"), true, new File("E:/Music/Runescape/OSRS Beatz/OSRS Beatz.m3u")),
         
-        BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false);
+        BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false),
+        
+        VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", new File("E:/Videos/Vsauce"), false),
+        MIND_FIELD_S1(true, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", new File("E:/Videos/Vsauce/Mind Field/Season 1"), false),
+        MIND_FIELD_S2(true, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", new File("E:/Videos/Vsauce/Mind Field/Season 2"), false),
+        MIND_FIELD_S3(true, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", new File("E:/Videos/Vsauce/Mind Field/Season 3"), false);
         
         private boolean active;
         
@@ -220,11 +227,13 @@ public class YoutubeChannelDownloader {
                 
                 String videoId = (String) resourceId.get("videoId");
                 String title = (String) snippet.get("title");
+                String date = (String) snippet.get("publishedAt");
                 
                 Video video = new Video();
                 video.videoId = videoId;
                 video.title = YoutubeUtils.cleanTitle(title);
                 video.url = VIDEO_BASE + videoId;
+                video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(date.replace("T", " ").replace("Z", ""));
                 video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                 
                 boolean exists = false;
@@ -316,12 +325,22 @@ public class YoutubeChannelDownloader {
         }
     }
     
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    private static void performSpecialConditions(List<String> queue, List<String> blocked) {
+    private static void performSpecialConditions(List<String> queue, List<String> blocked) throws Exception {
         switch (channel) {
             case OSRS_BEATZ:
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("runescape")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            case VSAUCE:
+                Date oldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
+                videoMap.forEach((key, value) -> {
+                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(oldest)) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
@@ -339,6 +358,8 @@ public class YoutubeChannelDownloader {
         public String title;
         
         public String url;
+        
+        public Date date;
         
         public File output;
         
