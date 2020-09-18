@@ -23,6 +23,8 @@ import org.json.simple.parser.JSONParser;
 
 public class YoutubeChannelDownloader {
     
+    //Constants
+    
     private static String API_KEY = "";
     
     static {
@@ -41,63 +43,12 @@ public class YoutubeChannelDownloader {
     
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
+    
+    //Static Fields
+    
     private static final boolean logCommand = true;
     
     private static final boolean logWork = false;
-    
-    //To get the playlistId for a Youtube Channel:
-    //1. Go to the Youtube Channel
-    //2. View the Page Source
-    //3. Search for "externalId" and copy that value
-    //4. Replace the second character from a 'C' to a 'U'
-    private enum Channel {
-        
-        TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
-        SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
-        TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
-        BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
-        
-        THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", new File("E:/Music/Meditation/The Comet Is Coming"), true, new File("E:/Music/Meditation/The Comet Is Coming.m3u")),
-        
-        OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", new File("E:/Music/Runescape/OSRS Beatz"), true, new File("E:/Music/Runescape/OSRS Beatz/OSRS Beatz.m3u")),
-        
-        BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", new File("E:/Downloads/Brave Wilderness"), false),
-        
-        VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", new File("E:/Videos/Vsauce"), false),
-        MIND_FIELD_S1(true, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", new File("E:/Videos/Vsauce/Mind Field/Season 1"), false),
-        MIND_FIELD_S2(true, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", new File("E:/Videos/Vsauce/Mind Field/Season 2"), false),
-        MIND_FIELD_S3(true, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", new File("E:/Videos/Vsauce/Mind Field/Season 3"), false);
-        
-        private boolean active;
-        
-        private String name;
-        
-        private String playlistId;
-        
-        private File outputFolder;
-        
-        private boolean saveAsMp3;
-        
-        private File playlistFile;
-        
-        Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3, File playlistFile) {
-            this.active = active;
-            this.name = name;
-            this.playlistId = playlistId;
-            this.outputFolder = outputFolder;
-            this.saveAsMp3 = saveAsMp3;
-            this.playlistFile = playlistFile;
-        }
-        
-        Channel(boolean active, String name, String playlistId, File outputFolder, boolean saveAsMp3) {
-            this.active = active;
-            this.name = name;
-            this.playlistId = playlistId;
-            this.outputFolder = outputFolder;
-            this.saveAsMp3 = saveAsMp3;
-        }
-        
-    }
     
     private static final boolean doAllChannels = true;
     
@@ -123,6 +74,9 @@ public class YoutubeChannelDownloader {
     
     private static File blockedFile;
     
+    
+    //Main Method
+    
     public static void main(String[] args) throws Exception {
         if (doAllChannels) {
             for (Channel currentChannel : Channel.values()) {
@@ -137,6 +91,9 @@ public class YoutubeChannelDownloader {
         }
     }
     
+    
+    //Methods
+    
     private static void setChannel(Channel thisChannel) throws Exception {
         channel = thisChannel;
         
@@ -144,10 +101,10 @@ public class YoutubeChannelDownloader {
         outputFolder = channel.outputFolder;
         playlistM3u = channel.playlistFile;
         
-        dataFile = new File("data/channel/" + channel.name + "-data.txt");
-        saveFile = new File("data/channel/" + channel.name + "-save.txt");
-        queueFile = new File("data/channel/" + channel.name + "-queue.txt");
-        blockedFile = new File("data/channel/" + channel.name + "-blocked.txt");
+        dataFile = new File("data/channel/" + channel.name + "/" + channel.name + "-data.txt");
+        saveFile = new File("data/channel/" + channel.name + "/" + channel.name + "-save.txt");
+        queueFile = new File("data/channel/" + channel.name + "/" + channel.name + "-queue.txt");
+        blockedFile = new File("data/channel/" + channel.name + "/" + channel.name + "-blocked.txt");
         
         for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
             File oldFile = new File(cleanupFile.getAbsolutePath().replace("\\", "/").replace("/channel/", "/"));
@@ -269,7 +226,7 @@ public class YoutubeChannelDownloader {
                 save.remove(key);
             }
         });
-        performSpecialConditions(queue, blocked);
+        Channel.performSpecialConditions(channel, videoMap, queue, save, blocked);
         
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
@@ -325,33 +282,10 @@ public class YoutubeChannelDownloader {
         }
     }
     
-    private static void performSpecialConditions(List<String> queue, List<String> blocked) throws Exception {
-        switch (channel) {
-            case OSRS_BEATZ:
-                videoMap.forEach((key, value) -> {
-                    if (!value.title.toLowerCase().contains("runescape")) {
-                        if (!blocked.contains(key)) {
-                            blocked.add(key);
-                        }
-                        queue.remove(key);
-                    }
-                });
-                break;
-            case VSAUCE:
-                Date oldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
-                videoMap.forEach((key, value) -> {
-                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(oldest)) {
-                        if (!blocked.contains(key)) {
-                            blocked.add(key);
-                        }
-                        queue.remove(key);
-                    }
-                });
-                break;
-        }
-    }
     
-    private static class Video {
+    //Inner Classes
+    
+    public static class Video {
         
         public String videoId;
         
