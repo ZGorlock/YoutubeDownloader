@@ -25,10 +25,20 @@ public enum Channel {
     
     //Values
     
-    TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Beats/Trap City"), true, new File("E:/Music/Beats/Trap.m3u")),
-    SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Beats/Sky Bass"), true, new File("E:/Music/Beats/Trap.m3u")),
-    TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Beats/Trap Nation"), true, new File("E:/Music/Beats/Trap.m3u")),
-    BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Beats/Bass Nation"), true, new File("E:/Music/Beats/Trap.m3u")),
+    MUSIC_LAB_HACKER(true, "MusicLabHacker", "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Hacker Music.m3u")),
+    MUSIC_LAB_WORK(true, "MusicLabWork", "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Work Music.m3u")),
+    MUSIC_LAB_CHILLSTEP(true, "MusicLabChillstep", "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Chillstep Music.m3u")),
+    MUSIC_LAB_CHILLOUT(true, "MusicLabChillout", "PLdE7uo_7KBkeSTmryNClNxUkioFpq3Btx", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Chillout Music.m3u")),
+    MUSIC_LAB_AMBIENT(true, "MusicLabAmbient", "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Ambient Music.m3u")),
+    MUSIC_LAB_LOFI(true, "MusicLabLoFi", "PLdE7uo_7KBkcywzGlsZ9c6aerJr3tK058", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Lo-Fi Music.m3u")),
+    MUSIC_LAB_CONTEMPORARY(true, "MusicLabContemporary", "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Contemporary Music.m3u")),
+    MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Study Music.m3u")),
+    MUSIC_LAB_CHILLHOP(true, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", new File("E:/Music/Beats/Music Lab"), true, new File("E:/Music/Beats/Chillhop Music.m3u")),
+    
+    TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", new File("E:/Music/Trap/Trap City"), true, new File("E:/Music/Trap/Trap.m3u")),
+    SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", new File("E:/Music/Trap/Sky Bass"), true, new File("E:/Music/Trap/Trap.m3u")),
+    TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", new File("E:/Music/Trap/Trap Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
+    BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", new File("E:/Music/Trap/Bass Nation"), true, new File("E:/Music/Trap/Trap.m3u")),
     
     THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", new File("E:/Music/Music/The Comet Is Coming"), true, new File("E:/Music/Music/The Comet Is Coming.m3u")),
     

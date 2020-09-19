@@ -37,25 +37,27 @@ public final class YoutubeUtils {
                 parameterString.append("&");
             }
             parameterString.append(URLEncoder.encode(parameterEntry.getKey(), "UTF-8"))
-                           .append("=")
-                           .append(URLEncoder.encode(parameterEntry.getValue(), "UTF-8"));
+                    .append("=")
+                    .append(URLEncoder.encode(parameterEntry.getValue(), "UTF-8"));
         }
         return parameterString.toString();
     }
     
     public static String cleanTitle(String title) {
         return title.replace("\\", "-")
-                    .replace("/", "-")
-                    .replace(":", "-")
-                    .replace("*", "-")
-                    .replace("?", "")
-                    .replace("\"", "'")
-                    .replace("<", "-")
-                    .replace(">", "-")
-                    .replace("|", "-")
-                    .replace("‒", "-")
-                    .replaceAll("[^\\x00-\\x7F]", "")
-                    .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+                .replace("/", "-")
+                .replace(":", "-")
+                .replace("*", "-")
+                .replace("?", "")
+                .replace("\"", "'")
+                .replace("<", "-")
+                .replace(">", "-")
+                .replace("|", "-")
+                .replace("‒", "-")
+                .replace("—", "-")
+                .replace("С", "C")
+                .replaceAll("[^\\x00-\\x7F]", "")
+                .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
     }
     
     public static String executeProcess(String cmd, boolean log) {
