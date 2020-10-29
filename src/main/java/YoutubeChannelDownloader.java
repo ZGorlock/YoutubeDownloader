@@ -223,10 +223,10 @@ public class YoutubeChannelDownloader {
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
         videoMap.forEach((key, value) -> {
-            if (!save.contains(key) && value.output.exists()) {
+            if (!save.contains(key) && videoExists(value.output)) {
                 save.add(key);
             }
-            if ((!save.contains(key) || !value.output.exists()) && !blocked.contains(key)) {
+            if ((!save.contains(key) || !videoExists(value.output)) && !blocked.contains(key)) {
                 queue.add(key);
                 save.remove(key);
             }
@@ -236,6 +236,26 @@ public class YoutubeChannelDownloader {
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
         FileUtils.writeLines(blockedFile, blocked);
+    }
+    
+    private static boolean videoExists(File output) {
+        File outputDir = output.getParentFile();
+        if (!outputDir.exists()) {
+            return false;
+        }
+        File[] existingFiles = outputDir.listFiles();
+        if (existingFiles == null) {
+            return false;
+        }
+        
+        String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
+        for (File existingFile : existingFiles) {
+            String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
+            if (existingName.equalsIgnoreCase(outputName)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     private static void downloadVideos() throws Exception {

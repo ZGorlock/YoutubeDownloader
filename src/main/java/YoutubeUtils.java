@@ -57,7 +57,8 @@ public final class YoutubeUtils {
                 .replace("—", "-")
                 .replace("С", "C")
                 .replaceAll("[^\\x00-\\x7F]", "")
-                .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "");
+                .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
+                .replaceAll("\\s+", " ");
     }
     
     public static String executeProcess(String cmd, boolean log) {
