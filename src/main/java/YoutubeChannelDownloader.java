@@ -1,3 +1,8 @@
+/*
+ * File:    YoutubeChannelDownloader.java
+ * Author:  Zachary Gill
+ */
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,12 +26,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * Downloads Youtube Channels and Playlists.
+ */
 public class YoutubeChannelDownloader {
     
     //Constants
     
+    /**
+     * The Youtube API key.
+     */
     private static String API_KEY = "";
     
+    //Populates API_KEY
     static {
         try {
             API_KEY = FileUtils.readFileToString(new File("apiKey"), "UTF-8");
@@ -39,44 +51,93 @@ public class YoutubeChannelDownloader {
         }
     }
     
+    /**
+     * The base url for querying Youtube Playlists.
+     */
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
     
+    /**
+     * The base url for Youtube videos.
+     */
     private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
     
     
     //Static Fields
     
+    /**
+     * A flag indicating whether to the log the download command or not.
+     */
     private static final boolean logCommand = true;
     
+    /**
+     * A flag indicating whether to log the download work or not.
+     */
     private static final boolean logWork = false;
     
+    /**
+     * A flag indicating whether to process all Channels or not.
+     */
     private static final boolean doAllChannels = true;
     
+    /**
+     * The Channel to process.
+     */
     private static Channel channel = null;
     
-    private static Runtime runtime = Runtime.getRuntime();
-    
+    /**
+     * The HTTP Client used to interact with the Youtube API.
+     */
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
     
+    /**
+     * The video map for the Channel being processed.
+     */
     private static Map<String, Video> videoMap = new LinkedHashMap<>();
     
+    /**
+     * The Playlist ID for the Channel being processed.
+     */
     private static String playlistId;
     
+    /**
+     * The output folder for the Channel being processed.
+     */
     private static File outputFolder;
     
+    /**
+     * The playlist file for the Channel being processed.
+     */
     private static File playlistM3u;
     
+    /**
+     * The internal data file for the Channel being processed.
+     */
     private static File dataFile;
     
+    /**
+     * The internal file holding the saved videos for the Channel being processed.
+     */
     private static File saveFile;
     
+    /**
+     * The internal file holding the videos queued for download for the Channel being processed.
+     */
     private static File queueFile;
     
+    /**
+     * The internal file holding the blocked videos for the Channel being processed.
+     */
     private static File blockedFile;
     
     
     //Main Method
     
+    /**
+     * The main method for the Youtube Channel Downloader.
+     *
+     * @param args The arguments to the main method.
+     * @throws Exception When there is an error.
+     */
     public static void main(String[] args) throws Exception {
         if (doAllChannels) {
             for (Channel currentChannel : Channel.values()) {
@@ -94,6 +155,12 @@ public class YoutubeChannelDownloader {
     
     //Methods
     
+    /**
+     * Sets the active Channel.
+     *
+     * @param thisChannel The Channel to be processed.
+     * @throws Exception When there is an error.
+     */
     private static void setChannel(Channel thisChannel) throws Exception {
         channel = thisChannel;
         
@@ -118,6 +185,11 @@ public class YoutubeChannelDownloader {
         }
     }
     
+    /**
+     * Processes the active Channel.
+     *
+     * @throws Exception When there is an error.
+     */
     private static void processChannel() throws Exception {
         System.out.println("Processing Channel: " + channel.name);
         System.out.println();
@@ -130,6 +202,11 @@ public class YoutubeChannelDownloader {
         System.out.println();
     }
     
+    /**
+     * Retrieves the data for the active Channel from the Youtube API.
+     *
+     * @throws Exception When there is an error.
+     */
     private static void getChannelData() throws Exception {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
@@ -169,6 +246,11 @@ public class YoutubeChannelDownloader {
         FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
     }
     
+    /**
+     * Processes the data for the active Channel that was retrieved from the Youtube API.
+     *
+     * @throws Exception When there is an error.
+     */
     private static void processChannelData() throws Exception {
         String data = FileUtils.readFileToString(dataFile, "UTF-8");
         videoMap.clear();
@@ -213,6 +295,11 @@ public class YoutubeChannelDownloader {
         }
     }
     
+    /**
+     * Produces the queue of videos to download from the active Channel.
+     *
+     * @throws Exception When there is an error.
+     */
     private static void produceQueue() throws Exception {
         if (videoMap.isEmpty()) {
             System.out.println("Must populate video map before producing the queue");
@@ -223,10 +310,10 @@ public class YoutubeChannelDownloader {
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
         videoMap.forEach((key, value) -> {
-            if (!save.contains(key) && videoExists(value.output)) {
+            if (!save.contains(key) && YoutubeUtils.videoExists(value.output)) {
                 save.add(key);
             }
-            if ((!save.contains(key) || !videoExists(value.output)) && !blocked.contains(key)) {
+            if ((!save.contains(key) || !YoutubeUtils.videoExists(value.output)) && !blocked.contains(key)) {
                 queue.add(key);
                 save.remove(key);
             }
@@ -238,26 +325,11 @@ public class YoutubeChannelDownloader {
         FileUtils.writeLines(blockedFile, blocked);
     }
     
-    private static boolean videoExists(File output) {
-        File outputDir = output.getParentFile();
-        if (!outputDir.exists()) {
-            return false;
-        }
-        File[] existingFiles = outputDir.listFiles();
-        if (existingFiles == null) {
-            return false;
-        }
-        
-        String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-        for (File existingFile : existingFiles) {
-            String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-            if (existingName.equalsIgnoreCase(outputName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
+    /**
+     * Downloads the queued videos from the active Channel.
+     *
+     * @throws Exception When there is an error.
+     */
     private static void downloadVideos() throws Exception {
         if (videoMap.isEmpty()) {
             System.out.println("Must populate video map before downloading videos");
@@ -310,16 +382,36 @@ public class YoutubeChannelDownloader {
     
     //Inner Classes
     
+    /**
+     * Defines a Video.
+     */
     public static class Video {
         
+        //Fields
+        
+        /**
+         * The ID of the Video.
+         */
         public String videoId;
         
+        /**
+         * The title of the Video.
+         */
         public String title;
         
+        /**
+         * The url of the Video.
+         */
         public String url;
         
+        /**
+         * The date the Video was uploaded.
+         */
         public Date date;
         
+        /**
+         * The output file for the Video.
+         */
         public File output;
         
     }

@@ -1,6 +1,5 @@
 /*
  * File:    Channel.java
- * Package: PACKAGE_NAME
  * Author:  Zachary Gill
  */
 
@@ -10,18 +9,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-//To get the playlistId for a Youtube Playlist:
-//1, Go to the Youtube Playlist
-//2. Simply copy it from the url:
-//  https://www.youtube.com/watch?v=3qiLI1ILMlU&list=PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr
-//                                                  <PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr>
-//
-//To get the playlistId for a Youtube Channel:
-//1. Go to the Youtube Channel
-//2. View the Page Source
-//3. Search for "externalId" and copy that value
-//4. Replace the second character from a 'C' to a 'U'
+/**
+ * Holds Channels and Playlists for the Youtube Channel Downloader.
+ */
 public enum Channel {
+    
+    //To get the playlistId for a Youtube Playlist:
+    //1, Go to the Youtube Playlist
+    //2. Simply copy it from the url:
+    //  https://www.youtube.com/watch?v=3qiLI1ILMlU&list=PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr
+    //                                                  <PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr>
+    //
+    //To get the playlistId for a Youtube Channel:
+    //1. Go to the Youtube Channel
+    //2. View the Page Source
+    //3. Search for "externalId" and copy that value
+    //4. Replace the second character from a 'C' to a 'U'
     
     //Values
     
@@ -54,30 +57,67 @@ public enum Channel {
     
     //Constants
     
+    /**
+     * The drive to use for storage of downloaded files.
+     */
     public final File storageDrive = new File("E:/");
     
+    /**
+     * The Music directory in the storage drive.
+     */
     public final File musicDir = new File(storageDrive, "Music");
     
+    /**
+     * The Videos directory in the storage drive.
+     */
     public final File videoDir = new File(storageDrive, "Videos");
     
     
     //Fields
     
+    /**
+     * A flag indicating whether or not a Channel is enabled or not.
+     */
     public boolean active;
     
+    /**
+     * The name of the Channel.
+     */
     public String name;
     
+    /**
+     * The Playlist ID of the Channel.
+     */
     public String playlistId;
     
+    /**
+     * The output folder to store the videos that are downloaded from the Channel.
+     */
     public File outputFolder;
     
+    /**
+     * A flag indicating whether or not to save the videos from the Channel as an mp3 file or not; mp4 otherwise.
+     */
     public boolean saveAsMp3;
     
+    /**
+     * The playlist file to add mp3 files downloaded from the Channel to if saving as mp3s; or null.
+     */
     public File playlistFile;
     
     
     //Constructors
     
+    /**
+     * Constructs a new Channel.
+     *
+     * @param active       Whether the Channel is enabled or not.
+     * @param name         The name of the Channel.
+     * @param playlistId   The Playlist ID of the Channel.
+     * @param outputFolder The output folder for the Channel.
+     * @param saveAsMp3    Whether the Channel should download as mp3 or not.
+     * @param playlistFile The playlist file for the Channel.
+     */
     Channel(boolean active, String name, String playlistId, String outputFolder, boolean saveAsMp3, String playlistFile) {
         this.active = active;
         this.name = name;
@@ -87,6 +127,16 @@ public enum Channel {
         this.playlistFile = (playlistFile != null) ? new File(saveAsMp3 ? musicDir : videoDir, playlistFile) : null;
     }
     
+    /**
+     * Constructs a new Channel.
+     *
+     * @param active       Whether the Channel is enabled or not.
+     * @param name         The name of the Channel.
+     * @param playlistId   The Playlist ID of the Channel.
+     * @param outputFolder The output folder for the Channel.
+     * @param saveAsMp3    Whether the Channel should download as mp3 or not.
+     * @see #Channel(boolean, String, String, String, boolean)
+     */
     Channel(boolean active, String name, String playlistId, String outputFolder, boolean saveAsMp3) {
         this(active, name, playlistId, outputFolder, saveAsMp3, null);
     }
@@ -94,6 +144,16 @@ public enum Channel {
     
     //Functions
     
+    /**
+     * Performs special checks specific to a Channel.
+     *
+     * @param channel  The Channel.
+     * @param videoMap The video map.
+     * @param queue    The list of queued videos.
+     * @param save     The list of saved videos.
+     * @param blocked  The list of blocked videos.
+     * @throws Exception When there is an error.
+     */
     public static void performSpecialConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
         switch (channel) {
             case MUSIC_LAB_HACKER:

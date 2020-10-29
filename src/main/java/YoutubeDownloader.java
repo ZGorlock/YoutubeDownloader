@@ -1,6 +1,5 @@
 /*
  * File:    YoutubeDownloader.java
- * Package: PACKAGE_NAME
  * Author:  Zachary Gill
  */
 
@@ -12,22 +11,60 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Downloads Youtube Videos.
+ */
 public class YoutubeDownloader {
     
+    //Constants
+    
+    /**
+     * The initial queue of Youtube video urls to download.
+     */
     private static final File downloadQueue = new File("data/downloadQueue.txt");
     
+    /**
+     * The list of Youtube video urls to download.
+     */
     private static final List<String> download = new ArrayList<>();
     
+    /**
+     * The output directory for downloaded videos.
+     */
     private static final File outputDir = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
     
+    /**
+     * The regex pattern for a Youtube url.
+     */
     private static final Pattern videoUrlPattern = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
     
+    
+    //Static Fields
+    
+    /**
+     * A flag indicating whether to download the videos as mp3 files or not.
+     */
     private static final boolean asMp3 = false;
     
+    /**
+     * A flag indicating whether to the log the download command or not.
+     */
     private static final boolean logCommand = true;
     
+    /**
+     * A flag indicating whether to log the download work or not.
+     */
     private static final boolean logWork = true;
     
+    
+    //Main Method
+    
+    /**
+     * The main method for the Youtube Downloader.
+     *
+     * @param args The arguments to the main method.
+     * @throws Exception When there is an error.
+     */
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws Exception {
         if (!outputDir.exists() && !outputDir.mkdirs()) {
