@@ -172,6 +172,11 @@ public class YoutubeChannelDownloader {
     private static void processChannelData() throws Exception {
         String data = FileUtils.readFileToString(dataFile, "UTF-8");
         videoMap.clear();
+        if (data.contains("\"code\": 404")) {
+            System.err.println("The Playlist for " + channel.name + " does not exist");
+            return;
+        }
+        
         JSONParser parser = new JSONParser();
         JSONArray dataJson = (JSONArray) parser.parse(data);
         for (Object dataChunk : dataJson) {
