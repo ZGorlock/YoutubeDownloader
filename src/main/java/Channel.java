@@ -38,6 +38,8 @@ public enum Channel {
     MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", "Beats/Music Lab", true, "Beats/Study Music.m3u"),
     MUSIC_LAB_CHILLHOP(false, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", "Beats/Music Lab", true, "Beats/Chillhop Music.m3u"),
     
+    JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u"),
+    
     TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", "Trap/Trap City", true, "Trap/Trap.m3u"),
     SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", "Trap/Sky Bass", true, "Trap/Trap.m3u"),
     TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", "Trap/Trap Nation", true, "Trap/Trap.m3u"),
@@ -145,7 +147,7 @@ public enum Channel {
     //Functions
     
     /**
-     * Performs special checks specific to a Channel.
+     * Performs special checks specific to a Channel before producing the queue.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
@@ -154,7 +156,33 @@ public enum Channel {
      * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+        switch (channel) {
+            case JIMTV_PROGRAMMING:
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle
+                            .replace("Programming - Coding - Hacking music vol.", "Volume ")
+                            .replace(" (", " - ")
+                            .replace(")", "");
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+        }
+    }
+    
+    /**
+     * Performs special checks specific to a Channel after producing the queue.
+     *
+     * @param channel  The Channel.
+     * @param videoMap The video map.
+     * @param queue    The list of queued videos.
+     * @param save     The list of saved videos.
+     * @param blocked  The list of blocked videos.
+     * @throws Exception When there is an error.
+     */
+    public static void performSpecialPostConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
         switch (channel) {
             case MUSIC_LAB_HACKER:
             case MUSIC_LAB_WORK:

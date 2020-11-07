@@ -321,6 +321,8 @@ public class YoutubeChannelDownloader {
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
+        
+        Channel.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
         videoMap.forEach((key, value) -> {
             if (!save.contains(key) && YoutubeUtils.videoExists(value.output)) {
                 save.add(key);
@@ -330,7 +332,7 @@ public class YoutubeChannelDownloader {
                 save.remove(key);
             }
         });
-        Channel.performSpecialConditions(channel, videoMap, queue, save, blocked);
+        Channel.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
         
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
