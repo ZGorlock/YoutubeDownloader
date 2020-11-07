@@ -258,6 +258,10 @@ public class YoutubeChannelDownloader {
             System.err.println("The Playlist for " + channel.name + " does not exist");
             return;
         }
+        if (data.contains("\"code\": 403")) {
+            System.err.println("Your API Key is not authorized or has exceeded its quota");
+            return;
+        }
         
         JSONParser parser = new JSONParser();
         JSONArray dataJson = (JSONArray) parser.parse(data);
