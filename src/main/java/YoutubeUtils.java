@@ -5,14 +5,34 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
 
 /**
  * Provides utility methods for the Youtube Downloader.
  */
 public final class YoutubeUtils {
+    
+    //Constants
+    
+    /**
+     * The base url for Youtube videos.
+     */
+    public static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
+    
+    /**
+     * The regex pattern for a Youtube url.
+     */
+    public static final Pattern VIDEO_URL_PATTERN = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
+    
     
     //Functions
     
@@ -113,6 +133,77 @@ public final class YoutubeUtils {
             }
         }
         return false;
+    }
+    
+    /**
+     * Performs startup checks.
+     *
+     * @return Whether all checks were successful or not.
+     */
+    public static boolean doStartupChecks() {
+        if (!YoutubeUtils.isOnline()) {
+            System.err.println("Internet access is required");
+            return false;
+        }
+        
+        String currentYoutubeDlVersion = executeProcess("youtube-dl.exe --version", false).trim();
+        String latestYoutubeDlVersion = YoutubeUtils.getCurrentYoutubeDlVersion();
+        if (currentYoutubeDlVersion.isEmpty()) {
+            System.err.println("Unable to check for youtube-dl updates");
+        } else if (!currentYoutubeDlVersion.equals(latestYoutubeDlVersion)) {
+            System.err.println("An update is available for youtube-dl");
+            System.err.println("Current Version: " + currentYoutubeDlVersion + " | Latest Version: " + latestYoutubeDlVersion);
+            System.err.println("Download: https://www.youtube-dl.org/downloads/latest/youtube-dl.exe");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Determines if the system has access to the internet.
+     *
+     * @return Whether the system has access to the internet or not.
+     */
+    public static boolean isOnline() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("youtube.com", 80), 200);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns the current youtube-dl version.
+     *
+     * @return The current youtube-dl version.
+     */
+    public static String getCurrentYoutubeDlVersion() {
+        try {
+            String html = Jsoup.connect("https://youtube-dl.org/")
+                    .ignoreContentType(true)
+                    .maxBodySize(0)
+                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                    .referrer("http://www.google.com")
+                    .timeout(5000)
+                    .followRedirects(true)
+                    .execute()
+                    .parse()
+                    .toString();
+            
+            Pattern versionPattern = Pattern.compile(".*<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:.*");
+            String[] lines = html.split("\n");
+            for (String line : lines) {
+                Matcher versionMatcher = versionPattern.matcher(line);
+                if (versionMatcher.matches()) {
+                    return versionMatcher.group("version");
+                }
+            }
+            
+        } catch (IOException ignored) {
+        }
+        return "";
     }
     
     /**

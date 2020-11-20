@@ -56,11 +56,6 @@ public class YoutubeChannelDownloader {
      */
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
     
-    /**
-     * The base url for Youtube videos.
-     */
-    private static final String VIDEO_BASE = "https://www.youtube.com/watch?v=";
-    
     
     //Static Fields
     
@@ -139,6 +134,10 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {
+        if (!YoutubeUtils.doStartupChecks()) {
+            return;
+        }
+        
         if (doAllChannels) {
             for (Channel currentChannel : Channel.values()) {
                 if (currentChannel.active) {
@@ -288,7 +287,7 @@ public class YoutubeChannelDownloader {
                 Video video = new Video();
                 video.videoId = videoId;
                 video.title = YoutubeUtils.cleanTitle(title);
-                video.url = VIDEO_BASE + videoId;
+                video.url = YoutubeUtils.VIDEO_BASE + videoId;
                 video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(date.replace("T", " ").replace("Z", ""));
                 video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                 
@@ -372,7 +371,7 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
-            if (YoutubeUtils.downloadYoutubeVideo(VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
+            if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
                 if (channel.saveAsMp3 && (channel.playlistFile != null)) {
                     List<String> current = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
                     if (!current.contains(video.output.getAbsolutePath())) {

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Downloads Youtube Videos.
@@ -32,11 +31,6 @@ public class YoutubeDownloader {
      * The output directory for downloaded videos.
      */
     private static final File outputDir = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
-    
-    /**
-     * The regex pattern for a Youtube url.
-     */
-    private static final Pattern videoUrlPattern = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
     
     
     //Static Fields
@@ -67,6 +61,10 @@ public class YoutubeDownloader {
      */
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws Exception {
+        if (!YoutubeUtils.doStartupChecks()) {
+            return;
+        }
+        
         if (!outputDir.exists() && !outputDir.mkdirs()) {
             System.err.println("Unable to create output directory");
             return;
@@ -80,7 +78,7 @@ public class YoutubeDownloader {
             List<String> work = new ArrayList<>(download);
             for (String video : work) {
                 System.out.println("Downloading: " + video);
-                Matcher videoUrlMatcher = videoUrlPattern.matcher(video);
+                Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(video);
                 if (videoUrlMatcher.matches()) {
                     String id = videoUrlMatcher.group("id");
                     YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), asMp3, logCommand, logWork);
