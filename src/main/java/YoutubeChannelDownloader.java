@@ -277,13 +277,19 @@ public class YoutubeChannelDownloader {
                 String title = (String) snippet.get("title");
                 String date = (String) snippet.get("publishedAt");
                 
+                //filter private videos
                 if (title.equals("Private video")) {
                     continue;
                 }
                 
+                //filter live videos
                 JSONObject defaultThumbnail = (JSONObject) thumbnails.get("default");
-                String defaultThumbnailUrl = (String) defaultThumbnail.get("url");
-                if (defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).toLowerCase().equals("_live")) {
+                if (defaultThumbnail != null) {
+                    String defaultThumbnailUrl = (String) defaultThumbnail.get("url");
+                    if ((defaultThumbnailUrl == null) || defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).toLowerCase().equals("_live")) {
+                        continue;
+                    }
+                } else {
                     continue;
                 }
                 
