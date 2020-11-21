@@ -273,16 +273,19 @@ public class YoutubeChannelDownloader {
                 JSONObject resourceId = (JSONObject) snippet.get("resourceId");
                 JSONObject thumbnails = (JSONObject) snippet.get("thumbnails");
                 
-                boolean isLive = false;
+                String videoId = (String) resourceId.get("videoId");
+                String title = (String) snippet.get("title");
+                String date = (String) snippet.get("publishedAt");
+                
+                if (title.equals("Private video")) {
+                    continue;
+                }
+                
                 JSONObject defaultThumbnail = (JSONObject) thumbnails.get("default");
                 String defaultThumbnailUrl = (String) defaultThumbnail.get("url");
                 if (defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).toLowerCase().equals("_live")) {
                     continue;
                 }
-                
-                String videoId = (String) resourceId.get("videoId");
-                String title = (String) snippet.get("title");
-                String date = (String) snippet.get("publishedAt");
                 
                 Video video = new Video();
                 video.videoId = videoId;
