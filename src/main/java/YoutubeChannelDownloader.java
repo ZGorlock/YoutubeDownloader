@@ -366,7 +366,7 @@ public class YoutubeChannelDownloader {
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         
-        if (channel.saveAsMp3 && (channel.playlistFile != null)) {
+        if (channel.playlistFile != null) {
             List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
             for (String saved : save) {
                 if (!videoMap.containsKey(saved)) {
@@ -404,7 +404,7 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(blockedFile, blocked);
         }
         
-        if (channel.saveAsMp3 && (channel.playlistFile != null)) {
+        if (channel.playlistFile != null) {
             List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
             
             Map<String, Instant> fileTimes = new HashMap<>();

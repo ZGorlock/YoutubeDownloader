@@ -49,12 +49,12 @@ public enum Channel {
     
     OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", "Runescape/OSRS Beatz", true, "Runescape/OSRS Beatz/OSRS Beatz.m3u"),
     
-    BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Brave Wilderness", false),
+    BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Brave Wilderness", false, "Youtube/Brave Wilderness.m3u"),
     
-    VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", "Youtube/Vsauce", false),
-    MIND_FIELD_S1(true, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Vsauce/Mind Field/Season 1", false),
-    MIND_FIELD_S2(true, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Vsauce/Mind Field/Season 2", false),
-    MIND_FIELD_S3(true, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Vsauce/Mind Field/Season 3", false);
+    VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", "Youtube/Vsauce", false, "Youtube/Vsauce.m3u"),
+    MIND_FIELD_S1(false, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Vsauce/Mind Field/Season 1", false, "Youtube/Vsauce/Mind Field/Season 1.m3u"),
+    MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Vsauce/Mind Field/Season 2", false, "Youtube/Vsauce/Mind Field/Season 2.m3u"),
+    MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Vsauce/Mind Field/Season 3", false, "Youtube/Vsauce/Mind Field/Season 3.m3u");
     
     
     //Constants
