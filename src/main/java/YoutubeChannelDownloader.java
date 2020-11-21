@@ -4,9 +4,13 @@
  */
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -363,13 +367,13 @@ public class YoutubeChannelDownloader {
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         
         if (channel.saveAsMp3 && (channel.playlistFile != null)) {
-            List<String> current = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
+            List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
             for (String saved : save) {
                 if (!videoMap.containsKey(saved)) {
                     continue;
                 }
                 String playlistEntry = videoMap.get(saved).output.getAbsolutePath();
-                if (!current.contains(playlistEntry)) {
+                if (!playlist.contains(playlistEntry)) {
                     FileUtils.write(playlistM3u, playlistEntry + System.lineSeparator(), "UTF-8", true);
                 }
             }
@@ -398,6 +402,22 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(queueFile, queue);
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
+        }
+        
+        if (channel.saveAsMp3 && (channel.playlistFile != null)) {
+            List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
+            
+            Map<String, Instant> fileTimes = new HashMap<>();
+            playlist.forEach(e -> {
+                try {
+                    fileTimes.put(e, Files.getLastModifiedTime(new File(e).toPath()).toInstant());
+                } catch (IOException ignored) {
+                    fileTimes.put(e, new Date().toInstant());
+                }
+            });
+            playlist.sort(Comparator.comparing(fileTimes::get));
+            
+            FileUtils.writeLines(channel.playlistFile, playlist);
         }
     }
     
