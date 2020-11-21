@@ -62,7 +62,7 @@ public final class YoutubeUtils {
         }
         String result = executeProcess(cmd, logWork);
         
-        return result.split("\r\n").length > 2;
+        return result.split("\r\n").length > 4;
     }
     
     /**
