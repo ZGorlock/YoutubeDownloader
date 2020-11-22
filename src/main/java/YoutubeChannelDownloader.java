@@ -4,13 +4,10 @@
  */
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -201,6 +198,7 @@ public class YoutubeChannelDownloader {
         processChannelData();
         produceQueue();
         downloadVideos();
+        createPlaylist();
         
         System.out.println();
     }
@@ -366,32 +364,12 @@ public class YoutubeChannelDownloader {
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         
-        if (channel.playlistFile != null) {
-            List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
-            for (String saved : save) {
-                if (!videoMap.containsKey(saved)) {
-                    continue;
-                }
-                String playlistEntry = videoMap.get(saved).output.getAbsolutePath();
-                if (!playlist.contains(playlistEntry)) {
-                    FileUtils.write(playlistM3u, playlistEntry + System.lineSeparator(), "UTF-8", true);
-                }
-            }
-        }
-        
         List<String> working = new ArrayList<>(queue);
         for (String videoId : working) {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
             if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
-                if (channel.saveAsMp3 && (channel.playlistFile != null)) {
-                    List<String> current = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
-                    if (!current.contains(video.output.getAbsolutePath())) {
-                        FileUtils.write(playlistM3u, video.output.getAbsolutePath() + System.lineSeparator(), "UTF-8", true);
-                    }
-                }
-                
                 queue.remove(videoId);
                 save.add(videoId);
             } else {
@@ -403,22 +381,36 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
         }
-        
-        if (channel.playlistFile != null) {
-            List<String> playlist = playlistM3u.exists() ? FileUtils.readLines(playlistM3u, "UTF-8") : new ArrayList<>();
-            
-            Map<String, Instant> fileTimes = new HashMap<>();
-            playlist.forEach(e -> {
-                try {
-                    fileTimes.put(e, Files.getLastModifiedTime(new File(e).toPath()).toInstant());
-                } catch (IOException ignored) {
-                    fileTimes.put(e, new Date().toInstant());
-                }
-            });
-            playlist.sort(Comparator.comparing(fileTimes::get));
-            
-            FileUtils.writeLines(channel.playlistFile, playlist);
+    }
+    
+    /**
+     * Creates a playlist of the videos from the active Channel.
+     *
+     * @throws Exception When there is an error.
+     */
+    private static void createPlaylist() throws Exception {
+        if (videoMap.isEmpty()) {
+            System.out.println("Must populate video map before creating a playlist");
+            return;
         }
+        
+        if (channel.playlistFile == null) {
+            return;
+        }
+        
+        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
+        List<String> playlist = new ArrayList<>();
+        for (Map.Entry<String, Video> video : videoMap.entrySet()) {
+            if (save.contains(video.getKey())) {
+                playlist.add(video.getValue().output.getAbsolutePath());
+            }
+        }
+        
+        if (channel.isChannel()) {
+            Collections.reverse(playlist);
+        }
+        
+        FileUtils.writeLines(channel.playlistFile, playlist);
     }
     
     

@@ -144,6 +144,27 @@ public enum Channel {
     }
     
     
+    //Methods
+    
+    /**
+     * Returns whether the Channel is a Playlist or not.
+     *
+     * @return Whether the Channel is a Playlist or not.
+     */
+    public boolean isPlaylist() {
+        return playlistId.startsWith("PL");
+    }
+    
+    /**
+     * Returns whether the Channel is a Channel or not.
+     *
+     * @return Whether the Channel is a Channel or not.
+     */
+    public boolean isChannel() {
+        return playlistId.startsWith("UU");
+    }
+    
+    
     //Functions
     
     /**
