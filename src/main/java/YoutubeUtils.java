@@ -61,8 +61,9 @@ public final class YoutubeUtils {
             System.out.println(cmd);
         }
         String result = executeProcess(cmd, logWork);
+        String[] resultLines = result.split("\r\n");
         
-        return result.split("\r\n").length > 4;
+        return resultLines.length > 4 && !resultLines[resultLines.length - 1].toLowerCase().contains("internal server error. retrying (attempt 10 of 10)");
     }
     
     /**
