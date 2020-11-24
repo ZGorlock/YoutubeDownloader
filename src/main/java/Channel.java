@@ -28,6 +28,7 @@ public enum Channel {
     
     //Values
     
+    //BEATS
     MUSIC_LAB_HACKER(true, "MusicLabHacker", "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr", "Beats/Music Lab", true, "Beats/Hacker Music.m3u"),
     MUSIC_LAB_WORK(true, "MusicLabWork", "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3", "Beats/Music Lab", true, "Beats/Work Music.m3u"),
     MUSIC_LAB_CHILLSTEP(true, "MusicLabChillstep", "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik", "Beats/Music Lab", true, "Beats/Chillstep Music.m3u"),
@@ -37,24 +38,109 @@ public enum Channel {
     MUSIC_LAB_CONTEMPORARY(false, "MusicLabContemporary", "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf", "Beats/Music Lab", true, "Beats/Contemporary Music.m3u"),
     MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", "Beats/Music Lab", true, "Beats/Study Music.m3u"),
     MUSIC_LAB_CHILLHOP(false, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", "Beats/Music Lab", true, "Beats/Chillhop Music.m3u"),
-    
     JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u"),
     
+    //TRAP
     TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", "Trap/Trap City", true, "Trap/Trap City.m3u"),
     SKY_BASS(true, "SkyBass", "UUpXbwekw4ySNHGt26aAKvHQ", "Trap/Sky Bass", true, "Trap/Sky Bass.m3u"),
     TRAP_NATION(true, "TrapNation", "UUa10nxShhzNrCE1o2ZOPztg", "Trap/Trap Nation", true, "Trap/Trap Nation.m3u"),
     BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", "Trap/Bass Nation", true, "Trap/Bass Nation.m3u"),
     
+    //MUSIC
     THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", "Music/The Comet Is Coming", true, "Music/The Comet Is Coming.m3u"),
     
+    //RUNESCAPE
     OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", "Runescape/OSRS Beatz", true, "Runescape/OSRS Beatz/OSRS Beatz.m3u"),
+    BY_RELEASE(true, "ByRelease", "PLDSJpYkJoHD-0Keg6Fu7bcVTlbR27T-88", "Youtube/Runescape/By Release", false, "Youtube/Runescape/By Release.m3u"),
+    OSRS_CHALLENGES_TANZOO(true, "OsrsChallengesTanzoo", "PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU", "Youtube/Runescape/OSRS Challenges - Tanzoo", false, "Youtube/Runescape/OSRS Challenges - Tanzoo.m3u"),
+    OSRS_CHALLENGES_VIRTOSO(true, "OsrsChallengesVirtoso", "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb", "Youtube/Runescape/OSRS Challenges - Virtoso", false, "Youtube/Runescape/OSRS Challenges - Virtoso.m3u"),
+    SWAMPLETICS(true, "Swampletics", "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a", "Youtube/Runescape/Swampletics", false, "Youtube/Runescape/Swampletics.m3u"),
+    LOWER_THE_BETTER(true, "LowerTheBetter", "PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6", "Youtube/Runescape/Lower the Better", false, "Youtube/Runescape/Lower the Better.m3u"),
     
-    BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Brave Wilderness", false, "Youtube/Brave Wilderness.m3u"),
+    //D&D
+    DND_LORE(true, "DndLore", "PL-Tj3kmYOOy2OVjoqTO8joausM-6JjcI-", "Youtube/D&D/Dungeons and Dragons Lore", false, "Youtube/D&D/Dungeons and Dragons Lore.m3u"),
     
-    VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", "Youtube/Vsauce", false, "Youtube/Vsauce.m3u"),
-    MIND_FIELD_S1(false, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Vsauce/Mind Field/Season 1", false, "Youtube/Vsauce/Mind Field/Season 1.m3u"),
-    MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Vsauce/Mind Field/Season 2", false, "Youtube/Vsauce/Mind Field/Season 2.m3u"),
-    MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Vsauce/Mind Field/Season 3", false, "Youtube/Vsauce/Mind Field/Season 3.m3u");
+    //SPACE
+    PBS_SPACE_TIME(true, "PbsSpaceTime", "UU7_gcs09iThXybpVgjHZ_7g", "Youtube/Space/PBS Space Time", false, "Youtube/Space/PBS Space Time.m3u"),
+    ISAAC_ARTHUR(true, "IsaacArthur", "UUZFipeZtQM5CKUjx6grh54g", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur.m3u"),
+    ISAAC_ARTHUR_P01(true, "IsaacArthurP01", "PLIIOUpOge0LuFZG2lvL9-zbxovZabYxcy", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Becoming an Interplanetary Species.m3u"),
+    ISAAC_ARTHUR_P02(true, "IsaacArthurP02", "PLIIOUpOge0LulClL2dHXh8TTOnCgRkLdU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox.m3u"),
+    ISAAC_ARTHUR_P03(true, "IsaacArthurP03", "PLIIOUpOge0LsIzYlIAIRdAGJTqAW6FmCE", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Outward Bound.m3u"),
+    ISAAC_ARTHUR_P04(true, "IsaacArthurP04", "PLIIOUpOge0LvQYACAZwizb8gqtXL-10PC", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Post Scarcity Civilizations.m3u"),
+    ISAAC_ARTHUR_P05(true, "IsaacArthurP05", "PLIIOUpOge0Ls3WMYP_2FpP9Y0mjgtf98M", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Advanced Civilizations.m3u"),
+    ISAAC_ARTHUR_P06(true, "IsaacArthurP06", "PLIIOUpOge0Lu97HzMt_BJu36UMaItB1cm", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Alien Civilizations.m3u"),
+    ISAAC_ARTHUR_P07(true, "IsaacArthurP07", "PLIIOUpOge0LsGJI_vni4xvfBQTuryTwlU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Upward Bound.m3u"),
+    ISAAC_ARTHUR_P08(true, "IsaacArthurP08", "PLIIOUpOge0Lv9Y_4Vmcgaxue0jyZG3_4K", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Earth 2.0.m3u"),
+    ISAAC_ARTHUR_P09(true, "IsaacArthurP09", "PLIIOUpOge0Ls94qU9ZgTy3A-PbmRKKbV4", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Visions of Earth.m3u"),
+    ISAAC_ARTHUR_P10(true, "IsaacArthurP10", "PLIIOUpOge0Lv5kr9vrX8DJjlF1A3QWJ3D", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - The Moon - Returning and Colonizing.m3u"),
+    ISAAC_ARTHUR_P11(true, "IsaacArthurP11", "PLIIOUpOge0LuzO1f6z-sCZFawM_xiMHCD", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox - Great Filters.m3u"),
+    ISAAC_ARTHUR_P12(true, "IsaacArthurP12", "PLIIOUpOge0LufQYxcfYVqcVQOFOHFynMl", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Colonizing Space.m3u"),
+    ISAAC_ARTHUR_P13(true, "IsaacArthurP13", "PLIIOUpOge0LtBd4s7qojmayIXcB80x0qB", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Rogue Civilizations.m3u"),
+    ISAAC_ARTHUR_P14(true, "IsaacArthurP14", "PLIIOUpOge0LtW77TNvgrWWu5OC3EOwqxQ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Megastructures.m3u"),
+    ISAAC_ARTHUR_P15(true, "IsaacArthurP15", "PLIIOUpOge0LvNm82I9n8CBaGUXoVeKbYn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Biotechnology.m3u"),
+    ISAAC_ARTHUR_P16(true, "IsaacArthurP16", "PLIIOUpOge0LuCndr25ORvBN9OI1k1O4kJ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Existential Crisis Series.m3u"),
+    ISAAC_ARTHUR_P17(true, "IsaacArthurP17", "PLIIOUpOge0Lt0pjc1LgiEQ1EpaIe_y_Jb", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cyborgs, Androids, Transhumanism, and AI.m3u"),
+    ISAAC_ARTHUR_P18(true, "IsaacArthurP18", "PLIIOUpOge0LvpLdGIp4xCyCVZEEUQ1Udn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Futuristic Weapons.m3u"),
+    ISAAC_ARTHUR_P19(true, "IsaacArthurP19", "PLIIOUpOge0LvLIXNMDKHf30gfyfnyX-4O", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cosmology.m3u"),
+    ISAAC_ARTHUR_P20(true, "IsaacArthurP20", "PLIIOUpOge0LvHsTP5fm8oxB1qPS54sTMk", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Civilizations at the End of Time.m3u"),
+    ISAAC_ARTHUR_P21(true, "IsaacArthurP21", "PLIIOUpOge0Ls9qzKr4sp4Kys3NPXxBZ-C", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Clarketech.m3u"),
+    ISAAC_ARTHUR_P22(true, "IsaacArthurP22", "PLIIOUpOge0Lv2jCm7LnYBiRYAPvxHyuWL", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Faster than Light.m3u"),
+    ISAAC_ARTHUR_P23(true, "IsaacArthurP23", "PLIIOUpOge0LskSp9Jac9nE6xSDfZ83Tgf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Generation Ships and Interstellar Colonization.m3u"),
+    ISAAC_ARTHUR_P24(true, "IsaacArthurP24", "PLIIOUpOge0Lv3LmdudQ6aPFzEvJarKF2J", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Black Holes.m3u"),
+    ISAAC_ARTHUR_P25(true, "IsaacArthurP25", "PLIIOUpOge0Lvr26RCeM_6mq72KFhPWEkG", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Life in a Space Colony.m3u"),
+    ISAAC_ARTHUR_P27(true, "IsaacArthurP27", "PLIIOUpOge0LsnC7OipBrfLSewH76ENAgc", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Interstellar Warfare and Worldbuilding.m3u"),
+    ISAAC_ARTHUR_P28(true, "IsaacArthurP28", "PLIIOUpOge0LuGoV8698AWjDcMYeB9OvEf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Habitable Planets.m3u"),
+    
+    //SCIENCE
+    KURZGESAGT(true, "Kurzgesagt", "UUsXVk37bltHxD1rDPwtNM8Q", "Youtube/Science/Kurzgesagt", false, "Youtube/Science/Kurzgesagt.m3u"),
+    SCI_SHOW(true, "SciShow", "UUZYTClx2T1of7BRZ86-8fow", "Youtube/Science/SciShow", false, "Youtube/Science/SciShow.m3u"),
+    VERITASIUM(true, "Veritasium", "UUHnyfMqiRRG1u-2MsSQLbXA", "Youtube/Science/Veritasium", false, "Youtube/Science/Veritasium.m3u"),
+    STEVE_MOULD(true, "SteveMould", "UUEIwxahdLz7bap-VDs9h35A", "Youtube/Science/Steve Mould", false, "Youtube/Science/Steve Mould.m3u"),
+    APPLIED_SCIENCE(true, "AppliedScience", "UUivA7_KLKWo43tFcCkFvydw", "Youtube/Science/Applied Science", false, "Youtube/Science/Applied Science.m3u"),
+    NEW_MIND(true, "NewMind", "UU5_Y-BKzq1uW_2rexWkUzlA", "Youtube/Science/New Mind", false, "Youtube/Science/New Mind.m3u"),
+    ANSWERS_WITH_JOE(true, "AnswersWithJoe", "PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl", "Youtube/Science/Answers With Joe", false, "Youtube/Science/Answers With Joe.m3u"),
+    VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", "Youtube/Science/Vsauce", false, "Youtube/Science/Vsauce.m3u"),
+    MIND_FIELD_S1(false, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Science/Vsauce/Mind Field/Season 1", false, "Youtube/Science/Vsauce/Mind Field/Season 1.m3u"),
+    MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Science/Vsauce/Mind Field/Season 2", false, "Youtube/Science/Vsauce/Mind Field/Season 2.m3u"),
+    MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Science/Vsauce/Mind Field/Season 3", false, "Youtube/Science/Vsauce/Mind Field/Season 3.m3u"),
+    
+    //NATURE
+    BRAVE_WILDERNESS(true, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Nature/Brave Wilderness", false, "Youtube/Nature/Brave Wilderness.m3u"),
+    
+    //TECHNOLOGY
+    TECHNOLOGY_CONNECTIONS(true, "TechnologyConnections", "UUy0tKL1T7wFoYcxCe0xjN6Q", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections.m3u"),
+    TECHNOLOGY_CONNECTIONS_P01(true, "TechnologyConnectionsP01", "PLv0jwu7G_DFWBEyCKt4tKHIk8ez_pZS_P", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Digital Sound and the Compact Disc.m3u"),
+    TECHNOLOGY_CONNECTIONS_P02(true, "TechnologyConnectionsP02", "PLv0jwu7G_DFVP0SGNlBiBtFVkV5LZ7SOU", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The CED.m3u"),
+    TECHNOLOGY_CONNECTIONS_P03(true, "TechnologyConnectionsP03", "PLv0jwu7G_DFUrcyMYAkUPODENwP4gYCmf", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Videotape Format War.m3u"),
+    TECHNOLOGY_CONNECTIONS_P04(true, "TechnologyConnectionsP04", "PLv0jwu7G_DFUYPuDoKWCUy33lL9LnMBGX", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - History of Artificial Sound.m3u"),
+    TECHNOLOGY_CONNECTIONS_P05(true, "TechnologyConnectionsP05", "PLv0jwu7G_DFUoByWSHHoSTlUIxY7VkJLi", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The Story of Laserdisc.m3u"),
+    TECHNOLOGY_CONNECTIONS_P06(true, "TechnologyConnectionsP06", "PLv0jwu7G_DFXjqlPfxjewWzwGltyf3d0T", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Tech Explorations.m3u"),
+    TECHNOLOGY_CONNECTIONS_P07(true, "TechnologyConnectionsP07", "PLv0jwu7G_DFUGEfwEl0uWduXGcRbT7Ran", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Television.m3u"),
+    COMPUTERPHILE(true, "Computerphile", "UU9-y-6csu5WGm29I7JiwpnA", "Youtube/Technology/Computerphile", false, "Youtube/Technology/Computerphile.m3u"),
+    
+    //MATH
+    THREE_BLUE_ONE_BROWN(true, "3Blue1Brown", "UUYO_jab_esuFRV4b17AJtAw", "Youtube/Math/3Blue1Brown", false, "Youtube/Math/3Blue1Brown.m3u"),
+    NUMBERPHILE(true, "Numberphile", "UUoxcjq-8xIDTYp3uz647V5A", "Youtube/Math/Numberphile", false, "Youtube/Math/Numberphile.m3u"),
+    ZACH_STAR(true, "ZachStar", "UUpCSAcbqs-sjEVfk_hMfY9w", "Youtube/Math/Zach Star", false, "Youtube/Math/Zach Star.m3u"),
+    SIXTY_SYMBOLS(true, "SixtySymbols", "UUvBqzzvUBLCs8Y7Axb-jZew", "Youtube/Math/Sixty Symbols", false, "Youtube/Math/Sixty Symbols.m3u"),
+    
+    //ENGINEERING
+    AVE(true, "Ave", "UUhWv6Pn_zP0rI6lgGt3MyfA", "Youtube/Engineering/AvE", false, "Youtube/Engineering/AvE.m3u"),
+    STUFF_MADE_HERE(true, "StuffMadeHere", "UUj1VqrHhDte54oLgPG4xpuQ", "Youtube/Engineering/Stuff Made Here", false, "Youtube/Engineering/Stuff Made Here.m3u"),
+    ELECTROBOOM(true, "Electroboom", "UUJ0-OtVpF0wOKEqT2Z1HEtA", "Youtube/Engineering/ElectroBOOM", false, "Youtube/Engineering/ElectroBOOM.m3u"),
+    HOW_ITS_MADE(true, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
+    
+    //CHEMISTRY
+    PERIODIC_VIDEOS(true, "PeriodicVideos", "UUtESv1e7ntJaLJYKIO1FoYw", "Youtube/Chemistry/Periodic Videos", false, "Youtube/Chemistry/Periodic Videos.m3u"),
+    NILE_RED(true, "NileRed", "UUFhXFikryT4aFcLkLw2LBLA", "Youtube/Chemistry/Nile Red", false, "Youtube/Chemistry/Nile Red.m3u"),
+    
+    //MEDICINE
+    CHUBBYEMU(true, "Chubbyemu", "UUKOvOaJv4GK-oDqx-sj7VVg", "Youtube/Medicine/Chubbyemu", false, "Youtube/Medicine/Chubbyemu.m3u"),
+    
+    //FUNNY
+    CASUALLY_EXPLAINED(true, "CasuallyExplained", "UUr3cBLTYmIK9kY0F_OdFWFQ", "Youtube/Funny/Casually Explained", false, "Youtube/Funny/Casually Explained.m3u"),
+    SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
+    ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u");
     
     
     //Constants
@@ -190,6 +276,18 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
+            
+            case STEVE_MOULD:
+                videoMap.forEach((key, value) -> {
+                    if (value.title.toLowerCase().contains("fewer than tom") ||
+                            value.title.toLowerCase().contains("more than tom")) {
+                        String oldTitle = value.title;
+                        String newTitle = "This Video Has...";
+                        value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                        value.title = newTitle;
+                    }
+                });
+                break;
         }
     }
     
@@ -235,10 +333,73 @@ public enum Channel {
                 });
                 break;
             
-            case VSAUCE:
-                Date oldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
+            case ISAAC_ARTHUR:
+            case ISAAC_ARTHUR_P01:
+            case ISAAC_ARTHUR_P02:
+            case ISAAC_ARTHUR_P03:
+            case ISAAC_ARTHUR_P04:
+            case ISAAC_ARTHUR_P05:
+            case ISAAC_ARTHUR_P06:
+            case ISAAC_ARTHUR_P07:
+            case ISAAC_ARTHUR_P08:
+            case ISAAC_ARTHUR_P09:
+            case ISAAC_ARTHUR_P10:
+            case ISAAC_ARTHUR_P11:
+            case ISAAC_ARTHUR_P12:
+            case ISAAC_ARTHUR_P13:
+            case ISAAC_ARTHUR_P14:
+            case ISAAC_ARTHUR_P15:
+            case ISAAC_ARTHUR_P16:
+            case ISAAC_ARTHUR_P17:
+            case ISAAC_ARTHUR_P18:
+            case ISAAC_ARTHUR_P19:
+            case ISAAC_ARTHUR_P20:
+            case ISAAC_ARTHUR_P21:
+            case ISAAC_ARTHUR_P22:
+            case ISAAC_ARTHUR_P23:
+            case ISAAC_ARTHUR_P24:
+            case ISAAC_ARTHUR_P25:
+            case ISAAC_ARTHUR_P27:
+            case ISAAC_ARTHUR_P28:
                 videoMap.forEach((key, value) -> {
-                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(oldest)) {
+                    if (value.title.toLowerCase().contains("livestream") ||
+                            value.title.toLowerCase().contains("hades") ||
+                            value.title.toLowerCase().equals("in the beginning")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case ANSWERS_WITH_JOE:
+                videoMap.forEach((key, value) -> {
+                    if (value.title.toLowerCase().contains("live stream")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case VSAUCE:
+                final Date vsauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
+                videoMap.forEach((key, value) -> {
+                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vsauceOldest)) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case CHUBBYEMU:
+                final Date chubbyemuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
+                videoMap.forEach((key, value) -> {
+                    if (value.date.before(chubbyemuOldest)) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
