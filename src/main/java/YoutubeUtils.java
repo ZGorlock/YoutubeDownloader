@@ -105,6 +105,8 @@ public final class YoutubeUtils {
                 .replace("‒", "-")
                 .replace("—", "-")
                 .replace("С", "C")
+                .replace("à", "a")
+                .replace("é", "e")
                 .replaceAll("[^\\x00-\\x7F]", "")
                 .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
                 .replaceAll("\\s+", " ");

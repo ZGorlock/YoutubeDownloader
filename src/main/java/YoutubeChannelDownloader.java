@@ -76,19 +76,27 @@ public class YoutubeChannelDownloader {
     private static final boolean doAllChannels = true;
     
     /**
-     * The Channel to process.
+     * A flag indicating whether to retry previously failed videos or not.
      */
-    private static Channel channel = null;
+    private static final boolean retryFailed = false;
     
     /**
      * The HTTP Client used to interact with the Youtube API.
      */
-    private static CloseableHttpClient httpClient = HttpClients.createDefault();
+    private static final CloseableHttpClient httpClient = HttpClients.createDefault();
     
     /**
      * The video map for the Channel being processed.
      */
-    private static Map<String, Video> videoMap = new LinkedHashMap<>();
+    private static final Map<String, Video> videoMap = new LinkedHashMap<>();
+    
+    
+    //Fields
+    
+    /**
+     * The Channel to process.
+     */
+    private static Channel channel = null;
     
     /**
      * The Playlist ID for the Channel being processed.
@@ -332,6 +340,10 @@ public class YoutubeChannelDownloader {
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
         
+        if (retryFailed) {
+            blocked.clear();
+        }
+        
         Channel.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
         videoMap.forEach((key, value) -> {
             if (!save.contains(key) && YoutubeUtils.videoExists(value.output)) {
@@ -369,11 +381,21 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             System.out.println("Downloading: " + video.title);
+            System.out.print("    ");
             if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
                 queue.remove(videoId);
                 save.add(videoId);
+                System.out.println("    Download Succeeded");
             } else {
                 queue.remove(videoId);
+                blocked.add(videoId);
+                System.err.println("    Download Failed");
+            }
+            
+            File partFile = new File(video.output.getParentFile(), video.output.getName() + ".part");
+            if (partFile.exists()) {
+                FileUtils.forceDeleteOnExit(partFile);
+                save.remove(videoId);
                 blocked.add(videoId);
             }
             
