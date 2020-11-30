@@ -356,6 +356,9 @@ public class YoutubeChannelDownloader {
         });
         Channel.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
         
+        queue.removeAll(blocked);
+        save.removeAll(blocked);
+        
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
         FileUtils.writeLines(blockedFile, blocked);
