@@ -56,6 +56,7 @@ public enum Channel {
     OSRS_CHALLENGES_VIRTOSO(true, "OsrsChallengesVirtoso", "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb", "Youtube/Runescape/OSRS Challenges - Virtoso", false, "Youtube/Runescape/OSRS Challenges - Virtoso.m3u"),
     SWAMPLETICS(true, "Swampletics", "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a", "Youtube/Runescape/Swampletics", false, "Youtube/Runescape/Swampletics.m3u"),
     LOWER_THE_BETTER(true, "LowerTheBetter", "PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6", "Youtube/Runescape/Lower the Better", false, "Youtube/Runescape/Lower the Better.m3u"),
+    OSRS_WEEKLY_RECAP(true, "OsrsWeeklyRecap", "PLiETVLquxFqxOaD4dT35ooeG9Ro0qK6LU", "Youtube/Runescape/Weekly Recap", false, "Youtube/Runescape/Weekly Recap.m3u"),
     
     //D&D
     DND_LORE(true, "DndLore", "PL-Tj3kmYOOy2OVjoqTO8joausM-6JjcI-", "Youtube/D&D/Dungeons and Dragons Lore", false, "Youtube/D&D/Dungeons and Dragons Lore.m3u"),
