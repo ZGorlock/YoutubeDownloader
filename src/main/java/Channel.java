@@ -131,6 +131,7 @@ public enum Channel {
     STUFF_MADE_HERE(true, "StuffMadeHere", "UUj1VqrHhDte54oLgPG4xpuQ", "Youtube/Engineering/Stuff Made Here", false, "Youtube/Engineering/Stuff Made Here.m3u"),
     ELECTROBOOM(true, "Electroboom", "UUJ0-OtVpF0wOKEqT2Z1HEtA", "Youtube/Engineering/ElectroBOOM", false, "Youtube/Engineering/ElectroBOOM.m3u"),
     HOW_ITS_MADE(true, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
+    PRACTICAL_ENGINEERING(true, "PracticalEngineering", "UUMOqf8ab-42UUQIdVoKwjlQ", "Youtube/Engineering/Practical Engineering", false, "Youtube/Engineering/Practical Engineering.m3u"),
     
     //CHEMISTRY
     PERIODIC_VIDEOS(true, "PeriodicVideos", "UUtESv1e7ntJaLJYKIO1FoYw", "Youtube/Chemistry/Periodic Videos", false, "Youtube/Chemistry/Periodic Videos.m3u"),
