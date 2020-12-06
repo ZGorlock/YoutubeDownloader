@@ -132,6 +132,7 @@ public enum Channel {
     ELECTROBOOM(true, "Electroboom", "UUJ0-OtVpF0wOKEqT2Z1HEtA", "Youtube/Engineering/ElectroBOOM", false, "Youtube/Engineering/ElectroBOOM.m3u"),
     HOW_ITS_MADE(true, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
     PRACTICAL_ENGINEERING(true, "PracticalEngineering", "UUMOqf8ab-42UUQIdVoKwjlQ", "Youtube/Engineering/Practical Engineering", false, "Youtube/Engineering/Practical Engineering.m3u"),
+    ADAM_SAVAGE_ONE_DAY_BUILDS(true, "AdamSavageOneDayBuilds", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - One Day Builds", false, "Youtube/Engineering/Adam Savage - One Day Builds.m3u"),
     
     //CHEMISTRY
     PERIODIC_VIDEOS(true, "PeriodicVideos", "UUtESv1e7ntJaLJYKIO1FoYw", "Youtube/Chemistry/Periodic Videos", false, "Youtube/Chemistry/Periodic Videos.m3u"),
@@ -144,7 +145,7 @@ public enum Channel {
     CASUALLY_EXPLAINED(true, "CasuallyExplained", "UUr3cBLTYmIK9kY0F_OdFWFQ", "Youtube/Funny/Casually Explained", false, "Youtube/Funny/Casually Explained.m3u"),
     SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
     ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u"),
-    OZZY_MAN_REVIEWS(true, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u");
+    OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u");
     
     
     //Constants
@@ -392,6 +393,18 @@ public enum Channel {
                 final Date vsauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
                 videoMap.forEach((key, value) -> {
                     if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vsauceOldest)) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case ADAM_SAVAGE_ONE_DAY_BUILDS:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("one day build") ||
+                            value.title.toLowerCase().contains("last call")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
