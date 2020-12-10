@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 
 /**
@@ -149,15 +151,32 @@ public final class YoutubeUtils {
             return false;
         }
         
-        String currentYoutubeDlVersion = executeProcess("youtube-dl.exe --version", false).trim();
+        File youtubeDl = new File("youtube-dl.exe");
+        
+        String currentYoutubeDlVersion = youtubeDl.exists() ? executeProcess("youtube-dl.exe --version", false).trim() : "";
         String latestYoutubeDlVersion = YoutubeUtils.getCurrentYoutubeDlVersion();
-        if (currentYoutubeDlVersion.isEmpty()) {
+        
+        if (youtubeDl.exists() && (currentYoutubeDlVersion.isEmpty() || latestYoutubeDlVersion.isEmpty())) {
             System.err.println("Unable to check for youtube-dl updates");
+            
         } else if (!currentYoutubeDlVersion.equals(latestYoutubeDlVersion)) {
-            System.err.println("An update is available for youtube-dl");
-            System.err.println("Current Version: " + currentYoutubeDlVersion + " | Latest Version: " + latestYoutubeDlVersion);
-            System.err.println("Download: https://www.youtube-dl.org/downloads/latest/youtube-dl.exe");
-            return false;
+            if (!youtubeDl.exists()) {
+                System.err.println("Requires youtube-dl");
+            } else {
+                System.err.println("An update is available for youtube-dl");
+                System.err.println("Current Version: " + currentYoutubeDlVersion + " | Latest Version: " + latestYoutubeDlVersion);
+            }
+            System.err.println("Downloading...");
+            
+            youtubeDl = downloadFile("https://www.youtube-dl.org/downloads/latest/youtube-dl.exe", new File("youtube-dl.exe"));
+            if (youtubeDl == null) {
+                System.err.println("Unable to update youtube-dl");
+                return false;
+            } else {
+                System.err.println("Successfully updated youtube-dl to " + latestYoutubeDlVersion);
+                System.out.println();
+                return true;
+            }
         }
         
         return true;
@@ -244,6 +263,29 @@ public final class YoutubeUtils {
             
         } catch (Exception e) {
             return "Failed";
+        }
+    }
+    
+    /**
+     * Downloads a file from a url to the specified file and returns the file.<br>
+     * This is a blocking operation and should be called from a thread.
+     *
+     * @param url      The url to the file to download.
+     * @param download The file to download to.
+     * @return The downloaded file or null if there was an error.
+     * @see FileUtils#copyURLToFile(URL, File, int, int)
+     */
+    public static File downloadFile(String url, File download) {
+        try {
+            if (!isOnline()) {
+                throw new IOException();
+            }
+            
+            FileUtils.copyURLToFile(new URL(url), download, 200, Integer.MAX_VALUE);
+            return download;
+            
+        } catch (IOException ignored) {
+            return null;
         }
     }
     
