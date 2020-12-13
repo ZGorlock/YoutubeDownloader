@@ -47,7 +47,7 @@ public class YoutubeChannelDownloader {
                 throw new Exception();
             }
         } catch (Exception e) {
-            System.out.println("Must supply a Google API key with Youtube Data API enabled in /apiKey");
+            System.err.println("Must supply a Google API key with Youtube Data API enabled in /apiKey");
             System.exit(0);
         }
     }
@@ -196,27 +196,31 @@ public class YoutubeChannelDownloader {
     /**
      * Processes the active Channel.
      *
+     * @return Whether the Channel was successfully processed or not.
      * @throws Exception When there is an error.
      */
-    private static void processChannel() throws Exception {
+    private static boolean processChannel() throws Exception {
         System.out.println("Processing Channel: " + channel.name);
         System.out.println();
         
-        getChannelData();
-        processChannelData();
-        produceQueue();
-        downloadVideos();
-        createPlaylist();
+        boolean success = YoutubeUtils.doStartupChecks() &&
+                getChannelData() &&
+                processChannelData() &&
+                produceQueue() &&
+                downloadVideos() &&
+                createPlaylist();
         
         System.out.println();
+        return success;
     }
     
     /**
      * Retrieves the data for the active Channel from the Youtube API.
      *
+     * @return Whether the Channel data was successfully retrieved or not.
      * @throws Exception When there is an error.
      */
-    private static void getChannelData() throws Exception {
+    private static boolean getChannelData() throws Exception {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");
@@ -253,23 +257,25 @@ public class YoutubeChannelDownloader {
         data.append("]");
         
         FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
+        return true;
     }
     
     /**
      * Processes the data for the active Channel that was retrieved from the Youtube API.
      *
+     * @return Whether the Channel data was successfully processed or not.
      * @throws Exception When there is an error.
      */
-    private static void processChannelData() throws Exception {
+    private static boolean processChannelData() throws Exception {
         String data = FileUtils.readFileToString(dataFile, "UTF-8");
         videoMap.clear();
         if (data.contains("\"code\": 404")) {
             System.err.println("The Playlist for " + channel.name + " does not exist");
-            return;
+            return false;
         }
         if (data.contains("\"code\": 403")) {
             System.err.println("Your API Key is not authorized or has exceeded its quota");
-            return;
+            return false;
         }
         
         JSONParser parser = new JSONParser();
@@ -323,17 +329,19 @@ public class YoutubeChannelDownloader {
                 }
             }
         }
+        return true;
     }
     
     /**
      * Produces the queue of videos to download from the active Channel.
      *
+     * @return Whether the queue was successfully produced or not.
      * @throws Exception When there is an error.
      */
-    private static void produceQueue() throws Exception {
+    private static boolean produceQueue() throws Exception {
         if (videoMap.isEmpty()) {
-            System.out.println("Must populate video map before producing the queue");
-            return;
+            System.err.println("Must populate video map before producing the queue");
+            return false;
         }
         
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
@@ -362,17 +370,19 @@ public class YoutubeChannelDownloader {
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
         FileUtils.writeLines(blockedFile, blocked);
+        return true;
     }
     
     /**
      * Downloads the queued videos from the active Channel.
      *
+     * @return Whether the queued videos were successfully downloaded or not.
      * @throws Exception When there is an error.
      */
-    private static void downloadVideos() throws Exception {
+    private static boolean downloadVideos() throws Exception {
         if (videoMap.isEmpty()) {
-            System.out.println("Must populate video map before downloading videos");
-            return;
+            System.err.println("Must populate video map before downloading videos");
+            return false;
         }
         
         List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
@@ -406,21 +416,23 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
         }
+        return true;
     }
     
     /**
      * Creates a playlist of the videos from the active Channel.
      *
+     * @return Whether the playlist was successfully created or not.
      * @throws Exception When there is an error.
      */
-    private static void createPlaylist() throws Exception {
+    private static boolean createPlaylist() throws Exception {
         if (videoMap.isEmpty()) {
-            System.out.println("Must populate video map before creating a playlist");
-            return;
+            System.err.println("Must populate video map before creating a playlist");
+            return false;
         }
         
         if (channel.playlistFile == null) {
-            return;
+            return false;
         }
         
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
@@ -436,6 +448,7 @@ public class YoutubeChannelDownloader {
         }
         
         FileUtils.writeLines(channel.playlistFile, playlist);
+        return true;
     }
     
     
