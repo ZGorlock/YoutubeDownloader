@@ -6,6 +6,8 @@
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +49,7 @@ public enum Channel {
     BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", "Trap/Bass Nation", true, "Trap/Bass Nation.m3u"),
     
     //MUSIC
-    THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", "Music/The Comet Is Coming", true, "Music/The Comet Is Coming.m3u"),
+    THE_COMET_IS_COMING(true, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", "Music/The Comet Is Coming", true, "Music/The Comet Is Coming.m3u"),
     
     //RUNESCAPE
     OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", "Runescape/OSRS Beatz", true, "Runescape/OSRS Beatz/OSRS Beatz.m3u"),
@@ -140,6 +142,23 @@ public enum Channel {
     
     //MEDICINE
     CHUBBYEMU(true, "Chubbyemu", "UUKOvOaJv4GK-oDqx-sj7VVg", "Youtube/Medicine/Chubbyemu", false, "Youtube/Medicine/Chubbyemu.m3u"),
+    
+    //CRIME
+    FORENSIC_FILES(true, "ForensicFiles", "UUVBTlb6_rQkWY99ZKi2oBMw", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files.m3u"),
+    FORENSIC_FILES_S01(true, "ForensicFilesS01", "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 1.m3u"),
+    FORENSIC_FILES_S02(true, "ForensicFilesS02", "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 2.m3u"),
+    FORENSIC_FILES_S03(true, "ForensicFilesS03", "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 3.m3u"),
+    FORENSIC_FILES_S04(true, "ForensicFilesS04", "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 4.m3u"),
+    FORENSIC_FILES_S05(true, "ForensicFilesS05", "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 5.m3u"),
+    FORENSIC_FILES_S06(true, "ForensicFilesS06", "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 6.m3u"),
+    FORENSIC_FILES_S07(true, "ForensicFilesS07", "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 7.m3u"),
+    FORENSIC_FILES_S08(true, "ForensicFilesS08", "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 8.m3u"),
+    FORENSIC_FILES_S09(true, "ForensicFilesS09", "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 9.m3u"),
+    FORENSIC_FILES_S10(true, "ForensicFilesS10", "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 10.m3u"),
+    FORENSIC_FILES_S11(true, "ForensicFilesS11", "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 11.m3u"),
+    FORENSIC_FILES_S12(true, "ForensicFilesS12", "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 12.m3u"),
+    FORENSIC_FILES_S13(true, "ForensicFilesS13", "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 13.m3u"),
+    FORENSIC_FILES_S14(true, "ForensicFilesS14", "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 14.m3u"),
     
     //FUNNY
     CASUALLY_EXPLAINED(true, "CasuallyExplained", "UUr3cBLTYmIK9kY0F_OdFWFQ", "Youtube/Funny/Casually Explained", false, "Youtube/Funny/Casually Explained.m3u"),
@@ -292,6 +311,55 @@ public enum Channel {
                         value.title = newTitle;
                     }
                 });
+                break;
+            
+            case FORENSIC_FILES:
+            case FORENSIC_FILES_S01:
+            case FORENSIC_FILES_S02:
+            case FORENSIC_FILES_S03:
+            case FORENSIC_FILES_S04:
+            case FORENSIC_FILES_S05:
+            case FORENSIC_FILES_S06:
+            case FORENSIC_FILES_S07:
+            case FORENSIC_FILES_S08:
+            case FORENSIC_FILES_S09:
+            case FORENSIC_FILES_S10:
+            case FORENSIC_FILES_S11:
+            case FORENSIC_FILES_S12:
+            case FORENSIC_FILES_S13:
+            case FORENSIC_FILES_S14:
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle
+                            .replace("( ", "(")
+                            .replace(" )", ")")
+                            .replace("Medical Detectives (Forensic Files)", "Forensic Files")
+                            .replace(" in HD ", " ")
+                            .replace("- ", " - ")
+                            .replace(" , ", ", ")
+                            .replace("Season ", "S")
+                            .replace(", Ep ", "E")
+                            .replaceAll("\\sS(\\d)E", " S0$1E")
+                            .replaceAll("E(\\d)\\s*-", "E0$1 - ")
+                            .replaceAll("\\s+", " ");
+                    if (newTitle.equals("Forensic Files - Series Premiere - The Disappearance of Helle Crafts")) {
+                        newTitle = "Forensic Files - S01E01 - The Disappearance of Helle Crafts";
+                    }
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                if (channel == FORENSIC_FILES_S01) {
+                    YoutubeChannelDownloader.Video video = new YoutubeChannelDownloader.Video();
+                    video.videoId = "OZc6vcGjknI";
+                    video.title = "Forensic Files - S01E01 - The Disappearance of Helle Crafts";
+                    video.url = YoutubeUtils.VIDEO_BASE + video.videoId;
+                    video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse("2015-01-23 12:15:00");
+                    video.output = new File(channel.outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
+                    HashMap<String, YoutubeChannelDownloader.Video> tmp = new LinkedHashMap<>(videoMap);
+                    videoMap.clear();
+                    videoMap.put(video.videoId, video);
+                    videoMap.putAll(tmp);
+                }
                 break;
         }
     }
