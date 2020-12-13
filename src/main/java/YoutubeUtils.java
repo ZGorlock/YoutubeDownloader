@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.Normalizer;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,7 +96,10 @@ public final class YoutubeUtils {
      * @return The cleaned title.
      */
     public static String cleanTitle(String title) {
-        return title.replace("\\", "-")
+        title = Normalizer.normalize(title, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS}+", "")
+                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS_SUPPLEMENT}+", "");
+        title = title.replace("\\", "-")
                 .replace("/", "-")
                 .replace(":", "-")
                 .replace("*", "-")
@@ -107,11 +111,10 @@ public final class YoutubeUtils {
                 .replace("‒", "-")
                 .replace("—", "-")
                 .replace("С", "C")
-                .replace("à", "a")
-                .replace("é", "e")
                 .replaceAll("[^\\x00-\\x7F]", "")
                 .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
                 .replaceAll("\\s+", " ");
+        return title;
     }
     
     /**

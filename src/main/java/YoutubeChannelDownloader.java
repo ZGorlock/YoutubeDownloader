@@ -311,6 +311,7 @@ public class YoutubeChannelDownloader {
                 
                 Video video = new Video();
                 video.videoId = videoId;
+                video.originalTitle = title;
                 video.title = YoutubeUtils.cleanTitle(title);
                 video.url = YoutubeUtils.VIDEO_BASE + videoId;
                 video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(date.replace("T", " ").replace("Z", ""));
@@ -465,6 +466,11 @@ public class YoutubeChannelDownloader {
          * The ID of the Video.
          */
         public String videoId;
+        
+        /**
+         * The original title of the Video.
+         */
+        public String originalTitle;
         
         /**
          * The title of the Video.
