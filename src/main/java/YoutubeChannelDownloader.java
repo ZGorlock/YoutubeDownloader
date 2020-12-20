@@ -435,6 +435,7 @@ public class YoutubeChannelDownloader {
         if (channel.playlistFile == null) {
             return false;
         }
+        List<String> existingPlaylist = channel.playlistFile.exists() ? FileUtils.readLines(channel.playlistFile, "UTF-8") : new ArrayList<>();
         
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> playlist = new ArrayList<>();
@@ -448,7 +449,9 @@ public class YoutubeChannelDownloader {
             Collections.reverse(playlist);
         }
         
-        FileUtils.writeLines(channel.playlistFile, playlist);
+        if (!playlist.equals(existingPlaylist)) {
+            FileUtils.writeLines(channel.playlistFile, playlist);
+        }
         return true;
     }
     
