@@ -56,9 +56,13 @@ public enum Channel {
     BY_RELEASE(true, "ByRelease", "PLDSJpYkJoHD-0Keg6Fu7bcVTlbR27T-88", "Youtube/Runescape/By Release", false, "Youtube/Runescape/By Release.m3u"),
     OSRS_CHALLENGES_TANZOO(true, "OsrsChallengesTanzoo", "PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU", "Youtube/Runescape/OSRS Challenges - Tanzoo", false, "Youtube/Runescape/OSRS Challenges - Tanzoo.m3u"),
     OSRS_CHALLENGES_VIRTOSO(true, "OsrsChallengesVirtoso", "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb", "Youtube/Runescape/OSRS Challenges - Virtoso", false, "Youtube/Runescape/OSRS Challenges - Virtoso.m3u"),
+    MUDKIP_HCIM(true, "MudkipHcim", "PL4Ct8chrkvPgti4HYTZFo7FSfxlLlptbN", "Youtube/Runescape/HCIM - Mudkip", false, "Youtube/Runescape/HCIM - Mudkip.m3u"),
+    MUDKIP_UIM(true, "MudkipUim", "PL4Ct8chrkvPitHm4U6QZfxrmDJVgg6VR1", "Youtube/Runescape/UIM - Mudkip", false, "Youtube/Runescape/UIM - Mudkip.m3u"),
     SWAMPLETICS(true, "Swampletics", "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a", "Youtube/Runescape/Swampletics", false, "Youtube/Runescape/Swampletics.m3u"),
     LOWER_THE_BETTER(true, "LowerTheBetter", "PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6", "Youtube/Runescape/Lower the Better", false, "Youtube/Runescape/Lower the Better.m3u"),
     OSRS_WEEKLY_RECAP(true, "OsrsWeeklyRecap", "PLiETVLquxFqxOaD4dT35ooeG9Ro0qK6LU", "Youtube/Runescape/Weekly Recap", false, "Youtube/Runescape/Weekly Recap.m3u"),
+    IRON_MAIN(true, "IronMain", "PLhsEAJsiNQ3afUF7AkQ_6RbH0Nicd1wCX", "Youtube/Runescape/IronMain", false, "Youtube/Runescape/Iron Main.m3u"),
+    ONE_KICK_RICK(true, "OneKickRick", "PLhsEAJsiNQ3YMprz-CHZ_MCMxedsdANc2", "Youtube/Runescape/One Kick Rick", false, "Youtube/Runescape/One Kick Rick.m3u"),
     
     //D&D
     DND_LORE(true, "DndLore", "PL-Tj3kmYOOy2OVjoqTO8joausM-6JjcI-", "Youtube/D&D/Dungeons and Dragons Lore", false, "Youtube/D&D/Dungeons and Dragons Lore.m3u"),
@@ -297,6 +301,16 @@ public enum Channel {
                             .replace("Programming - Coding - Hacking music vol.", "Volume ")
                             .replace(" (", " - ")
                             .replace(")", "");
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+            
+            case MUDKIP_HCIM:
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle
+                            .replace("[OSRS] ", "");
                     value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     value.title = newTitle;
                 });
