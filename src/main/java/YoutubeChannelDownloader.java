@@ -147,14 +147,14 @@ public class YoutubeChannelDownloader {
             return;
         }
         
-        if (doAllChannels) {
+        if (doAllChannels && (channel == null)) {
             for (Channel currentChannel : Channel.values()) {
                 if (currentChannel.active) {
                     setChannel(currentChannel);
                     processChannel();
                 }
             }
-        } else if (channel != null && channel.active) {
+        } else if ((channel != null) && channel.active) {
             setChannel(channel);
             processChannel();
         }
