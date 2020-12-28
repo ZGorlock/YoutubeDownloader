@@ -165,6 +165,9 @@ public enum Channel {
     FORENSIC_FILES_S13(true, "ForensicFilesS13", "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 13.m3u"),
     FORENSIC_FILES_S14(true, "ForensicFilesS14", "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 14.m3u"),
     
+    //TRIPPY
+    FELIX_COSGRAVE(true, "FelixCosgrave", "UUO7fujFV_MuxTM0TuZrnE6Q", "Youtube/Trippy/Felix Cosgrave", false, "Youtube/Trippy/Felix Cosgrave.m3u"),
+    
     //FUNNY
     CASUALLY_EXPLAINED(true, "CasuallyExplained", "UUr3cBLTYmIK9kY0F_OdFWFQ", "Youtube/Funny/Casually Explained", false, "Youtube/Funny/Casually Explained.m3u"),
     SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
