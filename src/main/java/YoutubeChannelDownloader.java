@@ -451,6 +451,17 @@ public class YoutubeChannelDownloader {
         
         if (!playlist.equals(existingPlaylist)) {
             FileUtils.writeLines(channel.playlistFile, playlist);
+            
+            if (channel.keepClean) {
+                File[] videos = channel.outputFolder.listFiles();
+                if (videos != null) {
+                    for (File video : videos) {
+                        if (!playlist.contains(video.getAbsolutePath())) {
+                            FileUtils.forceDeleteOnExit(video);
+                        }
+                    }
+                }
+            }
         }
         return true;
     }

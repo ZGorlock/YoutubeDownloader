@@ -31,16 +31,16 @@ public enum Channel {
     //Values
     
     //BEATS
-    MUSIC_LAB_HACKER(true, "MusicLabHacker", "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr", "Beats/Music Lab", true, "Beats/Hacker Music.m3u"),
-    MUSIC_LAB_WORK(true, "MusicLabWork", "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3", "Beats/Music Lab", true, "Beats/Work Music.m3u"),
-    MUSIC_LAB_CHILLSTEP(true, "MusicLabChillstep", "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik", "Beats/Music Lab", true, "Beats/Chillstep Music.m3u"),
-    MUSIC_LAB_CHILLOUT(true, "MusicLabChillout", "PLdE7uo_7KBkeSTmryNClNxUkioFpq3Btx", "Beats/Music Lab", true, "Beats/Chillout Music.m3u"),
-    MUSIC_LAB_AMBIENT(true, "MusicLabAmbient", "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR", "Beats/Music Lab", true, "Beats/Ambient Music.m3u"),
-    MUSIC_LAB_LOFI(false, "MusicLabLoFi", "PLdE7uo_7KBkcywzGlsZ9c6aerJr3tK058", "Beats/Music Lab", true, "Beats/Lo-Fi Music.m3u"),
-    MUSIC_LAB_CONTEMPORARY(false, "MusicLabContemporary", "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf", "Beats/Music Lab", true, "Beats/Contemporary Music.m3u"),
-    MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", "Beats/Music Lab", true, "Beats/Study Music.m3u"),
-    MUSIC_LAB_CHILLHOP(false, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", "Beats/Music Lab", true, "Beats/Chillhop Music.m3u"),
-    JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u"),
+    MUSIC_LAB_HACKER(true, "MusicLabHacker", "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr", "Beats/Music Lab", true, "Beats/Hacker Music.m3u", false),
+    MUSIC_LAB_WORK(true, "MusicLabWork", "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3", "Beats/Music Lab", true, "Beats/Work Music.m3u", false),
+    MUSIC_LAB_CHILLSTEP(true, "MusicLabChillstep", "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik", "Beats/Music Lab", true, "Beats/Chillstep Music.m3u", false),
+    MUSIC_LAB_CHILLOUT(true, "MusicLabChillout", "PLdE7uo_7KBkeSTmryNClNxUkioFpq3Btx", "Beats/Music Lab", true, "Beats/Chillout Music.m3u", false),
+    MUSIC_LAB_AMBIENT(true, "MusicLabAmbient", "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR", "Beats/Music Lab", true, "Beats/Ambient Music.m3u", false),
+    MUSIC_LAB_LOFI(false, "MusicLabLoFi", "PLdE7uo_7KBkcywzGlsZ9c6aerJr3tK058", "Beats/Music Lab", true, "Beats/Lo-Fi Music.m3u", false),
+    MUSIC_LAB_CONTEMPORARY(false, "MusicLabContemporary", "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf", "Beats/Music Lab", true, "Beats/Contemporary Music.m3u", false),
+    MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", "Beats/Music Lab", true, "Beats/Study Music.m3u", false),
+    MUSIC_LAB_CHILLHOP(false, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", "Beats/Music Lab", true, "Beats/Chillhop Music.m3u", false),
+    JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u", false),
     
     //TRAP
     TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", "Trap/Trap City", true, "Trap/Trap City.m3u"),
@@ -70,33 +70,33 @@ public enum Channel {
     //SPACE
     PBS_SPACE_TIME(true, "PbsSpaceTime", "UU7_gcs09iThXybpVgjHZ_7g", "Youtube/Space/PBS Space Time", false, "Youtube/Space/PBS Space Time.m3u"),
     ISAAC_ARTHUR(true, "IsaacArthur", "UUZFipeZtQM5CKUjx6grh54g", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur.m3u"),
-    ISAAC_ARTHUR_P01(true, "IsaacArthurP01", "PLIIOUpOge0LuFZG2lvL9-zbxovZabYxcy", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Becoming an Interplanetary Species.m3u"),
-    ISAAC_ARTHUR_P02(true, "IsaacArthurP02", "PLIIOUpOge0LulClL2dHXh8TTOnCgRkLdU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox.m3u"),
-    ISAAC_ARTHUR_P03(true, "IsaacArthurP03", "PLIIOUpOge0LsIzYlIAIRdAGJTqAW6FmCE", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Outward Bound.m3u"),
-    ISAAC_ARTHUR_P04(true, "IsaacArthurP04", "PLIIOUpOge0LvQYACAZwizb8gqtXL-10PC", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Post Scarcity Civilizations.m3u"),
-    ISAAC_ARTHUR_P05(true, "IsaacArthurP05", "PLIIOUpOge0Ls3WMYP_2FpP9Y0mjgtf98M", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Advanced Civilizations.m3u"),
-    ISAAC_ARTHUR_P06(true, "IsaacArthurP06", "PLIIOUpOge0Lu97HzMt_BJu36UMaItB1cm", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Alien Civilizations.m3u"),
-    ISAAC_ARTHUR_P07(true, "IsaacArthurP07", "PLIIOUpOge0LsGJI_vni4xvfBQTuryTwlU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Upward Bound.m3u"),
-    ISAAC_ARTHUR_P08(true, "IsaacArthurP08", "PLIIOUpOge0Lv9Y_4Vmcgaxue0jyZG3_4K", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Earth 2.0.m3u"),
-    ISAAC_ARTHUR_P09(true, "IsaacArthurP09", "PLIIOUpOge0Ls94qU9ZgTy3A-PbmRKKbV4", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Visions of Earth.m3u"),
-    ISAAC_ARTHUR_P10(true, "IsaacArthurP10", "PLIIOUpOge0Lv5kr9vrX8DJjlF1A3QWJ3D", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - The Moon - Returning and Colonizing.m3u"),
-    ISAAC_ARTHUR_P11(true, "IsaacArthurP11", "PLIIOUpOge0LuzO1f6z-sCZFawM_xiMHCD", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox - Great Filters.m3u"),
-    ISAAC_ARTHUR_P12(true, "IsaacArthurP12", "PLIIOUpOge0LufQYxcfYVqcVQOFOHFynMl", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Colonizing Space.m3u"),
-    ISAAC_ARTHUR_P13(true, "IsaacArthurP13", "PLIIOUpOge0LtBd4s7qojmayIXcB80x0qB", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Rogue Civilizations.m3u"),
-    ISAAC_ARTHUR_P14(true, "IsaacArthurP14", "PLIIOUpOge0LtW77TNvgrWWu5OC3EOwqxQ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Megastructures.m3u"),
-    ISAAC_ARTHUR_P15(true, "IsaacArthurP15", "PLIIOUpOge0LvNm82I9n8CBaGUXoVeKbYn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Biotechnology.m3u"),
-    ISAAC_ARTHUR_P16(true, "IsaacArthurP16", "PLIIOUpOge0LuCndr25ORvBN9OI1k1O4kJ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Existential Crisis Series.m3u"),
-    ISAAC_ARTHUR_P17(true, "IsaacArthurP17", "PLIIOUpOge0Lt0pjc1LgiEQ1EpaIe_y_Jb", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cyborgs, Androids, Transhumanism, and AI.m3u"),
-    ISAAC_ARTHUR_P18(true, "IsaacArthurP18", "PLIIOUpOge0LvpLdGIp4xCyCVZEEUQ1Udn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Futuristic Weapons.m3u"),
-    ISAAC_ARTHUR_P19(true, "IsaacArthurP19", "PLIIOUpOge0LvLIXNMDKHf30gfyfnyX-4O", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cosmology.m3u"),
-    ISAAC_ARTHUR_P20(true, "IsaacArthurP20", "PLIIOUpOge0LvHsTP5fm8oxB1qPS54sTMk", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Civilizations at the End of Time.m3u"),
-    ISAAC_ARTHUR_P21(true, "IsaacArthurP21", "PLIIOUpOge0Ls9qzKr4sp4Kys3NPXxBZ-C", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Clarketech.m3u"),
-    ISAAC_ARTHUR_P22(true, "IsaacArthurP22", "PLIIOUpOge0Lv2jCm7LnYBiRYAPvxHyuWL", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Faster than Light.m3u"),
-    ISAAC_ARTHUR_P23(true, "IsaacArthurP23", "PLIIOUpOge0LskSp9Jac9nE6xSDfZ83Tgf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Generation Ships and Interstellar Colonization.m3u"),
-    ISAAC_ARTHUR_P24(true, "IsaacArthurP24", "PLIIOUpOge0Lv3LmdudQ6aPFzEvJarKF2J", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Black Holes.m3u"),
-    ISAAC_ARTHUR_P25(true, "IsaacArthurP25", "PLIIOUpOge0Lvr26RCeM_6mq72KFhPWEkG", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Life in a Space Colony.m3u"),
-    ISAAC_ARTHUR_P27(true, "IsaacArthurP27", "PLIIOUpOge0LsnC7OipBrfLSewH76ENAgc", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Interstellar Warfare and Worldbuilding.m3u"),
-    ISAAC_ARTHUR_P28(true, "IsaacArthurP28", "PLIIOUpOge0LuGoV8698AWjDcMYeB9OvEf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Habitable Planets.m3u"),
+    ISAAC_ARTHUR_P01(true, "IsaacArthurP01", "PLIIOUpOge0LuFZG2lvL9-zbxovZabYxcy", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Becoming an Interplanetary Species.m3u", false),
+    ISAAC_ARTHUR_P02(true, "IsaacArthurP02", "PLIIOUpOge0LulClL2dHXh8TTOnCgRkLdU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox.m3u", false),
+    ISAAC_ARTHUR_P03(true, "IsaacArthurP03", "PLIIOUpOge0LsIzYlIAIRdAGJTqAW6FmCE", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Outward Bound.m3u", false),
+    ISAAC_ARTHUR_P04(true, "IsaacArthurP04", "PLIIOUpOge0LvQYACAZwizb8gqtXL-10PC", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Post Scarcity Civilizations.m3u", false),
+    ISAAC_ARTHUR_P05(true, "IsaacArthurP05", "PLIIOUpOge0Ls3WMYP_2FpP9Y0mjgtf98M", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Advanced Civilizations.m3u", false),
+    ISAAC_ARTHUR_P06(true, "IsaacArthurP06", "PLIIOUpOge0Lu97HzMt_BJu36UMaItB1cm", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Alien Civilizations.m3u", false),
+    ISAAC_ARTHUR_P07(true, "IsaacArthurP07", "PLIIOUpOge0LsGJI_vni4xvfBQTuryTwlU", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Upward Bound.m3u", false),
+    ISAAC_ARTHUR_P08(true, "IsaacArthurP08", "PLIIOUpOge0Lv9Y_4Vmcgaxue0jyZG3_4K", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Earth 2.0.m3u", false),
+    ISAAC_ARTHUR_P09(true, "IsaacArthurP09", "PLIIOUpOge0Ls94qU9ZgTy3A-PbmRKKbV4", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Visions of Earth.m3u", false),
+    ISAAC_ARTHUR_P10(true, "IsaacArthurP10", "PLIIOUpOge0Lv5kr9vrX8DJjlF1A3QWJ3D", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - The Moon - Returning and Colonizing.m3u", false),
+    ISAAC_ARTHUR_P11(true, "IsaacArthurP11", "PLIIOUpOge0LuzO1f6z-sCZFawM_xiMHCD", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Fermi Paradox - Great Filters.m3u", false),
+    ISAAC_ARTHUR_P12(true, "IsaacArthurP12", "PLIIOUpOge0LufQYxcfYVqcVQOFOHFynMl", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Colonizing Space.m3u", false),
+    ISAAC_ARTHUR_P13(true, "IsaacArthurP13", "PLIIOUpOge0LtBd4s7qojmayIXcB80x0qB", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Rogue Civilizations.m3u", false),
+    ISAAC_ARTHUR_P14(true, "IsaacArthurP14", "PLIIOUpOge0LtW77TNvgrWWu5OC3EOwqxQ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Megastructures.m3u", false),
+    ISAAC_ARTHUR_P15(true, "IsaacArthurP15", "PLIIOUpOge0LvNm82I9n8CBaGUXoVeKbYn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Biotechnology.m3u", false),
+    ISAAC_ARTHUR_P16(true, "IsaacArthurP16", "PLIIOUpOge0LuCndr25ORvBN9OI1k1O4kJ", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Existential Crisis Series.m3u", false),
+    ISAAC_ARTHUR_P17(true, "IsaacArthurP17", "PLIIOUpOge0Lt0pjc1LgiEQ1EpaIe_y_Jb", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cyborgs, Androids, Transhumanism, and AI.m3u", false),
+    ISAAC_ARTHUR_P18(true, "IsaacArthurP18", "PLIIOUpOge0LvpLdGIp4xCyCVZEEUQ1Udn", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Futuristic Weapons.m3u", false),
+    ISAAC_ARTHUR_P19(true, "IsaacArthurP19", "PLIIOUpOge0LvLIXNMDKHf30gfyfnyX-4O", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Cosmology.m3u", false),
+    ISAAC_ARTHUR_P20(true, "IsaacArthurP20", "PLIIOUpOge0LvHsTP5fm8oxB1qPS54sTMk", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Civilizations at the End of Time.m3u", false),
+    ISAAC_ARTHUR_P21(true, "IsaacArthurP21", "PLIIOUpOge0Ls9qzKr4sp4Kys3NPXxBZ-C", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Clarketech.m3u", false),
+    ISAAC_ARTHUR_P22(true, "IsaacArthurP22", "PLIIOUpOge0Lv2jCm7LnYBiRYAPvxHyuWL", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Faster than Light.m3u", false),
+    ISAAC_ARTHUR_P23(true, "IsaacArthurP23", "PLIIOUpOge0LskSp9Jac9nE6xSDfZ83Tgf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Generation Ships and Interstellar Colonization.m3u", false),
+    ISAAC_ARTHUR_P24(true, "IsaacArthurP24", "PLIIOUpOge0Lv3LmdudQ6aPFzEvJarKF2J", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Black Holes.m3u", false),
+    ISAAC_ARTHUR_P25(true, "IsaacArthurP25", "PLIIOUpOge0Lvr26RCeM_6mq72KFhPWEkG", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Life in a Space Colony.m3u", false),
+    ISAAC_ARTHUR_P27(true, "IsaacArthurP27", "PLIIOUpOge0LsnC7OipBrfLSewH76ENAgc", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Interstellar Warfare and Worldbuilding.m3u", false),
+    ISAAC_ARTHUR_P28(true, "IsaacArthurP28", "PLIIOUpOge0LuGoV8698AWjDcMYeB9OvEf", "Youtube/Space/Isaac Arthur", false, "Youtube/Space/Isaac Arthur - Habitable Planets.m3u", false),
     
     //SCIENCE
     KURZGESAGT(true, "Kurzgesagt", "UUsXVk37bltHxD1rDPwtNM8Q", "Youtube/Science/Kurzgesagt", false, "Youtube/Science/Kurzgesagt.m3u"),
@@ -117,13 +117,13 @@ public enum Channel {
     
     //TECHNOLOGY
     TECHNOLOGY_CONNECTIONS(true, "TechnologyConnections", "UUy0tKL1T7wFoYcxCe0xjN6Q", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections.m3u"),
-    TECHNOLOGY_CONNECTIONS_P01(true, "TechnologyConnectionsP01", "PLv0jwu7G_DFWBEyCKt4tKHIk8ez_pZS_P", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Digital Sound and the Compact Disc.m3u"),
-    TECHNOLOGY_CONNECTIONS_P02(true, "TechnologyConnectionsP02", "PLv0jwu7G_DFVP0SGNlBiBtFVkV5LZ7SOU", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The CED.m3u"),
-    TECHNOLOGY_CONNECTIONS_P03(true, "TechnologyConnectionsP03", "PLv0jwu7G_DFUrcyMYAkUPODENwP4gYCmf", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Videotape Format War.m3u"),
-    TECHNOLOGY_CONNECTIONS_P04(true, "TechnologyConnectionsP04", "PLv0jwu7G_DFUYPuDoKWCUy33lL9LnMBGX", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - History of Artificial Sound.m3u"),
-    TECHNOLOGY_CONNECTIONS_P05(true, "TechnologyConnectionsP05", "PLv0jwu7G_DFUoByWSHHoSTlUIxY7VkJLi", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The Story of Laserdisc.m3u"),
-    TECHNOLOGY_CONNECTIONS_P06(true, "TechnologyConnectionsP06", "PLv0jwu7G_DFXjqlPfxjewWzwGltyf3d0T", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Tech Explorations.m3u"),
-    TECHNOLOGY_CONNECTIONS_P07(true, "TechnologyConnectionsP07", "PLv0jwu7G_DFUGEfwEl0uWduXGcRbT7Ran", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Television.m3u"),
+    TECHNOLOGY_CONNECTIONS_P01(true, "TechnologyConnectionsP01", "PLv0jwu7G_DFWBEyCKt4tKHIk8ez_pZS_P", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Digital Sound and the Compact Disc.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P02(true, "TechnologyConnectionsP02", "PLv0jwu7G_DFVP0SGNlBiBtFVkV5LZ7SOU", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The CED.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P03(true, "TechnologyConnectionsP03", "PLv0jwu7G_DFUrcyMYAkUPODENwP4gYCmf", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Videotape Format War.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P04(true, "TechnologyConnectionsP04", "PLv0jwu7G_DFUYPuDoKWCUy33lL9LnMBGX", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - History of Artificial Sound.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P05(true, "TechnologyConnectionsP05", "PLv0jwu7G_DFUoByWSHHoSTlUIxY7VkJLi", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - The Story of Laserdisc.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P06(true, "TechnologyConnectionsP06", "PLv0jwu7G_DFXjqlPfxjewWzwGltyf3d0T", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Tech Explorations.m3u", false),
+    TECHNOLOGY_CONNECTIONS_P07(true, "TechnologyConnectionsP07", "PLv0jwu7G_DFUGEfwEl0uWduXGcRbT7Ran", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Television.m3u", false),
     COMPUTERPHILE(true, "Computerphile", "UU9-y-6csu5WGm29I7JiwpnA", "Youtube/Technology/Computerphile", false, "Youtube/Technology/Computerphile.m3u"),
     
     //MATH
@@ -150,20 +150,20 @@ public enum Channel {
     
     //CRIME
     FORENSIC_FILES(true, "ForensicFiles", "UUVBTlb6_rQkWY99ZKi2oBMw", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files.m3u"),
-    FORENSIC_FILES_S01(true, "ForensicFilesS01", "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 1.m3u"),
-    FORENSIC_FILES_S02(true, "ForensicFilesS02", "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 2.m3u"),
-    FORENSIC_FILES_S03(true, "ForensicFilesS03", "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 3.m3u"),
-    FORENSIC_FILES_S04(true, "ForensicFilesS04", "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 4.m3u"),
-    FORENSIC_FILES_S05(true, "ForensicFilesS05", "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 5.m3u"),
-    FORENSIC_FILES_S06(true, "ForensicFilesS06", "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 6.m3u"),
-    FORENSIC_FILES_S07(true, "ForensicFilesS07", "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 7.m3u"),
-    FORENSIC_FILES_S08(true, "ForensicFilesS08", "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 8.m3u"),
-    FORENSIC_FILES_S09(true, "ForensicFilesS09", "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 9.m3u"),
-    FORENSIC_FILES_S10(true, "ForensicFilesS10", "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 10.m3u"),
-    FORENSIC_FILES_S11(true, "ForensicFilesS11", "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 11.m3u"),
-    FORENSIC_FILES_S12(true, "ForensicFilesS12", "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 12.m3u"),
-    FORENSIC_FILES_S13(true, "ForensicFilesS13", "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 13.m3u"),
-    FORENSIC_FILES_S14(true, "ForensicFilesS14", "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 14.m3u"),
+    FORENSIC_FILES_S01(true, "ForensicFilesS01", "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 1.m3u", false),
+    FORENSIC_FILES_S02(true, "ForensicFilesS02", "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 2.m3u", false),
+    FORENSIC_FILES_S03(true, "ForensicFilesS03", "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 3.m3u", false),
+    FORENSIC_FILES_S04(true, "ForensicFilesS04", "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 4.m3u", false),
+    FORENSIC_FILES_S05(true, "ForensicFilesS05", "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 5.m3u", false),
+    FORENSIC_FILES_S06(true, "ForensicFilesS06", "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 6.m3u", false),
+    FORENSIC_FILES_S07(true, "ForensicFilesS07", "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 7.m3u", false),
+    FORENSIC_FILES_S08(true, "ForensicFilesS08", "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 8.m3u", false),
+    FORENSIC_FILES_S09(true, "ForensicFilesS09", "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 9.m3u", false),
+    FORENSIC_FILES_S10(true, "ForensicFilesS10", "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 10.m3u", false),
+    FORENSIC_FILES_S11(true, "ForensicFilesS11", "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 11.m3u", false),
+    FORENSIC_FILES_S12(true, "ForensicFilesS12", "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 12.m3u", false),
+    FORENSIC_FILES_S13(true, "ForensicFilesS13", "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 13.m3u", false),
+    FORENSIC_FILES_S14(true, "ForensicFilesS14", "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 14.m3u", false),
     
     //TRIPPY
     FELIX_COSGRAVE(true, "FelixCosgrave", "UUO7fujFV_MuxTM0TuZrnE6Q", "Youtube/Trippy/Felix Cosgrave", false, "Youtube/Trippy/Felix Cosgrave.m3u"),
@@ -225,6 +225,11 @@ public enum Channel {
      */
     public File playlistFile;
     
+    /**
+     * A flag indicating whether or not to delete files from the output directory that are not in the playlist anymore.
+     */
+    public boolean keepClean;
+    
     
     //Constructors
     
@@ -237,14 +242,30 @@ public enum Channel {
      * @param outputFolder The output folder for the Channel.
      * @param saveAsMp3    Whether the Channel should download as mp3 or not.
      * @param playlistFile The playlist file for the Channel.
+     * @param keepClean    Whether the Channel should keep its output directory clean or not.
      */
-    Channel(boolean active, String name, String playlistId, String outputFolder, boolean saveAsMp3, String playlistFile) {
+    Channel(boolean active, String name, String playlistId, String outputFolder, boolean saveAsMp3, String playlistFile, boolean keepClean) {
         this.active = active;
         this.name = name;
         this.playlistId = playlistId;
         this.outputFolder = new File(saveAsMp3 ? musicDir : videoDir, outputFolder);
         this.saveAsMp3 = saveAsMp3;
         this.playlistFile = (playlistFile != null) ? new File(saveAsMp3 ? musicDir : videoDir, playlistFile) : null;
+        this.keepClean = keepClean;
+    }
+    
+    /**
+     * Constructs a new Channel.
+     *
+     * @param active       Whether the Channel is enabled or not.
+     * @param name         The name of the Channel.
+     * @param playlistId   The Playlist ID of the Channel.
+     * @param outputFolder The output folder for the Channel.
+     * @param saveAsMp3    Whether the Channel should download as mp3 or not.
+     * @param playlistFile The playlist file for the Channel.
+     */
+    Channel(boolean active, String name, String playlistId, String outputFolder, boolean saveAsMp3, String playlistFile) {
+        this(active, name, playlistId, outputFolder, saveAsMp3, playlistFile, true);
     }
     
     /**
