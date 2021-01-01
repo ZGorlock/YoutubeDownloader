@@ -144,6 +144,7 @@ public enum Channel {
     //CHEMISTRY
     PERIODIC_VIDEOS(true, "PeriodicVideos", "UUtESv1e7ntJaLJYKIO1FoYw", "Youtube/Chemistry/Periodic Videos", false, "Youtube/Chemistry/Periodic Videos.m3u"),
     NILE_RED(true, "NileRed", "UUFhXFikryT4aFcLkLw2LBLA", "Youtube/Chemistry/Nile Red", false, "Youtube/Chemistry/Nile Red.m3u"),
+    BIG_STACK_D(true, "BigStackD", "UUfNQkKS2AkN_BX36MdvY70Q", "Youtube/Chemistry/Big Stack D", false, "Youtube/Chemistry/Big Stack D.m3u"),
     
     //MEDICINE
     CHUBBYEMU(true, "Chubbyemu", "UUKOvOaJv4GK-oDqx-sj7VVg", "Youtube/Medicine/Chubbyemu", false, "Youtube/Medicine/Chubbyemu.m3u"),
