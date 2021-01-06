@@ -111,6 +111,8 @@ public enum Channel {
     MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Science/Vsauce/Mind Field/Season 2", false, "Youtube/Science/Vsauce/Mind Field/Season 2.m3u"),
     MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Science/Vsauce/Mind Field/Season 3", false, "Youtube/Science/Vsauce/Mind Field/Season 3.m3u"),
     CGP_GREY(true, "CgpGrey", "UU2C_jShtL725hvbm1arSV9w", "Youtube/Science/CGP Grey", false, "Youtube/Science/CGP Grey.m3u"),
+    CODYS_LAB(true, "CodysLab", "UUu6mSoMNzHQiBIOCkHUa2Aw", "Youtube/Science/Cody's Lab", false, "Youtube/Science/Cody's Lab.m3u"),
+    SMARTER_EVERY_DAY(true, "SmarterEveryDay", "UU6107grRI4m0o2-emgoDnAA", "Youtube/Science/Smarter Every Day", false, "Youtube/Science/Smarter Every Day.m3u"),
     
     //NATURE
     BRAVE_WILDERNESS(true, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Nature/Brave Wilderness", false, "Youtube/Nature/Brave Wilderness.m3u"),
