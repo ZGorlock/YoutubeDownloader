@@ -283,6 +283,10 @@ public class YoutubeChannelDownloader {
         for (Object dataChunk : dataJson) {
             JSONObject dataChunkJson = (JSONObject) dataChunk;
             JSONArray dataItems = (JSONArray) dataChunkJson.get("items");
+            if (dataItems == null) {
+                System.err.println("Error reading the Playlist for " + channel.name + "; Skipping this run");
+                continue;
+            }
             for (Object dataItem : dataItems) {
                 JSONObject dataItemJson = (JSONObject) dataItem;
                 JSONObject snippet = (JSONObject) dataItemJson.get("snippet");
@@ -389,6 +393,10 @@ public class YoutubeChannelDownloader {
         List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
+        
+        if (!queue.isEmpty()) {
+            System.out.println("Downloading " + queue.size() + " in Queue...");
+        }
         
         List<String> working = new ArrayList<>(queue);
         for (String videoId : working) {
