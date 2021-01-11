@@ -479,7 +479,8 @@ public enum Channel {
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("livestream") ||
                             value.title.toLowerCase().contains("hades") ||
-                            value.title.toLowerCase().equals("in the beginning")) {
+                            value.title.toLowerCase().equals("in the beginning") ||
+                            value.title.toLowerCase().contains("collab") || value.title.toLowerCase().contains("colab")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
