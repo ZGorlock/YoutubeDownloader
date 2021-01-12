@@ -175,7 +175,8 @@ public enum Channel {
     CASUALLY_EXPLAINED(true, "CasuallyExplained", "UUr3cBLTYmIK9kY0F_OdFWFQ", "Youtube/Funny/Casually Explained", false, "Youtube/Funny/Casually Explained.m3u"),
     SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
     ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u"),
-    OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u");
+    OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u"),
+    KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga", false, "Youtube/Funny/Kitboga.m3u");
     
     
     //Constants
