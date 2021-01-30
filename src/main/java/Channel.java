@@ -140,7 +140,8 @@ public enum Channel {
     ELECTROBOOM(true, "Electroboom", "UUJ0-OtVpF0wOKEqT2Z1HEtA", "Youtube/Engineering/ElectroBOOM", false, "Youtube/Engineering/ElectroBOOM.m3u"),
     HOW_ITS_MADE(true, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
     PRACTICAL_ENGINEERING(true, "PracticalEngineering", "UUMOqf8ab-42UUQIdVoKwjlQ", "Youtube/Engineering/Practical Engineering", false, "Youtube/Engineering/Practical Engineering.m3u"),
-    ADAM_SAVAGE_ONE_DAY_BUILDS(true, "AdamSavageOneDayBuilds", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - One Day Builds", false, "Youtube/Engineering/Adam Savage - One Day Builds.m3u"),
+    ADAM_SAVAGE_TESTED(false, "AdamSavageTested", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - Tested", false, "Youtube/Engineering/Adam Savage - Tested.m3u"),
+    ADAM_SAVAGE_ONE_DAY_BUILDS(false, "AdamSavageOneDayBuilds", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - One Day Builds", false, "Youtube/Engineering/Adam Savage - One Day Builds.m3u"),
     THIS_OLD_TONY(true, "ThisOldTony", "UU5NO8MgTQKHAWXp6z8Xl7yQ", "Youtube/Engineering/This Old Tony", false, "Youtube/Engineering/This Old Tony.m3u"),
     
     //CHEMISTRY
