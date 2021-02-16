@@ -115,7 +115,7 @@ public enum Channel {
     SMARTER_EVERY_DAY(true, "SmarterEveryDay", "UU6107grRI4m0o2-emgoDnAA", "Youtube/Science/Smarter Every Day", false, "Youtube/Science/Smarter Every Day.m3u"),
     
     //NATURE
-    BRAVE_WILDERNESS(true, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Nature/Brave Wilderness", false, "Youtube/Nature/Brave Wilderness.m3u"),
+    BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Nature/Brave Wilderness", false, "Youtube/Nature/Brave Wilderness.m3u"),
     
     //TECHNOLOGY
     TECHNOLOGY_CONNECTIONS(true, "TechnologyConnections", "UUy0tKL1T7wFoYcxCe0xjN6Q", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections.m3u"),
@@ -127,6 +127,7 @@ public enum Channel {
     TECHNOLOGY_CONNECTIONS_P06(true, "TechnologyConnectionsP06", "PLv0jwu7G_DFXjqlPfxjewWzwGltyf3d0T", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Tech Explorations.m3u", false),
     TECHNOLOGY_CONNECTIONS_P07(true, "TechnologyConnectionsP07", "PLv0jwu7G_DFUGEfwEl0uWduXGcRbT7Ran", "Youtube/Technology/Technology Connections", false, "Youtube/Technology/Technology Connections - Television.m3u", false),
     COMPUTERPHILE(true, "Computerphile", "UU9-y-6csu5WGm29I7JiwpnA", "Youtube/Technology/Computerphile", false, "Youtube/Technology/Computerphile.m3u"),
+    ROBERT_MILES(true, "RobertMiles", "UULB7AzTwc6VFZrBsO2ucBMg", "Youtube/Technology/Robert Miles", false, "Youtube/Technology/Robert Miles.m3u"),
     
     //MATH
     THREE_BLUE_ONE_BROWN(true, "3Blue1Brown", "UUYO_jab_esuFRV4b17AJtAw", "Youtube/Math/3Blue1Brown", false, "Youtube/Math/3Blue1Brown.m3u"),
