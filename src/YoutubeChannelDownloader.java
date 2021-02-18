@@ -444,12 +444,13 @@ public class YoutubeChannelDownloader {
             return false;
         }
         List<String> existingPlaylist = channel.playlistFile.exists() ? FileUtils.readLines(channel.playlistFile, "UTF-8") : new ArrayList<>();
+        String playlistPath = channel.playlistFile.getParentFile().getAbsolutePath() + '\\';
         
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> playlist = new ArrayList<>();
         for (Map.Entry<String, Video> video : videoMap.entrySet()) {
             if (save.contains(video.getKey())) {
-                playlist.add(video.getValue().output.getAbsolutePath());
+                playlist.add(video.getValue().output.getAbsolutePath().replace(playlistPath, ""));
             }
         }
         
@@ -464,7 +465,7 @@ public class YoutubeChannelDownloader {
                 File[] videos = channel.outputFolder.listFiles();
                 if (videos != null) {
                     for (File video : videos) {
-                        if (!playlist.contains(video.getAbsolutePath())) {
+                        if (!playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
                             FileUtils.forceDeleteOnExit(video);
                         }
                     }
