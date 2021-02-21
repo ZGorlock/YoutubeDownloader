@@ -113,7 +113,9 @@ public final class YoutubeUtils {
                 .replace("С", "C")
                 .replaceAll("[^\\x00-\\x7F]", "")
                 .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
-                .replaceAll("\\s+", " ");
+                .replaceAll("\\s*[.\\-]$", "")
+                .replaceAll("\\s+", " ")
+                .trim();
         return title;
     }
     

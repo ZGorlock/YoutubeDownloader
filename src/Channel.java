@@ -4,12 +4,18 @@
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.
@@ -54,8 +60,8 @@ public enum Channel {
     //RUNESCAPE
     OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", "Runescape/OSRS Beatz", true, "Runescape/OSRS Beatz/OSRS Beatz.m3u"),
     BY_RELEASE(true, "ByRelease", "PLDSJpYkJoHD-0Keg6Fu7bcVTlbR27T-88", "Youtube/Runescape/By Release", false, "Youtube/Runescape/By Release.m3u"),
-    OSRS_CHALLENGES_TANZOO(true, "OsrsChallengesTanzoo", "PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU", "Youtube/Runescape/OSRS Challenges - Tanzoo", false, "Youtube/Runescape/OSRS Challenges - Tanzoo.m3u"),
-    OSRS_CHALLENGES_VIRTOSO(true, "OsrsChallengesVirtoso", "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb", "Youtube/Runescape/OSRS Challenges - Virtoso", false, "Youtube/Runescape/OSRS Challenges - Virtoso.m3u"),
+    OSRS_CHALLENGES_TANZOO(true, "OsrsChallengesTanzoo", "PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU", "Youtube/Runescape/OSRS Challenges", false, "Youtube/Runescape/OSRS Challenges - Tanzoo.m3u", false),
+    OSRS_CHALLENGES_VIRTOSO(true, "OsrsChallengesVirtoso", "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb", "Youtube/Runescape/OSRS Challenges", false, "Youtube/Runescape/OSRS Challenges - Virtoso.m3u", false),
     MUDKIP_HCIM(true, "MudkipHcim", "PL4Ct8chrkvPgti4HYTZFo7FSfxlLlptbN", "Youtube/Runescape/HCIM - Mudkip", false, "Youtube/Runescape/HCIM - Mudkip.m3u"),
     MUDKIP_UIM(true, "MudkipUim", "PL4Ct8chrkvPitHm4U6QZfxrmDJVgg6VR1", "Youtube/Runescape/UIM - Mudkip", false, "Youtube/Runescape/UIM - Mudkip.m3u"),
     SWAMPLETICS(true, "Swampletics", "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a", "Youtube/Runescape/Swampletics", false, "Youtube/Runescape/Swampletics.m3u"),
@@ -111,8 +117,9 @@ public enum Channel {
     MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Science/Vsauce/Mind Field/Season 2", false, "Youtube/Science/Vsauce/Mind Field/Season 2.m3u"),
     MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Science/Vsauce/Mind Field/Season 3", false, "Youtube/Science/Vsauce/Mind Field/Season 3.m3u"),
     CGP_GREY(true, "CgpGrey", "UU2C_jShtL725hvbm1arSV9w", "Youtube/Science/CGP Grey", false, "Youtube/Science/CGP Grey.m3u"),
-    CODYS_LAB(true, "CodysLab", "UUu6mSoMNzHQiBIOCkHUa2Aw", "Youtube/Science/Cody's Lab", false, "Youtube/Science/Cody's Lab.m3u"),
-    SMARTER_EVERY_DAY(true, "SmarterEveryDay", "UU6107grRI4m0o2-emgoDnAA", "Youtube/Science/Smarter Every Day", false, "Youtube/Science/Smarter Every Day.m3u"),
+    CODYS_LAB(false, "CodysLab", "UUu6mSoMNzHQiBIOCkHUa2Aw", "Youtube/Science/Cody's Lab", false, "Youtube/Science/Cody's Lab.m3u"),
+    SMARTER_EVERY_DAY(false, "SmarterEveryDay", "UU6107grRI4m0o2-emgoDnAA", "Youtube/Science/Smarter Every Day", false, "Youtube/Science/Smarter Every Day.m3u"),
+    MINUTE_PHYSICS(true, "MinutePhysics", "UUUHW94eEFW7hkUMVaZz4eDg", "Youtube/Science/Minute Physics", false, "Youtube/Science/Minute Physics.m3u"),
     
     //NATURE
     BRAVE_WILDERNESS(false, "BraveWilderness", "UU6E2mP01ZLH_kbAyeazCNdg", "Youtube/Nature/Brave Wilderness", false, "Youtube/Nature/Brave Wilderness.m3u"),
@@ -331,17 +338,288 @@ public enum Channel {
                             .replace("Programming - Coding - Hacking music vol.", "Volume ")
                             .replace(" (", " - ")
                             .replace(")", "");
-                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
                     value.title = newTitle;
                 });
                 break;
             
-            case MUDKIP_HCIM:
+            case BY_RELEASE:
+                Pattern byReleaseNamePattern = Pattern.compile("^(?<title>.+)\\s*-\\s*By\\sRelease\\s*-?#(?<episode>\\d+)$");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    Matcher byReleaseNameMatcher = byReleaseNamePattern.matcher(oldTitle);
+                    if (byReleaseNameMatcher.matches()) {
+                        String newTitle = "By Release #" + byReleaseNameMatcher.group("episode") + " - " + byReleaseNameMatcher.group("title");
+                        newTitle = YoutubeUtils.cleanTitle(newTitle);
+                        File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                        if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                            try {
+                                FileUtils.moveFile(value.output, newOutput);
+                            } catch (IOException ignored) {
+                            }
+                        }
+                        value.output = newOutput;
+                        value.title = newTitle;
+                    }
+                });
+                break;
+            case OSRS_CHALLENGES_TANZOO:
+                Pattern tanzooPattern = Pattern.compile("^(?<title>.+)\\s*-*\\s*Episode\\s*(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle
-                            .replace("[OSRS] ", "");
+                            .replaceAll("Tanzoo\\s*vs?\\.?\\s*Virtoso\\s*-", "")
+                            .replaceAll("-\\s*Challenge\\s*Episodes?", "- Episode")
+                            .replaceAll("(?:OSRS|Osrs|osrs)\\s*Challenges?\\s*-?", "")
+                            .replaceAll("\\s+", " ")
+                            .replaceAll("(^\\s*-\\s*)|(\\s*-\\s*$)", "")
+                            .replaceAll("\\s*Special\\s*$", "")
+                            .replaceAll("(^\\s*-\\s*)|(\\s*-\\s*$)", "")
+                            .replaceAll("\\s+", " ")
+                            .trim();
+                    Matcher tanzooMatcher = tanzooPattern.matcher(newTitle);
+                    if (tanzooMatcher.matches()) {
+                        newTitle = tanzooMatcher.group("title").replaceAll("\\s*-\\s*$", "").trim();
+                    }
+                    newTitle = "OSRS Challenges - " + newTitle + " (Tanzoo)";
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case OSRS_CHALLENGES_VIRTOSO:
+                Pattern virtosoPattern = Pattern.compile("^(?<title>.+)\\s*-*\\s*(Episode|EP\\.|Ep\\.)\\s*(?<episode>\\d+)$");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle
+                            .replaceAll("Tanzoo\\s*vs?\\.?\\s*Virtoso\\s*-", "")
+                            .replaceAll("\\s*-?\\sRunescape\\s2007\\s*-?", "")
+                            .replaceAll("-\\s*Challenge\\s*Episodes?", "- Episode")
+                            .replaceAll("(?:OSRS|Osrs|osrs)\\s*Challenges?\\s*-?", "")
+                            .replaceAll("^\\s*-\\s*", "")
+                            .replaceAll("\\s+", " ")
+                            .replaceAll("(^\\s*-\\s*)|(\\s*-\\s*$)", "")
+                            .replaceAll("\\s*Special\\s*$", "")
+                            .replaceAll("(^\\s*-\\s*)|(\\s*-\\s*$)", "")
+                            .replaceAll("\\s+", " ")
+                            .trim();
+                    Matcher virtosoMatcher = virtosoPattern.matcher(newTitle);
+                    if (virtosoMatcher.matches()) {
+                        newTitle = virtosoMatcher.group("title").replaceAll("\\s*-\\s*$", "").trim();
+                    }
+                    newTitle = "OSRS Challenges - " + newTitle + " (Virtoso)";
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case MUDKIP_HCIM:
+                Pattern hcimPattern1 = Pattern.compile("^(HCIM\\s(?<episode>\\d+)-).*");
+                Pattern hcimPattern2 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)HCIM\\s*(?:Episode|ep\\.|Ep\\.|)\\s*(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>\\(\\d+-\\d+\\))?");
+                Pattern hcimPattern3 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)#(?<episode>\\d*\\.?\\d+)\\)?");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle.replace("[OSRS] ", "");
                     value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    oldTitle = newTitle;
+                    if (newTitle.contains("Maxed HCIM")) {
+                        newTitle = newTitle.replace("Maxed HCIM ", "");
+                        Matcher hcimMatcher3 = hcimPattern3.matcher(newTitle);
+                        if (hcimMatcher3.matches()) {
+                            newTitle = "Maxed HCIM #" + hcimMatcher3.group("episode") + " - " + hcimMatcher3.group("title");
+                        } else {
+                            newTitle = newTitle.replaceAll("^Maxed HCIM ", "Maxed HCIM #");
+                        }
+                    } else {
+                        Matcher hcimMatcher1 = hcimPattern1.matcher(newTitle);
+                        if (hcimMatcher1.matches()) {
+                            newTitle = newTitle.replace(hcimMatcher1.group(1), hcimMatcher1.group(1).replace("-", " -"));
+                        } else {
+                            Matcher hcimMatcher2 = hcimPattern2.matcher(newTitle);
+                            if (hcimMatcher2.matches()) {
+                                newTitle = "HCIM #" + hcimMatcher2.group("episode") + " - " + hcimMatcher2.group("title").trim() +
+                                        (hcimMatcher2.group("level") == null ? "" : (" " + hcimMatcher2.group("level")));
+                            }
+                        }
+                        newTitle = newTitle.replaceAll("^HCIM ", "HCIM #");
+                    }
+                    newTitle = newTitle
+                            .replace("##", "#")
+                            .replace("()", "")
+                            .replace(" - (", " (");
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case MUDKIP_UIM:
+                Pattern uimPattern = Pattern.compile(".*?(\\s(?:\\(UIM\\s#|\\(#)(?<episode>\\d+)\\)).*");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    Matcher uimMatcher = uimPattern.matcher(newTitle);
+                    if (uimMatcher.matches()) {
+                        newTitle = "UIM #" + uimMatcher.group("episode") + " - " + newTitle.replace(uimMatcher.group(1), "");
+                    } else {
+                        newTitle = newTitle.replaceAll("^UIM ", "UIM #");
+                    }
+                    newTitle = newTitle
+                            .replace("##", "#");
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case SWAMPLETICS:
+                Pattern swampleticsPattern = Pattern.compile(".*?(\\s(?:\\(Swampletics\\s#|\\(#)(?<episode>\\d+)\\)).*");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    Matcher swampleticsMatcher = swampleticsPattern.matcher(newTitle);
+                    if (swampleticsMatcher.matches()) {
+                        newTitle = "Swampletics #" + swampleticsMatcher.group("episode") + " - " + newTitle.replace(swampleticsMatcher.group(1), "");
+                    }
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case LOWER_THE_BETTER:
+                Pattern lowerTheBetterPattern = Pattern.compile(".*(\\s*-\\s*Lower\\s[Tt]he\\sBetter\\s(?:Ep\\.\\s)?#\\s?(?<episode>\\d+)).*");
+                AtomicInteger lowerTheBetterCount = new AtomicInteger(0);
+                videoMap.forEach((key, value) -> {
+                    lowerTheBetterCount.incrementAndGet();
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    if (!newTitle.toLowerCase().contains("lower the better")) {
+                        newTitle += " - Lower the Better #" + lowerTheBetterCount.get();
+                    }
+                    Matcher lowerTheBetterMatcher = lowerTheBetterPattern.matcher(newTitle);
+                    if (lowerTheBetterMatcher.matches()) {
+                        newTitle = "Lower the Better #" + lowerTheBetterMatcher.group("episode") + " - " + newTitle.replace(lowerTheBetterMatcher.group(1), "");
+                    }
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case OSRS_WEEKLY_RECAP:
+                Pattern osrsWeeklyRecapPattern = Pattern.compile(".*?(\\s*-*\\s*(#\\d+\\s*-*\\s*)?(OSRS\\s)?Weekly\\sRecap[\\s\\d\\-#!]*)");
+                SimpleDateFormat osrsWeeklyRecapDate = new SimpleDateFormat("yyyy-MM-dd");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle.replaceAll("\\s*\\[OSRS]", "");
+                    Matcher osrsWeeklyRecapMatcher = osrsWeeklyRecapPattern.matcher(newTitle);
+                    if (osrsWeeklyRecapMatcher.matches()) {
+                        newTitle = "Weekly Recap - " + osrsWeeklyRecapDate.format(value.date) + " - " + newTitle.replace(osrsWeeklyRecapMatcher.group(1), "");
+                    }
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case IRON_MAIN:
+                Pattern ironMainPattern = Pattern.compile(".*?(\\s*-\\s*(?:IronMain\\s)?\\[#\\s*(?<episode>\\d+)]).*");
+                AtomicInteger ironMainCount = new AtomicInteger(0);
+                videoMap.forEach((key, value) -> {
+                    ironMainCount.incrementAndGet();
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    Matcher ironMainMatcher = ironMainPattern.matcher(newTitle);
+                    if (ironMainMatcher.matches()) {
+                        newTitle = newTitle.replace(ironMainMatcher.group(1), "");
+                    }
+                    newTitle = "IronMain #" + ironMainCount.get() + " - " + newTitle;
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            case ONE_KICK_RICK:
+                Pattern oneKickRickPattern = Pattern.compile(".*(\\s*-\\s*Lumbridge-Draynor\\s(?:Only\\s)?HCIM\\s-\\s(?:One\\sKick\\sRick\\s-\\s)?(?:Episode|Ep\\.|ep\\.)\\s*#?(?<episode>\\d+)).*");
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    if (newTitle.contains("Series Trailer")) {
+                        newTitle = newTitle.replace("Series Trailer", "One Kick Rick - ep.0");
+                    }
+                    Matcher oneKickRickMatcher = oneKickRickPattern.matcher(newTitle);
+                    if (oneKickRickMatcher.matches()) {
+                        newTitle = "One Kick Rick #" + oneKickRickMatcher.group("episode") + " - " + newTitle.replace(oneKickRickMatcher.group(1), "");
+                    }
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
                     value.title = newTitle;
                 });
                 break;
@@ -352,7 +630,15 @@ public enum Channel {
                             value.title.toLowerCase().contains("more than tom")) {
                         String oldTitle = value.title;
                         String newTitle = "This Video Has...";
-                        value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                        newTitle = YoutubeUtils.cleanTitle(newTitle);
+                        File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                        if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                            try {
+                                FileUtils.moveFile(value.output, newOutput);
+                            } catch (IOException ignored) {
+                            }
+                        }
+                        value.output = newOutput;
                         value.title = newTitle;
                     }
                 });
@@ -390,13 +676,21 @@ public enum Channel {
                     if (newTitle.equals("Forensic Files - Series Premiere - The Disappearance of Helle Crafts")) {
                         newTitle = "Forensic Files - S01E01 - The Disappearance of Helle Crafts";
                     }
-                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
                     value.title = newTitle;
                 });
                 if (channel == FORENSIC_FILES_S01) {
                     YoutubeChannelDownloader.Video video = new YoutubeChannelDownloader.Video();
                     video.videoId = "OZc6vcGjknI";
-                    video.title = "Forensic Files - S01E01 - The Disappearance of Helle Crafts";
+                    video.title = YoutubeUtils.cleanTitle("Forensic Files - S01E01 - The Disappearance of Helle Crafts");
                     video.url = YoutubeUtils.VIDEO_BASE + video.videoId;
                     video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse("2015-01-23 12:15:00");
                     video.output = new File(channel.outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
@@ -443,6 +737,16 @@ public enum Channel {
             case OSRS_BEATZ:
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("runescape")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            case OSRS_WEEKLY_RECAP:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("weekly recap")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
@@ -504,9 +808,9 @@ public enum Channel {
                 break;
             
             case VSAUCE:
-                final Date vsauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
+                final Date vSauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
                 videoMap.forEach((key, value) -> {
-                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vsauceOldest)) {
+                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vSauceOldest)) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
@@ -528,9 +832,9 @@ public enum Channel {
                 break;
             
             case CHUBBYEMU:
-                final Date chubbyemuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
+                final Date chubbyEmuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
                 videoMap.forEach((key, value) -> {
-                    if (value.date.before(chubbyemuOldest)) {
+                    if (value.date.before(chubbyEmuOldest)) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
