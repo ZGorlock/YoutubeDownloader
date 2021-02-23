@@ -465,7 +465,7 @@ public class YoutubeChannelDownloader {
                 File[] videos = channel.outputFolder.listFiles();
                 if (videos != null) {
                     for (File video : videos) {
-                        if (!playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
+                        if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
                             FileUtils.forceDeleteOnExit(video);
                         }
                     }
