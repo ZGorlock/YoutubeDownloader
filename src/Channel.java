@@ -113,9 +113,9 @@ public enum Channel {
     NEW_MIND(true, "NewMind", "UU5_Y-BKzq1uW_2rexWkUzlA", "Youtube/Science/New Mind", false, "Youtube/Science/New Mind.m3u"),
     ANSWERS_WITH_JOE(true, "AnswersWithJoe", "PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl", "Youtube/Science/Answers With Joe", false, "Youtube/Science/Answers With Joe.m3u"),
     VSAUCE(true, "Vsauce", "UU6nSFpj9HTCZ5t-N3Rm3-HA", "Youtube/Science/Vsauce", false, "Youtube/Science/Vsauce.m3u"),
-    MIND_FIELD_S1(false, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Science/Vsauce/Mind Field/Season 1", false, "Youtube/Science/Vsauce/Mind Field/Season 1.m3u"),
-    MIND_FIELD_S2(false, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Science/Vsauce/Mind Field/Season 2", false, "Youtube/Science/Vsauce/Mind Field/Season 2.m3u"),
-    MIND_FIELD_S3(false, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Science/Vsauce/Mind Field/Season 3", false, "Youtube/Science/Vsauce/Mind Field/Season 3.m3u"),
+    MIND_FIELD_S1(true, "MindFieldS1", "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2", "Youtube/Science/Vsauce/Mind Field/Season 1", false, "Youtube/Science/Vsauce/Mind Field/Season 1.m3u", false),
+    MIND_FIELD_S2(true, "MindFieldS2", "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI", "Youtube/Science/Vsauce/Mind Field/Season 2", false, "Youtube/Science/Vsauce/Mind Field/Season 2.m3u", false),
+    MIND_FIELD_S3(true, "MindFieldS3", "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP", "Youtube/Science/Vsauce/Mind Field/Season 3", false, "Youtube/Science/Vsauce/Mind Field/Season 3.m3u", false),
     CGP_GREY(true, "CgpGrey", "UU2C_jShtL725hvbm1arSV9w", "Youtube/Science/CGP Grey", false, "Youtube/Science/CGP Grey.m3u"),
     CODYS_LAB(false, "CodysLab", "UUu6mSoMNzHQiBIOCkHUa2Aw", "Youtube/Science/Cody's Lab", false, "Youtube/Science/Cody's Lab.m3u"),
     SMARTER_EVERY_DAY(false, "SmarterEveryDay", "UU6107grRI4m0o2-emgoDnAA", "Youtube/Science/Smarter Every Day", false, "Youtube/Science/Smarter Every Day.m3u"),
@@ -641,6 +641,52 @@ public enum Channel {
                         value.output = newOutput;
                         value.title = newTitle;
                     }
+                });
+                break;
+            case MIND_FIELD_S1:
+                Pattern mindFieldS1Pattern = Pattern.compile(".*?(\\s*-\\s*(?:Mind\\sField\\s)\\(Ep\\.?\\s*(?<episode>\\d+)\\)).*");
+                AtomicInteger mindFieldS1Count = new AtomicInteger(0);
+                videoMap.forEach((key, value) -> {
+                    mindFieldS1Count.incrementAndGet();
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    Matcher mindFieldS1Matcher = mindFieldS1Pattern.matcher(newTitle);
+                    if (mindFieldS1Matcher.matches()) {
+                        newTitle = newTitle.replace(mindFieldS1Matcher.group(1), "");
+                    }
+                    newTitle = "Mind Field - S01E0" + mindFieldS1Count.get() + " - " + newTitle;
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+            case MIND_FIELD_S2:
+                Pattern mindFieldS2Pattern = Pattern.compile(".*?(\\s*-\\s*(?:Mind\\sField\\sS2\\s)\\(Ep\\.?\\s*(?<episode>\\d+)\\)).*");
+                AtomicInteger mindFieldS2Count = new AtomicInteger(0);
+                videoMap.forEach((key, value) -> {
+                    mindFieldS2Count.incrementAndGet();
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    Matcher mindFieldS2Matcher = mindFieldS2Pattern.matcher(newTitle);
+                    if (mindFieldS2Matcher.matches()) {
+                        newTitle = newTitle.replace(mindFieldS2Matcher.group(1), "");
+                    }
+                    newTitle = "Mind Field - S02E0" + mindFieldS2Count.get() + " - " + newTitle;
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+            case MIND_FIELD_S3:
+                AtomicInteger mindFieldS3Count = new AtomicInteger(0);
+                videoMap.forEach((key, value) -> {
+                    mindFieldS3Count.incrementAndGet();
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle;
+                    newTitle = "Mind Field - S03E0" + mindFieldS3Count.get() + " - " + newTitle;
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
                 });
                 break;
             
