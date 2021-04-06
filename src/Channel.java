@@ -55,7 +55,7 @@ public enum Channel {
     BASS_NATION(true, "BassNation", "UUCvVpbYRgYjMN7mG7qQN0Pg", "Trap/Bass Nation", true, "Trap/Bass Nation.m3u"),
     
     //MUSIC
-    THE_COMET_IS_COMING(true, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", "Music/The Comet Is Coming", true, "Music/The Comet Is Coming.m3u"),
+    THE_COMET_IS_COMING(false, "TheCometIsComing", "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB", "Music/The Comet Is Coming", true, "My Playlists/The Comet Is Coming.m3u"),
     
     //RUNESCAPE
     OSRS_BEATZ(true, "OsrsBeatz", "UUs1rnF_c_VSg74M5CQ-HKWg", "Runescape/OSRS Beatz", true, "Runescape/OSRS Beatz/OSRS Beatz.m3u"),
@@ -67,6 +67,7 @@ public enum Channel {
     SWAMPLETICS(true, "Swampletics", "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a", "Youtube/Runescape/Swampletics", false, "Youtube/Runescape/Swampletics.m3u"),
     LOWER_THE_BETTER(true, "LowerTheBetter", "PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6", "Youtube/Runescape/Lower the Better", false, "Youtube/Runescape/Lower the Better.m3u"),
     OSRS_WEEKLY_RECAP(true, "OsrsWeeklyRecap", "PLiETVLquxFqxOaD4dT35ooeG9Ro0qK6LU", "Youtube/Runescape/Weekly Recap", false, "Youtube/Runescape/Weekly Recap.m3u"),
+    OSRS_MARKET_ANALYSIS(true, "OsrsMarketAnalysis", "UUIi4nY4YuOYUJEg8XLM0vQw", "Youtube/Runescape/Market Analysis", false, "Youtube/Runescape/Market Analysis.m3u"),
     IRON_MAIN(true, "IronMain", "PLhsEAJsiNQ3afUF7AkQ_6RbH0Nicd1wCX", "Youtube/Runescape/IronMain", false, "Youtube/Runescape/Iron Main.m3u"),
     ONE_KICK_RICK(true, "OneKickRick", "PLhsEAJsiNQ3YMprz-CHZ_MCMxedsdANc2", "Youtube/Runescape/One Kick Rick", false, "Youtube/Runescape/One Kick Rick.m3u"),
     
@@ -321,6 +322,7 @@ public enum Channel {
     
     /**
      * Performs special checks specific to a Channel before producing the queue.
+     * Typically renaming.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
@@ -751,6 +753,7 @@ public enum Channel {
     
     /**
      * Performs special checks specific to a Channel after producing the queue.
+     * Typically blocking.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
@@ -793,6 +796,16 @@ public enum Channel {
             case OSRS_WEEKLY_RECAP:
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("weekly recap")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            case OSRS_MARKET_ANALYSIS:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("market")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
