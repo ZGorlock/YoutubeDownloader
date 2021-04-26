@@ -24,7 +24,7 @@
         <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
         
         <!-- COMMONS -->
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <commons-codec.version>1.12</commons-codec.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         
