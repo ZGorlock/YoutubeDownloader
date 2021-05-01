@@ -46,6 +46,8 @@ public enum Channel {
     MUSIC_LAB_CONTEMPORARY(false, "MusicLabContemporary", "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf", "Beats/Music Lab", true, "Beats/Contemporary Music.m3u", false),
     MUSIC_LAB_STUDY(true, "MusicLabStudy", "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi", "Beats/Music Lab", true, "Beats/Study Music.m3u", false),
     MUSIC_LAB_CHILLHOP(false, "MusicLabChillhop", "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd", "Beats/Music Lab", true, "Beats/Chillhop Music.m3u", false),
+    MUSIC_LAB_ENERGY(true, "MusicLabEnergy", "PLdE7uo_7KBkcp_XPf2GiTOqUWAdvqM4ap", "Beats/Music Lab", true, "Beats/Energy Music.m3u", false),
+    MUSIC_LAB_FUTURE_GARAGE(true, "MusicLabFutureGarage", "PLdE7uo_7KBkdbssGgnnIDm3EnE2gmHyEQ", "Beats/Music Lab", true, "Beats/Future Garage Music.m3u", false),
     JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u", false),
     
     //TRAP
@@ -147,7 +149,7 @@ public enum Channel {
     AVE(true, "Ave", "UUhWv6Pn_zP0rI6lgGt3MyfA", "Youtube/Engineering/AvE", false, "Youtube/Engineering/AvE.m3u"),
     STUFF_MADE_HERE(true, "StuffMadeHere", "UUj1VqrHhDte54oLgPG4xpuQ", "Youtube/Engineering/Stuff Made Here", false, "Youtube/Engineering/Stuff Made Here.m3u"),
     ELECTROBOOM(true, "Electroboom", "UUJ0-OtVpF0wOKEqT2Z1HEtA", "Youtube/Engineering/ElectroBOOM", false, "Youtube/Engineering/ElectroBOOM.m3u"),
-    HOW_ITS_MADE(true, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
+    HOW_ITS_MADE(false, "HowItsMade", "UUWBkudOTaVbvkCBc0pyZFMA", "Youtube/Engineering/How its Made", false, "Youtube/Engineering/How its Made.m3u"),
     PRACTICAL_ENGINEERING(true, "PracticalEngineering", "UUMOqf8ab-42UUQIdVoKwjlQ", "Youtube/Engineering/Practical Engineering", false, "Youtube/Engineering/Practical Engineering.m3u"),
     ADAM_SAVAGE_TESTED(false, "AdamSavageTested", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - Tested", false, "Youtube/Engineering/Adam Savage - Tested.m3u"),
     ADAM_SAVAGE_ONE_DAY_BUILDS(false, "AdamSavageOneDayBuilds", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - One Day Builds", false, "Youtube/Engineering/Adam Savage - One Day Builds.m3u"),
