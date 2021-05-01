@@ -11,6 +11,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -82,9 +83,9 @@ public final class YoutubeUtils {
             if (parameterString.length() > 1) {
                 parameterString.append("&");
             }
-            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), "UTF-8"))
+            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), StandardCharsets.UTF_8))
                     .append("=")
-                    .append(URLEncoder.encode(parameterEntry.getValue(), "UTF-8"));
+                    .append(URLEncoder.encode(parameterEntry.getValue(), StandardCharsets.UTF_8));
         }
         return parameterString.toString();
     }

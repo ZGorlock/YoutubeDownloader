@@ -740,7 +740,7 @@ public enum Channel {
                     video.videoId = "OZc6vcGjknI";
                     video.title = YoutubeUtils.cleanTitle("Forensic Files - S01E01 - The Disappearance of Helle Crafts");
                     video.url = YoutubeUtils.VIDEO_BASE + video.videoId;
-                    video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse("2015-01-23 12:15:00");
+                    video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-01-23 12:15:00");
                     video.output = new File(channel.outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                     HashMap<String, YoutubeChannelDownloader.Video> tmp = new LinkedHashMap<>(videoMap);
                     videoMap.clear();
@@ -845,7 +845,7 @@ public enum Channel {
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("livestream") ||
                             value.title.toLowerCase().contains("hades") ||
-                            value.title.toLowerCase().equals("in the beginning") ||
+                            value.title.equalsIgnoreCase("in the beginning") ||
                             value.title.toLowerCase().contains("collab") || value.title.toLowerCase().contains("colab")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);

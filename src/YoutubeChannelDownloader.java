@@ -270,7 +270,7 @@ public class YoutubeChannelDownloader {
         String data = FileUtils.readFileToString(dataFile, "UTF-8");
         videoMap.clear();
         if (data.contains("\"code\": 404")) {
-            System.err.println("The Playlist for " + channel.name + " does not exist");
+            System.err.println("The Channel " + channel.name + " does not exist");
             return false;
         }
         if (data.contains("\"code\": 403")) {
@@ -284,7 +284,7 @@ public class YoutubeChannelDownloader {
             JSONObject dataChunkJson = (JSONObject) dataChunk;
             JSONArray dataItems = (JSONArray) dataChunkJson.get("items");
             if (dataItems == null) {
-                System.err.println("Error reading the Playlist for " + channel.name + "; Skipping this run");
+                System.err.println("Error reading the Channel " + channel.name + "; Skipping this run");
                 continue;
             }
             for (Object dataItem : dataItems) {
@@ -306,7 +306,7 @@ public class YoutubeChannelDownloader {
                 JSONObject defaultThumbnail = (JSONObject) thumbnails.get("default");
                 if (defaultThumbnail != null) {
                     String defaultThumbnailUrl = (String) defaultThumbnail.get("url");
-                    if ((defaultThumbnailUrl == null) || defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).toLowerCase().equals("_live")) {
+                    if ((defaultThumbnailUrl == null) || defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).equalsIgnoreCase("_live")) {
                         continue;
                     }
                 } else {
@@ -318,7 +318,7 @@ public class YoutubeChannelDownloader {
                 video.originalTitle = title;
                 video.title = YoutubeUtils.cleanTitle(title);
                 video.url = YoutubeUtils.VIDEO_BASE + videoId;
-                video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS").parse(date.replace("T", " ").replace("Z", ""));
+                video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date.replace("T", " ").replace("Z", ""));
                 video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
                 
                 boolean exists = false;
