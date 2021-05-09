@@ -188,7 +188,13 @@ public enum Channel {
     SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
     ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u"),
     OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u"),
-    KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga", false, "Youtube/Funny/Kitboga.m3u");
+    KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga", false, "Youtube/Funny/Kitboga.m3u"),
+    
+    //BEST CUBE
+    BEST_CUBE_COUBOY(true, "BestCubeCouboy", "UUfU5Otc792c-lNXfFK8PM7Q", "Youtube/Best Cube/Best Cube - Couboy", false, "Youtube/Best Cube/Best Cube - Couboy.m3u"),
+    BEST_CUBE_SPARTA(true, "BestCubeSparta", "UUqb-JGYhFaV_jkJE026YZyA", "Youtube/Best Cube/Best Cube - Sparta", false, "Youtube/Best Cube/Best Cube - Sparta.m3u"),
+    SEXY_CUBE(true, "SexyCube", "UUI1JjfDCiMyeSnSXtAZL5zg", "Youtube/Best Cube/Sexy Cube", false, "Youtube/Best Cube/Sexy Cube.m3u"),
+    ANIME_CUBE(true, "AnimeCube", "UU2M5ugO54csNiDOEb8pOvvg", "Youtube/Best Cube/Anime Cube", false, "Youtube/Best Cube/Anime Cube.m3u");
     
     
     //Constants
@@ -755,7 +761,7 @@ public enum Channel {
     
     /**
      * Performs special checks specific to a Channel after producing the queue.
-     * Typically blocking.
+     * Typically filtering.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
@@ -896,6 +902,30 @@ public enum Channel {
                 final Date chubbyEmuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
                 videoMap.forEach((key, value) -> {
                     if (value.date.before(chubbyEmuOldest)) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case BEST_CUBE_COUBOY:
+            case BEST_CUBE_SPARTA:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("best cube") ||
+                            value.title.toLowerCase().contains("best coub")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            case SEXY_CUBE:
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("sexy cube") ||
+                            value.title.toLowerCase().contains("sexy coub")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
