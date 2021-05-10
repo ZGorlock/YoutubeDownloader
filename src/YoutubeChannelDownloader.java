@@ -30,6 +30,7 @@ import org.json.simple.parser.JSONParser;
 /**
  * Downloads Youtube Channels and Playlists.
  */
+@SuppressWarnings("FieldMayBeFinal")
 public class YoutubeChannelDownloader {
     
     //Constants
@@ -99,6 +100,11 @@ public class YoutubeChannelDownloader {
     private static Channel channel = null;
     
     /**
+     * The Channel to start processing from, if processing all Channels.
+     */
+    private static Channel startAt = null;
+    
+    /**
      * The Playlist ID for the Channel being processed.
      */
     private static String playlistId;
@@ -148,8 +154,10 @@ public class YoutubeChannelDownloader {
         }
         
         if (doAllChannels && (channel == null)) {
+            boolean skip = (startAt != null);
             for (Channel currentChannel : Channel.values()) {
-                if (currentChannel.active) {
+                skip = skip && (currentChannel != startAt);
+                if (!skip && currentChannel.active) {
                     setChannel(currentChannel);
                     processChannel();
                 }
