@@ -362,12 +362,12 @@ public enum Channel {
                 break;
             
             case BY_RELEASE:
-                Pattern byReleaseNamePattern = Pattern.compile("^(?<title>.+)\\s*-\\s*By\\sRelease\\s*-?#(?<episode>\\d+)$");
+                Pattern byReleaseNamePattern = Pattern.compile("^(?<title>.+)\\s*-\\s*By\\sRelease\\s*-?-\\s(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     Matcher byReleaseNameMatcher = byReleaseNamePattern.matcher(oldTitle);
                     if (byReleaseNameMatcher.matches()) {
-                        String newTitle = "By Release #" + byReleaseNameMatcher.group("episode") + " - " + byReleaseNameMatcher.group("title");
+                        String newTitle = "By Release - " + byReleaseNameMatcher.group("episode") + " - " + byReleaseNameMatcher.group("title");
                         newTitle = YoutubeUtils.cleanTitle(newTitle);
                         File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                         if (value.output.exists() && !oldTitle.equals(newTitle)) {
@@ -448,7 +448,7 @@ public enum Channel {
             case MUDKIP_HCIM:
                 Pattern hcimPattern1 = Pattern.compile("^(HCIM\\s(?<episode>\\d+)-).*");
                 Pattern hcimPattern2 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)HCIM\\s*(?:Episode|ep\\.|Ep\\.|)\\s*(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>\\(\\d+-\\d+\\))?");
-                Pattern hcimPattern3 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)#(?<episode>\\d*\\.?\\d+)\\)?");
+                Pattern hcimPattern3 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)-\\s(?<episode>\\d*\\.?\\d+)\\)?");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle.replace("[OSRS] ", "");
@@ -458,9 +458,9 @@ public enum Channel {
                         newTitle = newTitle.replace("Maxed HCIM ", "");
                         Matcher hcimMatcher3 = hcimPattern3.matcher(newTitle);
                         if (hcimMatcher3.matches()) {
-                            newTitle = "Maxed HCIM #" + hcimMatcher3.group("episode") + " - " + hcimMatcher3.group("title");
+                            newTitle = "Maxed HCIM - " + hcimMatcher3.group("episode") + " - " + hcimMatcher3.group("title");
                         } else {
-                            newTitle = newTitle.replaceAll("^Maxed HCIM ", "Maxed HCIM #");
+                            newTitle = newTitle.replaceAll("^Maxed HCIM ", "Maxed HCIM - ");
                         }
                     } else {
                         Matcher hcimMatcher1 = hcimPattern1.matcher(newTitle);
@@ -469,16 +469,18 @@ public enum Channel {
                         } else {
                             Matcher hcimMatcher2 = hcimPattern2.matcher(newTitle);
                             if (hcimMatcher2.matches()) {
-                                newTitle = "HCIM #" + hcimMatcher2.group("episode") + " - " + hcimMatcher2.group("title").trim() +
+                                newTitle = "HCIM - " + hcimMatcher2.group("episode") + " - " + hcimMatcher2.group("title").trim() +
                                         (hcimMatcher2.group("level") == null ? "" : (" " + hcimMatcher2.group("level")));
                             }
                         }
-                        newTitle = newTitle.replaceAll("^HCIM ", "HCIM #");
+                        newTitle = newTitle.replaceAll("^HCIM ", "HCIM - ");
                     }
                     newTitle = newTitle
                             .replace("##", "#")
+                            .replace("#", "- ")
                             .replace("()", "")
-                            .replace(" - (", " (");
+                            .replace(" - (", " (")
+                            .replace(" - - ", " - ");
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     if (value.output.exists() && !oldTitle.equals(newTitle)) {
@@ -492,18 +494,20 @@ public enum Channel {
                 });
                 break;
             case MUDKIP_UIM:
-                Pattern uimPattern = Pattern.compile(".*?(\\s(?:\\(UIM\\s#|\\(#)(?<episode>\\d+)\\)).*");
+                Pattern uimPattern = Pattern.compile(".*?(\\s(?:\\(UIM\\s-\\s|\\(-\\s)(?<episode>\\d+)\\)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle;
                     Matcher uimMatcher = uimPattern.matcher(newTitle);
                     if (uimMatcher.matches()) {
-                        newTitle = "UIM #" + uimMatcher.group("episode") + " - " + newTitle.replace(uimMatcher.group(1), "");
+                        newTitle = "UIM - " + uimMatcher.group("episode") + " - " + newTitle.replace(uimMatcher.group(1), "");
                     } else {
-                        newTitle = newTitle.replaceAll("^UIM ", "UIM #");
+                        newTitle = newTitle.replaceAll("^UIM ", "UIM - ");
                     }
                     newTitle = newTitle
-                            .replace("##", "#");
+                            .replace("##", "#")
+                            .replace("#", "- ")
+                            .replace(" - - ", " - ");
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     if (value.output.exists() && !oldTitle.equals(newTitle)) {
@@ -517,13 +521,13 @@ public enum Channel {
                 });
                 break;
             case SWAMPLETICS:
-                Pattern swampleticsPattern = Pattern.compile(".*?(\\s(?:\\(Swampletics\\s#|\\(#)(?<episode>\\d+)\\)).*");
+                Pattern swampleticsPattern = Pattern.compile(".*?(\\s(?:\\(Swampletics\\s-\\s|\\(-\\s)(?<episode>\\d+)\\)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle;
                     Matcher swampleticsMatcher = swampleticsPattern.matcher(newTitle);
                     if (swampleticsMatcher.matches()) {
-                        newTitle = "Swampletics #" + swampleticsMatcher.group("episode") + " - " + newTitle.replace(swampleticsMatcher.group(1), "");
+                        newTitle = "Swampletics - " + swampleticsMatcher.group("episode") + " - " + newTitle.replace(swampleticsMatcher.group(1), "");
                     }
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
@@ -538,18 +542,18 @@ public enum Channel {
                 });
                 break;
             case LOWER_THE_BETTER:
-                Pattern lowerTheBetterPattern = Pattern.compile(".*(\\s*-\\s*Lower\\s[Tt]he\\sBetter\\s(?:Ep\\.\\s)?#\\s?(?<episode>\\d+)).*");
+                Pattern lowerTheBetterPattern = Pattern.compile(".*(\\s*-\\s*Lower\\s[Tt]he\\sBetter\\s(?:Ep\\.\\s)?-\\s\\s?(?<episode>\\d+)).*");
                 AtomicInteger lowerTheBetterCount = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
                     lowerTheBetterCount.incrementAndGet();
                     String oldTitle = value.title;
                     String newTitle = oldTitle;
                     if (!newTitle.toLowerCase().contains("lower the better")) {
-                        newTitle += " - Lower the Better #" + lowerTheBetterCount.get();
+                        newTitle += " - Lower the Better - " + lowerTheBetterCount.get();
                     }
                     Matcher lowerTheBetterMatcher = lowerTheBetterPattern.matcher(newTitle);
                     if (lowerTheBetterMatcher.matches()) {
-                        newTitle = "Lower the Better #" + lowerTheBetterMatcher.group("episode") + " - " + newTitle.replace(lowerTheBetterMatcher.group(1), "");
+                        newTitle = "Lower the Better - " + lowerTheBetterMatcher.group("episode") + " - " + newTitle.replace(lowerTheBetterMatcher.group(1), "");
                     }
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
@@ -564,7 +568,7 @@ public enum Channel {
                 });
                 break;
             case OSRS_WEEKLY_RECAP:
-                Pattern osrsWeeklyRecapPattern = Pattern.compile(".*?(\\s*-*\\s*(#\\d+\\s*-*\\s*)?(OSRS\\s)?Weekly\\sRecap[\\s\\d\\-#!]*)");
+                Pattern osrsWeeklyRecapPattern = Pattern.compile(".*?(\\s*-*\\s*(-\\s\\d+\\s*-*\\s*)?(OSRS\\s)?Weekly\\sRecap[\\s\\d\\-!]*)");
                 SimpleDateFormat osrsWeeklyRecapDate = new SimpleDateFormat("yyyy-MM-dd");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -586,7 +590,7 @@ public enum Channel {
                 });
                 break;
             case IRON_MAIN:
-                Pattern ironMainPattern = Pattern.compile(".*?(\\s*-\\s*(?:IronMain\\s)?\\[#\\s*(?<episode>\\d+)]).*");
+                Pattern ironMainPattern = Pattern.compile(".*?(\\s*-\\s*(?:IronMain\\s)?\\[-\\s\\s*(?<episode>\\d+)]).*");
                 AtomicInteger ironMainCount = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
                     ironMainCount.incrementAndGet();
@@ -596,7 +600,7 @@ public enum Channel {
                     if (ironMainMatcher.matches()) {
                         newTitle = newTitle.replace(ironMainMatcher.group(1), "");
                     }
-                    newTitle = "IronMain #" + ironMainCount.get() + " - " + newTitle;
+                    newTitle = "IronMain - " + ironMainCount.get() + " - " + newTitle;
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     if (value.output.exists() && !oldTitle.equals(newTitle)) {
@@ -610,7 +614,7 @@ public enum Channel {
                 });
                 break;
             case ONE_KICK_RICK:
-                Pattern oneKickRickPattern = Pattern.compile(".*(\\s*-\\s*Lumbridge-Draynor\\s(?:Only\\s)?HCIM\\s-\\s(?:One\\sKick\\sRick\\s-\\s)?(?:Episode|Ep\\.|ep\\.)\\s*#?(?<episode>\\d+)).*");
+                Pattern oneKickRickPattern = Pattern.compile(".*(\\s*-\\s*Lumbridge-Draynor\\s(?:Only\\s)?HCIM\\s-\\s(?:One\\sKick\\sRick\\s-\\s)?(?:Episode|Ep\\.|ep\\.)\\s*(?:-\\s)?(?<episode>\\d+)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle;
@@ -619,7 +623,7 @@ public enum Channel {
                     }
                     Matcher oneKickRickMatcher = oneKickRickPattern.matcher(newTitle);
                     if (oneKickRickMatcher.matches()) {
-                        newTitle = "One Kick Rick #" + oneKickRickMatcher.group("episode") + " - " + newTitle.replace(oneKickRickMatcher.group(1), "");
+                        newTitle = "One Kick Rick - " + oneKickRickMatcher.group("episode") + " - " + newTitle.replace(oneKickRickMatcher.group(1), "");
                     }
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
@@ -877,7 +881,7 @@ public enum Channel {
             case VSAUCE:
                 final Date vSauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
                 videoMap.forEach((key, value) -> {
-                    if (value.title.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vSauceOldest)) {
+                    if (value.originalTitle.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vSauceOldest)) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
