@@ -191,6 +191,7 @@ public enum Channel {
     ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u"),
     OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u"),
     KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga", false, "Youtube/Funny/Kitboga.m3u"),
+    MORE_KITBOGA(true, "MoreKitboga", "UUWpQycBnpPxyWY6bBhr4Rbw", "Youtube/Funny/Kitboga - Uncut", false, "Youtube/Funny/Kitboga - Uncut.m3u"),
     
     //BEST CUBE
     BEST_CUBE_COUBOY(true, "BestCubeCouboy", "UUfU5Otc792c-lNXfFK8PM7Q", "Youtube/Best Cube/Best Cube - Couboy", false, "Youtube/Best Cube/Best Cube - Couboy.m3u"),
