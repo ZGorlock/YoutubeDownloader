@@ -820,7 +820,7 @@ public enum Channel {
                 break;
             case OSRS_MARKET_ANALYSIS:
                 videoMap.forEach((key, value) -> {
-                    if (!value.title.toLowerCase().contains("market")) {
+                    if (!value.title.toLowerCase().contains("market") && !value.title.toLowerCase().contains("economy")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
