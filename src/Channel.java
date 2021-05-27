@@ -162,7 +162,7 @@ public enum Channel {
     
     //MEDICINE
     CHUBBYEMU(true, "Chubbyemu", "UUKOvOaJv4GK-oDqx-sj7VVg", "Youtube/Medicine/Chubbyemu", false, "Youtube/Medicine/Chubbyemu.m3u"),
-    NHAT_BANG_SPA(true, "NhatBangSpa", "UUT37VsJ13vviqMtu_HDI4tg", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Nhat Bang Spa.m3u", false),
+    NHAT_BANG_SPA(true, "NhatBangSpa", "UUaXE_FFGt8rhOf8BhH7fAJw", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Nhat Bang Spa.m3u", false),
     LIKE_YOU(true, "LikeYou", "UU3bVSowe2a0jK8NWNlMGVUg", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Like You.m3u", false),
     
     //CRIME
@@ -701,6 +701,16 @@ public enum Channel {
                     String oldTitle = value.title;
                     String newTitle = oldTitle;
                     newTitle = "Mind Field - S03E0" + mindFieldS3Count.get() + " - " + newTitle;
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+            
+            case NHAT_BANG_SPA:
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle.replace("010", "10");
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
                     value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     value.title = newTitle;
