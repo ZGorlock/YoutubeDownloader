@@ -182,6 +182,9 @@ public enum Channel {
     FORENSIC_FILES_S13(false, "ForensicFilesS13", "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 13.m3u", false),
     FORENSIC_FILES_S14(false, "ForensicFilesS14", "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files - Season 14.m3u", false),
     
+    //GME
+    SUPERSTONK(true, "Superstonk", "UUI4EET9NJPWxUuXGlG6fxPA", "../Documents/Other/GME/AMAs", false, "../Documents/Other/GME/AMAs/AMAs.m3u", false),
+    
     //TRIPPY
     FELIX_COSGRAVE(true, "FelixCosgrave", "UUO7fujFV_MuxTM0TuZrnE6Q", "Youtube/Trippy/Felix Cosgrave", false, "Youtube/Trippy/Felix Cosgrave.m3u"),
     
