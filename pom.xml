@@ -29,7 +29,7 @@
         <commons-lang3.version>3.9</commons-lang3.version>
         
         <!-- HTTP -->
-        <httpclient.version>4.5.10</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
         <jsoup.version>1.12.1</jsoup.version>
         
         <!-- JSON -->
