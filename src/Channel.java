@@ -162,8 +162,8 @@ public enum Channel {
     
     //MEDICINE
     CHUBBYEMU(true, "Chubbyemu", "UUKOvOaJv4GK-oDqx-sj7VVg", "Youtube/Medicine/Chubbyemu", false, "Youtube/Medicine/Chubbyemu.m3u"),
-    NHAT_BANG_SPA(true, "NhatBangSpa", "UUaXE_FFGt8rhOf8BhH7fAJw", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Nhat Bang Spa.m3u", false),
-    LIKE_YOU(true, "LikeYou", "UU3bVSowe2a0jK8NWNlMGVUg", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Like You.m3u", false),
+    NHAT_BANG_SPA(false, "NhatBangSpa", "UUaXE_FFGt8rhOf8BhH7fAJw", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Nhat Bang Spa.m3u", false),
+    LIKE_YOU(false, "LikeYou", "UU3bVSowe2a0jK8NWNlMGVUg", "Youtube/Medicine/Popping", false, "Youtube/Medicine/Popping - Like You.m3u", false),
     
     //CRIME
     FORENSIC_FILES(false, "ForensicFiles", "UUVBTlb6_rQkWY99ZKi2oBMw", "Youtube/Crime/Forensic Files", false, "Youtube/Crime/Forensic Files.m3u"),
