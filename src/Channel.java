@@ -22,17 +22,21 @@ import org.apache.commons.io.FileUtils;
  */
 public enum Channel {
     
-    //To get the playlistId for a Youtube Playlist:
-    //1, Go to the Youtube Playlist
-    //2. Simply copy it from the url:
-    //  https://www.youtube.com/watch?v=3qiLI1ILMlU&list=PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr
-    //                                                  <PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr>
+    // ----------------------------------------------------------------
     //
-    //To get the playlistId for a Youtube Channel:
-    //1. Go to the Youtube Channel
-    //2. View the Page Source
-    //3. Search for "externalId" and copy that value
-    //4. Replace the second character from a 'C' to a 'U'
+    //  To get the playlistId for a Youtube Playlist:
+    //   1. Go to the Youtube Playlist
+    //   2. Simply copy it from the url:
+    //   https://www.youtube.com/watch?v=3qiLI1ILMlU&list=PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr
+    //                                                   <PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr>
+    //
+    // To get the playlistId for a Youtube Channel:
+    //   1. Go to the Youtube Channel
+    //   2. View the Page Source
+    //   3. Search for "externalId" and copy that value
+    //   4. Replace the second character from a 'C' to a 'U'
+    //
+    // ----------------------------------------------------------------
     
     //Values
     

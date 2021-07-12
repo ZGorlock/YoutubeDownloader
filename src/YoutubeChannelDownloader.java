@@ -40,6 +40,20 @@ public class YoutubeChannelDownloader {
      */
     private static String API_KEY = "";
     
+    // ----------------------------------------------------------------
+    //
+    // To run this project you need a Google API Key:
+    //   1. Go to: https://console.cloud.google.com/projectselector2/apis/dashboard
+    //   2. Click 'Create new Project' and name it 'Youtube Downloader'
+    //   3. Click on 'Enable APIs and Services'
+    //   4. Search 'Youtube' and select 'YouTube Data API v3'
+    //   5. Click 'Enable'
+    //   6. Click 'Create Credentials'
+    //   7. Select 'YouTube Data API v3', click 'Public Data', then click 'Next'
+    //   8. Copy your API key to the file /apiKey in the project
+    //
+    // ----------------------------------------------------------------
+    
     //Populates API_KEY
     static {
         try {
