@@ -717,6 +717,16 @@ public enum Channel {
                 });
                 break;
             
+            case LOCK_PICKING_LAWYER:
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle.replace("[", "").replace("]", " -");
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    value.title = newTitle;
+                });
+                break;
+            
             case NHAT_BANG_SPA:
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
