@@ -1,7 +1,10 @@
 /*
  * File:    YoutubeUtils.java
+ * Package: youtube
  * Author:  Zachary Gill
  */
+
+package youtube;
 
 import java.io.BufferedReader;
 import java.io.File;

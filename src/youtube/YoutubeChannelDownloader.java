@@ -1,7 +1,10 @@
 /*
  * File:    YoutubeChannelDownloader.java
+ * Package: youtube
  * Author:  Zachary Gill
  */
+
+package youtube;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

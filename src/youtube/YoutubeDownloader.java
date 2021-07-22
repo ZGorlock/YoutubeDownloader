@@ -1,7 +1,10 @@
 /*
  * File:    YoutubeDownloader.java
+ * Package: youtube
  * Author:  Zachary Gill
  */
+
+package youtube;
 
 import java.io.File;
 import java.nio.file.Files;
