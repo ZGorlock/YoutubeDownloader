@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import commons.console.ConsoleProgressBar;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 
@@ -252,6 +253,11 @@ public final class YoutubeUtils {
             Process process = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
             
+            Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+).*$");
+            Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
+            ConsoleProgressBar progressBar = null;
+            long initialProgress = -1L;
+            
             StringBuilder response = new StringBuilder();
             String line;
             while (true) {
@@ -259,15 +265,45 @@ public final class YoutubeUtils {
                 if (line == null) {
                     break;
                 }
+                
                 if (log) {
                     System.out.println(line);
+                    
+                } else {
+                    if (initialProgress == -1) {
+                        Matcher resumeMatcher = resumePattern.matcher(line);
+                        if (resumeMatcher.matches()) {
+                            initialProgress = Long.parseLong(resumeMatcher.group("initialProgress")) / 1024;
+                        }
+                    }
+                    
+                    Matcher progressMatcher = progressPattern.matcher(line);
+                    if (progressMatcher.matches()) {
+                        double percentage = Double.parseDouble(progressMatcher.group("percentage")) / 100.0;
+                        long total = (long) (Double.parseDouble(progressMatcher.group("total")) * 1024);
+                        
+                        if (progressBar == null) {
+                            progressBar = new ConsoleProgressBar("", total, "KB");
+                            progressBar.setAutoPrint(true);
+                            initialProgress = Math.max(initialProgress, 0);
+                            progressBar.setInitialProgress(initialProgress);
+                        }
+                        
+                        long progress = (long) (percentage * total);
+                        progressBar.update(progress);
+                    }
                 }
+                
                 response.append(line).append(System.lineSeparator());
             }
             
             process.waitFor();
             r.close();
             process.destroy();
+            
+            if (progressBar != null) {
+                progressBar.complete();
+            }
             
             return response.toString();
             
