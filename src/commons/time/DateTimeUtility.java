@@ -488,6 +488,10 @@ public final class DateTimeUtility {
         durationString.append(((!abbreviate && (durationString.length() > 0)) || (seconds > 0)) ? (seconds + (abbreviateUnits ? "s " : (" Second" + ((seconds == 1) ? "" : "s") + " "))) : "");
         durationString.append(showMilliseconds ? (((!abbreviate && (durationString.length() > 0)) || (milliseconds > 0)) ? (milliseconds + (abbreviateUnits ? "ms " : (" Millisecond" + ((milliseconds == 1) ? "" : "s") + " "))) : "") : "");
         durationString.insert(0, ((isNegative && (durationString.length() > 0)) ? (abbreviateUnits ? "- " : "Negative ") : ""));
+        
+        if (durationString.toString().isBlank()) {
+            return "0" + (showMilliseconds ? (abbreviateUnits ? "ms" : " Milliseconds") : (abbreviateUnits ? "s" : " Seconds"));
+        }
         return StringUtility.trim(durationString.toString());
     }
     
@@ -552,6 +556,7 @@ public final class DateTimeUtility {
         durationStamp.append((!abbreviate || (seconds > 0) || (durationStamp.length() > 0)) ? (((!abbreviate || (durationStamp.length() > 0)) ? StringUtility.padZero(seconds, 2) : seconds) + "") : "0");
         durationStamp.append(showMilliseconds ? (((!abbreviate || (milliseconds > 0)) ? "." : "") + (!abbreviate ? StringUtility.padZero(milliseconds, 3) : StringUtility.padZero(milliseconds, 3).replaceAll("0+$", ""))) : "");
         durationStamp.insert(0, (isNegative ? "-" : ""));
+        
         return durationStamp.toString();
     }
     
