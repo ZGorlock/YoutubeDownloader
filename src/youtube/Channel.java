@@ -163,6 +163,7 @@ public enum Channel {
     ADAM_SAVAGE_ONE_DAY_BUILDS(false, "AdamSavageOneDayBuilds", "UUiDJtJKMICpb9B1qf7qjEOA", "Youtube/Engineering/Adam Savage - One Day Builds", false, "Youtube/Engineering/Adam Savage - One Day Builds.m3u"),
     THIS_OLD_TONY(true, "ThisOldTony", "UU5NO8MgTQKHAWXp6z8Xl7yQ", "Youtube/Engineering/This Old Tony", false, "Youtube/Engineering/This Old Tony.m3u"),
     LOCK_PICKING_LAWYER(true, "LockPickingLawyer", "UUm9K6rby98W8JigLoZOh6FQ", "Youtube/Engineering/Lock Picking Lawyer", false, "Youtube/Engineering/Lock Picking Lawyer.m3u"),
+    MACHINE_THINKING(true, "MachineThinking", "UUfsznjef2zGJnrCRQBXqo6Q", "Youtube/Engineering/Machine Thinking", false, "Youtube/Engineering/Machine Thinking.m3u"),
     
     //CHEMISTRY
     PERIODIC_VIDEOS(true, "PeriodicVideos", "UUtESv1e7ntJaLJYKIO1FoYw", "Youtube/Chemistry/Periodic Videos", false, "Youtube/Chemistry/Periodic Videos.m3u"),
