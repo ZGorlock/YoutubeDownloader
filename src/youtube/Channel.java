@@ -210,7 +210,7 @@ public enum Channel {
     //BEST CUBE
     BEST_CUBE_COUBOY(true, "BestCubeCouboy", "UUfU5Otc792c-lNXfFK8PM7Q", "Youtube/Best Cube/Best Cube - Couboy", false, "Youtube/Best Cube/Best Cube - Couboy.m3u"),
     BEST_CUBE_SPARTA(true, "BestCubeSparta", "UUqb-JGYhFaV_jkJE026YZyA", "Youtube/Best Cube/Best Cube - Sparta", false, "Youtube/Best Cube/Best Cube - Sparta.m3u"),
-    SEXY_CUBE(true, "SexyCube", "UUI1JjfDCiMyeSnSXtAZL5zg", "Youtube/Best Cube/Sexy Cube", false, "Youtube/Best Cube/Sexy Cube.m3u"),
+    SEXY_CUBE(false, "SexyCube", "UUI1JjfDCiMyeSnSXtAZL5zg", "Youtube/Best Cube/Sexy Cube", false, "Youtube/Best Cube/Sexy Cube.m3u"),
     ANIME_CUBE(true, "AnimeCube", "UU2M5ugO54csNiDOEb8pOvvg", "Youtube/Best Cube/Anime Cube", false, "Youtube/Best Cube/Anime Cube.m3u");
     
     
