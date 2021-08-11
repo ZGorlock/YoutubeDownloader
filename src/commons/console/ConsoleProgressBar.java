@@ -77,6 +77,11 @@ public class ConsoleProgressBar {
      */
     public static final boolean DEFAULT_SHOW_TIME_REMAINING = true;
     
+    /**
+     * A string printed at the end of the progress bar to help it display in some terminals.
+     */
+    public static final String ENDCAP = Console.ConsoleEffect.BLACK.apply(" ");
+    
     
     //Fields
     
@@ -113,7 +118,7 @@ public class ConsoleProgressBar {
     /**
      * The last couple progress values of the progress bar for calculating the rolling average speed.
      */
-    private List<Long> rollingProgress = new ArrayList<>();
+    private final List<Long> rollingProgress = new ArrayList<>();
     
     /**
      * The initial duration of the progress bar in seconds.
@@ -138,7 +143,7 @@ public class ConsoleProgressBar {
     /**
      * The last couple times the progress bar was updated for calculating the rolling average speed.
      */
-    private List<Long> rollingUpdate = new ArrayList<>();
+    private final List<Long> rollingUpdate = new ArrayList<>();
     
     /**
      * The width of the bar in the progress bar.
@@ -316,9 +321,10 @@ public class ConsoleProgressBar {
      * @see #get()
      */
     public String getPrintable() {
-        int oldLength = progressBar.length();
+        int oldLength = StringUtility.removeConsoleEscapeCharacters(progressBar).length();
         String bar = get();
-        return '\r' + bar + StringUtility.spaces(Math.max((oldLength - bar.length()), 0));
+        int newLength = StringUtility.removeConsoleEscapeCharacters(bar).length();
+        return '\r' + bar + ' ' + StringUtility.spaces(Math.max((oldLength - newLength - 1), 0)) + ENDCAP;
     }
     
     /**
@@ -400,6 +406,7 @@ public class ConsoleProgressBar {
      */
     public synchronized void print() {
         String bar = getPrintable();
+        bar = bar.replace(" ", " ");
         System.out.print(bar);
         System.out.flush();
         System.err.flush();
@@ -516,14 +523,16 @@ public class ConsoleProgressBar {
         update(total, false);
         String completeProgressBar = getPrintable();
         
+        String extras = "";
         if (printTime) {
             long duration = TimeUnit.NANOSECONDS.toMillis(getTotalDuration());
             String durationString = DateTimeUtility.durationToDurationString(duration, false, false, true);
-            completeProgressBar += " (" + durationString + ')';
+            extras += " (" + durationString + ')';
         }
         if (!additionalInfo.isEmpty()) {
-            completeProgressBar += " - " + additionalInfo;
+            extras += " - " + additionalInfo;
         }
+        completeProgressBar = completeProgressBar.replace(" ", (extras.isEmpty() ? " " : extras));
         
         System.out.println(completeProgressBar);
         System.out.flush();
