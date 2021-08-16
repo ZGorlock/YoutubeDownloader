@@ -113,6 +113,31 @@ public class YoutubeChannelDownloader {
      */
     private static final Map<String, Video> videoMap = new LinkedHashMap<>();
     
+    /**
+     * A counter of the total number of Channels that were processed this run.
+     */
+    private static int totalChannels = 0;
+    
+    /**
+     * A counter of the total number of videos that were downloaded this run.
+     */
+    private static int totalDownloads = 0;
+    
+    /**
+     * A counter of the total number of videos that failed to download this run.
+     */
+    private static int totalDownloadFailures = 0;
+    
+    /**
+     * A counter of the total number of times the Youtube Data API was called this run.
+     */
+    private static int totalApiCalls = 0;
+    
+    /**
+     * A counter of the total number of times calling the Youtube Data API failed this run.
+     */
+    private static int totalApiFailures = 0;
+    
     
     //Fields
     
@@ -193,6 +218,8 @@ public class YoutubeChannelDownloader {
             setChannel(channel);
             processChannel();
         }
+        
+        printStats();
     }
     
     
@@ -246,6 +273,7 @@ public class YoutubeChannelDownloader {
                 downloadVideos() &&
                 createPlaylist();
         
+        totalChannels++;
         System.out.println();
         return success;
     }
@@ -277,9 +305,12 @@ public class YoutubeChannelDownloader {
                     HttpEntity entity = response.getEntity();
                     Header headers = entity.getContentType();
                     String result = EntityUtils.toString(entity);
+                    
+                    totalApiCalls++;
                     calls.add(request.getURI() + " ===== " + result.replaceAll("[\\s\\r\\n]+", " "));
                     
                     if (result.contains("\"error\": {")) {
+                        totalApiFailures++;
                         if (retry < (MAX_RETRIES - 1)) {
                             continue;
                         }
@@ -451,18 +482,21 @@ public class YoutubeChannelDownloader {
         }
         
         List<String> working = new ArrayList<>(queue);
-        for (String videoId : working) {
+        for (int i = 0; i < working.size(); i++) {
+            String videoId = working.get(i);
             Video video = videoMap.get(videoId);
             
-            System.out.println("Downloading: " + video.title);
+            System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
             System.out.print("    ");
             if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
                 queue.remove(videoId);
                 save.add(videoId);
+                totalDownloads++;
                 System.out.println("    Download Succeeded");
             } else {
                 queue.remove(videoId);
                 blocked.add(videoId);
+                totalDownloadFailures++;
                 System.err.println("    Download Failed");
             }
             
@@ -527,6 +561,17 @@ public class YoutubeChannelDownloader {
             }
         }
         return true;
+    }
+    
+    /**
+     * Prints statistics about the completed run.
+     */
+    private static void printStats() {
+        System.out.println("Channels Processed: " + totalChannels);
+        System.out.println("Videos Downloaded:  " + totalDownloads);
+        System.out.println("Videos Failed:      " + totalDownloadFailures);
+        System.out.println("API Calls:          " + totalApiCalls);
+        System.out.println("API Failures:       " + totalApiFailures);
     }
     
     
