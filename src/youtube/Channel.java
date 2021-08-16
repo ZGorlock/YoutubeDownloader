@@ -269,6 +269,11 @@ public enum Channel {
      */
     public boolean keepClean;
     
+    /**
+     * A flag indicating whether there was an error retrieving the Channel this run or not.
+     */
+    public boolean error;
+    
     
     //Constructors
     
@@ -291,6 +296,7 @@ public enum Channel {
         this.saveAsMp3 = saveAsMp3;
         this.playlistFile = (playlistFile != null) ? new File(saveAsMp3 ? musicDir : videoDir, playlistFile) : null;
         this.keepClean = keepClean;
+        this.error = false;
     }
     
     /**

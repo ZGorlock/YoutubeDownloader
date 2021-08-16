@@ -75,6 +75,11 @@ public class YoutubeChannelDownloader {
      */
     private static final String REQUEST_BASE = "https://www.googleapis.com/youtube/v3/playlistItems";
     
+    /**
+     * The maximum number of times to retry an API call before failing.
+     */
+    private static final int MAX_RETRIES = 10;
+    
     
     //Static Fields
     
@@ -142,6 +147,11 @@ public class YoutubeChannelDownloader {
     private static File dataFile;
     
     /**
+     * The internal call log file for the Channel being processed.
+     */
+    private static File callLogFile;
+    
+    /**
      * The internal file holding the saved videos for the Channel being processed.
      */
     private static File saveFile;
@@ -202,6 +212,7 @@ public class YoutubeChannelDownloader {
         playlistM3u = channel.playlistFile;
         
         dataFile = new File("data/channel/" + channel.name + "/" + channel.name + "-data.txt");
+        callLogFile = new File("data/channel/" + channel.name + "/" + channel.name + "-callLog.txt");
         saveFile = new File("data/channel/" + channel.name + "/" + channel.name + "-save.txt");
         queueFile = new File("data/channel/" + channel.name + "/" + channel.name + "-queue.txt");
         blockedFile = new File("data/channel/" + channel.name + "/" + channel.name + "-blocked.txt");
@@ -253,35 +264,51 @@ public class YoutubeChannelDownloader {
         parameters.put("key", API_KEY);
         
         StringBuilder data = new StringBuilder("[").append(System.lineSeparator());
-        boolean more;
+        List<String> calls = new ArrayList<>();
+        boolean more = false;
         boolean first = true;
         do {
             HttpGet request = new HttpGet(REQUEST_BASE + YoutubeUtils.buildParameterString(parameters));
             request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
             
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                HttpEntity entity = response.getEntity();
-                Header headers = entity.getContentType();
-                String result = EntityUtils.toString(entity);
+            for (int retry = 0; retry < MAX_RETRIES; retry++) {
                 
-                more = false;
-                JSONParser parser = new JSONParser();
-                JSONObject resultJson = (JSONObject) parser.parse(result);
-                if (resultJson.containsKey("nextPageToken")) {
-                    parameters.put("pageToken", (String) resultJson.get("nextPageToken"));
-                    more = true;
+                try (CloseableHttpResponse response = httpClient.execute(request)) {
+                    HttpEntity entity = response.getEntity();
+                    Header headers = entity.getContentType();
+                    String result = EntityUtils.toString(entity);
+                    calls.add(request.getURI() + " ===== " + result.replaceAll("[\\s\\r\\n]+", " "));
+                    
+                    if (result.contains("\"error\": {")) {
+                        if (retry < (MAX_RETRIES - 1)) {
+                            continue;
+                        }
+                        channel.error = true;
+                    } else {
+                        retry = MAX_RETRIES;
+                    }
+                    
+                    more = false;
+                    JSONParser parser = new JSONParser();
+                    JSONObject resultJson = (JSONObject) parser.parse(result);
+                    if (resultJson.containsKey("nextPageToken")) {
+                        parameters.put("pageToken", (String) resultJson.get("nextPageToken"));
+                        more = true;
+                    }
+                    
+                    if (!first) {
+                        data.append(",");
+                    }
+                    data.append(result);
+                    first = false;
                 }
                 
-                if (!first) {
-                    data.append(",");
-                }
-                data.append(result);
-                first = false;
             }
         } while (more);
         data.append("]");
         
         FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
+        FileUtils.writeLines(callLogFile, calls);
         return true;
     }
     
@@ -483,15 +510,17 @@ public class YoutubeChannelDownloader {
             Collections.reverse(playlist);
         }
         
-        if (!playlist.equals(existingPlaylist)) {
-            FileUtils.writeLines(channel.playlistFile, playlist);
-            
-            if (channel.keepClean) {
-                File[] videos = channel.outputFolder.listFiles();
-                if (videos != null) {
-                    for (File video : videos) {
-                        if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
-                            FileUtils.forceDeleteOnExit(video);
+        if (!channel.error) {
+            if (!playlist.equals(existingPlaylist)) {
+                FileUtils.writeLines(channel.playlistFile, playlist);
+                
+                if (channel.keepClean) {
+                    File[] videos = channel.outputFolder.listFiles();
+                    if (videos != null) {
+                        for (File video : videos) {
+                            if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
+                                FileUtils.forceDeleteOnExit(video);
+                            }
                         }
                     }
                 }
