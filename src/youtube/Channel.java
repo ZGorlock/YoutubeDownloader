@@ -57,6 +57,7 @@ public enum Channel {
     MUSIC_LAB_FUTURE_GARAGE(true, "MusicLabFutureGarage", "PLdE7uo_7KBkdbssGgnnIDm3EnE2gmHyEQ", "Beats/Music Lab", true, "Beats/Future Garage Music.m3u", false),
     JIMTV_PROGRAMMING(true, "JimTVProgramming", "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y", "Beats/JimTV", true, "Beats/Programming Music.m3u", false),
     DREAMHOP_MUSIC(true, "DreamhopMusic", "UUz9_4daWw-uWuqeB6_IkhMg", "Beats/Dreamhop Music", true, "Beats/Dreamhop Music.m3u", false),
+    LITTLE_SOUL(true, "LittleSoul", "UUdTB4hMadQoqVaDiunBIkmQ", "Beats/Little Soul", true, "Beats/Little Soul.m3u", false),
     
     //TRAP
     TRAP_CITY(true, "TrapCity", "UU65afEgL62PGFWXY7n6CUbA", "Trap/Trap City", true, "Trap/Trap City.m3u"),
