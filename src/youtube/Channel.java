@@ -209,8 +209,10 @@ public enum Channel {
     KITBOGA_HIGHLIGHTS(true, "KitbogaHighlights", "UUgmhcAFfPVx_AMSf89HGh_A", "Youtube/Funny/Kitboga - Highlights", false, "Youtube/Funny/Kitboga - Highlights.m3u"),
     
     //BEST CUBE
+    BEST_CUBE(true, "BestCube", "UUIGBzvhOm5Hwxs9u_LY2XLQ", "Youtube/Best Cube/Best Cube", false, "Youtube/Best Cube/Best Cube.m3u"),
+    BEST_CUBE_2(true, "BestCube2", "UU0s-sfNvOloiNBkCBYlfmUw", "Youtube/Best Cube/Best Cube 2", false, "Youtube/Best Cube/Best Cube 2.m3u"),
     BEST_CUBE_COUBOY(true, "BestCubeCouboy", "UUfU5Otc792c-lNXfFK8PM7Q", "Youtube/Best Cube/Best Cube - Couboy", false, "Youtube/Best Cube/Best Cube - Couboy.m3u"),
-    BEST_CUBE_SPARTA(true, "BestCubeSparta", "UUqb-JGYhFaV_jkJE026YZyA", "Youtube/Best Cube/Best Cube - Sparta", false, "Youtube/Best Cube/Best Cube - Sparta.m3u"),
+    BEST_CUBE_SPARTA(false, "BestCubeSparta", "UUqb-JGYhFaV_jkJE026YZyA", "Youtube/Best Cube/Best Cube - Sparta", false, "Youtube/Best Cube/Best Cube - Sparta.m3u"),
     SEXY_CUBE(false, "SexyCube", "UUI1JjfDCiMyeSnSXtAZL5zg", "Youtube/Best Cube/Sexy Cube", false, "Youtube/Best Cube/Sexy Cube.m3u"),
     ANIME_CUBE(true, "AnimeCube", "UU2M5ugO54csNiDOEb8pOvvg", "Youtube/Best Cube/Anime Cube", false, "Youtube/Best Cube/Anime Cube.m3u");
     
