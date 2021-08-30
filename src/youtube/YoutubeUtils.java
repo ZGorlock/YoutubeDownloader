@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import commons.access.CmdLine;
+import commons.access.OperatingSystem;
 import commons.console.ConsoleProgressBar;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -70,7 +72,7 @@ public final class YoutubeUtils {
          */
         Executable(String name, String website) {
             this.name = name;
-            this.exe = new File(name + ".exe");
+            this.exe = new File(name + (OperatingSystem.isWindows() ? ".exe" : ""));
             this.website = website;
         }
         
@@ -368,7 +370,7 @@ public final class YoutubeUtils {
      */
     public static String executeProcess(String cmd, boolean log) {
         try {
-            ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
+            ProcessBuilder builder = CmdLine.buildProcess(cmd);
             
             Process process = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
