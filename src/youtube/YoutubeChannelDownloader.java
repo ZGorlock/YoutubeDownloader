@@ -266,7 +266,7 @@ public class YoutubeChannelDownloader {
         System.out.println("Processing Channel: " + channel.name);
         System.out.println();
         
-        boolean success = YoutubeUtils.doStartupChecks() &&
+        boolean success = YoutubeUtils.isOnline() &&
                 getChannelData() &&
                 processChannelData() &&
                 produceQueue() &&
