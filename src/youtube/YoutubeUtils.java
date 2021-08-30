@@ -375,7 +375,7 @@ public final class YoutubeUtils {
             Process process = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
             
-            Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+).*$");
+            Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
             Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
             ConsoleProgressBar progressBar = null;
             long initialProgress = -1L;
@@ -402,10 +402,22 @@ public final class YoutubeUtils {
                     Matcher progressMatcher = progressPattern.matcher(line);
                     if (progressMatcher.matches()) {
                         double percentage = Double.parseDouble(progressMatcher.group("percentage")) / 100.0;
-                        long total = (long) (Double.parseDouble(progressMatcher.group("total")) * 1024);
+                        double total = Double.parseDouble(progressMatcher.group("total"));
+                        
+                        String units = progressMatcher.group("units").replace("i", "");
+                        switch (units) {
+                            case "TB":
+                                total *= 1024;
+                            case "GB":
+                                total *= 1024;
+                            case "MB":
+                                total *= 1024;
+                            case "KB":
+                            default:
+                        }
                         
                         if (progressBar == null) {
-                            progressBar = new ConsoleProgressBar("", total, "KB");
+                            progressBar = new ConsoleProgressBar("", (long) total, "KB");
                             progressBar.setAutoPrint(true);
                             initialProgress = Math.max(initialProgress, 0);
                             progressBar.setInitialProgress(initialProgress);
