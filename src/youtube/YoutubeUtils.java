@@ -29,7 +29,90 @@ import org.jsoup.Jsoup;
  */
 public final class YoutubeUtils {
     
+    //Enums
+    
+    /**
+     * An enumeration of Youtube Downloader executables.
+     */
+    public enum Executable {
+        
+        //Values
+        
+        YOUTUBE_DL("youtube-dl", "https://www.youtube-dl.org/"),
+        YT_DLP("yt-dlp", "https://github.com/yt-dlp/yt-dlp/");
+        
+        
+        //Fields
+        
+        /**
+         * The name of the Executable.
+         */
+        private final String name;
+        
+        /**
+         * The exe of the Executable.
+         */
+        private final File exe;
+        
+        /**
+         * The website of the Executable.
+         */
+        private final String website;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs an Executable.
+         *
+         * @param name    The name of the Executable.
+         * @param website The website of the Executable.
+         */
+        Executable(String name, String website) {
+            this.name = name;
+            this.exe = new File(name + ".exe");
+            this.website = website;
+        }
+        
+        
+        //Methods
+        
+        /**
+         * Returns the name of the Executable.
+         *
+         * @return The name of the Executable.
+         */
+        public String getName() {
+            return name;
+        }
+        
+        /**
+         * Returns the exe of the Executable.
+         *
+         * @return The exe of the Executable.
+         */
+        public File getExe() {
+            return exe;
+        }
+        
+        /**
+         * Returns the website of the Executable.
+         *
+         * @return The website of the Executable.
+         */
+        public String getWebsite() {
+            return website;
+        }
+        
+    }
+    
+    
     //Constants
+    
+    /**
+     * The Youtube Downloader executable to use.
+     */
+    public static final Executable EXECUTABLE = Executable.YT_DLP;
     
     /**
      * The base url for Youtube videos.
@@ -50,7 +133,7 @@ public final class YoutubeUtils {
      * @param video      The video url.
      * @param output     The output file to create.
      * @param asMp3      Whether or not to save the video as an mp3.
-     * @param logCommand Whether or not to log the youtube-dl command.
+     * @param logCommand Whether or not to log the download command.
      * @param logWork    Whether or not to log the download work.
      * @return Whether the video was successfully downloaded or not.
      * @throws Exception When there is an error downloading the video.
@@ -59,7 +142,7 @@ public final class YoutubeUtils {
         String outputPath = output.getAbsolutePath();
         outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
         
-        String cmd = "youtube-dl.exe " +
+        String cmd = EXECUTABLE.getExe().getName() + " " +
                 "--output \"" + outputPath + ".%(ext)s\" " +
                 "--geo-bypass --rm-cache-dir " +
                 (asMp3 ? "--extract-audio --audio-format mp3 " :
@@ -162,35 +245,104 @@ public final class YoutubeUtils {
             return false;
         }
         
-        File youtubeDl = new File("youtube-dl.exe");
+        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? executeProcess(EXECUTABLE.getExe().getName() + " --version", false).trim() : "";
+        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
         
-        String currentYoutubeDlVersion = youtubeDl.exists() ? executeProcess("youtube-dl.exe --version", false).trim() : "";
-        String latestYoutubeDlVersion = YoutubeUtils.getCurrentYoutubeDlVersion();
-        
-        if (youtubeDl.exists() && (currentYoutubeDlVersion.isEmpty() || latestYoutubeDlVersion.isEmpty())) {
-            System.err.println("Unable to check for youtube-dl updates");
+        if (EXECUTABLE.getExe().exists() && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
+            System.err.println("Unable to check for " + EXECUTABLE.getName() + " updates");
             
-        } else if (!currentYoutubeDlVersion.equals(latestYoutubeDlVersion)) {
-            if (!youtubeDl.exists()) {
-                System.err.println("Requires youtube-dl");
+        } else if (!currentExecutableVersion.equals(latestExecutableVersion)) {
+            if (!EXECUTABLE.getExe().exists()) {
+                System.err.println("Requires " + EXECUTABLE.getName());
             } else {
-                System.err.println("An update is available for youtube-dl");
-                System.err.println("Current Version: " + currentYoutubeDlVersion + " | Latest Version: " + latestYoutubeDlVersion);
+                System.err.println("An update is available for " + EXECUTABLE.getName());
+                System.err.println("Current Version: " + currentExecutableVersion + " | Latest Version: " + latestExecutableVersion);
             }
             System.err.println("Downloading...");
             
-            youtubeDl = downloadFile("https://www.youtube-dl.org/downloads/latest/youtube-dl.exe", new File("youtube-dl.exe"));
-            if (youtubeDl == null) {
-                System.err.println("Unable to update youtube-dl");
+            File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
+            if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
+                System.err.println("Unable to update " + EXECUTABLE.getName());
                 return false;
             } else {
-                System.err.println("Successfully updated youtube-dl to " + latestYoutubeDlVersion);
+                System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
                 System.out.println();
                 return true;
             }
         }
         
         return true;
+    }
+    
+    /**
+     * Returns the latest executable version.
+     *
+     * @return The latest executable version, or an empty string if there an an error.
+     */
+    public static String getLatestExecutableVersion() {
+        String url;
+        String versionPatternRegex;
+        
+        switch (EXECUTABLE) {
+            case YOUTUBE_DL:
+                url = EXECUTABLE.getWebsite();
+                versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:";
+                break;
+            
+            case YT_DLP:
+                url = EXECUTABLE.getWebsite() + "releases/";
+                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/[^\"]+\">yt-dlp\\s(?<version>[0-9.]+)</a>";
+                break;
+            
+            default:
+                return "";
+        }
+        
+        try {
+            String html = Jsoup.connect(url)
+                    .ignoreContentType(true)
+                    .maxBodySize(0)
+                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                    .referrer("http://www.google.com")
+                    .timeout(5000)
+                    .followRedirects(true)
+                    .execute()
+                    .parse()
+                    .toString();
+            
+            Pattern versionPattern = Pattern.compile(".*" + versionPatternRegex + ".*");
+            String[] lines = html.split("\n");
+            for (String line : lines) {
+                Matcher versionMatcher = versionPattern.matcher(line);
+                if (versionMatcher.matches()) {
+                    return versionMatcher.group("version");
+                }
+            }
+            
+        } catch (IOException ignored) {
+        }
+        return "";
+    }
+    
+    /**
+     * Downloads the latest executable.
+     *
+     * @param latestVersion The latest version of the executable.
+     * @return The downloaded executable, or null if there was an error.
+     */
+    public static File downloadLatestExecutable(String latestVersion) {
+        switch (EXECUTABLE) {
+            case YOUTUBE_DL:
+                //https://www.youtube-dl.org/downloads/latest/youtube-dl.exe
+                return downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+            
+            case YT_DLP:
+                //https://github.com/yt-dlp/yt-dlp/releases/download/2021.08.10/yt-dlp.exe
+                return downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+            
+            default:
+                return null;
+        }
     }
     
     /**
@@ -205,38 +357,6 @@ public final class YoutubeUtils {
         } catch (IOException e) {
             return false;
         }
-    }
-    
-    /**
-     * Returns the current youtube-dl version.
-     *
-     * @return The current youtube-dl version.
-     */
-    public static String getCurrentYoutubeDlVersion() {
-        try {
-            String html = Jsoup.connect("https://youtube-dl.org/")
-                    .ignoreContentType(true)
-                    .maxBodySize(0)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
-                    .referrer("http://www.google.com")
-                    .timeout(5000)
-                    .followRedirects(true)
-                    .execute()
-                    .parse()
-                    .toString();
-            
-            Pattern versionPattern = Pattern.compile(".*<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:.*");
-            String[] lines = html.split("\n");
-            for (String line : lines) {
-                Matcher versionMatcher = versionPattern.matcher(line);
-                if (versionMatcher.matches()) {
-                    return versionMatcher.group("version");
-                }
-            }
-            
-        } catch (IOException ignored) {
-        }
-        return "";
     }
     
     /**
