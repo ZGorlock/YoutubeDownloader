@@ -7,9 +7,12 @@
 package youtube;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -150,6 +153,26 @@ public class YoutubeChannelDownloader {
      */
     private static int totalApiFailures = 0;
     
+    /**
+     * A counter of the total number of videos saved from Youtube.
+     */
+    private static int totalVideos = 0;
+    
+    /**
+     * A counter of the total number of songs saved from Youtube.
+     */
+    private static int totalSongs = 0;
+    
+    /**
+     * A counter of the total data downloaded from Youtube this run.
+     */
+    private static double totalDataDownloaded = 0.0;
+    
+    /**
+     * A counter of the total data saved from Youtube, in MB.
+     */
+    private static double totalData = 0.0;
+    
     
     //Fields
     
@@ -227,12 +250,15 @@ public class YoutubeChannelDownloader {
                     processChannel();
                 }
             }
+            channel = null;
+            
         } else if ((channel != null) && channel.active) {
             setChannel(channel);
             processChannel();
         }
         
         saveKeyStore();
+        calculateData();
         printStats();
     }
     
@@ -517,6 +543,7 @@ public class YoutubeChannelDownloader {
                 save.add(videoId);
                 keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 totalDownloads++;
+                totalDataDownloaded += (video.output.length() / 1048576.0);
                 System.out.println("    Download Succeeded");
             } else {
                 queue.remove(videoId);
@@ -618,6 +645,38 @@ public class YoutubeChannelDownloader {
     }
     
     /**
+     * Calculates the total data saved from Youtube.
+     */
+    private static void calculateData() throws Exception {
+        File channelData = new File("data/channel");
+        Collection<File> channels = FileUtils.listFiles(channelData, new String[] {"txt"}, true);
+        
+        for (File channel : channels) {
+            if (channel.getName().endsWith("-save.txt")) {
+                List<String> save = FileUtils.readLines(channel, StandardCharsets.UTF_8);
+                
+                for (String saved : save) {
+                    if (!keyStore.containsKey(saved)) {
+                        continue;
+                    }
+                    
+                    File file = new File(keyStore.get(saved));
+                    if (!file.exists()) {
+                        continue;
+                    }
+                    
+                    totalData += (file.length() / 1048576.0);
+                    if (file.getName().toLowerCase().endsWith(".mp4")) {
+                        totalVideos++;
+                    } else if (file.getName().toLowerCase().endsWith(".mp3")) {
+                        totalSongs++;
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * Prints statistics about the completed run.
      */
     private static void printStats() {
@@ -626,6 +685,13 @@ public class YoutubeChannelDownloader {
         System.out.println("Videos Failed:      " + totalDownloadFailures);
         System.out.println("API Calls:          " + totalApiCalls);
         System.out.println("API Failures:       " + totalApiFailures);
+        System.out.println("Data Downloaded:    " + new DecimalFormat("#.##MB").format(totalDataDownloaded));
+        
+        if (doAllChannels && (channel == null)) {
+            System.out.println("Total Videos:       " + totalVideos);
+            System.out.println("Total Songs:        " + totalSongs);
+            System.out.println("Total Data:         " + new DecimalFormat("#.##MB").format(totalData));
+        }
     }
     
     
