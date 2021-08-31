@@ -356,7 +356,7 @@ public enum Channel {
     
     /**
      * Performs special checks specific to a Channel before producing the queue.
-     * Typically renaming.
+     * Typically used for renaming videos in the video map.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
@@ -811,7 +811,7 @@ public enum Channel {
     
     /**
      * Performs special checks specific to a Channel after producing the queue.
-     * Typically filtering.
+     * Typically used for filtering; Do not use this to rename videos in the video map.
      *
      * @param channel  The Channel.
      * @param videoMap The video map.

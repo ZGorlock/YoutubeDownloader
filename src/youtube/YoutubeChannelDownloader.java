@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -80,6 +82,11 @@ public class YoutubeChannelDownloader {
      */
     private static final int MAX_RETRIES = 10;
     
+    /**
+     * The store of video keys and their current saved file name.
+     */
+    private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
+    
     
     //Static Fields
     
@@ -112,6 +119,11 @@ public class YoutubeChannelDownloader {
      * The video map for the Channel being processed.
      */
     private static final Map<String, Video> videoMap = new LinkedHashMap<>();
+    
+    /**
+     * A map of video keys and their current saved file name.
+     */
+    private static final Map<String, String> keyStore = new HashMap<>();
     
     /**
      * A counter of the total number of Channels that were processed this run.
@@ -204,6 +216,7 @@ public class YoutubeChannelDownloader {
         if (!YoutubeUtils.doStartupChecks()) {
             return;
         }
+        loadKeyStore();
         
         if (doAllChannels && (channel == null)) {
             boolean skip = (startAt != null);
@@ -219,6 +232,7 @@ public class YoutubeChannelDownloader {
             processChannel();
         }
         
+        saveKeyStore();
         printStats();
     }
     
@@ -442,12 +456,21 @@ public class YoutubeChannelDownloader {
         
         Channel.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
         videoMap.forEach((key, value) -> {
-            if (!save.contains(key) && YoutubeUtils.videoExists(value.output)) {
+            save.remove(key);
+            
+            if (YoutubeUtils.videoExists(value.output)) {
                 save.add(key);
-            }
-            if ((!save.contains(key) || !YoutubeUtils.videoExists(value.output)) && !blocked.contains(key)) {
-                queue.add(key);
-                save.remove(key);
+                blocked.remove(key);
+                keyStore.put(key, value.output.getAbsolutePath().replace("/", "\\"));
+                
+            } else if (!blocked.contains(key)) {
+                if (keyStore.containsKey(key) && new File(keyStore.get(key)).exists() &&
+                        new File(keyStore.get(key)).renameTo(value.output)) {
+                    save.add(key);
+                    keyStore.replace(key, value.output.getAbsolutePath().replace("/", "\\"));
+                } else {
+                    queue.add(key);
+                }
             }
         });
         Channel.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
@@ -458,6 +481,7 @@ public class YoutubeChannelDownloader {
         FileUtils.writeLines(queueFile, queue);
         FileUtils.writeLines(saveFile, save);
         FileUtils.writeLines(blockedFile, blocked);
+        saveKeyStore();
         return true;
     }
     
@@ -491,6 +515,7 @@ public class YoutubeChannelDownloader {
             if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
                 queue.remove(videoId);
                 save.add(videoId);
+                keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 totalDownloads++;
                 System.out.println("    Download Succeeded");
             } else {
@@ -511,6 +536,8 @@ public class YoutubeChannelDownloader {
             FileUtils.writeLines(saveFile, save);
             FileUtils.writeLines(blockedFile, blocked);
         }
+        
+        saveKeyStore();
         return true;
     }
     
@@ -561,6 +588,33 @@ public class YoutubeChannelDownloader {
             }
         }
         return true;
+    }
+    
+    /**
+     * Loads the map of video keys and their current saved file names.
+     *
+     * @throws Exception When there is an error loading the file.
+     */
+    private static void loadKeyStore() throws Exception {
+        keyStore.clear();
+        List<String> lines = FileUtils.readLines(KEY_STORE_FILE, Charsets.UTF_8);
+        for (String line : lines) {
+            if (line.isEmpty()) {
+                continue;
+            }
+            String[] lineParts = line.split("/");
+            keyStore.put(lineParts[0], lineParts[1]);
+        }
+    }
+    
+    /**
+     * Saves the map of video keys and their current saved file names.
+     *
+     * @throws Exception When there is an error saving the file.
+     */
+    private static void saveKeyStore() throws Exception {
+        List<String> lines = keyStore.entrySet().stream().map(e -> e.getKey() + '/' + e.getValue()).collect(Collectors.toList());
+        FileUtils.writeLines(KEY_STORE_FILE, lines);
     }
     
     /**
