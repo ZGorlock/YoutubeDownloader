@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import commons.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 
 /**
@@ -731,10 +732,15 @@ public enum Channel {
                 break;
             
             case LOCK_PICKING_LAWYER:
+                Pattern lockPickingLawyerPattern = Pattern.compile("^(?<episode>\\d+)\\s-\\s(?<title>.+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle.replace("[", "").replace("]", " -");
                     newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    Matcher lockPickingLawyerMatcher = lockPickingLawyerPattern.matcher(newTitle);
+                    if (lockPickingLawyerMatcher.matches()) {
+                        newTitle = StringUtility.padZero(lockPickingLawyerMatcher.group("episode"), 4) + " - " + lockPickingLawyerMatcher.group("title");
+                    }
                     value.output = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
                     value.title = newTitle;
                 });
