@@ -367,8 +367,9 @@ public enum Channel {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPreConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
-        switch (channel) {
-            case JIMTV_PROGRAMMING:
+        switch (channel.name()) {
+            
+            case "JIMTV_PROGRAMMING":
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle
@@ -388,7 +389,7 @@ public enum Channel {
                 });
                 break;
             
-            case BY_RELEASE:
+            case "BY_RELEASE":
                 Pattern byReleaseNamePattern = Pattern.compile("^(?<title>.+)\\s*-\\s*By\\sRelease\\s*-?-\\s(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -408,7 +409,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case OSRS_CHALLENGES_TANZOO:
+            case "OSRS_CHALLENGES_TANZOO":
                 Pattern tanzooPattern = Pattern.compile("^(?<title>.+)\\s*-*\\s*Episode\\s*(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -439,7 +440,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case OSRS_CHALLENGES_VIRTOSO:
+            case "OSRS_CHALLENGES_VIRTOSO":
                 Pattern virtosoPattern = Pattern.compile("^(?<title>.+)\\s*-*\\s*(Episode|EP\\.|Ep\\.)\\s*(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -472,7 +473,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case MUDKIP_HCIM:
+            case "MUDKIP_HCIM":
                 Pattern hcimPattern1 = Pattern.compile("^(HCIM\\s(?<episode>\\d+)-).*");
                 Pattern hcimPattern2 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)HCIM\\s*(?:Episode|ep\\.|Ep\\.|)\\s*(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>\\(\\d+-\\d+\\))?");
                 Pattern hcimPattern3 = Pattern.compile("^(?<title>.+)\\s(?:-\\s|\\(|)-\\s(?<episode>\\d*\\.?\\d+)\\)?");
@@ -520,7 +521,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case MUDKIP_UIM:
+            case "MUDKIP_UIM":
                 Pattern uimPattern = Pattern.compile(".*?(\\s(?:\\(UIM\\s-\\s|\\(-\\s)(?<episode>\\d+)\\)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -547,7 +548,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case SWAMPLETICS:
+            case "SWAMPLETICS":
                 Pattern swampleticsPattern = Pattern.compile(".*?(\\s(?:\\(Swampletics\\s-\\s|\\(-\\s)(?<episode>\\d+)\\)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -568,7 +569,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case LOWER_THE_BETTER:
+            case "LOWER_THE_BETTER":
                 Pattern lowerTheBetterPattern = Pattern.compile(".*(\\s*-\\s*Lower\\s[Tt]he\\sBetter\\s(?:Ep\\.\\s)?-\\s\\s?(?<episode>\\d+)).*");
                 AtomicInteger lowerTheBetterCount = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
@@ -594,7 +595,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case OSRS_WEEKLY_RECAP:
+            case "OSRS_WEEKLY_RECAP":
                 Pattern osrsWeeklyRecapPattern = Pattern.compile(".*?(\\s*-*\\s*(-\\s\\d+\\s*-*\\s*)?(OSRS\\s)?Weekly\\sRecap[\\s\\d\\-!]*)");
                 SimpleDateFormat osrsWeeklyRecapDate = new SimpleDateFormat("yyyy-MM-dd");
                 videoMap.forEach((key, value) -> {
@@ -616,7 +617,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case IRON_MAIN:
+            case "IRON_MAIN":
                 Pattern ironMainPattern = Pattern.compile(".*?(\\s*-\\s*(?:IronMain\\s)?\\[-\\s\\s*(?<episode>\\d+)]).*");
                 AtomicInteger ironMainCount = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
@@ -640,7 +641,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case ONE_KICK_RICK:
+            case "ONE_KICK_RICK":
                 Pattern oneKickRickPattern = Pattern.compile(".*(\\s*-\\s*Lumbridge-Draynor\\s(?:Only\\s)?HCIM\\s-\\s(?:One\\sKick\\sRick\\s-\\s)?(?:Episode|Ep\\.|ep\\.)\\s*(?:-\\s)?(?<episode>\\d+)).*");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -665,7 +666,7 @@ public enum Channel {
                 });
                 break;
             
-            case STEVE_MOULD:
+            case "STEVE_MOULD":
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("fewer than tom") ||
                             value.title.toLowerCase().contains("more than tom")) {
@@ -684,7 +685,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case MIND_FIELD_S1:
+            case "MIND_FIELD_S1":
                 Pattern mindFieldS1Pattern = Pattern.compile(".*?(\\s*-\\s*(?:Mind\\sField\\s)\\(Ep\\.?\\s*(?<episode>\\d+)\\)).*");
                 AtomicInteger mindFieldS1Count = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
@@ -701,7 +702,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case MIND_FIELD_S2:
+            case "MIND_FIELD_S2":
                 Pattern mindFieldS2Pattern = Pattern.compile(".*?(\\s*-\\s*(?:Mind\\sField\\sS2\\s)\\(Ep\\.?\\s*(?<episode>\\d+)\\)).*");
                 AtomicInteger mindFieldS2Count = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
@@ -718,7 +719,7 @@ public enum Channel {
                     value.title = newTitle;
                 });
                 break;
-            case MIND_FIELD_S3:
+            case "MIND_FIELD_S3":
                 AtomicInteger mindFieldS3Count = new AtomicInteger(0);
                 videoMap.forEach((key, value) -> {
                     mindFieldS3Count.incrementAndGet();
@@ -731,7 +732,7 @@ public enum Channel {
                 });
                 break;
             
-            case LOCK_PICKING_LAWYER:
+            case "LOCK_PICKING_LAWYER":
                 Pattern lockPickingLawyerPattern = Pattern.compile("^(?<episode>\\d+)\\s-\\s(?<title>.+)$");
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
@@ -746,7 +747,7 @@ public enum Channel {
                 });
                 break;
             
-            case NHAT_BANG_SPA:
+            case "NHAT_BANG_SPA":
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle.replace("010", "10");
@@ -756,21 +757,21 @@ public enum Channel {
                 });
                 break;
             
-            case FORENSIC_FILES:
-            case FORENSIC_FILES_S01:
-            case FORENSIC_FILES_S02:
-            case FORENSIC_FILES_S03:
-            case FORENSIC_FILES_S04:
-            case FORENSIC_FILES_S05:
-            case FORENSIC_FILES_S06:
-            case FORENSIC_FILES_S07:
-            case FORENSIC_FILES_S08:
-            case FORENSIC_FILES_S09:
-            case FORENSIC_FILES_S10:
-            case FORENSIC_FILES_S11:
-            case FORENSIC_FILES_S12:
-            case FORENSIC_FILES_S13:
-            case FORENSIC_FILES_S14:
+            case "FORENSIC_FILES":
+            case "FORENSIC_FILES_S01":
+            case "FORENSIC_FILES_S02":
+            case "FORENSIC_FILES_S03":
+            case "FORENSIC_FILES_S04":
+            case "FORENSIC_FILES_S05":
+            case "FORENSIC_FILES_S06":
+            case "FORENSIC_FILES_S07":
+            case "FORENSIC_FILES_S08":
+            case "FORENSIC_FILES_S09":
+            case "FORENSIC_FILES_S10":
+            case "FORENSIC_FILES_S11":
+            case "FORENSIC_FILES_S12":
+            case "FORENSIC_FILES_S13":
+            case "FORENSIC_FILES_S14":
                 videoMap.forEach((key, value) -> {
                     String oldTitle = value.title;
                     String newTitle = oldTitle
@@ -827,16 +828,17 @@ public enum Channel {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPostConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
-        switch (channel) {
-            case MUSIC_LAB_HACKER:
-            case MUSIC_LAB_WORK:
-            case MUSIC_LAB_CHILLSTEP:
-            case MUSIC_LAB_CHILLOUT:
-            case MUSIC_LAB_AMBIENT:
-            case MUSIC_LAB_LOFI:
-            case MUSIC_LAB_CONTEMPORARY:
-            case MUSIC_LAB_STUDY:
-            case MUSIC_LAB_CHILLHOP:
+        switch (channel.name()) {
+            
+            case "MUSIC_LAB_HACKER":
+            case "MUSIC_LAB_WORK":
+            case "MUSIC_LAB_CHILLSTEP":
+            case "MUSIC_LAB_CHILLOUT":
+            case "MUSIC_LAB_AMBIENT":
+            case "MUSIC_LAB_LOFI":
+            case "MUSIC_LAB_CONTEMPORARY":
+            case "MUSIC_LAB_STUDY":
+            case "MUSIC_LAB_CHILLHOP":
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("live 24-7")) {
                         if (!blocked.contains(key)) {
@@ -847,7 +849,7 @@ public enum Channel {
                 });
                 break;
             
-            case OSRS_BEATZ:
+            case "OSRS_BEATZ":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("runescape")) {
                         if (!blocked.contains(key)) {
@@ -857,7 +859,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case OSRS_WEEKLY_RECAP:
+            case "OSRS_WEEKLY_RECAP":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("weekly recap")) {
                         if (!blocked.contains(key)) {
@@ -867,7 +869,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case OSRS_MARKET_ANALYSIS:
+            case "OSRS_MARKET_ANALYSIS":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("market") && !value.title.toLowerCase().contains("economy")) {
                         if (!blocked.contains(key)) {
@@ -878,34 +880,34 @@ public enum Channel {
                 });
                 break;
             
-            case ISAAC_ARTHUR:
-            case ISAAC_ARTHUR_P01:
-            case ISAAC_ARTHUR_P02:
-            case ISAAC_ARTHUR_P03:
-            case ISAAC_ARTHUR_P04:
-            case ISAAC_ARTHUR_P05:
-            case ISAAC_ARTHUR_P06:
-            case ISAAC_ARTHUR_P07:
-            case ISAAC_ARTHUR_P08:
-            case ISAAC_ARTHUR_P09:
-            case ISAAC_ARTHUR_P10:
-            case ISAAC_ARTHUR_P11:
-            case ISAAC_ARTHUR_P12:
-            case ISAAC_ARTHUR_P13:
-            case ISAAC_ARTHUR_P14:
-            case ISAAC_ARTHUR_P15:
-            case ISAAC_ARTHUR_P16:
-            case ISAAC_ARTHUR_P17:
-            case ISAAC_ARTHUR_P18:
-            case ISAAC_ARTHUR_P19:
-            case ISAAC_ARTHUR_P20:
-            case ISAAC_ARTHUR_P21:
-            case ISAAC_ARTHUR_P22:
-            case ISAAC_ARTHUR_P23:
-            case ISAAC_ARTHUR_P24:
-            case ISAAC_ARTHUR_P25:
-            case ISAAC_ARTHUR_P27:
-            case ISAAC_ARTHUR_P28:
+            case "ISAAC_ARTHUR":
+            case "ISAAC_ARTHUR_P01":
+            case "ISAAC_ARTHUR_P02":
+            case "ISAAC_ARTHUR_P03":
+            case "ISAAC_ARTHUR_P04":
+            case "ISAAC_ARTHUR_P05":
+            case "ISAAC_ARTHUR_P06":
+            case "ISAAC_ARTHUR_P07":
+            case "ISAAC_ARTHUR_P08":
+            case "ISAAC_ARTHUR_P09":
+            case "ISAAC_ARTHUR_P10":
+            case "ISAAC_ARTHUR_P11":
+            case "ISAAC_ARTHUR_P12":
+            case "ISAAC_ARTHUR_P13":
+            case "ISAAC_ARTHUR_P14":
+            case "ISAAC_ARTHUR_P15":
+            case "ISAAC_ARTHUR_P16":
+            case "ISAAC_ARTHUR_P17":
+            case "ISAAC_ARTHUR_P18":
+            case "ISAAC_ARTHUR_P19":
+            case "ISAAC_ARTHUR_P20":
+            case "ISAAC_ARTHUR_P21":
+            case "ISAAC_ARTHUR_P22":
+            case "ISAAC_ARTHUR_P23":
+            case "ISAAC_ARTHUR_P24":
+            case "ISAAC_ARTHUR_P25":
+            case "ISAAC_ARTHUR_P27":
+            case "ISAAC_ARTHUR_P28":
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("livestream") ||
                             value.title.toLowerCase().contains("hades") ||
@@ -919,7 +921,7 @@ public enum Channel {
                 });
                 break;
             
-            case ANSWERS_WITH_JOE:
+            case "ANSWERS_WITH_JOE":
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("live stream")) {
                         if (!blocked.contains(key)) {
@@ -930,7 +932,7 @@ public enum Channel {
                 });
                 break;
             
-            case VSAUCE:
+            case "VSAUCE":
                 final Date vSauceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15");
                 videoMap.forEach((key, value) -> {
                     if (value.originalTitle.contains("#") || value.title.contains("DONG") || value.title.contains("Mind Field") || value.date.before(vSauceOldest)) {
@@ -942,7 +944,7 @@ public enum Channel {
                 });
                 break;
             
-            case ADAM_SAVAGE_ONE_DAY_BUILDS:
+            case "ADAM_SAVAGE_ONE_DAY_BUILDS":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("one day build") ||
                             value.title.toLowerCase().contains("last call")) {
@@ -954,7 +956,7 @@ public enum Channel {
                 });
                 break;
             
-            case CHUBBYEMU:
+            case "CHUBBYEMU":
                 final Date chubbyEmuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
                 videoMap.forEach((key, value) -> {
                     if (value.date.before(chubbyEmuOldest)) {
@@ -965,7 +967,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case LIKE_YOU:
+            case "LIKE_YOU":
                 videoMap.forEach((key, value) -> {
                     if (value.title.toLowerCase().contains("photographer") ||
                             value.title.toLowerCase().contains("phone") ||
@@ -980,8 +982,8 @@ public enum Channel {
                 });
                 break;
             
-            case BEST_CUBE_COUBOY:
-            case BEST_CUBE_SPARTA:
+            case "BEST_CUBE_COUBOY":
+            case "BEST_CUBE_SPARTA":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("best cube") ||
                             value.title.toLowerCase().contains("best coub")) {
@@ -992,7 +994,7 @@ public enum Channel {
                     }
                 });
                 break;
-            case SEXY_CUBE:
+            case "SEXY_CUBE":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("sexy cube") ||
                             value.title.toLowerCase().contains("sexy coub")) {
