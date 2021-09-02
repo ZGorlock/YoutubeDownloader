@@ -58,7 +58,7 @@ public class YoutubeChannelDownloader {
     //   5. Click 'Enable'
     //   6. Click 'Create Credentials'
     //   7. Select 'YouTube Data API v3', click 'Public Data', then click 'Next'
-    //   8. Copy your API key to the file /apiKey in the project
+    //   8. Copy your API key to the file ./apiKey in the project
     //
     // ----------------------------------------------------------------
     
