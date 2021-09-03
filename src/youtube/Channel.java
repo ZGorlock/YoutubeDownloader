@@ -205,9 +205,11 @@ public enum Channel {
     SAM_ONELLA_ACADEMY(true, "SamOnellaAcademy", "UU1DTYW241WD64ah5BFWn4JA", "Youtube/Funny/Sam O'Nella Academy", false, "Youtube/Funny/Sam O'Nella Academy.m3u"),
     ZEFRANK(true, "Zefrank", "UUVpankR4HtoAVtYnFDUieYA", "Youtube/Funny/Zefrank", false, "Youtube/Funny/Zefrank.m3u"),
     OZZY_MAN_REVIEWS(false, "OzzyManReviews", "UUeE3lj6pLX_gCd0Yvns517Q", "Youtube/Funny/Ozzy Man Reviews", false, "Youtube/Funny/Ozzy Man Reviews.m3u"),
-    KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga", false, "Youtube/Funny/Kitboga.m3u"),
-    MORE_KITBOGA(true, "MoreKitboga", "UUWpQycBnpPxyWY6bBhr4Rbw", "Youtube/Funny/Kitboga - Uncut", false, "Youtube/Funny/Kitboga - Uncut.m3u"),
-    KITBOGA_HIGHLIGHTS(true, "KitbogaHighlights", "UUgmhcAFfPVx_AMSf89HGh_A", "Youtube/Funny/Kitboga - Highlights", false, "Youtube/Funny/Kitboga - Highlights.m3u"),
+    KITBOGA(true, "Kitboga", "UUm22FAXZMw1BaWeFszZxUKw", "Youtube/Funny/Kitboga/Kitboga", false, "Youtube/Funny/Kitboga/Kitboga.m3u"),
+    KITBOGA_HIGHLIGHTS(true, "KitbogaHighlights", "UUgmhcAFfPVx_AMSf89HGh_A", "Youtube/Funny/Kitboga/Kitboga - Highlights", false, "Youtube/Funny/Kitboga/Kitboga - Highlights.m3u"),
+    KITBOGA_UNCUT(true, "KitbogaUncut", "UUWpQycBnpPxyWY6bBhr4Rbw", "Youtube/Funny/Kitboga/Kitboga - Uncut", false, "Youtube/Funny/Kitboga/Kitboga - Uncut.m3u"),
+    KITBOGA_BAITED_S01(true, "KitbogaBaitedS01", "PLKdaP6lVyupYeTTKinNc67neByoDz2UAT", "Youtube/Funny/Kitboga/Kitboga", false, "Youtube/Funny/Kitboga/Kitboga - Baited - S01.m3u", false),
+    KITBOGA_BAITED_S02(true, "KitbogaBaitedS02", "PLKdaP6lVyupZeqk_nSEPvrQJz5PhhvqJl", "Youtube/Funny/Kitboga/Kitboga", false, "Youtube/Funny/Kitboga/Kitboga - Baited - S02.m3u", false),
     
     //BEST CUBE
     BEST_CUBE(true, "BestCube", "UUIGBzvhOm5Hwxs9u_LY2XLQ", "Youtube/Best Cube/Best Cube", false, "Youtube/Best Cube/Best Cube.m3u"),
