@@ -1,7 +1,18 @@
 # Youtube Downloader
-This repo contains two projects, a Youtube Downloader and a Youtube Channel Downloader.
+This repo contains two projects, the **Youtube Downloader** and the **Youtube Channel Downloader**.
 
-Both projects can be run from an IDE or compiled and executed with Maven using a command like:
+To run these projects you will need to have [**Java 13.0.2**](https://jdk.java.net/archive/) or higher, as well as [**Maven 3.6.3**](https://maven.apache.org/download.cgi) or higher.
+
+Both projects can be run within an IDE or by using the scripts in the project directory which compile and execute it using Maven.
+\
+Depending on your operating system you want to use either the *.bat* files (Windows) or the *.sh* files (Linux).
+
+* YoutubeDownloader.bat
+* YoutubeChannelDownloader.bat
+* YoutubeDownloader.sh
+* YoutubeChannelDownloader.sh
+
+Alternatively you could run it with Maven directly from the command line using a command like:
 
     mvn compile && mvn exec:java -Dexec.mainClass="youtube.YoutubeChannelDownloader"
 
