@@ -109,7 +109,8 @@ Whichever Executable you choose will be automatically downloaded by the project 
 There are a couple other options that you can enable for certain circumstances. All of these can be found in *./src/youtube/YoutubeChannelDownloader.java*. Just search for "< variableName > = " and change the value.
 
 * *channel* - Once you have multiple Channels, there may be instances where you want to process only a single Channel and not all of them. Set this variable to 'Channel.YOUR_CHANNEL_NAME' to process only that Channel. To return to processing all Channels, set this variable back to 'null'.
-* *startAt* - This will start processing at a certain Channel, skipping all Channels before it. The values for this variable work the same as for *channel*. The Channels are processed in the order that they appear in the Channel enum.
+* *startAt* - This will start processing at a specified Channel, skipping all Channels before it. The values for this variable work the same as for *channel*. The Channels are processed in the order that they appear in the Channel enum.
+* *stopAt* - This will stop processing at a specified Channel, skipping all Channels after it. The values for this variable work the same as for *channel*. The Channels are processed in the order that they appear in the Channel enum.
 * *retryFailed* - When the Youtube Channel Downloader fails to download a video (either because of a connection issue or because a video is "not available in your country") it will mark that video as blocked and will not automatically attempt to download it again. Sometimes the download will succeed if tried again though. You can set this variable to 'true' or 'false', by default it is set to 'false'. This should only be turned on occasionally because it will cause all previously failed downloads from all Channels to be reattempted in the next run. You do not want this to happen during every run, so set it back to 'false' after the run.
 
 ### Note about Updates:

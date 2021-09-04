@@ -187,6 +187,11 @@ public class YoutubeChannelDownloader {
     private static Channel startAt = null;
     
     /**
+     * The Channel to stop processing at, if processing all Channels.
+     */
+    private static Channel stopAt = null;
+    
+    /**
      * The Playlist ID for the Channel being processed.
      */
     private static String playlistId;
@@ -243,13 +248,21 @@ public class YoutubeChannelDownloader {
         
         if (doAllChannels && (channel == null)) {
             boolean skip = (startAt != null);
-            for (Channel currentChannel : Channel.values()) {
-                skip = skip && (currentChannel != startAt);
-                if (!skip && currentChannel.active) {
-                    setChannel(currentChannel);
-                    processChannel();
+            boolean stop = (stopAt != null);
+            
+            if (!((skip && stop) && (stopAt.ordinal() < startAt.ordinal()))) {
+                for (Channel currentChannel : Channel.values()) {
+                    skip = skip && (currentChannel != startAt);
+                    if (!skip && currentChannel.active) {
+                        setChannel(currentChannel);
+                        processChannel();
+                        if (stop && (currentChannel == stopAt)) {
+                            break;
+                        }
+                    }
                 }
             }
+            
             channel = null;
             
         } else if ((channel != null) && channel.active) {
