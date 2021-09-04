@@ -99,8 +99,7 @@ public final class OperatingSystem {
      * @see #getOperatingSystem()
      */
     public static boolean isWindows() {
-        return false;
-//        return getOperatingSystem().equals(OS.WINDOWS);
+        return getOperatingSystem().equals(OS.WINDOWS);
     }
     
     /**
