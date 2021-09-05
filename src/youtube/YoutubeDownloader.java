@@ -62,7 +62,6 @@ public class YoutubeDownloader {
      * @param args The arguments to the main method.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(String[] args) throws Exception {
         if (!YoutubeUtils.doStartupChecks()) {
             return;
@@ -100,6 +99,8 @@ public class YoutubeDownloader {
             if (!input.isEmpty()) {
                 download.add(input);
                 Files.write(downloadQueue.toPath(), download);
+            } else {
+                break;
             }
         }
     }
