@@ -225,17 +225,17 @@ public enum Channel {
     /**
      * The drive to use for storage of downloaded files.
      */
-    public final File storageDrive = new File("E:/");
+    public final File storageDrive = new File((String) Configurator.getSetting("storageDrive"));
     
     /**
      * The Music directory in the storage drive.
      */
-    public final File musicDir = new File(storageDrive, "Music");
+    public final File musicDir = new File(storageDrive, (String) Configurator.getSetting("musicDir"));
     
     /**
      * The Videos directory in the storage drive.
      */
-    public final File videoDir = new File(storageDrive, "Videos");
+    public final File videoDir = new File(storageDrive, (String) Configurator.getSetting("videoDir"));
     
     
     //Fields

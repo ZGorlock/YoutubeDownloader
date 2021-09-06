@@ -90,28 +90,28 @@ public class YoutubeChannelDownloader {
      */
     private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
     
+    //Loads the configuration settings in Configurator
+    static {
+        Configurator.loadSettings("YoutubeChannelDownloader");
+    }
+    
     
     //Static Fields
     
     /**
      * A flag indicating whether to the log the download command or not.
      */
-    private static final boolean logCommand = true;
+    private static final boolean logCommand = (boolean) Configurator.getSetting("logCommand", true);
     
     /**
      * A flag indicating whether to log the download work or not.
      */
-    private static final boolean logWork = false;
-    
-    /**
-     * A flag indicating whether to process all Channels or not.
-     */
-    private static final boolean doAllChannels = true;
+    private static final boolean logWork = (boolean) Configurator.getSetting("logWork", false);
     
     /**
      * A flag indicating whether to retry previously failed videos or not.
      */
-    private static final boolean retryFailed = false;
+    private static final boolean retryFailed = (boolean) Configurator.getSetting("retryFailed", false);
     
     /**
      * The HTTP Client used to interact with the Youtube API.
@@ -191,6 +191,22 @@ public class YoutubeChannelDownloader {
      */
     private static Channel stopAt = null;
     
+    //Loads the Channel configuration
+    static {
+        try {
+            channel = Channel.valueOf((String) Configurator.getSetting("channel"));
+        } catch (Exception ignored) {
+        }
+        try {
+            startAt = Channel.valueOf((String) Configurator.getSetting("startAt"));
+        } catch (Exception ignored) {
+        }
+        try {
+            stopAt = Channel.valueOf((String) Configurator.getSetting("stopAt"));
+        } catch (Exception ignored) {
+        }
+    }
+    
     /**
      * The Playlist ID for the Channel being processed.
      */
@@ -246,7 +262,7 @@ public class YoutubeChannelDownloader {
         }
         loadKeyStore();
         
-        if (doAllChannels && (channel == null)) {
+        if (channel == null) {
             boolean skip = (startAt != null);
             boolean stop = (stopAt != null);
             
@@ -265,7 +281,7 @@ public class YoutubeChannelDownloader {
             
             channel = null;
             
-        } else if ((channel != null) && channel.active) {
+        } else if (channel.active) {
             setChannel(channel);
             processChannel();
         }
@@ -700,7 +716,7 @@ public class YoutubeChannelDownloader {
         System.out.println("API Failures:       " + totalApiFailures);
         System.out.println("Data Downloaded:    " + new DecimalFormat("#.##MB").format(totalDataDownloaded));
         
-        if (doAllChannels && (channel == null)) {
+        if (channel == null) {
             System.out.println("Total Videos:       " + totalVideos);
             System.out.println("Total Songs:        " + totalSongs);
             System.out.println("Total Data:         " + new DecimalFormat("#.##MB").format(totalData));

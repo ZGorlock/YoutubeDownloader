@@ -114,7 +114,8 @@ public final class YoutubeUtils {
     /**
      * The Youtube Downloader executable to use.
      */
-    public static final Executable EXECUTABLE = Executable.YT_DLP;
+    public static final Executable EXECUTABLE = Executable.valueOf(
+            ((String) Configurator.getSetting("executable", Executable.YT_DLP.name)).toUpperCase().replace("-", "_"));
     
     /**
      * The base url for Youtube videos.

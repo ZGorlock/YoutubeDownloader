@@ -35,23 +35,28 @@ public class YoutubeDownloader {
      */
     private static final File outputDir = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
     
+    //Loads the configuration settings in Configurator
+    static {
+        Configurator.loadSettings("YoutubeDownloader");
+    }
+    
     
     //Static Fields
     
     /**
      * A flag indicating whether to download the videos as mp3 files or not.
      */
-    private static final boolean asMp3 = false;
+    private static final boolean asMp3 = (boolean) Configurator.getSetting("asMp3", false);
     
     /**
      * A flag indicating whether to the log the download command or not.
      */
-    private static final boolean logCommand = true;
+    private static final boolean logCommand = (boolean) Configurator.getSetting("logCommand", true);
     
     /**
      * A flag indicating whether to log the download work or not.
      */
-    private static final boolean logWork = true;
+    private static final boolean logWork = (boolean) Configurator.getSetting("logWork", false);
     
     
     //Main Method
