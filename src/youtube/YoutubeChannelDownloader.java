@@ -183,9 +183,14 @@ public class YoutubeChannelDownloader {
     //Fields
     
     /**
-     * The Channel to process.
+     * The Channel to process, or null if all Channels should be processed.
      */
     private static Channel channel = null;
+    
+    /**
+     * The group to process, or null if all groups should be processed.
+     */
+    private static String group = null;
     
     /**
      * The Channel to start processing from, if processing all Channels.
@@ -201,6 +206,10 @@ public class YoutubeChannelDownloader {
     static {
         try {
             channel = Channels.getChannel((String) Configurator.getSetting("channel"));
+        } catch (Exception ignored) {
+        }
+        try {
+            group = (String) Configurator.getSetting("group");
         } catch (Exception ignored) {
         }
         try {
@@ -274,8 +283,9 @@ public class YoutubeChannelDownloader {
             
             if (!((skip && stop) && (Channels.indexOf(stopAt.key) < Channels.indexOf(startAt.key)))) {
                 for (Channel currentChannel : Channels.getChannel()) {
-                    skip = skip && (currentChannel.key != startAt.key);
-                    if (!skip && currentChannel.active) {
+                    skip = skip && (!currentChannel.key.equals(startAt.key));
+                    if (!skip && currentChannel.active &&
+                            ((group == null) || (currentChannel.group.equalsIgnoreCase(group)))) {
                         setChannel(currentChannel);
                         processChannel();
                         if (stop && (currentChannel == stopAt)) {

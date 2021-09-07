@@ -5,6 +5,7 @@
         "videoDir": "Videos/",
         "executable": "yt-dlp",
         "channel": null,
+        "group": null,
         "startAt": null,
         "stopAt": null,
         "retryFailed": false,
