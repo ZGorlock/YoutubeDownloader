@@ -90,9 +90,10 @@ public class YoutubeChannelDownloader {
      */
     private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
     
-    //Loads the configuration settings in Configurator
+    //Loads the settings and Channel configurations
     static {
         Configurator.loadSettings("YoutubeChannelDownloader");
+        Channels.loadChannels();
     }
     
     
@@ -194,15 +195,15 @@ public class YoutubeChannelDownloader {
     //Loads the Channel configuration
     static {
         try {
-            channel = Channel.valueOf((String) Configurator.getSetting("channel"));
+            channel = Channels.getChannel((String) Configurator.getSetting("channel"));
         } catch (Exception ignored) {
         }
         try {
-            startAt = Channel.valueOf((String) Configurator.getSetting("startAt"));
+            startAt = Channels.getChannel((String) Configurator.getSetting("startAt"));
         } catch (Exception ignored) {
         }
         try {
-            stopAt = Channel.valueOf((String) Configurator.getSetting("stopAt"));
+            stopAt = Channels.getChannel((String) Configurator.getSetting("stopAt"));
         } catch (Exception ignored) {
         }
     }
@@ -266,9 +267,9 @@ public class YoutubeChannelDownloader {
             boolean skip = (startAt != null);
             boolean stop = (stopAt != null);
             
-            if (!((skip && stop) && (stopAt.ordinal() < startAt.ordinal()))) {
-                for (Channel currentChannel : Channel.values()) {
-                    skip = skip && (currentChannel != startAt);
+            if (!((skip && stop) && (Channels.indexOf(stopAt.key) < Channels.indexOf(startAt.key)))) {
+                for (Channel currentChannel : Channels.getChannel()) {
+                    skip = skip && (currentChannel.key != startAt.key);
                     if (!skip && currentChannel.active) {
                         setChannel(currentChannel);
                         processChannel();
@@ -466,6 +467,7 @@ public class YoutubeChannelDownloader {
                 }
                 
                 Video video = new Video();
+                video.channelKey = channel.key;
                 video.videoId = videoId;
                 video.originalTitle = title;
                 video.title = YoutubeUtils.cleanTitle(title);
@@ -509,7 +511,7 @@ public class YoutubeChannelDownloader {
             blocked.clear();
         }
         
-        Channel.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
+        ChannelProcesses.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
         videoMap.forEach((key, value) -> {
             save.remove(key);
             
@@ -528,7 +530,7 @@ public class YoutubeChannelDownloader {
                 }
             }
         });
-        Channel.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
+        ChannelProcesses.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
         
         queue.removeAll(blocked);
         save.removeAll(blocked);
@@ -732,6 +734,11 @@ public class YoutubeChannelDownloader {
     public static class Video {
         
         //Fields
+        
+        /**
+         * The key of the Channel containing the Video.
+         */
+        public String channelKey;
         
         /**
          * The ID of the Video.
