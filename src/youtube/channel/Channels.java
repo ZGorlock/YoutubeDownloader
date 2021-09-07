@@ -1,10 +1,10 @@
 /*
  * File:    Channels.java
- * Package: youtube
+ * Package: youtube.channel
  * Author:  Zachary Gill
  */
 
-package youtube;
+package youtube.channel;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import youtube.tools.Configurator;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.

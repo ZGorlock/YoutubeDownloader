@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
+import youtube.tools.Configurator;
+import youtube.tools.YoutubeUtils;
+
 /**
  * Downloads Youtube Videos.
  */

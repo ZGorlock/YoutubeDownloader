@@ -1,10 +1,10 @@
 /*
  * File:    Channel.java
- * Package: youtube
+ * Package: youtube.channel
  * Author:  Zachary Gill
  */
 
-package youtube;
+package youtube.channel;
 
 import java.io.File;
 

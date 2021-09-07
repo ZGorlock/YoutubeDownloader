@@ -34,6 +34,11 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import youtube.channel.Channel;
+import youtube.channel.ChannelProcesses;
+import youtube.channel.Channels;
+import youtube.tools.Configurator;
+import youtube.tools.YoutubeUtils;
 
 /**
  * Downloads Youtube Channels and Playlists.

@@ -1,10 +1,10 @@
 /*
  * File:    ChannelProcesses_Sample.java
- * Package: youtube
+ * Package: youtube.channel
  * Author:  Zachary Gill
  */
 
-package youtube;
+package youtube.channel;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 
 import commons.string.StringUtility;
 import org.apache.commons.io.FileUtils;
+import youtube.YoutubeChannelDownloader;
+import youtube.tools.YoutubeUtils;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.

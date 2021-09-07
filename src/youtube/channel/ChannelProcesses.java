@@ -1,13 +1,15 @@
 /*
  * File:    ChannelProcesses.java
- * Package: youtube
+ * Package: youtube.channel
  * Author:  Zachary Gill
  */
 
-package youtube;
+package youtube.channel;
 
 import java.util.List;
 import java.util.Map;
+
+import youtube.YoutubeChannelDownloader;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.

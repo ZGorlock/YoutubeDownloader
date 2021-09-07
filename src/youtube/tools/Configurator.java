@@ -1,10 +1,10 @@
 /*
  * File:    Configuration.java
- * Package: youtube
+ * Package: youtube.tools
  * Author:  Zachary Gill
  */
 
-package youtube;
+package youtube.tools;
 
 import java.io.File;
 import java.io.IOException;
