@@ -102,10 +102,18 @@ A "Channel object" is a section in the file that starts with '{' and ends with '
 * ***group*** - A group or category for the Channel; this could be anything you want it to be. By organizing your Channels into groups, you can process all Channels in a group independently of others.
 * ***url*** - The url of the Youtube playlist or channel. This field is not used by the program, but is useful for returning to the playlist or channel in the future if you need to. 
 * ***playlistId*** - This is the playlistId of the Channel or playlist; information about how to obtain this is discussed in the Finding YoutubePlaylist IDs section below.
-* ***outputFolder*** - The output directory for the Channel; if this is a music Channel this will be relative to the ***location.musicDir*** from the Configuration section above, if it is a video Channel it will be relative to the ***location.videoDir***. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the output directory.
+* ***outputFolder*** - The output directory for the Channel; if this is a music Channel this will be relative to the ***location.musicDir*** from the Configuration section above, if it is a video Channel it will be relative to the ***location.videoDir***. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the output directory. ***IMPORTANT***: This should be an empty directory to start with! ***DO NOT*** use the same directory for all your Channels and especially do not use directories where you already have other videos or data saved. The **Youtube Channel Downloader is able to delete files from this directory** in certain cases so do not set this to a directory that contains existing files you do not want to lose!
 * ***saveAsMp3*** - A boolean specifying whether this Channel should be downloaded as mp3 (true) or as mp4 (false).
 * ***playlistFile*** - An optional playlist file for enumerating the downloads from the Channel, this will also be relative to the ***location.musicDir*** or ***location.videoDir*** but does not need to be in the same folder where the music or videos are saved. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the playlist file. If you do not want to create a playlist for the Channel then set this field to null.
 * ***keepClean*** - A boolean specifying whether or not to keep the Channel directory clean; if this is enabled then videos that are deleted off of Youtube will also be deleted from your hard drive.
+
+***IMPORTANT***: Again, make sure you set the ***outputFolder*** for each Channel to an empty directory or a directory that does not exist yet. These directories may have files deleted from them in certain circumstances. Files that are deleted in this way are not sent to the recycle bin and would be difficult, if not impossible, to recover.
+
+Examples:
+* ***BAD***: A directory that also contains your personal home videos
+* ***BAD***: A directory that also contains important work documents
+* ***BAD***: A directory that also contains videos that you have also downloaded previously for this Channel before starting to use this project
+* ***GOOD***: An empty directory or a directory that does not exist yet
 
 ### Finding Youtube Playlist IDs:
 
