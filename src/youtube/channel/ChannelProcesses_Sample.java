@@ -41,7 +41,7 @@ public class ChannelProcesses_Sample {
      * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings({"StatementWithEmptyBody", "DuplicateBranchesInSwitch"})
     public static void performSpecialPreConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
         switch (channel.key) {
             
@@ -503,7 +503,7 @@ public class ChannelProcesses_Sample {
      * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings({"StatementWithEmptyBody", "DuplicateBranchesInSwitch"})
     public static void performSpecialPostConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
         switch (channel.key) {
             
@@ -651,6 +651,17 @@ public class ChannelProcesses_Sample {
                             value.title.toLowerCase().contains("friend") ||
                             value.title.toLowerCase().contains("my son") ||
                             value.title.toLowerCase().contains("dogs")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
+            case "KITBOGA_UNCUT":
+                videoMap.forEach((key, value) -> {
+                    if (value.title.toLowerCase().contains("live stream")) {
                         if (!blocked.contains(key)) {
                             blocked.add(key);
                         }
