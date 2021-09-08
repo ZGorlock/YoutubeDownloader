@@ -1,21 +1,29 @@
 {
     "YoutubeChannelDownloader": {
-        "storageDrive": "E:/",
-        "musicDir": "Music/",
-        "videoDir": "Videos/",
         "executable": "yt-dlp",
-        "channel": null,
-        "group": null,
-        "startAt": null,
-        "stopAt": null,
-        "retryFailed": false,
-        "logCommand": true,
-        "logWork": false
+        "location": {
+            "storageDrive": "E:/",
+            "musicDir": "Music/",
+            "videoDir": "Videos/"
+        },
+        "filter": {
+            "channel": null,
+            "group": null,
+            "startAt": null,
+            "stopAt": null
+        },
+        "flag": {
+            "retryFailed": false,
+            "logCommand": true,
+            "logWork": false
+        }
     },
     "YoutubeDownloader": {
         "executable": "yt-dlp",
         "asMp3": false,
-        "logCommand": true,
-        "logWork": false
+        "flag": {
+            "logCommand": true,
+            "logWork": false
+        }
     }
 }

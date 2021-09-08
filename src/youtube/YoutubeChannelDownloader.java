@@ -107,17 +107,17 @@ public class YoutubeChannelDownloader {
     /**
      * A flag indicating whether to the log the download command or not.
      */
-    private static final boolean logCommand = (boolean) Configurator.getSetting("logCommand", true);
+    private static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand", true);
     
     /**
      * A flag indicating whether to log the download work or not.
      */
-    private static final boolean logWork = (boolean) Configurator.getSetting("logWork", false);
+    private static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
     
     /**
      * A flag indicating whether to retry previously failed videos or not.
      */
-    private static final boolean retryFailed = (boolean) Configurator.getSetting("retryFailed", false);
+    private static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
     
     /**
      * The HTTP Client used to interact with the Youtube API.
@@ -202,22 +202,22 @@ public class YoutubeChannelDownloader {
      */
     private static Channel stopAt = null;
     
-    //Loads the Channel configuration
+    //Loads the Channel filters
     static {
         try {
-            channel = Channels.getChannel((String) Configurator.getSetting("channel"));
+            channel = Channels.getChannel((String) Configurator.getSetting("filter.channel"));
         } catch (Exception ignored) {
         }
         try {
-            group = (String) Configurator.getSetting("group");
+            group = (String) Configurator.getSetting("filter.group");
         } catch (Exception ignored) {
         }
         try {
-            startAt = Channels.getChannel((String) Configurator.getSetting("startAt"));
+            startAt = Channels.getChannel((String) Configurator.getSetting("filter.startAt"));
         } catch (Exception ignored) {
         }
         try {
-            stopAt = Channels.getChannel((String) Configurator.getSetting("stopAt"));
+            stopAt = Channels.getChannel((String) Configurator.getSetting("filter.stopAt"));
         } catch (Exception ignored) {
         }
     }

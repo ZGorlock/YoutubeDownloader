@@ -77,8 +77,8 @@ public class Configurator {
      * Loads the configuration settings from the configuration file.
      *
      * @param activeProject The current active project.
+     * @see #loadSettings(JSONObject, String)
      */
-    @SuppressWarnings("unchecked")
     public static void loadSettings(String activeProject) {
         if (loaded.compareAndSet(false, true)) {
             Configurator.activeProject = activeProject;
@@ -88,13 +88,29 @@ public class Configurator {
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(jsonString);
                 JSONObject conf = (JSONObject) json.get(activeProject);
-                for (Object setting : conf.entrySet()) {
-                    Map.Entry<String, Object> settingEntry = (Map.Entry<String, Object>) setting;
-                    settings.put(settingEntry.getKey(), settingEntry.getValue());
-                }
+                
+                loadSettings(conf, "");
                 
             } catch (IOException | ParseException e) {
                 System.err.println("Could not load settings from: " + CONF_FILE.getAbsolutePath());
+            }
+        }
+    }
+    
+    /**
+     * Loads the configuration settings from a configuration JSON object.
+     *
+     * @param conf   The configuration JSON object.
+     * @param prefix The name prefix of the settings in the current configuration JSON object.
+     */
+    @SuppressWarnings("unchecked")
+    private static void loadSettings(JSONObject conf, String prefix) {
+        for (Object setting : conf.entrySet()) {
+            Map.Entry<String, Object> settingEntry = (Map.Entry<String, Object>) setting;
+            if ((settingEntry.getValue() != null) && (settingEntry.getValue() instanceof JSONObject)) {
+                loadSettings(((JSONObject) settingEntry.getValue()), (prefix + settingEntry.getKey() + '.'));
+            } else {
+                settings.put((prefix + settingEntry.getKey()), settingEntry.getValue());
             }
         }
     }

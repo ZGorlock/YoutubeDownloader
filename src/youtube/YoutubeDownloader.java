@@ -54,12 +54,12 @@ public class YoutubeDownloader {
     /**
      * A flag indicating whether to the log the download command or not.
      */
-    private static final boolean logCommand = (boolean) Configurator.getSetting("logCommand", true);
+    private static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand", true);
     
     /**
      * A flag indicating whether to log the download work or not.
      */
-    private static final boolean logWork = (boolean) Configurator.getSetting("logWork", false);
+    private static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
     
     
     //Main Method
