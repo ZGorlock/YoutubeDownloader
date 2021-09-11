@@ -36,6 +36,8 @@ You can configure the operation of the Downloader project by changing the values
 * ***flag.logCommand*** - When set to true the commands sent to the executable will be printed to the console for each video.
 * ***flag.logWork*** - When set to true the work done by the executable while downloading each video will be printed to the console.
 
+You can also specify a global SponsorBlock configuration for videos downloaded by the Downloader. For more information on how to do this see the SponsorBlock Configuration section in the Channel Downloader chapter below.
+
  
 ***
 
@@ -154,6 +156,40 @@ These methods have no return value, any changes that you want to make should be 
 * ***blocked*** - A list of video ids that have not already been downloaded, but are also not queued for download.
 
 There are many examples of these processes in the file *./src/youtube/ChannelProcesses_Sample.java*. These are also the personal pre and post processes for my Channel configuration. If you did copy some of my Channels from *./channels-sample.json* then you should also copy the corresponding pre and post processes.
+
+### SponsorBlock Configuration:
+
+If you chose to use ***yt-dlp*** as the Youtube Downloader executable then you have the option to set up [SponsorBlock](https://sponsor.ajay.app/) as part of your configuration. SponsorBlock is able to automatically cut out unwanted parts from the Youtube videos you download, for example, sponsored sections, self promotions, intros, etc.
+
+You can set up a Global SponsorBlock configuration for the entire Channel Downloader or Downloader project, and you can also have custom SponsorBlock configurations for individual Channels.
+
+The Global and the Channel configuration are basically the same. To start, add a new "sponsorBlock" object to either *./conf.json* inside the "YoutubeChannelDownloader" or the "YoutubeDownloader" object, or for a Channel, to *./channels.json* inside the Channel object that you want to use SponsorBlock with.
+
+    "sponsorBlock": {
+    }
+
+You can add the following fields inside the "sponsorBlock" object. All fields are booleans (true or false). You only need to include the fields that you are setting to true, all other fields will be false by default.
+
+* ***enabled*** - Whether or not this SponsorBlock configuration should be active or not.
+* ***forceGlobally*** - *Only used for Global configurations.* Setting this to true will cause the Global configuration to be used in place of a specific Channel configuration, even if the Channel configuration is ***enabled***.
+* ***overrideGlobal*** - *Only used for Channel configurations.* Setting this to true will cause the specific Channel configuration to be used in place of the Global configuration, even if the Global configuration has ***forceGlobally***.
+* ***skipAll*** - Whether or not to skip all segments covered by SponsorBlock.
+* ***skipSponsor*** - Whether or not to skip sponsor segments.
+* ***skipIntro*** - Whether or not to skip intro segments.
+* ***skipOutro*** - Whether or not to skip outro segments.
+* ***skipSelfPromo*** - Whether or not to skip self promotion segments.
+* ***skipInteraction*** - Whether or not to skip interaction segments.
+* ***skipPreview*** - Whether or not to skip preview segments.
+* ***skipMusicOffTopic*** - Whether or not to skip off topic segments of music videos.
+
+You can see details about what each segment covers on the [Segment Categories](https://wiki.sponsor.ajay.app/index.php/Segment_Categories) page of the [SponsorBlock wiki](https://wiki.sponsor.ajay.app/index.php/Main_Page).
+
+If you have a Global configuration and a Channel configuration and both are enabled, it may get confusing about which configuration will be used. The following rules define the precedence of SponsorBlock configurations:
+
+* If only one of the configurations has ***enabled*** set to true then that configuration will be used.
+* If both configurations have ***enabled*** set to true, the Channel configuration will be used.
+* If both configurations have ***enabled*** set to true, but the Global configuration has ***forceGlobally*** set to true, then the Global configuration will be used.
+* If both configurations have ***enabled*** set to true, but the Channel configuration has ***overrideGlobal*** set to true, regardless of whether the Global configuration has ***forceGlobally*** set to true or not, then the Channel configuration will be used.
 
 ### Note about Updates:
 

@@ -9,7 +9,7 @@ package youtube.tools;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,7 +41,7 @@ public class Configurator {
     /**
      * A cache of configuration settings from the configuration file.
      */
-    private static final Map<String, Object> settings = new HashMap<>();
+    private static final Map<String, Object> settings = new LinkedHashMap<>();
     
     /**
      * A flag indicating whether the configuration settings have been loaded yet or not.
@@ -50,6 +50,15 @@ public class Configurator {
     
     
     //Functions
+    
+    /**
+     * Returns a list of configuration settings.
+     *
+     * @return The list of configuration settings.
+     */
+    public static Map<String, Object> getSettings() {
+        return new LinkedHashMap<>(settings);
+    }
     
     /**
      * Returns a configuration setting by name.
@@ -108,7 +117,11 @@ public class Configurator {
         for (Object setting : conf.entrySet()) {
             Map.Entry<String, Object> settingEntry = (Map.Entry<String, Object>) setting;
             if ((settingEntry.getValue() != null) && (settingEntry.getValue() instanceof JSONObject)) {
-                loadSettings(((JSONObject) settingEntry.getValue()), (prefix + settingEntry.getKey() + '.'));
+                if (settingEntry.getKey().equals("sponsorBlock")) {
+                    SponsorBlocker.loadGlobalConfig(((JSONObject) settingEntry.getValue()));
+                } else {
+                    loadSettings(((JSONObject) settingEntry.getValue()), (prefix + settingEntry.getKey() + '.'));
+                }
             } else {
                 settings.put((prefix + settingEntry.getKey()), settingEntry.getValue());
             }

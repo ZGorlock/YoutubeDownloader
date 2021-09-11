@@ -21,6 +21,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import youtube.tools.Configurator;
+import youtube.tools.SponsorBlocker;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.
@@ -119,6 +120,14 @@ public class Channels {
                     channel.playlistFile = (channelJson.get("playlistFile") == null) ? null :
                                            new File((channel.saveAsMp3 ? musicDir : videoDir) + channelJson.get("playlistFile"));
                     channel.error = false;
+                    
+                    if (channelJson.containsKey("sponsorBlock")) {
+                        JSONObject sponsorBlockJson = (JSONObject) channelJson.get("sponsorBlock");
+                        channel.sponsorBlockConfig = SponsorBlocker.loadConfig(sponsorBlockJson);
+                        channel.sponsorBlockConfig.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL;
+                    } else {
+                        channel.sponsorBlockConfig = null;
+                    }
                     
                     channels.put(channel.key, channel);
                 }

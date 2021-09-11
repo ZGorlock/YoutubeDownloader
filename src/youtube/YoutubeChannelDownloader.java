@@ -584,7 +584,7 @@ public class YoutubeChannelDownloader {
             
             System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
             System.out.print("    ");
-            if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork)) {
+            if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork, channel.sponsorBlockConfig)) {
                 queue.remove(videoId);
                 save.add(videoId);
                 keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));

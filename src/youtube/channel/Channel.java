@@ -8,6 +8,8 @@ package youtube.channel;
 
 import java.io.File;
 
+import youtube.tools.SponsorBlocker;
+
 /**
  * Defines a Channel of the Youtube Channel Downloader.
  */
@@ -64,6 +66,11 @@ public class Channel {
      * A flag indicating whether or not to delete files from the output directory that are not in the playlist anymore.
      */
     public boolean keepClean;
+    
+    /**
+     * The SponsorBlock configuration for the Channel.
+     */
+    public SponsorBlocker.SponsorBlockConfig sponsorBlockConfig;
     
     /**
      * A flag indicating whether there was an error retrieving the Channel this run or not.

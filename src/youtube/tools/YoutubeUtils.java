@@ -133,15 +133,16 @@ public final class YoutubeUtils {
     /**
      * Downloads a Youtube video.
      *
-     * @param video      The video url.
-     * @param output     The output file to create.
-     * @param asMp3      Whether or not to save the video as an mp3.
-     * @param logCommand Whether or not to log the download command.
-     * @param logWork    Whether or not to log the download work.
+     * @param video              The video url.
+     * @param output             The output file to create.
+     * @param asMp3              Whether or not to save the video as an mp3.
+     * @param logCommand         Whether or not to log the download command.
+     * @param logWork            Whether or not to log the download work.
+     * @param sponsorBlockConfig The SponsorBlock configuration for the active Channel.
      * @return Whether the video was successfully downloaded or not.
      * @throws Exception When there is an error downloading the video.
      */
-    public static boolean downloadYoutubeVideo(String video, File output, boolean asMp3, boolean logCommand, boolean logWork) throws Exception {
+    public static boolean downloadYoutubeVideo(String video, File output, boolean asMp3, boolean logCommand, boolean logWork, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
         String outputPath = output.getAbsolutePath();
         outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
         
@@ -150,6 +151,7 @@ public final class YoutubeUtils {
                 "--geo-bypass --rm-cache-dir " +
                 (asMp3 ? "--extract-audio --audio-format mp3 " :
                  "--format best ") +
+                SponsorBlocker.getCommand(sponsorBlockConfig) +
                 video;
         if (logCommand) {
             System.out.println(cmd);
