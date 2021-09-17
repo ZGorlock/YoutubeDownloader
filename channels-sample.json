@@ -1296,6 +1296,18 @@
     "playlistFile": "Youtube/Medicine/Popping - Like You.m3u",
     "keepClean": false
   },
+  {
+    "key": "SURI_NGUYEN",
+    "active": true,
+    "name": "SuriNguyen",
+    "group": "MEDICINE",
+    "url": "https://www.youtube.com/channel/UCMRXymZEaLVlllBmqS2sQtQ",
+    "playlistId": "UUMRXymZEaLVlllBmqS2sQtQ",
+    "outputFolder": "Youtube/Medicine/Popping",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Medicine/Popping - Suri Nguyen.m3u",
+    "keepClean": false
+  },
 
   {
     "key": "FORENSIC_FILES",
