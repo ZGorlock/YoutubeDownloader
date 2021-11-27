@@ -402,6 +402,18 @@
     "keepClean": true
   },
   {
+    "key": "PBS_SPACE_TIME_MATT_ONLY",
+    "active": true,
+    "name": "PbsSpaceTimeMattOnly",
+    "group": "SPACE",
+    "url": "https://www.youtube.com/c/pbsspacetime",
+    "playlistId": "UU7_gcs09iThXybpVgjHZ_7g",
+    "outputFolder": "Youtube/Space/PBS Space Time",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Space/PBS Space Time - Matt Only.m3u",
+    "keepClean": false
+  },
+  {
     "key": "ISAAC_ARTHUR",
     "active": true,
     "name": "IsaacArthur",

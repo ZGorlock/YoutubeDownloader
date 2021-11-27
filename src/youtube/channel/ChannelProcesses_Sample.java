@@ -597,6 +597,17 @@ public class ChannelProcesses_Sample {
                     }
                 });
                 break;
+            case "PBS_SPACE_TIME_MATT_ONLY":
+                final Date mattOnlyOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2015-09-01");
+                videoMap.forEach((key, value) -> {
+                    if (value.date.before(mattOnlyOldest)) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
             
             case "ANSWERS_WITH_JOE":
                 videoMap.forEach((key, value) -> {
