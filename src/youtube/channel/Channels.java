@@ -98,6 +98,7 @@ public class Channels {
     /**
      * Loads the Channel configuration from the channels file.
      */
+    @SuppressWarnings("unchecked")
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
@@ -109,13 +110,13 @@ public class Channels {
                     
                     Channel channel = new Channel();
                     channel.key = (String) channelJson.get("key");
-                    channel.active = (boolean) channelJson.get("active");
+                    channel.active = (boolean) channelJson.getOrDefault("active", true);
                     channel.name = (String) channelJson.get("name");
-                    channel.group = (String) channelJson.get("group");
-                    channel.url = (String) channelJson.get("url");
+                    channel.group = (String) channelJson.getOrDefault("group", "");
+                    channel.url = (String) channelJson.getOrDefault("url", "");
                     channel.playlistId = (String) channelJson.get("playlistId");
-                    channel.saveAsMp3 = (boolean) channelJson.get("saveAsMp3");
-                    channel.keepClean = (boolean) channelJson.get("keepClean");
+                    channel.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
+                    channel.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
                     channel.outputFolder = new File((channel.saveAsMp3 ? musicDir : videoDir) + channelJson.get("outputFolder"));
                     channel.playlistFile = (channelJson.get("playlistFile") == null) ? null :
                                            new File((channel.saveAsMp3 ? musicDir : videoDir) + channelJson.get("playlistFile"));

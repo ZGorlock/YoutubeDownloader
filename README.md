@@ -66,13 +66,13 @@ Copy your API key to the file *./apiKey* in the project.
 You can configure the operation of the Channel Downloader project by changing the values inside the file *./conf.json*. There are two sections in the conf file, the settings for the Channel Downloader project are under the "YoutubeChannelDownloader" section:
 
 * ***executable*** - This configures which Youtube Downloader executable should be used to download videos. The two valid options for this setting are 'yt-dlp' and 'youtube-dl'. More information about these options is provided in the Executable Options section below.
-* ***location.storageDrive*** - The drive where your music and videos will be stored. For example: "C:/". You may leave this blank ("") if you wish to specify the full path for each Channel in *./channels.json*; if you leave this blank you must also leave ***location.musicDir*** and ***location.videoDir*** blank.
+* ***location.storageDrive*** - The drive where your music and videos will be stored. For example: "C:/". You may leave this blank ("") if you wish to specify the full path for each Channel in *./channels.json*.
 * ***location.musicDir*** - The directory within the storageDrive where you want music to be saved. For Example: "Users/Me/My Music/". You may leave this blank ("") if you wish to specify the full path for each Channel in *./channels.json*; if you leave this blank you must also leave ***location.storageDrive*** and ***location.videoDir*** blank.
 * ***location.videoDir*** - The directory within the storageDrive where you want videos to be saved. For Example: "Users/Me/My Videos/". You may leave this blank ("") if you wish to specify the full path for each Channel in *./channels.json*; if you leave this blank you must also leave ***location.storageDrive*** and ***location.musicDir*** blank.
 * ***filter.channel*** - Once you have multiple Channels, there may be instances where you want to process only a single Channel and not all of them. Set this variable to '<YOUR_CHANNEL_KEY>' to process only that Channel. To return to processing all Channels, set this variable back to null.
 * ***filter.group*** - Once you have multiple Channels, and have organized them into groups, there may be instances where you want to process only a single group and not all of them. Set this variable to '<YOUR_CHANNEL_GROUP>' to process only that group. To return to processing all Channels, set this variable back to null.
-* ***filter.startAt*** - This will start processing at a specified Channel, skipping all Channels before it. The values for this variable work the same as for ***filter.channel***. The Channels are processed in the order that they appear in the Channel enum. Except in special circumstances, this setting should be null.
-* ***filter.stopAt*** - This will stop processing at a specified Channel, skipping all Channels after it. The values for this variable work the same as for ***filter.channel***. The Channels are processed in the order that they appear in the Channel enum. Except in special circumstances, this setting should be null.
+* ***filter.startAt*** - This will start processing at a specified Channel, skipping all Channels before it. The values for this variable work the same as for ***filter.channel***. The Channels are processed in the order that they appear in your Channel configuration. Except in special circumstances, this setting should be null.
+* ***filter.stopAt*** - This will stop processing at a specified Channel, skipping all Channels after it. The values for this variable work the same as for ***filter.channel***. The Channels are processed in the order that they appear in your Channel configuration. Except in special circumstances, this setting should be null.
 * ***flag.retryFailed*** - When the Youtube Channel Downloader fails to download a video (either because of a connection issue or because a video is "not available in your country") it will mark that video as blocked and will not automatically attempt to download it again. Sometimes the download will succeed if tried again though. You can set this variable to true or false, by default it is set to false. This should only be turned on occasionally because it will cause all previously failed downloads from all Channels to be reattempted in the next run. You do not want this to happen during every run, so set it back to false after the run.
 * ***flag.logCommand*** - When set to true the commands sent to the executable will be printed to the console for each video.
 * ***flag.logWork*** - When set to true the work done by the executable while downloading each video will be printed to the console.
@@ -99,15 +99,15 @@ When you add a new Channel you need to create a new json object in the json arra
 A "Channel object" is a section in the file that starts with '{' and ends with '}'.
 
 * ***key*** - The Channel key can be anything as long as it is unique among all the Channels in your configuration.
-* ***active*** - A boolean specifying whether the Channel will be active or inactive.
-* ***name*** - A human readable name for the Channel, ideally unique and without spaces. Most likely this will be similar to ***key***.
-* ***group*** - A group or category for the Channel; this could be anything you want it to be. By organizing your Channels into groups, you can process all Channels in a group independently of others.
-* ***url*** - The url of the Youtube playlist or channel. This field is not used by the program, but is useful for returning to the playlist or channel in the future if you need to. 
+* ***active*** - A boolean specifying whether the Channel will be active or inactive. *(optional; defaults to true)*
+* ***name*** - A human readable name for the Channel, unique among all the Channels in your configuration, ideally without spaces. Most likely this will be similar to ***key***.
+* ***group*** - A group or category for the Channel; this could be anything you want it to be. By organizing your Channels into groups, you can process all Channels in a group independently of others. *(optional)*
+* ***url*** - The url of the Youtube playlist or channel. This field is not used by the program, but is useful for returning to the playlist or channel in the future if you need to. *(optional)*
 * ***playlistId*** - This is the playlistId of the Channel or playlist; information about how to obtain this is discussed in the Finding YoutubePlaylist IDs section below.
 * ***outputFolder*** - The output directory for the Channel; if this is a music Channel this will be relative to the ***location.musicDir*** from the Configuration section above, if it is a video Channel it will be relative to the ***location.videoDir***. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the output directory. ***IMPORTANT***: This should be an empty directory to start with! ***DO NOT*** use the same directory for all your Channels and especially do not use directories where you already have other videos or data saved. The **Youtube Channel Downloader is able to delete files from this directory** in certain cases so do not set this to a directory that contains existing files you do not want to lose!
-* ***saveAsMp3*** - A boolean specifying whether this Channel should be downloaded as mp3 (true) or as mp4 (false).
-* ***playlistFile*** - An optional playlist file for enumerating the downloads from the Channel, this will also be relative to the ***location.musicDir*** or ***location.videoDir*** but does not need to be in the same folder where the music or videos are saved. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the playlist file. If you do not want to create a playlist for the Channel then set this field to null.
-* ***keepClean*** - A boolean specifying whether or not to keep the Channel directory clean; if this is enabled then videos that are deleted off of Youtube will also be deleted from your hard drive.
+* ***saveAsMp3*** - A boolean specifying whether this Channel should be downloaded as mp3 (true) or as mp4 (false). *(optional; defaults to false)*
+* ***playlistFile*** - A playlist file for enumerating the downloads from the Channel, this will also be relative to the ***location.musicDir*** or ***location.videoDir*** but does not need to be in the same folder where the music or videos are saved. If you left ***location.storageDir***, ***location.musicDir***, and ***location.videoDir*** blank in *./conf.json* then specify the full path to the playlist file. *(optional)*
+* ***keepClean*** - A boolean specifying whether to keep the Channel directory clean or not; if this is enabled then videos that are deleted off of Youtube will also be deleted from your hard drive. *(optional; defaults to false)*
 
 ***IMPORTANT***: Again, make sure you set the ***outputFolder*** for each Channel to an empty directory or a directory that does not exist yet. These directories may have files deleted from them in certain circumstances. Files that are deleted in this way are not sent to the recycle bin and would be difficult, if not impossible, to recover.
 
@@ -170,17 +170,17 @@ The Global and the Channel configuration are basically the same. To start, add a
 
 You can add the following fields inside the "sponsorBlock" object. All fields are booleans (true or false). You only need to include the fields that you are setting to true, all other fields will be false by default.
 
-* ***enabled*** - Whether or not this SponsorBlock configuration should be active or not.
-* ***forceGlobally*** - *Only used for Global configurations.* Setting this to true will cause the Global configuration to be used in place of a specific Channel configuration, even if the Channel configuration is ***enabled***.
-* ***overrideGlobal*** - *Only used for Channel configurations.* Setting this to true will cause the specific Channel configuration to be used in place of the Global configuration, even if the Global configuration has ***forceGlobally***.
-* ***skipAll*** - Whether or not to skip all segments covered by SponsorBlock.
-* ***skipSponsor*** - Whether or not to skip sponsor segments.
-* ***skipIntro*** - Whether or not to skip intro segments.
-* ***skipOutro*** - Whether or not to skip outro segments.
-* ***skipSelfPromo*** - Whether or not to skip self promotion segments.
-* ***skipInteraction*** - Whether or not to skip interaction segments.
-* ***skipPreview*** - Whether or not to skip preview segments.
-* ***skipMusicOffTopic*** - Whether or not to skip off topic segments of music videos.
+* ***enabled*** - Whether this SponsorBlock configuration should be active or not. *(optional; defaults to true)*
+* ***forceGlobally*** - *Only used for Global configurations.* Setting this to true will cause the Global configuration to be used in place of a specific Channel configuration, even if the Channel configuration is ***enabled***. *(optional; defaults to false)*
+* ***overrideGlobal*** - *Only used for Channel configurations.* Setting this to true will cause the specific Channel configuration to be used in place of the Global configuration, even if the Global configuration has ***forceGlobally***. *(optional; defaults to false)*
+* ***skipAll*** - Whether to skip all segments covered by SponsorBlock or not. *(optional; defaults to false)*
+* ***skipSponsor*** - Whether to skip sponsor segments or not. *(optional; defaults to false)*
+* ***skipIntro*** - Whether to skip intro segments or not. *(optional; defaults to false)*
+* ***skipOutro*** - Whether to skip outro segments or not. *(optional; defaults to false)*
+* ***skipSelfPromo*** - Whether to skip self promotion segments or not. *(optional; defaults to false)*
+* ***skipInteraction*** - Whether to skip interaction segments or not. *(optional; defaults to false)*
+* ***skipPreview*** - Whether to skip preview segments or not. *(optional; defaults to false)*
+* ***skipMusicOffTopic*** - Whether to skip off topic segments of music videos or not. *(optional; defaults to false)*
 
 You can see details about what each segment covers on the [Segment Categories](https://wiki.sponsor.ajay.app/index.php/Segment_Categories) page of the [SponsorBlock wiki](https://wiki.sponsor.ajay.app/index.php/Main_Page).
 

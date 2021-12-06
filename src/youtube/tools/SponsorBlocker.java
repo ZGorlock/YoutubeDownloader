@@ -88,20 +88,21 @@ public class SponsorBlocker {
      * @param conf The JSON settings configuration.
      * @return The SponsorBlock config, or null if the settings configuration does not contain SponsorBlock settings.
      */
+    @SuppressWarnings("unchecked")
     public static SponsorBlockConfig loadConfig(JSONObject conf) {
         SponsorBlockConfig config = new SponsorBlockConfig();
         
-        config.enabled = (conf.containsKey("enabled") && (boolean) conf.get("enabled"));
-        config.forceGlobally = (conf.containsKey("forceGlobally") && (boolean) conf.get("forceGlobally"));
-        config.overrideGlobal = (conf.containsKey("overrideGlobal") && (boolean) conf.get("overrideGlobal"));
-        config.skipAll = (conf.containsKey("skipAll") && (boolean) conf.get("skipAll"));
-        config.skipSponsor = (conf.containsKey("skipSponsor") && (boolean) conf.get("skipSponsor"));
-        config.skipIntro = (conf.containsKey("skipIntro") && (boolean) conf.get("skipIntro"));
-        config.skipOutro = (conf.containsKey("skipOutro") && (boolean) conf.get("skipOutro"));
-        config.skipSelfPromo = (conf.containsKey("skipSelfPromo") && (boolean) conf.get("skipSelfPromo"));
-        config.skipInteraction = (conf.containsKey("skipInteraction") && (boolean) conf.get("skipInteraction"));
-        config.skipPreview = (conf.containsKey("skipPreview") && (boolean) conf.get("skipPreview"));
-        config.skipMusicOffTopic = (conf.containsKey("skipMusicOffTopic") && (boolean) conf.get("skipMusicOffTopic"));
+        config.enabled = (conf.containsKey("enabled") && (boolean) conf.getOrDefault("enabled", true));
+        config.forceGlobally = (conf.containsKey("forceGlobally") && (boolean) conf.getOrDefault("forceGlobally", false));
+        config.overrideGlobal = (conf.containsKey("overrideGlobal") && (boolean) conf.getOrDefault("overrideGlobal", false));
+        config.skipAll = (conf.containsKey("skipAll") && (boolean) conf.getOrDefault("skipAll", false));
+        config.skipSponsor = (conf.containsKey("skipSponsor") && (boolean) conf.getOrDefault("skipSponsor", false));
+        config.skipIntro = (conf.containsKey("skipIntro") && (boolean) conf.getOrDefault("skipIntro", false));
+        config.skipOutro = (conf.containsKey("skipOutro") && (boolean) conf.getOrDefault("skipOutro", false));
+        config.skipSelfPromo = (conf.containsKey("skipSelfPromo") && (boolean) conf.getOrDefault("skipSelfPromo", false));
+        config.skipInteraction = (conf.containsKey("skipInteraction") && (boolean) conf.getOrDefault("skipInteraction", false));
+        config.skipPreview = (conf.containsKey("skipPreview") && (boolean) conf.getOrDefault("skipPreview", false));
+        config.skipMusicOffTopic = (conf.containsKey("skipMusicOffTopic") && (boolean) conf.getOrDefault("skipMusicOffTopic", false));
         
         return config;
     }

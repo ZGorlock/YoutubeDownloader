@@ -18,57 +18,57 @@ public class Channel {
     //Fields
     
     /**
-     * The key of the Channel.
+     * The key of the Channel; required.
      */
     public String key;
     
     /**
-     * A flag indicating whether or not a Channel is enabled or not.
+     * A flag indicating whether a Channel is enabled or not; true by default.
      */
     public boolean active;
     
     /**
-     * The name of the Channel.
+     * The name of the Channel; required.
      */
     public String name;
     
     /**
-     * The group of the Channel.
+     * The group of the Channel; empty by default.
      */
     public String group;
     
     /**
-     * The url of the Channel.
+     * The url of the Channel; empty by default.
      */
     public String url;
     
     /**
-     * The Playlist ID of the Channel.
+     * The Playlist ID of the Channel; required.
      */
     public String playlistId;
     
     /**
-     * The output folder to store the videos that are downloaded from the Channel.
+     * The output folder to store the videos that are downloaded from the Channel; required.
      */
     public File outputFolder;
     
     /**
-     * A flag indicating whether or not to save the videos from the Channel as an mp3 file or not; mp4 otherwise.
+     * A flag indicating whether to save the videos from the Channel as a mp3 file or not; mp4 otherwise; false by default.
      */
     public boolean saveAsMp3;
     
     /**
-     * The playlist file to add mp3 files downloaded from the Channel to if saving as mp3s; or null.
+     * The playlist file to add mp3 files downloaded from the Channel to if saving as mp3s; null by default.
      */
     public File playlistFile;
     
     /**
-     * A flag indicating whether or not to delete files from the output directory that are not in the playlist anymore.
+     * A flag indicating whether to delete files from the output directory that are not in the playlist anymore; false by default.
      */
     public boolean keepClean;
     
     /**
-     * The SponsorBlock configuration for the Channel.
+     * The SponsorBlock configuration for the Channel; null by default.
      */
     public SponsorBlocker.SponsorBlockConfig sponsorBlockConfig;
     
