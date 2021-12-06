@@ -21,7 +21,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import youtube.tools.Configurator;
-import youtube.tools.SponsorBlocker;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.
@@ -105,36 +104,23 @@ public class Channels {
                 String jsonString = FileUtils.readFileToString(CHANNELS_FILE, StandardCharsets.UTF_8);
                 JSONParser parser = new JSONParser();
                 JSONArray channelList = (JSONArray) parser.parse(jsonString);
+                
                 for (Object channelEntry : channelList) {
                     JSONObject channelJson = (JSONObject) channelEntry;
                     
-                    Channel channel = new Channel();
-                    channel.key = (String) channelJson.get("key");
-                    channel.active = (boolean) channelJson.getOrDefault("active", true);
-                    channel.name = (String) channelJson.get("name");
-                    channel.group = (String) channelJson.getOrDefault("group", "");
-                    channel.url = (String) channelJson.getOrDefault("url", "");
-                    channel.playlistId = (String) channelJson.get("playlistId");
-                    channel.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
-                    channel.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
-                    channel.outputFolder = new File((channel.saveAsMp3 ? musicDir : videoDir) + channelJson.get("outputFolder"));
-                    channel.playlistFile = (channelJson.get("playlistFile") == null) ? null :
-                                           new File((channel.saveAsMp3 ? musicDir : videoDir) + channelJson.get("playlistFile"));
-                    channel.error = false;
-                    
-                    if (channelJson.containsKey("sponsorBlock")) {
-                        JSONObject sponsorBlockJson = (JSONObject) channelJson.get("sponsorBlock");
-                        channel.sponsorBlockConfig = SponsorBlocker.loadConfig(sponsorBlockJson);
-                        channel.sponsorBlockConfig.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL;
-                    } else {
-                        channel.sponsorBlockConfig = null;
+                    try {
+                        Channel channel = new Channel(channelJson);
+                        channels.put(channel.key, channel);
+                        
+                    } catch (Exception e) {
+                        System.err.println("Could not load channel: " + channelJson.getOrDefault("key", "null").toString());
+                        System.err.println("    " + e.getMessage());
                     }
-                    
-                    channels.put(channel.key, channel);
                 }
                 
             } catch (IOException | ParseException e) {
                 System.err.println("Could not load channels from: " + CHANNELS_FILE.getAbsolutePath());
+                System.err.println("    " + e.getMessage());
             }
         }
     }

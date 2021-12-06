@@ -7,13 +7,24 @@
 package youtube.channel;
 
 import java.io.File;
+import java.util.InvalidPropertiesFormatException;
+import java.util.List;
 
+import org.json.simple.JSONObject;
 import youtube.tools.SponsorBlocker;
 
 /**
  * Defines a Channel of the Youtube Channel Downloader.
  */
 public class Channel {
+    
+    //Constants
+    
+    /**
+     * A list of required fields in a Channel configuration.
+     */
+    public static final List<String> requiredFields = List.of("key", "name", "playlistId", "outputFolder");
+    
     
     //Fields
     
@@ -76,6 +87,52 @@ public class Channel {
      * A flag indicating whether there was an error retrieving the Channel this run or not.
      */
     public boolean error;
+    
+    
+    //Constructors
+    
+    /**
+     * The default no-argument constructor for a Channel.
+     *
+     * @param channelJson The json data containing the Channel configuration.
+     * @throws InvalidPropertiesFormatException When the Channel configuration does not contain a required field.
+     */
+    @SuppressWarnings("unchecked")
+    public Channel(JSONObject channelJson) throws Exception {
+        for (String requiredField : requiredFields) {
+            if ((channelJson == null) || !channelJson.containsKey(requiredField)) {
+                throw new InvalidPropertiesFormatException("Channel configuration missing required field: " + requiredField +
+                        (((channelJson != null) && channelJson.containsKey("key")) ? (" (" + channelJson.get("key") + ')') : ""));
+            }
+        }
+        
+        this.key = (String) channelJson.get("key");
+        this.active = (boolean) channelJson.getOrDefault("active", true);
+        this.name = (String) channelJson.get("name");
+        this.group = (String) channelJson.getOrDefault("group", "");
+        this.url = (String) channelJson.getOrDefault("url", "");
+        this.playlistId = (String) channelJson.get("playlistId");
+        this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
+        this.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
+        this.outputFolder = new File((this.saveAsMp3 ? Channels.musicDir : Channels.videoDir) + channelJson.get("outputFolder"));
+        this.playlistFile = (channelJson.get("playlistFile") == null) ? null :
+                            new File((this.saveAsMp3 ? Channels.musicDir : Channels.videoDir) + channelJson.get("playlistFile"));
+        this.error = false;
+        
+        if (channelJson.containsKey("sponsorBlock")) {
+            JSONObject sponsorBlockJson = (JSONObject) channelJson.get("sponsorBlock");
+            this.sponsorBlockConfig = SponsorBlocker.loadConfig(sponsorBlockJson);
+            this.sponsorBlockConfig.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL;
+        } else {
+            this.sponsorBlockConfig = null;
+        }
+    }
+    
+    /**
+     * The default no-argument constructor for a Channel.
+     */
+    public Channel() {
+    }
     
     
     //Methods
