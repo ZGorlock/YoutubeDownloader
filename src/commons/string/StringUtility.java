@@ -12,7 +12,9 @@ import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -133,6 +135,55 @@ public final class StringUtility {
     }
     
     /**
+     * Tokenizes a string into a list of tokens based on a list of valid tokens.
+     *
+     * @param str         The string to tokenize.
+     * @param validTokens The list of valid tokens.
+     * @param sortList    Whether or not to sort the valid tokens list for best performance.
+     * @return The list of all the tokens from the passed string, or null when the string cannot be tokenized.
+     */
+    public static List<String> tokenize(String str, List<String> validTokens, boolean sortList) {
+        final List<String> validTokenList = new ArrayList<>(validTokens);
+        if (sortList) {
+            validTokenList.sort((o1, o2) -> Integer.compare(o2.length(), o1.length()));
+        }
+        
+        final Map<Character, String> placeholders = new HashMap<>();
+        int originalMaxCharacter = (str + String.join("", validTokenList)).codePoints().max().orElse(0);
+        int placeholderChar = originalMaxCharacter + 1;
+        for (String validToken : validTokenList) {
+            if (!str.contains(validToken)) {
+                continue;
+            }
+            if (placeholderChar > 65535) {
+                return null;
+            }
+            char placeholder = (char) placeholderChar++;
+            placeholders.put(placeholder, validToken);
+            str = str.replace(validToken, String.valueOf(placeholder));
+        }
+        
+        int newMinCharacter = str.codePoints().min().orElse(0);
+        if (newMinCharacter <= originalMaxCharacter) {
+            return null;
+        }
+        
+        return str.codePoints().mapToObj(e -> (char) e).map(placeholders::get).collect(Collectors.toList());
+    }
+    
+    /**
+     * Tokenizes a string into a list of tokens based on a list of valid tokens.
+     *
+     * @param str         The string to tokenize.
+     * @param validTokens The list of valid tokens.
+     * @return The list of all the tokens from the passed string, or null when the string cannot be tokenized.
+     * @see #tokenize(String, List)
+     */
+    public static List<String> tokenize(String str, List<String> validTokens) {
+        return tokenize(str, validTokens, true);
+    }
+    
+    /**
      * Detokenizes a passed list of tokens back into a string.
      *
      * @param tokens The list of tokens to detokenize.
@@ -224,12 +275,34 @@ public final class StringUtility {
     
     /**
      * Reverses a string.
-     * 
+     *
      * @param str The string.
      * @return The reversed string.
      */
     public static String reverse(String str) {
         return new StringBuilder(str).reverse().toString();
+    }
+    
+    /**
+     * Determines if a string contains any of a set of substrings.
+     *
+     * @param str    The string.
+     * @param search The set of substrings to search for.
+     * @return Whether or not the string contains any of the set of substrings.
+     */
+    public static boolean containsAny(String str, String[] search) {
+        return Arrays.stream(search).anyMatch(str::contains);
+    }
+    
+    /**
+     * Determines if a string contains any of a set of characters.
+     *
+     * @param str    The string.
+     * @param search The set of characters to search for.
+     * @return Whether or not the string contains any of the set of characters.
+     */
+    public static boolean containsAny(String str, Character[] search) {
+        return Arrays.stream(search).anyMatch(e -> (str.indexOf(e) >= 0));
     }
     
     /**
@@ -767,11 +840,11 @@ public final class StringUtility {
     /**
      * Determines the number of occurrences of a pattern in a string.
      *
+     * @param string  The string to search in.
      * @param pattern The pattern to find the number of occurrences of.
-     * @param string  The string to operate on.
      * @return The number of occurrences of the pattern in the string.
      */
-    public static int numberOfOccurrences(String pattern, String string) {
+    public static int numberOfOccurrences(String string, String pattern) {
         int n = 0;
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(string);
@@ -784,18 +857,18 @@ public final class StringUtility {
     /**
      * Determines the number of occurrences of a pattern in a string.
      *
+     * @param string  The string to search in.
      * @param pattern The pattern to find the number of occurrences of.
-     * @param string  The string to operate on.
      * @param start   The index to start looking from.
      * @param end     The index to stop looking at.
      * @return The number of occurrences of the pattern in the string.
      * @see #numberOfOccurrences(String, String)
      */
-    public static int numberOfOccurrences(String pattern, String string, int start, int end) {
+    public static int numberOfOccurrences(String string, String pattern, int start, int end) {
         if ((start == 0) && (end == string.length() - 1)) {
-            return numberOfOccurrences(pattern, string);
+            return numberOfOccurrences(string, pattern);
         }
-        return numberOfOccurrences(pattern, string.substring(start, end));
+        return numberOfOccurrences(string.substring(start, end), pattern);
     }
     
     /**
@@ -805,7 +878,7 @@ public final class StringUtility {
      * @return The string with double spaces replaced with single spaces.
      */
     public static String fixSpaces(String string) {
-        return string.replaceAll("\\s+", " ");
+        return StringUtility.trim(string.replaceAll("\\s+", " "));
     }
     
     /**
@@ -919,6 +992,30 @@ public final class StringUtility {
     }
     
     /**
+     * Pads a string on the left with a specified amount of padding.
+     *
+     * @param str     The string to pad.
+     * @param size    The amount of padding.
+     * @param padding The character to pad with.
+     * @return The padded string.
+     */
+    public static String padLeftAbsolute(String str, int size, char padding) {
+        return fillStringOfLength(padding, size) + str;
+    }
+    
+    /**
+     * Pads a string on the left with a specified amount of padding.
+     *
+     * @param str  The string to pad.
+     * @param size The amount of padding.
+     * @return The padded string.
+     * @see #padLeftAbsolute(String, int, char)
+     */
+    public static String padLeftAbsolute(String str, int size) {
+        return padLeftAbsolute(str, size, ' ');
+    }
+    
+    /**
      * Pads a string on the right to a specified length.
      *
      * @param str     The string to pad.
@@ -944,10 +1041,87 @@ public final class StringUtility {
      * @param str  The string to pad.
      * @param size The target size of the string.
      * @return The padded string.
-     * @see #padRight(String, int)
+     * @see #padRight(String, int, char)
      */
     public static String padRight(String str, int size) {
         return padRight(str, size, ' ');
+    }
+    
+    /**
+     * Pads a string on the right with a specified amount of padding.
+     *
+     * @param str     The string to pad.
+     * @param size    The amount of padding.
+     * @param padding The character to pad with.
+     * @return The padded string.
+     */
+    public static String padRightAbsolute(String str, int size, char padding) {
+        return str + fillStringOfLength(padding, size);
+    }
+    
+    /**
+     * Pads a string on the left with a specified amount of padding.
+     *
+     * @param str  The string to pad.
+     * @param size The amount of padding.
+     * @return The padded string.
+     * @see #padRightAbsolute(String, int, char)
+     */
+    public static String padRightAbsolute(String str, int size) {
+        return padRightAbsolute(str, size, ' ');
+    }
+    
+    /**
+     * Pads a string on both sides to a specified length.
+     *
+     * @param str     The string to pad.
+     * @param size    The target size of the string.
+     * @param padding The character to pad with.
+     * @return The padded string.
+     */
+    public static String pad(String str, int size, char padding) {
+        if (str.length() >= size) {
+            return str;
+        }
+        String pad = fillStringOfLength(padding, ((size - str.length()) / 2));
+        return pad + str + pad;
+    }
+    
+    /**
+     * Pads a string on both sides to a specified length.
+     *
+     * @param str  The string to pad.
+     * @param size The target size of the string.
+     * @return The padded string.
+     * @see #pad(String, int, char)
+     */
+    public static String pad(String str, int size) {
+        return pad(str, size, ' ');
+    }
+    
+    /**
+     * Pads a string on both sides with a specified amount of padding.
+     *
+     * @param str     The string to pad.
+     * @param size    The amount of padding.
+     * @param padding The character to pad with.
+     * @return The padded string.
+     */
+    public static String padAbsolute(String str, int size, char padding) {
+        String pad = fillStringOfLength(padding, size);
+        return pad + str + pad;
+    }
+    
+    /**
+     * Pads a string on both sides with a specified amount of padding.
+     *
+     * @param str  The string to pad.
+     * @param size The amount of padding.
+     * @return The padded string.
+     * @see #padAbsolute(String, int, char)
+     */
+    public static String padAbsolute(String str, int size) {
+        return padAbsolute(str, size, ' ');
     }
     
     /**
@@ -1097,13 +1271,10 @@ public final class StringUtility {
      * @param text  The text to center.
      * @param width The width to center the text within.
      * @return The centered text.
+     * @see #pad(String, int)
      */
     public static String centerText(String text, int width) {
-        if (text.length() >= width) {
-            return text;
-        }
-        String padding = spaces((width - text.length()) / 2);
-        return padding + text + padding;
+        return pad(text, width);
     }
     
     /**

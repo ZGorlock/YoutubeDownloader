@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
 import commons.access.OperatingSystem;
-import commons.console.ConsoleProgressBar;
+import commons.console.ProgressBar;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 
@@ -380,7 +380,7 @@ public final class YoutubeUtils {
             
             Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
             Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
-            ConsoleProgressBar progressBar = null;
+            ProgressBar progressBar = null;
             long initialProgress = -1L;
             
             StringBuilder response = new StringBuilder();
@@ -420,10 +420,10 @@ public final class YoutubeUtils {
                         }
                         
                         if (progressBar == null) {
-                            progressBar = new ConsoleProgressBar("", (long) total, "KB");
+                            progressBar = new ProgressBar("", (long) total, "KB");
                             progressBar.setAutoPrint(true);
                             initialProgress = Math.max(initialProgress, 0);
-                            progressBar.setInitialProgress(initialProgress);
+                            progressBar.defineInitialProgress(initialProgress);
                         }
                         
                         long progress = (long) (percentage * total);

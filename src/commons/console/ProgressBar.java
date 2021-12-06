@@ -1,5 +1,5 @@
 /*
- * File:    ConsoleProgressBar.java
+ * File:    ProgressBar.java
  * Package: commons.console
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
@@ -10,6 +10,8 @@ package commons.console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 import commons.math.BoundUtility;
 import commons.string.StringUtility;
@@ -20,14 +22,14 @@ import org.slf4j.LoggerFactory;
 /**
  * A progress bar for the console.
  */
-public class ConsoleProgressBar {
+public class ProgressBar {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(ConsoleProgressBar.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProgressBar.class);
     
     
     //Constants
@@ -161,6 +163,11 @@ public class ConsoleProgressBar {
     private boolean autoPrint;
     
     /**
+     * A flag indicating whether the progress bar has not been printed yet or not.
+     */
+    private AtomicBoolean firstPrint = new AtomicBoolean(true);
+    
+    /**
      * A flag indicating whether to show the percentage in the progress bar or not.
      */
     private boolean showPercentage = DEFAULT_SHOW_PERCENTAGE;
@@ -193,13 +200,18 @@ public class ConsoleProgressBar {
     /**
      * A flag indicating whether there was an update to the progress bar or not.
      */
-    private boolean update = false;
+    private AtomicBoolean update = new AtomicBoolean(false);
+    
+    /**
+     * A flag indicating whether the progress bar has failed or not.
+     */
+    private AtomicBoolean failed = new AtomicBoolean(false);
     
     
     //Constructors
     
     /**
-     * Creates a new ConsoleProgressBar object.
+     * Creates a new ProgressBar object.
      *
      * @param title     The title to display for the progress bar.
      * @param total     The total size of the progress bar.
@@ -207,7 +219,7 @@ public class ConsoleProgressBar {
      * @param units     The units of the progress bar.
      * @param autoPrint Whether or not to automatically print the progress bar after an update.
      */
-    public ConsoleProgressBar(String title, long total, int width, String units, boolean autoPrint) {
+    public ProgressBar(String title, long total, int width, String units, boolean autoPrint) {
         this.title = title;
         this.total = total;
         this.width = width;
@@ -216,57 +228,57 @@ public class ConsoleProgressBar {
     }
     
     /**
-     * Creates a new ConsoleProgressBar object.
+     * Creates a new ProgressBar object.
      *
      * @param title The title to display for the progress bar.
      * @param total The total size of the progress bar.
      * @param width The with of the bar in the progress bar.
      * @param units The units of the progress bar.
-     * @see #ConsoleProgressBar(String, long, int, String, boolean)
+     * @see #ProgressBar(String, long, int, String, boolean)
      */
-    public ConsoleProgressBar(String title, long total, int width, String units) {
+    public ProgressBar(String title, long total, int width, String units) {
         this(title, total, width, units, DEFAULT_PROGRESS_BAR_AUTO_PRINT);
     }
     
     /**
-     * Creates a new ConsoleProgressBar object.
+     * Creates a new ProgressBar object.
      *
      * @param title The title to display for the progress bar.
      * @param total The total size of the progress bar.
      * @param units The units of the progress bar.
-     * @see #ConsoleProgressBar(String, long, int, String)
+     * @see #ProgressBar(String, long, int, String)
      */
-    public ConsoleProgressBar(String title, long total, String units) {
+    public ProgressBar(String title, long total, String units) {
         this(title, total, DEFAULT_PROGRESS_BAR_WIDTH, units);
     }
     
     /**
-     * Creates a new ConsoleProgressBar object.
+     * Creates a new ProgressBar object.
      *
      * @param title The title to display for the progress bar.
      * @param total The total size of the progress bar.
      * @param width The with of the bar in the progress bar.
-     * @see #ConsoleProgressBar(String, long, int, String)
+     * @see #ProgressBar(String, long, int, String)
      */
-    public ConsoleProgressBar(String title, long total, int width) {
+    public ProgressBar(String title, long total, int width) {
         this(title, total, width, "");
     }
     
     /**
-     * Creates a new ConsoleProgressBar object.
+     * Creates a new ProgressBar object.
      *
      * @param title The title to display for the progress bar.
      * @param total The total size of the progress bar.
-     * @see #ConsoleProgressBar(String, long, int, String)
+     * @see #ProgressBar(String, long, int, String)
      */
-    public ConsoleProgressBar(String title, long total) {
+    public ProgressBar(String title, long total) {
         this(title, total, DEFAULT_PROGRESS_BAR_WIDTH, "");
     }
     
     /**
-     * Private constructor for a new ConsoleProgressBar object.
+     * Private constructor for a new ProgressBar object.
      */
-    private ConsoleProgressBar() {
+    private ProgressBar() {
     }
     
     
@@ -284,7 +296,7 @@ public class ConsoleProgressBar {
      */
     @SuppressWarnings("HardcodedLineSeparator")
     public String get() {
-        if (update) {
+        if (update.get()) {
             StringBuilder progressBarBuilder = new StringBuilder();
             
             if (getShowPercentage()) {
@@ -298,7 +310,7 @@ public class ConsoleProgressBar {
                 progressBarBuilder.append((progressBarBuilder.length() == 0) ? "" : ' ');
                 progressBarBuilder.append(getRatioString());
             }
-            if (getShowSpeed() && !isComplete()) {
+            if (getShowSpeed() && !isComplete() && !isFailed()) {
                 progressBarBuilder.append((progressBarBuilder.length() == 0) ? "" : ' ');
                 progressBarBuilder.append(getSpeedString());
             }
@@ -336,19 +348,11 @@ public class ConsoleProgressBar {
      * @return Whether the progress bar was updated or not.
      */
     private synchronized boolean update(long newProgress, boolean autoPrint) {
-        if (isComplete()) {
+        if (isComplete() || isFailed()) {
             return false;
         }
         
-        if (firstUpdate == 0) {
-            if (!title.isEmpty()) {
-                System.out.println(getTitleString());
-                System.out.flush();
-                System.err.flush();
-            }
-            firstUpdate = System.nanoTime();
-        }
-        
+        firstUpdate = (firstUpdate == 0) ? System.nanoTime() : firstUpdate;
         progress = BoundUtility.truncateNum(newProgress, 0, total).longValue();
         
         boolean needsUpdate = (Math.abs(System.nanoTime() - currentUpdate) >= TimeUnit.MILLISECONDS.toNanos(PROGRESS_BAR_MINIMUM_UPDATE_DELAY));
@@ -368,13 +372,14 @@ public class ConsoleProgressBar {
                 rollingUpdate.remove(0);
             }
             
-            update = true;
+            update.set(true);
         }
         
-        if (update && autoPrint) {
+        if (update.get() && autoPrint) {
             print();
+            return true;
         }
-        return update;
+        return update.get();
     }
     
     /**
@@ -400,6 +405,30 @@ public class ConsoleProgressBar {
     }
     
     /**
+     * Processes the log data passed into it and updates the progress bar accordingly.<br>
+     * It is expected that this method be overridden in subclasses for specific use cases.
+     *
+     * @param log     The log data.
+     * @param isError Whether the passed log is an error log or not.
+     * @return Whether the progress bar was updated or not.
+     */
+    public synchronized boolean processLog(String log, boolean isError) {
+        return false;
+    }
+    
+    /**
+     * Processes the log data passed into it and updates the progress bar accordingly.<br>
+     * It is expected that this method be overridden in subclasses for specific use cases.
+     *
+     * @param log The log data.
+     * @return Whether the progress bar was updated or not.
+     * @see #processLog(String, boolean)
+     */
+    public synchronized boolean processLog(String log) {
+        return processLog(log, false);
+    }
+    
+    /**
      * Prints the progress bar to the console.
      *
      * @see #getPrintable()
@@ -407,10 +436,16 @@ public class ConsoleProgressBar {
     public synchronized void print() {
         String bar = getPrintable();
         bar = bar.replace(" ", " ");
+        
+        if (firstPrint.get() && !title.isEmpty()) {
+            System.out.println(getTitleString());
+        }
         System.out.print(bar);
         System.out.flush();
         System.err.flush();
-        update = false;
+        
+        firstPrint.set(false);
+        update.set(false);
     }
     
     /**
@@ -418,10 +453,10 @@ public class ConsoleProgressBar {
      *
      * @return The ratio of the progress bar.
      */
-    public double getRatio() {
-        return ((total <= 0) || (current > total)) ? 1 :
-               (current < 0) ? 0 :
-               (double) current / total;
+    public synchronized double getRatio() {
+        return ((total <= 0) || (current >= total)) ? 1 :
+               ((current < 0) ? 0 :
+                ((double) current / total));
     }
     
     /**
@@ -430,7 +465,7 @@ public class ConsoleProgressBar {
      * @return The percentage of the progress bar.
      * @see #getRatio()
      */
-    public int getPercentage() {
+    public synchronized int getPercentage() {
         return (int) (getRatio() * 100);
     }
     
@@ -439,7 +474,7 @@ public class ConsoleProgressBar {
      *
      * @return The last recorded speed of the progress bar in units per second.
      */
-    public double getLastSpeed() {
+    public synchronized double getLastSpeed() {
         double recentTime = (double) Math.max((currentUpdate - previousUpdate), 0) / TimeUnit.SECONDS.toNanos(1);
         long recentProgress = Math.max((current - previous), 0);
         
@@ -452,7 +487,7 @@ public class ConsoleProgressBar {
      *
      * @return The average speed of the progress bar in units per second.
      */
-    public double getAverageSpeed() {
+    public synchronized double getAverageSpeed() {
         double totalTime = (double) Math.max((currentUpdate - firstUpdate), 0) / TimeUnit.SECONDS.toNanos(1);
         
         return ((totalTime == 0) || (current <= 0) || (firstUpdate < 0) || (currentUpdate <= 0)) ? 0 :
@@ -464,7 +499,7 @@ public class ConsoleProgressBar {
      *
      * @return The rolling average speed of the progress bar in units per second.
      */
-    public double getRollingAverageSpeed() {
+    public synchronized double getRollingAverageSpeed() {
         if ((rollingProgress.size() != ROLLING_AVERAGE_UPDATE_COUNT) || (rollingUpdate.size() != ROLLING_AVERAGE_UPDATE_COUNT)) {
             return 0;
         }
@@ -481,7 +516,7 @@ public class ConsoleProgressBar {
      *
      * @return The total duration of the progress bar in nanoseconds.
      */
-    public long getTotalDuration() {
+    public synchronized long getTotalDuration() {
         long totalDuration = Math.max((currentUpdate - firstUpdate), 0) +
                 (Math.max(initialDuration, 0) * TimeUnit.SECONDS.toNanos(1));
         
@@ -494,7 +529,7 @@ public class ConsoleProgressBar {
      *
      * @return The estimated time remaining in seconds.
      */
-    public long getTimeRemaining() {
+    public synchronized long getTimeRemaining() {
         long remainingProgress = Math.max((total - current), 0);
         long totalProgress = Math.max((current - Math.max(initialProgress, 0)), 0);
         long totalTime = Math.max((currentUpdate - firstUpdate), 0);
@@ -508,7 +543,7 @@ public class ConsoleProgressBar {
      *
      * @return Whether the progress bar is complete or not.
      */
-    public boolean isComplete() {
+    public synchronized boolean isComplete() {
         return (current >= total);
     }
     
@@ -519,7 +554,7 @@ public class ConsoleProgressBar {
      * @param additionalInfo Additional info to print at the end of the progress bar.
      * @see #getPrintable()
      */
-    public void complete(boolean printTime, String additionalInfo) {
+    public synchronized void complete(boolean printTime, String additionalInfo) {
         update(total, false);
         String completeProgressBar = getPrintable();
         
@@ -534,10 +569,15 @@ public class ConsoleProgressBar {
         }
         completeProgressBar = completeProgressBar.replace(" ", (extras.isEmpty() ? " " : extras));
         
+        if (firstPrint.get() && !title.isEmpty()) {
+            System.out.println(getTitleString());
+        }
         System.out.println(completeProgressBar);
         System.out.flush();
         System.err.flush();
-        update = false;
+        
+        firstPrint.set(false);
+        update.set(false);
     }
     
     /**
@@ -546,7 +586,7 @@ public class ConsoleProgressBar {
      * @param printTime Whether or not to print the final time after the progress bar.
      * @see #complete(boolean, String)
      */
-    public void complete(boolean printTime) {
+    public synchronized void complete(boolean printTime) {
         complete(printTime, "");
     }
     
@@ -555,8 +595,70 @@ public class ConsoleProgressBar {
      *
      * @see #complete(boolean)
      */
-    public void complete() {
+    public synchronized void complete() {
         complete(true);
+    }
+    
+    /**
+     * Determines if the progress bar has failed.
+     *
+     * @return Whether the progress bar has failed or not.
+     */
+    public synchronized boolean isFailed() {
+        return failed.get();
+    }
+    
+    /**
+     * Fails the progress bar.
+     *
+     * @param printTime      Whether or not to print the final time after the progress bar.
+     * @param additionalInfo Additional info to print at the end of the progress bar.
+     * @see #getPrintable()
+     */
+    public synchronized void fail(boolean printTime, String additionalInfo) {
+        failed.set(true);
+        update.set(true);
+        String failedProgressBar = getPrintable();
+        
+        String extras = "";
+        if (printTime) {
+            long duration = TimeUnit.NANOSECONDS.toMillis(getTotalDuration());
+            String durationString = DateTimeUtility.durationToDurationString(duration, false, false, true);
+            extras += " (" + durationString + ')';
+        }
+        if (!additionalInfo.isEmpty()) {
+            extras += " - " + additionalInfo;
+        }
+        failedProgressBar = failedProgressBar.replace(" ", (extras.isEmpty() ? " " : extras));
+        
+        if (firstPrint.get() && !title.isEmpty()) {
+            System.out.println(getTitleString());
+        }
+        System.out.println(failedProgressBar);
+        System.out.flush();
+        System.err.flush();
+        
+        firstPrint.set(false);
+        update.set(false);
+    }
+    
+    /**
+     * Fails the progress bar.
+     *
+     * @param printTime Whether or not to print the final time after the progress bar.
+     * @see #fail(boolean, String)
+     */
+    public synchronized void fail(boolean printTime) {
+        fail(printTime, "");
+    }
+    
+    /**
+     * Fails the progress bar.
+     *
+     * @see #fail(boolean)
+     */
+    public synchronized void fail() {
+        fail(true);
     }
     
     /**
@@ -578,7 +680,9 @@ public class ConsoleProgressBar {
     public String getPercentageString() {
         int percentage = getPercentage();
         String percentageString = StringUtility.padLeft(String.valueOf(percentage), 3);
-        Console.ConsoleEffect color = ((percentage == 100) ? Console.ConsoleEffect.CYAN : Console.ConsoleEffect.GREEN);
+        Console.ConsoleEffect color = (isFailed() ? Console.ConsoleEffect.RED :
+                                       (isComplete() ? Console.ConsoleEffect.CYAN :
+                                        Console.ConsoleEffect.GREEN));
         
         return color.apply(percentageString) + '%';
     }
@@ -593,9 +697,11 @@ public class ConsoleProgressBar {
         double ratio = getRatio();
         int completed = Math.max((int) ((double) width * ratio), 0);
         int remaining = Math.max((width - completed - 1), 0);
-        Console.ConsoleEffect color = ((completed == width) ? Console.ConsoleEffect.CYAN : Console.ConsoleEffect.GREEN);
+        Console.ConsoleEffect color = (isFailed() ? Console.ConsoleEffect.RED :
+                                       (isComplete() ? Console.ConsoleEffect.CYAN :
+                                        Console.ConsoleEffect.GREEN));
         
-        String bar = "=".repeat(completed) + ((completed != width) ? '>' : "") + " ".repeat(remaining);
+        String bar = "=".repeat(completed) + (isComplete() ? "" : (isFailed() ? ' ' : '>')) + " ".repeat(remaining);
         return '[' + color.apply(bar) + ']';
     }
     
@@ -606,7 +712,9 @@ public class ConsoleProgressBar {
      */
     public String getRatioString() {
         String formattedCurrent = StringUtility.padLeft(String.valueOf(Math.max(Math.min(current, total), 0)), String.valueOf(total).length());
-        Console.ConsoleEffect color = ((current >= total) ? Console.ConsoleEffect.CYAN : Console.ConsoleEffect.GREEN);
+        Console.ConsoleEffect color = (isFailed() ? Console.ConsoleEffect.RED :
+                                       (isComplete() ? Console.ConsoleEffect.CYAN :
+                                        Console.ConsoleEffect.GREEN));
         
         return color.apply(formattedCurrent) + units + '/' +
                 Console.ConsoleEffect.CYAN.apply(String.valueOf(total)) + units;
@@ -621,8 +729,8 @@ public class ConsoleProgressBar {
         double rollingAverageSpeed = getRollingAverageSpeed();
         String formattedSpeed = String.format("%.1f", rollingAverageSpeed);
         
-        return (current >= total) ? "" :
-               "at " + formattedSpeed + units + "/s";
+        return (isFailed() || isComplete()) ? "" :
+               ("at " + formattedSpeed + units + "/s");
     }
     
     /**
@@ -635,9 +743,10 @@ public class ConsoleProgressBar {
         long time = getTimeRemaining();
         String durationStamp = DateTimeUtility.durationToDurationStamp(TimeUnit.SECONDS.toMillis(time), false, false);
         
-        return (current >= total) ? Console.ConsoleEffect.CYAN.apply("Complete") :
-               (time == Long.MAX_VALUE) ? "ETA: --:--:--" :
-               "ETA: " + durationStamp;
+        return isFailed() ? Console.ConsoleEffect.RED.apply("Failed") :
+               (isComplete() ? Console.ConsoleEffect.CYAN.apply("Complete") :
+                ((time == Long.MAX_VALUE) ? "ETA: --:--:--" :
+                 ("ETA: " + durationStamp)));
     }
     
     
@@ -809,21 +918,85 @@ public class ConsoleProgressBar {
     //Setters
     
     /**
-     * Sets the initial progress of the progress bar.
+     * Updates the title of the progress bar.<br>
+     * If the title has already been printed then the title will not be changed.
      *
-     * @param initialProgress The initial progress of the progress bar.
+     * @param title The new title of the progress bar.
+     * @return Whether the title of the progress bar was updated or not.
      */
-    public void setInitialProgress(long initialProgress) {
-        this.initialProgress = initialProgress;
+    public synchronized boolean updateTitle(String title) {
+        if (firstPrint.get()) {
+            this.title = title;
+            return true;
+        }
+        return false;
     }
     
     /**
-     * Sets the initial duration of the progress bar in seconds.
+     * Updates the total progress of the progress bar.
+     *
+     * @param total The new total progress of the progress bar.
+     */
+    public synchronized void updateTotal(long total) {
+        this.total = total;
+    }
+    
+    /**
+     * Updates the units of the progress bar and scales the progress.
+     *
+     * @param units The new units of the progress bar.
+     * @param scale The amount to scale the current and total progress by.
+     */
+    public synchronized void updateUnits(String units, double scale) {
+        this.units = units;
+        
+        this.total *= scale;
+        this.progress *= scale;
+        this.current *= scale;
+        this.previous *= scale;
+        this.initialProgress *= scale;
+        IntStream.range(0, this.rollingProgress.size()).boxed().forEach(i ->
+                this.rollingProgress.set(i, (long) (this.rollingProgress.get(i) * scale)));
+    }
+    
+    /**
+     * Updates the units of the progress bar.
+     *
+     * @param units The new units of the progress bar.
+     * @see #updateUnits(String, double)
+     */
+    public synchronized void updateUnits(String units) {
+        updateUnits(units, 1.0);
+    }
+    
+    /**
+     * Defines the initial progress of the progress bar.<br>
+     * If the initial progress has already been defined the initial progress will not be changed.
+     *
+     * @param initialProgress The initial progress of the progress bar.
+     * @return Whether the initial progress was defined or not.
+     */
+    public synchronized boolean defineInitialProgress(long initialProgress) {
+        if (this.initialProgress == 0) {
+            this.initialProgress = initialProgress;
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Sets the initial duration of the progress bar in seconds.<br>
+     * If the initial duration has already been defined the initial duration will not be changed.
      *
      * @param initialDuration The initial duration of the progress bar in seconds.
+     * @return Whether the initial duration was defined or not.
      */
-    public void setInitialDuration(long initialDuration) {
-        this.initialDuration = initialDuration;
+    public synchronized boolean defineInitialDuration(long initialDuration) {
+        if (this.initialDuration == 0) {
+            this.initialDuration = initialDuration;
+            return true;
+        }
+        return false;
     }
     
     /**
