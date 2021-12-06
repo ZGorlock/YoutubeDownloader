@@ -168,18 +168,6 @@
     "playlistFile": "Beats/Little Soul.m3u",
     "keepClean": false
   },
-  {
-    "key": "MR_MOM_MUSIC",
-    "active": true,
-    "name": "MrMomMusic",
-    "group": "BEATS",
-    "url": "https://www.youtube.com/c/MrMoMMusic",
-    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "Beats/Mr Mom Music",
-    "saveAsMp3": false,
-    "playlistFile": "Beats/Mr Mom Music.m3u",
-    "keepClean": false
-  },
 
   {
     "key": "TRAP_CITY",
@@ -222,12 +210,25 @@
     "active": true,
     "name": "BassNation",
     "group": "TRAP",
-    "url": "ttps://www.youtube.com/channel/UCCvVpbYRgYjMN7mG7qQN0Pg",
+    "url": "https://www.youtube.com/channel/UCCvVpbYRgYjMN7mG7qQN0Pg",
     "playlistId": "UUCvVpbYRgYjMN7mG7qQN0Pg",
     "outputFolder": "Trap/Bass Nation",
     "saveAsMp3": true,
     "playlistFile": "Trap/Bass Nation.m3u",
     "keepClean": true
+  },
+  {
+    "key": "MR_MOM_MUSIC",
+    "active": true,
+    "name": "MrMomMusic",
+    "group": "TRAP",
+    "url": "https://www.youtube.com/c/MrMoMMusic",
+    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
+    "outputFolder": "${M}/Trap/Mr Mom Music",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/Trap/Mr Mom Music.m3u",
+    "ignoreGlobalLocations": true,
+    "keepClean": false
   },
 
   {
@@ -1521,9 +1522,10 @@
     "group": "GME",
     "url": "https://www.youtube.com/c/Superstonk",
     "playlistId": "UUI4EET9NJPWxUuXGlG6fxPA",
-    "outputFolder": "../Documents/Other/GME/AMAs",
+    "outputFolder": "${D}/Documents/Other/GME/AMAs",
     "saveAsMp3": false,
-    "playlistFile": "../Documents/Other/GME/AMAs/AMAs.m3u",
+    "playlistFile": "${D}/Documents/Other/GME/AMAs/AMAs.m3u",
+    "ignoreGlobalLocations": true,
     "keepClean": false
   },
 

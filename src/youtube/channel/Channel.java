@@ -64,6 +64,11 @@ public class Channel {
     public File outputFolder;
     
     /**
+     * A flag indicating whether to disregard the globally configured storage drive and the video directory, if saveAsMp3 is false, or music directory, if saveAsMp3 is true; false by default.
+     */
+    public boolean ignoreGlobalLocations;
+    
+    /**
      * A flag indicating whether to save the videos from the Channel as a mp3 file or not; mp4 otherwise; false by default.
      */
     public boolean saveAsMp3;
@@ -113,10 +118,14 @@ public class Channel {
         this.url = (String) channelJson.getOrDefault("url", "");
         this.playlistId = (String) channelJson.get("playlistId");
         this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
+        this.ignoreGlobalLocations = (boolean) channelJson.getOrDefault("ignoreGlobalLocations", false);
         this.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
-        this.outputFolder = new File((this.saveAsMp3 ? Channels.musicDir : Channels.videoDir) + channelJson.get("outputFolder"));
+        
+        final String directoryPrefix = (this.ignoreGlobalLocations ? "" : (this.saveAsMp3 ? Channels.musicDir : Channels.videoDir));
+        this.outputFolder = parseFilePath(directoryPrefix, (String) channelJson.get("outputFolder"));
         this.playlistFile = (channelJson.get("playlistFile") == null) ? null :
-                            new File((this.saveAsMp3 ? Channels.musicDir : Channels.videoDir) + channelJson.get("playlistFile"));
+                            parseFilePath(directoryPrefix, (String) channelJson.get("playlistFile"));
+        
         this.error = false;
         
         if (channelJson.containsKey("sponsorBlock")) {
@@ -153,6 +162,23 @@ public class Channel {
      */
     public boolean isChannel() {
         return playlistId.startsWith("UU");
+    }
+    
+    
+    //Functions
+    
+    /**
+     * Parses a Channel file path.
+     *
+     * @param directoryPrefix The directory prefix.
+     * @param filePath        The file path.
+     * @return A file representing the parsed file path.
+     */
+    private static File parseFilePath(String directoryPrefix, String filePath) {
+        return new File(directoryPrefix +
+                filePath.replace("${D}", Channels.storageDrive)
+                        .replace("${V}", Channels.videoDir)
+                        .replace("${M}", Channels.musicDir));
     }
     
 }
