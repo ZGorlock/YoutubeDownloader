@@ -168,6 +168,18 @@
     "playlistFile": "Beats/Little Soul.m3u",
     "keepClean": false
   },
+  {
+    "key": "MR_MOM_MUSIC",
+    "active": true,
+    "name": "MrMomMusic",
+    "group": "BEATS",
+    "url": "https://www.youtube.com/c/MrMoMMusic",
+    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
+    "outputFolder": "Beats/Mr Mom Music",
+    "saveAsMp3": false,
+    "playlistFile": "Beats/Mr Mom Music.m3u",
+    "keepClean": false
+  },
 
   {
     "key": "TRAP_CITY",
