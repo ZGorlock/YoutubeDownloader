@@ -282,7 +282,7 @@ public final class YoutubeUtils {
     /**
      * Returns the latest executable version.
      *
-     * @return The latest executable version, or an empty string if there an an error.
+     * @return The latest executable version, or an empty string if there was an error.
      */
     public static String getLatestExecutableVersion() {
         String url;
@@ -296,7 +296,7 @@ public final class YoutubeUtils {
             
             case YT_DLP:
                 url = EXECUTABLE.getWebsite() + "releases/";
-                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/[^\"]+\">yt-dlp\\s(?<version>[0-9.]+)</a>";
+                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[0-9.]+)\"";
                 break;
             
             default:
