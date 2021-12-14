@@ -74,9 +74,14 @@ public class Channel {
     public boolean saveAsMp3;
     
     /**
-     * The playlist file to add mp3 files downloaded from the Channel to if saving as mp3s; null by default.
+     * The playlist file to add files downloaded from the Channel to; null by default.
      */
     public File playlistFile;
+    
+    /**
+     * A flag indicating whether to reverse the order of the playlist or not, putting newer videos first; false by default.
+     */
+    public boolean reversePlaylist;
     
     /**
      * A flag indicating whether to delete files from the output directory that are not in the playlist anymore; false by default.
@@ -119,6 +124,7 @@ public class Channel {
         this.playlistId = (String) channelJson.get("playlistId");
         this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
         this.ignoreGlobalLocations = (boolean) channelJson.getOrDefault("ignoreGlobalLocations", false);
+        this.reversePlaylist = (boolean) channelJson.getOrDefault("reversePlaylist", false);
         this.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
         
         final String directoryPrefix = (this.ignoreGlobalLocations ? "" : (this.saveAsMp3 ? Channels.musicDir : Channels.videoDir));

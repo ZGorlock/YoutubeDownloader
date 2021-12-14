@@ -643,6 +643,9 @@ public class YoutubeChannelDownloader {
         if (channel.isChannel()) {
             Collections.reverse(playlist);
         }
+        if (channel.reversePlaylist) {
+            Collections.reverse(playlist);
+        }
         
         if (!channel.error) {
             if (!playlist.equals(existingPlaylist)) {
