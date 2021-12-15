@@ -12,14 +12,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
@@ -130,9 +128,9 @@ public class YoutubeChannelDownloader {
     private static final Map<String, Video> videoMap = new LinkedHashMap<>();
     
     /**
-     * A map of video keys and their current saved file name.
+     * A map of video keys and their current saved file name for each Channel.
      */
-    private static final Map<String, String> keyStore = new HashMap<>();
+    private static final Map<String, Map<String, String>> keyStore = new LinkedHashMap<>();
     
     /**
      * A counter of the total number of Channels that were processed this run.
@@ -282,7 +280,7 @@ public class YoutubeChannelDownloader {
             boolean stop = (stopAt != null);
             
             if (!((skip && stop) && (Channels.indexOf(stopAt.key) < Channels.indexOf(startAt.key)))) {
-                for (Channel currentChannel : Channels.getChannel()) {
+                for (Channel currentChannel : Channels.getChannels()) {
                     skip = skip && (!currentChannel.key.equals(startAt.key));
                     if (!skip && currentChannel.active &&
                             ((group == null) || (currentChannel.group.equalsIgnoreCase(group)))) {
@@ -521,6 +519,7 @@ public class YoutubeChannelDownloader {
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
         List<String> queue = new ArrayList<>();
+        Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
         
         if (retryFailed) {
             blocked.clear();
@@ -533,13 +532,13 @@ public class YoutubeChannelDownloader {
             if (YoutubeUtils.videoExists(value.output)) {
                 save.add(key);
                 blocked.remove(key);
-                keyStore.put(key, value.output.getAbsolutePath().replace("/", "\\"));
+                channelKeyStore.put(key, value.output.getAbsolutePath().replace("/", "\\"));
                 
             } else if (!blocked.contains(key)) {
-                if (keyStore.containsKey(key) && new File(keyStore.get(key)).exists() &&
-                        new File(keyStore.get(key)).renameTo(value.output)) {
+                if (channelKeyStore.containsKey(key) && new File(channelKeyStore.get(key)).exists() &&
+                        new File(channelKeyStore.get(key)).renameTo(value.output)) {
                     save.add(key);
-                    keyStore.replace(key, value.output.getAbsolutePath().replace("/", "\\"));
+                    channelKeyStore.replace(key, value.output.getAbsolutePath().replace("/", "\\"));
                 } else {
                     queue.add(key);
                 }
@@ -572,6 +571,7 @@ public class YoutubeChannelDownloader {
         List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
         List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
+        Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
         
         if (!queue.isEmpty()) {
             System.out.println("Downloading " + queue.size() + " in Queue...");
@@ -587,7 +587,7 @@ public class YoutubeChannelDownloader {
             if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork, channel.sponsorBlockConfig)) {
                 queue.remove(videoId);
                 save.add(videoId);
-                keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                channelKeyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 totalDownloads++;
                 totalDataDownloaded += (video.output.length() / 1048576.0);
                 System.out.println("    Download Succeeded");
@@ -667,29 +667,41 @@ public class YoutubeChannelDownloader {
     }
     
     /**
-     * Loads the map of video keys and their current saved file names.
+     * Loads the map of video keys and their current saved file names for each Channel.
      *
      * @throws Exception When there is an error loading the file.
      */
     private static void loadKeyStore() throws Exception {
         keyStore.clear();
+        for (Channel channel : Channels.getChannels()) {
+            keyStore.putIfAbsent(channel.name, new LinkedHashMap<>());
+        }
+        
         List<String> lines = FileUtils.readLines(KEY_STORE_FILE, Charsets.UTF_8);
         for (String line : lines) {
             if (line.isEmpty()) {
                 continue;
             }
-            String[] lineParts = line.split("/");
-            keyStore.put(lineParts[0], lineParts[1]);
+            String[] lineParts = line.split("\\|\\|\\|");
+            if (lineParts.length == 3) {
+                keyStore.putIfAbsent(lineParts[0], new LinkedHashMap<>());
+                keyStore.get(lineParts[0]).put(lineParts[1], lineParts[2]);
+            }
         }
     }
     
     /**
-     * Saves the map of video keys and their current saved file names.
+     * Saves the map of video keys and their current saved file names for each Channel.
      *
      * @throws Exception When there is an error saving the file.
      */
     private static void saveKeyStore() throws Exception {
-        List<String> lines = keyStore.entrySet().stream().map(e -> e.getKey() + '/' + e.getValue()).collect(Collectors.toList());
+        List<String> lines = new ArrayList<>();
+        for (Map.Entry<String, Map<String, String>> keyStoreEntry : keyStore.entrySet()) {
+            for (Map.Entry<String, String> keyStoreChannelEntry : keyStoreEntry.getValue().entrySet()) {
+                lines.add(keyStoreEntry.getKey() + "|||" + keyStoreChannelEntry.getKey() + "|||" + keyStoreChannelEntry.getValue());
+            }
+        }
         FileUtils.writeLines(KEY_STORE_FILE, lines);
     }
     
@@ -698,18 +710,19 @@ public class YoutubeChannelDownloader {
      */
     private static void calculateData() throws Exception {
         File channelData = new File("data/channel");
-        Collection<File> channels = FileUtils.listFiles(channelData, new String[] {"txt"}, true);
         
-        for (File channel : channels) {
-            if (channel.getName().endsWith("-save.txt")) {
-                List<String> save = FileUtils.readLines(channel, StandardCharsets.UTF_8);
+        for (Channel channel : Channels.getChannels()) {
+            File channelSaveFile = new File(channelData, channel.name + '/' + channel.name + "-save.txt");
+            if (channelSaveFile.exists()) {
+                List<String> save = FileUtils.readLines(channelSaveFile, StandardCharsets.UTF_8);
+                Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
                 
                 for (String saved : save) {
-                    if (!keyStore.containsKey(saved)) {
+                    if (!channelKeyStore.containsKey(saved)) {
                         continue;
                     }
                     
-                    File file = new File(keyStore.get(saved));
+                    File file = new File(channelKeyStore.get(saved));
                     if (!file.exists()) {
                         continue;
                     }
