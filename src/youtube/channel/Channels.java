@@ -70,7 +70,7 @@ public class Channels {
      *
      * @return The list of Channels.
      */
-    public static List<Channel> getChannel() {
+    public static List<Channel> getChannels() {
         return new ArrayList<>(channels.values());
     }
     
