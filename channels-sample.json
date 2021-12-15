@@ -10,6 +10,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Hacker Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -22,6 +23,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Work Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -34,6 +36,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Chillstep Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -46,6 +49,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Chillout Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -58,6 +62,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Ambient Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -70,6 +75,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Lo-Fi Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -82,6 +88,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Contemporary Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -94,6 +101,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Study Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -106,6 +114,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Chillhop Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -118,6 +127,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Energy Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -130,6 +140,7 @@
     "outputFolder": "Beats/Music Lab",
     "saveAsMp3": true,
     "playlistFile": "Beats/Future Garage Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -142,6 +153,7 @@
     "outputFolder": "Beats/JimTV",
     "saveAsMp3": true,
     "playlistFile": "Beats/Programming Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -154,6 +166,7 @@
     "outputFolder": "Beats/Dreamhop Music",
     "saveAsMp3": true,
     "playlistFile": "Beats/Dreamhop Music.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
   {
@@ -166,6 +179,7 @@
     "outputFolder": "Beats/Little Soul",
     "saveAsMp3": true,
     "playlistFile": "Beats/Little Soul.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
 
@@ -179,6 +193,7 @@
     "outputFolder": "Trap/Trap City",
     "saveAsMp3": true,
     "playlistFile": "Trap/Trap City.m3u",
+    "reversePlaylist": true,
     "keepClean": true
   },
   {
@@ -191,6 +206,7 @@
     "outputFolder": "Trap/Sky Bass",
     "saveAsMp3": true,
     "playlistFile": "Trap/Sky Bass.m3u",
+    "reversePlaylist": true,
     "keepClean": true
   },
   {
@@ -203,6 +219,7 @@
     "outputFolder": "Trap/Trap Nation",
     "saveAsMp3": true,
     "playlistFile": "Trap/Trap Nation.m3u",
+    "reversePlaylist": true,
     "keepClean": true
   },
   {
@@ -215,19 +232,75 @@
     "outputFolder": "Trap/Bass Nation",
     "saveAsMp3": true,
     "playlistFile": "Trap/Bass Nation.m3u",
+    "reversePlaylist": true,
     "keepClean": true
+  },
+
+  {
+    "key": "MR_MOM_MUSIC_VIDEOS",
+    "active": true,
+    "name": "MrMomMusicVideos",
+    "group": "EDM",
+    "url": "https://www.youtube.com/c/MrMoM",
+    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
+    "outputFolder": "${M}/EDM/Mr Mom Music - Music Videos",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/EDM/Mr Mom Music - Music Videos - All.m3u",
+    "reversePlaylist": true,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
+  {
+    "key": "MR_MOM_MUSIC_VIDEOS_NEW",
+    "active": true,
+    "name": "MrMomMusicVideosNew",
+    "group": "EDM",
+    "url": "https://www.youtube.com/c/MrMoM",
+    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
+    "outputFolder": "${M}/EDM/Mr Mom Music - Music Videos",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/EDM/Mr Mom Music - Music Videos.m3u",
+    "reversePlaylist": true,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
   },
   {
     "key": "MR_MOM_MUSIC",
     "active": true,
     "name": "MrMomMusic",
-    "group": "TRAP",
-    "url": "https://www.youtube.com/c/MrMoMMusic",
+    "group": "EDM",
+    "url": "https://www.youtube.com/c/MrMoM",
     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "${M}/Trap/Mr Mom Music",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Trap/Mr Mom Music.m3u",
-    "ignoreGlobalLocations": true,
+    "outputFolder": "EDM/Mr Mom Music",
+    "saveAsMp3": true,
+    "playlistFile": "EDM/Mr Mom Music - All.m3u",
+    "reversePlaylist": true,
+    "keepClean": false
+  },
+  {
+    "key": "MR_MOM_MUSIC_NEW",
+    "active": true,
+    "name": "MrMomMusicNew",
+    "group": "EDM",
+    "url": "https://www.youtube.com/c/MrMoM",
+    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
+    "outputFolder": "EDM/Mr Mom Music",
+    "saveAsMp3": true,
+    "playlistFile": "EDM/Mr Mom Music.m3u",
+    "reversePlaylist": true,
+    "keepClean": false
+  },
+  {
+    "key": "MR_SUICIDE_SHEEP",
+    "active": true,
+    "name": "MrSuicideSheep",
+    "group": "EDM",
+    "url": "https://www.youtube.com/user/MrSuicideSheep",
+    "playlistId": "UU5nc_ZtjKW1htCVZVRxlQAQ",
+    "outputFolder": "EDM/Mr Suicide Sheep",
+    "saveAsMp3": true,
+    "playlistFile": "EDM/Mr Suicide Sheep.m3u",
+    "reversePlaylist": true,
     "keepClean": false
   },
 
@@ -931,6 +1004,18 @@
     "playlistFile": "Youtube/Science/Minute Physics.m3u",
     "keepClean": true
   },
+  {
+    "key": "RATIONAL_ANIMATIONS",
+    "active": true,
+    "name": "RationalAnimations",
+    "group": "SCIENCE",
+    "url": "https://www.youtube.com/c/RationalAnimations",
+    "playlistId": "UUgqt1RE0k0MIr0LoyJRy2lg",
+    "outputFolder": "Youtube/Science/Rational Animations",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Science/Rational Animations.m3u",
+    "keepClean": true
+  },
 
   {
     "key": "BRAVE_WILDERNESS",
@@ -1524,7 +1609,20 @@
     "playlistId": "UUI4EET9NJPWxUuXGlG6fxPA",
     "outputFolder": "${D}/Documents/Other/GME/AMAs",
     "saveAsMp3": false,
-    "playlistFile": "${D}/Documents/Other/GME/AMAs/AMAs.m3u",
+    "playlistFile": null,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
+  {
+    "key": "SUPERSTONK_2",
+    "active": true,
+    "name": "Superstonk2",
+    "group": "GME",
+    "url": "https://www.youtube.com/channel/UCJ-mn_GXx-MZeL8KiNx-_IA",
+    "playlistId": "UUJ-mn_GXx-MZeL8KiNx-_IA",
+    "outputFolder": "${D}/Documents/Other/GME/AMAs",
+    "saveAsMp3": false,
+    "playlistFile": null,
     "ignoreGlobalLocations": true,
     "keepClean": false
   },
@@ -1723,5 +1821,5 @@
     "playlistFile": "Youtube/Best Cube/Anime Cube.m3u",
     "keepClean": true
   }
-  
+
 ]
