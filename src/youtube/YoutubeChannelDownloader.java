@@ -677,6 +677,10 @@ public class YoutubeChannelDownloader {
             keyStore.putIfAbsent(channel.name, new LinkedHashMap<>());
         }
         
+        if (!KEY_STORE_FILE.exists()) {
+            return;
+        }
+        
         List<String> lines = FileUtils.readLines(KEY_STORE_FILE, Charsets.UTF_8);
         for (String line : lines) {
             if (line.isEmpty()) {
