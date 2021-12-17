@@ -1665,6 +1665,18 @@
     "keepClean": true
   },
   {
+    "key": "CYANIDE_AND_HAPPINESS",
+    "active": true,
+    "name": "CyanideAndHappiness",
+    "group": "FUNNY",
+    "url": "https://www.youtube.com/c/ExplosmEntertainment",
+    "playlistId": "PLA1F18BC2CFDB46FF",
+    "outputFolder": "Youtube/Funny/Cyanide and Happiness",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Funny/Cyanide and Happiness.m3u",
+    "keepClean": true
+  },
+  {
     "key": "ZEFRANK",
     "active": true,
     "name": "Zefrank",
