@@ -240,12 +240,12 @@
     "key": "MR_MOM_MUSIC_VIDEOS",
     "active": true,
     "name": "MrMomMusicVideos",
-    "group": "EDM",
+    "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/c/MrMoM",
     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "${M}/EDM/Mr Mom Music - Music Videos",
+    "outputFolder": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos",
     "saveAsMp3": false,
-    "playlistFile": "${M}/EDM/Mr Mom Music - Music Videos - All.m3u",
+    "playlistFile": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos - All.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
     "keepClean": false
@@ -254,12 +254,12 @@
     "key": "MR_MOM_MUSIC_VIDEOS_NEW",
     "active": true,
     "name": "MrMomMusicVideosNew",
-    "group": "EDM",
+    "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/c/MrMoM",
     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "${M}/EDM/Mr Mom Music - Music Videos",
+    "outputFolder": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos",
     "saveAsMp3": false,
-    "playlistFile": "${M}/EDM/Mr Mom Music - Music Videos.m3u",
+    "playlistFile": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
     "keepClean": false
@@ -268,12 +268,12 @@
     "key": "MR_MOM_MUSIC",
     "active": true,
     "name": "MrMomMusic",
-    "group": "EDM",
+    "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/c/MrMoM",
     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "EDM/Mr Mom Music",
+    "outputFolder": "Vocal Dubstep/Mr Mom Music",
     "saveAsMp3": true,
-    "playlistFile": "EDM/Mr Mom Music - All.m3u",
+    "playlistFile": "Vocal Dubstep/Mr Mom Music - All.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -281,12 +281,12 @@
     "key": "MR_MOM_MUSIC_NEW",
     "active": true,
     "name": "MrMomMusicNew",
-    "group": "EDM",
+    "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/c/MrMoM",
     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "EDM/Mr Mom Music",
+    "outputFolder": "Vocal Dubstep/Mr Mom Music",
     "saveAsMp3": true,
-    "playlistFile": "EDM/Mr Mom Music.m3u",
+    "playlistFile": "Vocal Dubstep/Mr Mom Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -294,12 +294,12 @@
     "key": "MR_SUICIDE_SHEEP",
     "active": true,
     "name": "MrSuicideSheep",
-    "group": "EDM",
+    "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/user/MrSuicideSheep",
     "playlistId": "UU5nc_ZtjKW1htCVZVRxlQAQ",
-    "outputFolder": "EDM/Mr Suicide Sheep",
+    "outputFolder": "Vocal Dubstep/Mr Suicide Sheep",
     "saveAsMp3": true,
-    "playlistFile": "EDM/Mr Suicide Sheep.m3u",
+    "playlistFile": "Vocal Dubstep/Mr Suicide Sheep.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -314,7 +314,7 @@
     "outputFolder": "Music/The Comet Is Coming",
     "saveAsMp3": true,
     "playlistFile": "My Playlists/The Comet Is Coming.m3u",
-    "keepClean": true
+    "keepClean": false
   },
 
   {
@@ -509,7 +509,7 @@
     "outputFolder": "Youtube/Space/Isaac Arthur",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Space/Isaac Arthur.m3u",
-    "keepClean": true
+    "keepClean": false
   },
   {
     "key": "ISAAC_ARTHUR_P01",
