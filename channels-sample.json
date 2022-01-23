@@ -265,6 +265,20 @@
     "keepClean": false
   },
   {
+    "key": "MR_MOM_MUSIC_VIDEOS_FAVORITES",
+    "active": true,
+    "name": "MrMomMusicVideosFavorites",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "outputFolder": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/Vocal Dubstep/Mr Mom Music - Music Videos - Favorites.m3u",
+    "reversePlaylist": false,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
+  {
     "key": "MR_MOM_MUSIC",
     "active": true,
     "name": "MrMomMusic",
@@ -289,6 +303,32 @@
     "playlistFile": "Vocal Dubstep/Mr Mom Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
+  },
+  {
+    "key": "MR_MOM_MUSIC_FAVORITES",
+    "active": true,
+    "name": "MrMomMusicFavorites",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "outputFolder": "Vocal Dubstep/Mr Mom Music",
+    "saveAsMp3": true,
+    "playlistFile": "Vocal Dubstep/Mr Mom Music - Favorites.m3u",
+    "reversePlaylist": false,
+    "keepClean": false
+  },
+  {
+    "key": "MR_MOM_MUSIC_PLAYLIST",
+    "active": true,
+    "name": "MrMomMusicPlaylist",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
+    "outputFolder": "Music/MrMomMusic",
+    "saveAsMp3": true,
+    "playlistFile": "My Playlists/Mr Mom Music.m3u",
+    "reversePlaylist": false,
+    "keepClean": true
   },
   {
     "key": "MR_SUICIDE_SHEEP",
@@ -1016,6 +1056,18 @@
     "playlistFile": "Youtube/Science/Rational Animations.m3u",
     "keepClean": true
   },
+  {
+    "key": "DOMAIN_OF_SCIENCE",
+    "active": true,
+    "name": "DomainOfScience",
+    "group": "SCIENCE",
+    "url": "https://www.youtube.com/c/DomainofScience",
+    "playlistId": "UUxqAWLTk1CmBvZFPzeZMd9A",
+    "outputFolder": "Youtube/Science/Domain of Science",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Science/Domain of Science.m3u",
+    "keepClean": true
+  },
 
   {
     "key": "BRAVE_WILDERNESS",
@@ -1126,28 +1178,41 @@
     "playlistFile": "Youtube/Technology/Technology Connections - Television.m3u",
     "keepClean": false
   },
+
   {
     "key": "COMPUTERPHILE",
     "active": true,
     "name": "Computerphile",
-    "group": "TECHNOLOGY",
+    "group": "PROGRAMMING",
     "url": "https://www.youtube.com/user/Computerphile",
     "playlistId": "UU9-y-6csu5WGm29I7JiwpnA",
-    "outputFolder": "Youtube/Technology/Computerphile",
+    "outputFolder": "Youtube/Programming/Computerphile",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Technology/Computerphile.m3u",
+    "playlistFile": "Youtube/Programming/Computerphile.m3u",
     "keepClean": true
   },
   {
     "key": "ROBERT_MILES",
     "active": true,
     "name": "RobertMiles",
-    "group": "TECHNOLOGY",
+    "group": "PROGRAMMING",
     "url": "https://www.youtube.com/c/RobertMilesAI",
     "playlistId": "UULB7AzTwc6VFZrBsO2ucBMg",
-    "outputFolder": "Youtube/Technology/Robert Miles",
+    "outputFolder": "Youtube/Programming/Robert Miles",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Technology/Robert Miles.m3u",
+    "playlistFile": "Youtube/Programming/Robert Miles.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "REDUCIBLE",
+    "active": true,
+    "name": "Reducible",
+    "group": "PROGRAMMING",
+    "url": "https://www.youtube.com/c/Reducible",
+    "playlistId": "UUK8XIGR5kRidIw2fWqwyHRA",
+    "outputFolder": "Youtube/Programming/Reducible",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Programming/Reducible.m3u",
     "keepClean": true
   },
 
@@ -1367,6 +1432,19 @@
     "outputFolder": "Youtube/Chemistry/Big Stack D",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Chemistry/Big Stack D.m3u",
+    "keepClean": true
+  },
+
+  {
+    "key": "NOT_JUST_BIKES",
+    "active": true,
+    "name": "NotJustBikes",
+    "group": "INFRASTRUCTURE",
+    "url": "https://www.youtube.com/c/NotJustBikes",
+    "playlistId": "UU0intLFzLaudFG-xAvUEO-A",
+    "outputFolder": "Youtube/Infrastructure/Not Just Bikes",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Infrastructure/Not Just Bikes.m3u",
     "keepClean": true
   },
 

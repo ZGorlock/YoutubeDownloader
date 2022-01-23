@@ -645,6 +645,18 @@ public class ChannelProcesses_Sample {
                 });
                 break;
             
+            case "DOMAIN_OF_SCIENCE":
+                final Date domainOfScienceOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2016-11-27");
+                videoMap.forEach((key, value) -> {
+                    if (value.date.before(domainOfScienceOldest)) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
             case "ADAM_SAVAGE_ONE_DAY_BUILDS":
                 videoMap.forEach((key, value) -> {
                     if (!value.title.toLowerCase().contains("one day build") ||
