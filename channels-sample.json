@@ -949,6 +949,18 @@
     "keepClean": true
   },
   {
+    "key": "THOUGHTY2",
+    "active": true,
+    "name": "Thoughty2",
+    "group": "SCIENCE",
+    "url": "https://www.youtube.com/channel/UCRlICXvO4XR4HMeEB9JjDlA",
+    "playlistId": "UURlICXvO4XR4HMeEB9JjDlA",
+    "outputFolder": "Youtube/Science/Thoughty2",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Science/Thoughty2.m3u",
+    "keepClean": true
+  },
+  {
     "key": "VSAUCE",
     "active": true,
     "name": "Vsauce",
@@ -1375,7 +1387,7 @@
   },
   {
     "key": "LOCK_PICKING_LAWYER",
-    "active": true,
+    "active": false,
     "name": "LockPickingLawyer",
     "group": "ENGINEERING",
     "url": "https://www.youtube.com/c/lockpickinglawyer",
