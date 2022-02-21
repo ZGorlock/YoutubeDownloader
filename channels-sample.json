@@ -235,6 +235,19 @@
     "reversePlaylist": true,
     "keepClean": true
   },
+  {
+    "key": "TRAP_FAVORITES",
+    "active": true,
+    "name": "TrapFavorites",
+    "group": "TRAP",
+    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
+    "playlistId": "PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
+    "outputFolder": "Trap/Trap Favorites",
+    "saveAsMp3": true,
+    "playlistFile": "Trap/Trap Favorites.m3u",
+    "reversePlaylist": false,
+    "keepClean": true
+  },
 
   {
     "key": "MR_MOM_MUSIC_VIDEOS",
@@ -1195,36 +1208,48 @@
     "key": "COMPUTERPHILE",
     "active": true,
     "name": "Computerphile",
-    "group": "PROGRAMMING",
+    "group": "COMPUTING",
     "url": "https://www.youtube.com/user/Computerphile",
     "playlistId": "UU9-y-6csu5WGm29I7JiwpnA",
-    "outputFolder": "Youtube/Programming/Computerphile",
+    "outputFolder": "Youtube/Computing/Computerphile",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Programming/Computerphile.m3u",
+    "playlistFile": "Youtube/Computing/Computerphile.m3u",
     "keepClean": true
   },
   {
     "key": "ROBERT_MILES",
     "active": true,
     "name": "RobertMiles",
-    "group": "PROGRAMMING",
+    "group": "COMPUTING",
     "url": "https://www.youtube.com/c/RobertMilesAI",
     "playlistId": "UULB7AzTwc6VFZrBsO2ucBMg",
-    "outputFolder": "Youtube/Programming/Robert Miles",
+    "outputFolder": "Youtube/Computing/Robert Miles",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Programming/Robert Miles.m3u",
+    "playlistFile": "Youtube/Computing/Robert Miles.m3u",
     "keepClean": true
   },
   {
     "key": "REDUCIBLE",
     "active": true,
     "name": "Reducible",
-    "group": "PROGRAMMING",
+    "group": "COMPUTING",
     "url": "https://www.youtube.com/c/Reducible",
     "playlistId": "UUK8XIGR5kRidIw2fWqwyHRA",
-    "outputFolder": "Youtube/Programming/Reducible",
+    "outputFolder": "Youtube/Computing/Reducible",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Programming/Reducible.m3u",
+    "playlistFile": "Youtube/Computing/Reducible.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "BEN_EATER",
+    "active": true,
+    "name": "BenEater",
+    "group": "COMPUTING",
+    "url": "https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA",
+    "playlistId": "UUS0N5baNlQWJCUrhCEo8WlA",
+    "outputFolder": "Youtube/Computing/Ben Eater",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Computing/Ben Eater.m3u",
     "keepClean": true
   },
 
