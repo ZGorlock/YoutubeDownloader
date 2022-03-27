@@ -1095,6 +1095,18 @@
   },
 
   {
+    "key": "TIER_ZOO",
+    "active": true,
+    "name": "TierZoo",
+    "group": "NATURE",
+    "url": "https://www.youtube.com/channel/UCHsRtomD4twRf5WVHHk-cMw",
+    "playlistId": "UUHsRtomD4twRf5WVHHk-cMw",
+    "outputFolder": "Youtube/Nature/Tier Zoo",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Nature/Tier Zoo.m3u",
+    "keepClean": true
+  },
+  {
     "key": "BRAVE_WILDERNESS",
     "active": false,
     "name": "BraveWilderness",
@@ -1104,6 +1116,18 @@
     "outputFolder": "Youtube/Nature/Brave Wilderness",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Nature/Brave Wilderness.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "RIVER_MONSTERS",
+    "active": true,
+    "name": "RiverMonsters",
+    "group": "NATURE",
+    "url": "https://www.youtube.com/c/rivermonsters",
+    "playlistId": "UUomwL29zYKujb1JhkB0EcGA",
+    "outputFolder": "Youtube/Nature/River Monsters",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Nature/River Monsters.m3u",
     "keepClean": true
   },
 
