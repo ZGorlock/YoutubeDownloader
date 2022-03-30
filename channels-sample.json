@@ -1095,6 +1095,30 @@
   },
 
   {
+    "key": "FREE_DOCUMENTARY",
+    "active": true,
+    "name": "FreeDocumentary",
+    "group": "NATURE",
+    "url": "https://www.youtube.com/c/FreeDocumentaryNature/videos",
+    "playlistId": "UUQtW2oz8ec8pHjjxawujNjg",
+    "outputFolder": "Youtube/Nature/Free Documentary",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Nature/Free Documentary.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "REAL_WILD",
+    "active": true,
+    "name": "RealWild",
+    "group": "NATURE",
+    "url": "https://www.youtube.com/c/WildThingsChannel/videos",
+    "playlistId": "UUbq-4OJxnziD3awH-aTezeA",
+    "outputFolder": "Youtube/Nature/Real Wild",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Nature/Real Wild.m3u",
+    "keepClean": true
+  },
+  {
     "key": "TIER_ZOO",
     "active": true,
     "name": "TierZoo",
