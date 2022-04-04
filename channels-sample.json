@@ -356,6 +356,33 @@
     "reversePlaylist": true,
     "keepClean": false
   },
+  {
+    "key": "KURUMI_VIDEOS",
+    "active": true,
+    "name": "KurumiVideos",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/c/KurumiMixes",
+    "playlistId": "UUN1UX97MkTb-nuiqJaBPRTA",
+    "outputFolder": "${M}/Vocal Dubstep/Kurumi - Music Videos",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/Vocal Dubstep/Kurumi - Music Videos.m3u",
+    "reversePlaylist": true,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
+  {
+    "key": "KURUMI",
+    "active": true,
+    "name": "Kurumi",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/c/KurumiMixes",
+    "playlistId": "UUN1UX97MkTb-nuiqJaBPRTA",
+    "outputFolder": "Vocal Dubstep/Kurumi",
+    "saveAsMp3": true,
+    "playlistFile": "Vocal Dubstep/Kurumi.m3u",
+    "reversePlaylist": true,
+    "keepClean": false
+  },
 
   {
     "key": "THE_COMET_IS_COMING",
