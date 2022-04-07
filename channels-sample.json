@@ -358,7 +358,7 @@
   },
   {
     "key": "KURUMI_VIDEOS",
-    "active": true,
+    "active": false,
     "name": "KurumiVideos",
     "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/c/KurumiMixes",
@@ -1135,7 +1135,7 @@
   },
   {
     "key": "REAL_WILD",
-    "active": true,
+    "active": false,
     "name": "RealWild",
     "group": "NATURE",
     "url": "https://www.youtube.com/c/WildThingsChannel/videos",
