@@ -383,6 +383,34 @@
     "reversePlaylist": true,
     "keepClean": false
   },
+  {
+    "key": "ASUNA_VIDEOS",
+    "active": false,
+    "name": "AsunaVideos",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/channel/UC2oGnY6k_f1ZgT2fZ-dHlNw",
+    "playlistId": "UU2oGnY6k_f1ZgT2fZ-dHlNw",
+    "outputFolder": "${M}/Vocal Dubstep/Asuna - Music Videos",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/Vocal Dubstep/Asuna - Music Videos.m3u",
+    "reversePlaylist": true,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
+  {
+    "key": "ASUNA",
+    "active": true,
+    "name": "Asuna",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/channel/UC2oGnY6k_f1ZgT2fZ-dHlNw",
+    "playlistId": "UU2oGnY6k_f1ZgT2fZ-dHlNw",
+    "outputFolder": "${M}/Vocal Dubstep/Asuna",
+    "saveAsMp3": false,
+    "playlistFile": "${M}/Vocal Dubstep/Asuna.m3u",
+    "reversePlaylist": true,
+    "ignoreGlobalLocations": true,
+    "keepClean": false
+  },
 
   {
     "key": "THE_COMET_IS_COMING",
