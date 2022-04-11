@@ -405,7 +405,7 @@
     "url": "https://www.youtube.com/channel/UC2oGnY6k_f1ZgT2fZ-dHlNw",
     "playlistId": "UU2oGnY6k_f1ZgT2fZ-dHlNw",
     "outputFolder": "${M}/Vocal Dubstep/Asuna",
-    "saveAsMp3": false,
+    "saveAsMp3": true,
     "playlistFile": "${M}/Vocal Dubstep/Asuna.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
@@ -422,6 +422,19 @@
     "outputFolder": "Music/The Comet Is Coming",
     "saveAsMp3": true,
     "playlistFile": "My Playlists/The Comet Is Coming.m3u",
+    "keepClean": false
+  },
+
+  {
+    "key": "SOUND_LIBRARY",
+    "active": true,
+    "name": "SoundLibrary",
+    "group": "AUDIO",
+    "url": "https://www.youtube.com/c/SoundLibrary1",
+    "playlistId": "UUXm0O2N7IWtjSGv9tblq34g",
+    "outputFolder": "Sound Bytes",
+    "saveAsMp3": true,
+    "playlistFile": null,
     "keepClean": false
   },
 

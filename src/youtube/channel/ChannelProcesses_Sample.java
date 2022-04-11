@@ -65,6 +65,24 @@ public class ChannelProcesses_Sample {
                 });
                 break;
             
+            case "SOUND_LIBRARY":
+                videoMap.forEach((key, value) -> {
+                    String oldTitle = value.title;
+                    String newTitle = oldTitle
+                            .replaceAll("(?i)\\s*-\\s*Sound Effect for editing", "");
+                    newTitle = YoutubeUtils.cleanTitle(newTitle);
+                    File newOutput = new File(value.output.getParentFile(), value.output.getName().replace(oldTitle, newTitle));
+                    if (value.output.exists() && !oldTitle.equals(newTitle)) {
+                        try {
+                            FileUtils.moveFile(value.output, newOutput);
+                        } catch (IOException ignored) {
+                        }
+                    }
+                    value.output = newOutput;
+                    value.title = newTitle;
+                });
+                break;
+            
             case "BY_RELEASE":
                 Pattern byReleaseNamePattern = Pattern.compile("^(?<title>.+)\\s*-\\s*By\\sRelease\\s*-?-\\s(?<episode>\\d+)$");
                 videoMap.forEach((key, value) -> {
