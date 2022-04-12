@@ -8,7 +8,7 @@
         },
         "filter": {
             "channel": null,
-            "group": "AUDIO",
+            "group": null,
             "startAt": null,
             "stopAt": null
         },
