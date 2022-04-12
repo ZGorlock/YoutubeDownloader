@@ -13,11 +13,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
@@ -87,6 +90,11 @@ public class YoutubeChannelDownloader {
      * The maximum number of times to retry an API call before failing.
      */
     private static final int MAX_RETRIES = 10;
+    
+    /**
+     * The maximum number of API playlist pages to save to a single file.
+     */
+    private static final int MAX_PAGES_PER_FILE = 100;
     
     /**
      * The store of video keys and their current saved file name.
@@ -337,6 +345,7 @@ public class YoutubeChannelDownloader {
                 }
             }
         }
+        FileUtils.deleteQuietly(dataFile);
     }
     
     /**
@@ -374,10 +383,10 @@ public class YoutubeChannelDownloader {
         parameters.put("playlistId", playlistId);
         parameters.put("key", API_KEY);
         
-        StringBuilder data = new StringBuilder("[").append(System.lineSeparator());
+        int page = 0;
+        List<String> data = new ArrayList<>();
         List<String> calls = new ArrayList<>();
         boolean more = false;
-        boolean first = true;
         do {
             HttpGet request = new HttpGet(REQUEST_BASE + YoutubeUtils.buildParameterString(parameters));
             request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
@@ -401,6 +410,7 @@ public class YoutubeChannelDownloader {
                     } else {
                         retry = MAX_RETRIES;
                     }
+                    data.add(result);
                     
                     more = false;
                     JSONParser parser = new JSONParser();
@@ -410,18 +420,18 @@ public class YoutubeChannelDownloader {
                         more = true;
                     }
                     
-                    if (!first) {
-                        data.append(",");
+                    if (((++page % MAX_PAGES_PER_FILE) == 0) || !more) {
+                        FileUtils.writeStringToFile(
+                                new File(dataFile.getParentFile(), (dataFile.getName() + '.' + (page / MAX_PAGES_PER_FILE))),
+                                data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")),
+                                "UTF-8", false);
+                        data.clear();
                     }
-                    data.append(result);
-                    first = false;
                 }
                 
             }
         } while (more);
-        data.append("]");
         
-        FileUtils.writeStringToFile(dataFile, data.toString(), "UTF-8", false);
         FileUtils.writeLines(callLogFile, calls);
         return true;
     }
@@ -432,9 +442,30 @@ public class YoutubeChannelDownloader {
      * @return Whether the Channel data was successfully processed or not.
      * @throws Exception When there is an error.
      */
+    @SuppressWarnings("RedundantStreamOptionalCall")
     private static boolean processChannelData() throws Exception {
-        String data = FileUtils.readFileToString(dataFile, "UTF-8");
         videoMap.clear();
+        
+        return Stream.ofNullable(dataFile.getParentFile().listFiles(e -> e.getName().matches(dataFile.getName() + "\\.\\d+")))
+                .flatMap(Arrays::stream).sorted(Comparator.comparing(File::getName)).allMatch(chunk -> {
+                    try {
+                        return processChannelData(chunk);
+                    } catch (Exception e) {
+                        return false;
+                    }
+                });
+    }
+    
+    /**
+     * Processes a chunk of data for the active Channel that was retrieved from the Youtube API.
+     *
+     * @param chunk The data chunk file.
+     * @return Whether the Channel data chunk was successfully processed or not.
+     * @throws Exception When there is an error.
+     */
+    private static boolean processChannelData(File chunk) throws Exception {
+        String data = FileUtils.readFileToString(chunk, "UTF-8");
+        
         if (data.contains("\"code\": 404")) {
             System.err.println("The Channel " + channel.name + " does not exist");
             return false;
