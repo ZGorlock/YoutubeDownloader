@@ -427,7 +427,7 @@
 
   {
     "key": "SOUND_LIBRARY",
-    "active": true,
+    "active": false,
     "name": "SoundLibrary",
     "group": "AUDIO",
     "url": "https://www.youtube.com/c/SoundLibrary1",
