@@ -121,6 +121,11 @@ public class YoutubeChannelDownloader {
     private static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
     
     /**
+     * A flag indicating whether to globally prevent any media deletion.
+     */
+    private static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
+    
+    /**
      * A flag indicating whether to retry previously failed videos or not.
      */
     private static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
@@ -682,7 +687,7 @@ public class YoutubeChannelDownloader {
             if (!playlist.equals(existingPlaylist)) {
                 FileUtils.writeLines(channel.playlistFile, playlist);
                 
-                if (channel.keepClean) {
+                if (channel.keepClean && !preventDeletion) {
                     File[] videos = channel.outputFolder.listFiles();
                     if (videos != null) {
                         for (File video : videos) {

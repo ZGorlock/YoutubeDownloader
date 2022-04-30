@@ -25,6 +25,7 @@
             "skipMusicOffTopic": false
         },
         "flag": {
+            "preventDeletion": false,
             "retryFailed": false,
             "logCommand": true,
             "logWork": false
