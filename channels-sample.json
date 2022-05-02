@@ -2176,6 +2176,18 @@
     "saveAsMp3": false,
     "playlistFile": "Youtube/Best Cube/Anime Cube.m3u",
     "keepClean": true
+  },
+  {
+    "key": "TRAMBOLINO_COMPILATION",
+    "active": true,
+    "name": "TrambolinoCompilation",
+    "group": "BEST CUBE",
+    "url": "https://www.youtube.com/channel/UCn42HkmbUavCnHhwnvwpl_g",
+    "playlistId": "UUn42HkmbUavCnHhwnvwpl_g",
+    "outputFolder": "Youtube/Best Cube/Trambolino Compilation",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Best Cube/Trambolino Compilation.m3u",
+    "keepClean": true
   }
 
 ]
