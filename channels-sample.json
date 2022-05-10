@@ -1481,6 +1481,18 @@
     "playlistFile": "Youtube/Computing/Ben Eater.m3u",
     "keepClean": true
   },
+  {
+    "key": "CODE_BULLET",
+    "active": true,
+    "name": "CodeBullet",
+    "group": "COMPUTING",
+    "url": "https://www.youtube.com/c/CodeBullet",
+    "playlistId": "UU0e3QhIYukixgh5VVpKHH9Q",
+    "outputFolder": "Youtube/Computing/Code Bullet",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Computing/Code Bullet.m3u",
+    "keepClean": true
+  },
 
   {
     "key": "THREE_BLUE_ONE_BROWN",
