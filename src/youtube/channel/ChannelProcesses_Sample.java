@@ -687,6 +687,17 @@ public class ChannelProcesses_Sample {
                 });
                 break;
             
+            case "NILE_BLUE":
+                videoMap.forEach((key, value) -> {
+                    if (!value.title.toLowerCase().contains("announcement")) {
+                        if (!blocked.contains(key)) {
+                            blocked.add(key);
+                        }
+                        queue.remove(key);
+                    }
+                });
+                break;
+            
             case "CHUBBYEMU":
                 final Date chubbyEmuOldest = new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07");
                 videoMap.forEach((key, value) -> {

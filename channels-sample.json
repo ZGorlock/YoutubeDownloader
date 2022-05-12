@@ -1701,6 +1701,18 @@
     "keepClean": true
   },
   {
+    "key": "NILE_BLUE",
+    "active": true,
+    "name": "NileBlue",
+    "group": "CHEMISTRY",
+    "url": "https://www.youtube.com/c/NileRed2",
+    "playlistId": "UU1D3yD4wlPMico0dss264XA",
+    "outputFolder": "Youtube/Chemistry/Nile Blue",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Chemistry/Nile Blue.m3u",
+    "keepClean": true
+  },
+  {
     "key": "BIG_STACK_D",
     "active": true,
     "name": "BigStackD",
