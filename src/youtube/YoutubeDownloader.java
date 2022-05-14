@@ -91,10 +91,16 @@ public class YoutubeDownloader {
                 Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(video);
                 if (videoUrlMatcher.matches()) {
                     String id = videoUrlMatcher.group("id");
-                    if (YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), asMp3, logCommand, logWork, null)) {
-                        System.out.println("Done");
-                    } else {
-                        System.err.println("Failed");
+                    switch (YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), asMp3, logCommand, logWork, null)) {
+                        case SUCCESS:
+                            System.out.println("Done");
+                            break;
+                        case FAILURE:
+                            System.err.println("Failed");
+                            break;
+                        case ERROR:
+                            System.err.println("Error");
+                            break;
                     }
                 } else {
                     System.err.println("URL is not a Youtube video");

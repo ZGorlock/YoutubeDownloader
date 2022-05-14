@@ -620,19 +620,23 @@ public class YoutubeChannelDownloader {
             
             System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
             System.out.print("    ");
-            if (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork, channel.sponsorBlockConfig)) {
-                queue.remove(videoId);
-                save.add(videoId);
-                channelKeyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
-                totalDownloads++;
-                totalDataDownloaded += (video.output.length() / 1048576.0);
-                System.out.println("    Download Succeeded");
-            } else {
-                queue.remove(videoId);
-                blocked.add(videoId);
-                totalDownloadFailures++;
-                System.err.println("    Download Failed");
+            
+            switch (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork, channel.sponsorBlockConfig)) {
+                case SUCCESS:
+                    save.add(videoId);
+                    channelKeyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                    totalDownloads++;
+                    totalDataDownloaded += (video.output.length() / 1048576.0);
+                    System.out.println("    Download Succeeded");
+                    break;
+                case ERROR:
+                    blocked.add(videoId);
+                case FAILURE:
+                    totalDownloadFailures++;
+                    System.out.println("    Download Failed");
+                    break;
             }
+            queue.remove(videoId);
             
             File partFile = new File(video.output.getParentFile(), video.output.getName() + ".part");
             if (partFile.exists()) {

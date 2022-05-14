@@ -108,6 +108,19 @@ public final class YoutubeUtils {
         
     }
     
+    /**
+     * An enumeration of Download Responses.
+     */
+    public enum DownloadResponse {
+        
+        //Values
+        
+        SUCCESS,
+        FAILURE,
+        ERROR
+        
+    }
+    
     
     //Constants
     
@@ -139,10 +152,10 @@ public final class YoutubeUtils {
      * @param logCommand         Whether or not to log the download command.
      * @param logWork            Whether or not to log the download work.
      * @param sponsorBlockConfig The SponsorBlock configuration for the active Channel.
-     * @return Whether the video was successfully downloaded or not.
+     * @return A download response indicated the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    public static boolean downloadYoutubeVideo(String video, File output, boolean asMp3, boolean logCommand, boolean logWork, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
+    public static DownloadResponse downloadYoutubeVideo(String video, File output, boolean asMp3, boolean logCommand, boolean logWork, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
         String outputPath = output.getAbsolutePath();
         outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
         
@@ -156,10 +169,11 @@ public final class YoutubeUtils {
         if (logCommand) {
             System.out.println(cmd);
         }
-        String result = executeProcess(cmd, logWork);
-        String[] resultLines = result.split("\r\n");
         
-        return resultLines.length > 4 && !resultLines[resultLines.length - 1].toLowerCase().contains("internal server error. retrying (attempt 10 of 10)");
+        String result = executeProcess(cmd, logWork);
+        return !result.contains("ERROR: ") ? DownloadResponse.SUCCESS :
+               (result.toLowerCase().indexOf("sign in to ") > result.indexOf("ERROR: ")) ? DownloadResponse.FAILURE :
+               DownloadResponse.ERROR;
     }
     
     /**
@@ -250,7 +264,7 @@ public final class YoutubeUtils {
             return false;
         }
         
-        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? executeProcess(EXECUTABLE.getExe().getName() + " --version", false).trim() : "";
+        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
         String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
         
         if (EXECUTABLE.getExe().exists() && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
@@ -372,18 +386,22 @@ public final class YoutubeUtils {
      * @return The response from the process.
      */
     public static String executeProcess(String cmd, boolean log) {
+        String response;
+        String error;
+        ProgressBar progressBar = null;
+        
         try {
             ProcessBuilder builder = CmdLine.buildProcess(cmd);
+            builder.redirectErrorStream(true);
             
             Process process = builder.start();
             BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
             
             Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
             Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
-            ProgressBar progressBar = null;
             long initialProgress = -1L;
             
-            StringBuilder response = new StringBuilder();
+            StringBuilder responseBuilder = new StringBuilder();
             String line;
             while (true) {
                 line = r.readLine();
@@ -431,21 +449,36 @@ public final class YoutubeUtils {
                     }
                 }
                 
-                response.append(line).append(System.lineSeparator());
+                responseBuilder.append(line).append(System.lineSeparator());
             }
             
             process.waitFor();
             r.close();
             process.destroy();
             
-            if (progressBar != null) {
-                progressBar.complete();
+            response = responseBuilder.toString().trim();
+            error = !response.contains("ERROR: ") ? null :
+                    response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
+            
+            if (progressBar == null) {
+                error = (error != null) ? error : "ERROR: Unknown Error";
+                progressBar = new ProgressBar("", 0, "KB");
+                progressBar.setAutoPrint(true);
+                progressBar.update(-1);
             }
             
-            return response.toString();
+            if (error == null) {
+                progressBar.complete();
+            } else {
+                progressBar.fail(true, error.replaceAll("^ERROR: ", ""));
+            }
+            return responseBuilder.toString();
             
         } catch (Exception e) {
-            return "Failed";
+            if (progressBar != null) {
+                progressBar.fail(true, "Unknown Error");
+            }
+            return "ERROR: Unknown Error";
         }
     }
     
