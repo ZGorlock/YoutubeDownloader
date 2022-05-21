@@ -20,7 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import youtube.tools.Configurator;
+import youtube.util.Configurator;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.
@@ -111,6 +111,7 @@ public class Channels {
                     try {
                         Channel channel = new Channel(channelJson);
                         channels.put(channel.key, channel);
+                        channel.state.load();
                         
                     } catch (Exception e) {
                         System.err.println("Could not load channel: " + channelJson.getOrDefault("key", "null").toString());

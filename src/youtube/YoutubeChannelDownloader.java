@@ -7,22 +7,17 @@
 package youtube;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.apache.commons.codec.Charsets;
+import commons.console.Console;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -38,8 +33,9 @@ import org.json.simple.parser.JSONParser;
 import youtube.channel.Channel;
 import youtube.channel.ChannelProcesses;
 import youtube.channel.Channels;
-import youtube.tools.Configurator;
-import youtube.tools.YoutubeUtils;
+import youtube.channel.KeyStore;
+import youtube.util.Configurator;
+import youtube.util.YoutubeUtils;
 
 /**
  * Downloads Youtube Channels and Playlists.
@@ -96,44 +92,20 @@ public class YoutubeChannelDownloader {
      */
     private static final int MAX_PAGES_PER_FILE = 100;
     
-    /**
-     * The store of video keys and their current saved file name.
-     */
-    private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
-    
-    //Loads the settings and Channel configurations
+    //Loads the settings, keystore, and Channel configurations
     static {
         Configurator.loadSettings("YoutubeChannelDownloader");
         Channels.loadChannels();
+        KeyStore.load();
     }
     
     
     //Static Fields
     
     /**
-     * A flag indicating whether to the log the download command or not.
+     * The current Channel being processed.
      */
-    private static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand", true);
-    
-    /**
-     * A flag indicating whether to log the download work or not.
-     */
-    private static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
-    
-    /**
-     * A flag indicating whether to globally prevent any media deletion.
-     */
-    private static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
-    
-    /**
-     * A flag indicating whether to retry previously failed videos or not.
-     */
-    private static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
-    
-    /**
-     * The HTTP Client used to interact with the Youtube API.
-     */
-    private static final CloseableHttpClient httpClient = HttpClients.createDefault();
+    public static Channel channel = null;
     
     /**
      * The video map for the Channel being processed.
@@ -141,137 +113,9 @@ public class YoutubeChannelDownloader {
     private static final Map<String, Video> videoMap = new LinkedHashMap<>();
     
     /**
-     * A map of video keys and their current saved file name for each Channel.
+     * The HTTP Client used to interact with the Youtube API.
      */
-    private static final Map<String, Map<String, String>> keyStore = new LinkedHashMap<>();
-    
-    /**
-     * A counter of the total number of Channels that were processed this run.
-     */
-    private static int totalChannels = 0;
-    
-    /**
-     * A counter of the total number of videos that were downloaded this run.
-     */
-    private static int totalDownloads = 0;
-    
-    /**
-     * A counter of the total number of videos that failed to download this run.
-     */
-    private static int totalDownloadFailures = 0;
-    
-    /**
-     * A counter of the total number of times the Youtube Data API was called this run.
-     */
-    private static int totalApiCalls = 0;
-    
-    /**
-     * A counter of the total number of times calling the Youtube Data API failed this run.
-     */
-    private static int totalApiFailures = 0;
-    
-    /**
-     * A counter of the total number of videos saved from Youtube.
-     */
-    private static int totalVideos = 0;
-    
-    /**
-     * A counter of the total number of songs saved from Youtube.
-     */
-    private static int totalSongs = 0;
-    
-    /**
-     * A counter of the total data downloaded from Youtube this run.
-     */
-    private static double totalDataDownloaded = 0.0;
-    
-    /**
-     * A counter of the total data saved from Youtube, in MB.
-     */
-    private static double totalData = 0.0;
-    
-    
-    //Fields
-    
-    /**
-     * The Channel to process, or null if all Channels should be processed.
-     */
-    private static Channel channel = null;
-    
-    /**
-     * The group to process, or null if all groups should be processed.
-     */
-    private static String group = null;
-    
-    /**
-     * The Channel to start processing from, if processing all Channels.
-     */
-    private static Channel startAt = null;
-    
-    /**
-     * The Channel to stop processing at, if processing all Channels.
-     */
-    private static Channel stopAt = null;
-    
-    //Loads the Channel filters
-    static {
-        try {
-            channel = Channels.getChannel((String) Configurator.getSetting("filter.channel"));
-        } catch (Exception ignored) {
-        }
-        try {
-            group = (String) Configurator.getSetting("filter.group");
-        } catch (Exception ignored) {
-        }
-        try {
-            startAt = Channels.getChannel((String) Configurator.getSetting("filter.startAt"));
-        } catch (Exception ignored) {
-        }
-        try {
-            stopAt = Channels.getChannel((String) Configurator.getSetting("filter.stopAt"));
-        } catch (Exception ignored) {
-        }
-    }
-    
-    /**
-     * The Playlist ID for the Channel being processed.
-     */
-    private static String playlistId;
-    
-    /**
-     * The output folder for the Channel being processed.
-     */
-    private static File outputFolder;
-    
-    /**
-     * The playlist file for the Channel being processed.
-     */
-    private static File playlistM3u;
-    
-    /**
-     * The internal data file for the Channel being processed.
-     */
-    private static File dataFile;
-    
-    /**
-     * The internal call log file for the Channel being processed.
-     */
-    private static File callLogFile;
-    
-    /**
-     * The internal file holding the saved videos for the Channel being processed.
-     */
-    private static File saveFile;
-    
-    /**
-     * The internal file holding the videos queued for download for the Channel being processed.
-     */
-    private static File queueFile;
-    
-    /**
-     * The internal file holding the blocked videos for the Channel being processed.
-     */
-    private static File blockedFile;
+    private static final CloseableHttpClient httpClient = HttpClients.createDefault();
     
     
     //Main Method
@@ -286,36 +130,35 @@ public class YoutubeChannelDownloader {
         if (!YoutubeUtils.doStartupChecks()) {
             return;
         }
-        loadKeyStore();
         
-        if (channel == null) {
-            boolean skip = (startAt != null);
-            boolean stop = (stopAt != null);
+        if (Configurator.Config.channel == null) {
+            boolean skip = (Configurator.Config.startAt != null);
+            boolean stop = (Configurator.Config.stopAt != null);
             
-            if (!((skip && stop) && (Channels.indexOf(stopAt.key) < Channels.indexOf(startAt.key)))) {
+            if (!((skip && stop) && (Channels.indexOf(Configurator.Config.stopAt.key) < Channels.indexOf(Configurator.Config.startAt.key)))) {
                 for (Channel currentChannel : Channels.getChannels()) {
-                    skip = skip && (!currentChannel.key.equals(startAt.key));
-                    if (!skip && currentChannel.active &&
-                            ((group == null) || (currentChannel.group.equalsIgnoreCase(group)))) {
-                        setChannel(currentChannel);
-                        processChannel();
-                        if (stop && (currentChannel == stopAt)) {
+                    if (!(skip &= (currentChannel != Configurator.Config.startAt)) &&
+                            ((Configurator.Config.group == null) || (currentChannel.group.equalsIgnoreCase(Configurator.Config.group)))) {
+                        if (currentChannel.active) {
+                            setChannel(currentChannel);
+                            processChannel();
+                        }
+                        if (stop && (currentChannel == Configurator.Config.stopAt)) {
                             break;
                         }
                     }
                 }
             }
             
-            channel = null;
-            
-        } else if (channel.active) {
-            setChannel(channel);
+        } else if (Configurator.Config.channel.active) {
+            setChannel(Configurator.Config.channel);
             processChannel();
         }
         
-        saveKeyStore();
-        calculateData();
-        printStats();
+        KeyStore.save();
+        
+        Stats.calculateData();
+        Stats.print();
     }
     
     
@@ -324,33 +167,13 @@ public class YoutubeChannelDownloader {
     /**
      * Sets the active Channel.
      *
-     * @param thisChannel The Channel to be processed.
+     * @param newChannel The Channel to be processed.
      * @throws Exception When there is an error.
      */
-    private static void setChannel(Channel thisChannel) throws Exception {
-        channel = thisChannel;
-        
-        playlistId = channel.playlistId;
-        outputFolder = channel.outputFolder;
-        playlistM3u = channel.playlistFile;
-        
-        dataFile = new File("data/channel/" + channel.name + "/" + channel.name + "-data.txt");
-        callLogFile = new File("data/channel/" + channel.name + "/" + channel.name + "-callLog.txt");
-        saveFile = new File("data/channel/" + channel.name + "/" + channel.name + "-save.txt");
-        queueFile = new File("data/channel/" + channel.name + "/" + channel.name + "-queue.txt");
-        blockedFile = new File("data/channel/" + channel.name + "/" + channel.name + "-blocked.txt");
-        
-        for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
-            File oldFile = new File(cleanupFile.getAbsolutePath().replace("\\", "/").replace("/channel/", "/"));
-            if (oldFile.exists()) {
-                if (cleanupFile.exists()) {
-                    FileUtils.deleteQuietly(oldFile);
-                } else {
-                    FileUtils.moveFile(oldFile, cleanupFile);
-                }
-            }
-        }
-        FileUtils.deleteQuietly(dataFile);
+    private static void setChannel(Channel newChannel) throws Exception {
+        channel = newChannel;
+        channel.state.cleanup();
+        channel.state.load();
     }
     
     /**
@@ -360,18 +183,17 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
-        System.out.println("Processing Channel: " + channel.name);
         System.out.println();
+        System.out.println("Processing Channel: " + Console.ConsoleEffect.YELLOW.apply(channel.name));
         
         boolean success = YoutubeUtils.isOnline() &&
-                getChannelData() &&
+                fetchChannelData() &&
                 processChannelData() &&
                 produceQueue() &&
                 downloadVideos() &&
                 createPlaylist();
         
-        totalChannels++;
-        System.out.println();
+        Stats.totalChannels++;
         return success;
     }
     
@@ -381,11 +203,11 @@ public class YoutubeChannelDownloader {
      * @return Whether the Channel data was successfully retrieved or not.
      * @throws Exception When there is an error.
      */
-    private static boolean getChannelData() throws Exception {
+    private static boolean fetchChannelData() throws Exception {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");
-        parameters.put("playlistId", playlistId);
+        parameters.put("playlistId", channel.playlistId);
         parameters.put("key", API_KEY);
         
         int page = 0;
@@ -403,11 +225,11 @@ public class YoutubeChannelDownloader {
                     Header headers = entity.getContentType();
                     String result = EntityUtils.toString(entity);
                     
-                    totalApiCalls++;
+                    Stats.totalApiCalls++;
                     calls.add(request.getURI() + " ===== " + result.replaceAll("[\\s\\r\\n]+", " "));
                     
                     if (result.contains("\"error\": {")) {
-                        totalApiFailures++;
+                        Stats.totalApiFailures++;
                         if (retry < (MAX_RETRIES - 1)) {
                             continue;
                         }
@@ -427,7 +249,7 @@ public class YoutubeChannelDownloader {
                     
                     if (((++page % MAX_PAGES_PER_FILE) == 0) || !more) {
                         FileUtils.writeStringToFile(
-                                new File(dataFile.getParentFile(), (dataFile.getName() + '.' + (page / MAX_PAGES_PER_FILE))),
+                                channel.state.getDataFile(page / MAX_PAGES_PER_FILE),
                                 data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")),
                                 "UTF-8", false);
                         data.clear();
@@ -437,7 +259,7 @@ public class YoutubeChannelDownloader {
             }
         } while (more);
         
-        FileUtils.writeLines(callLogFile, calls);
+        FileUtils.writeLines(channel.state.callLogFile, calls);
         return true;
     }
     
@@ -451,8 +273,8 @@ public class YoutubeChannelDownloader {
     private static boolean processChannelData() throws Exception {
         videoMap.clear();
         
-        return Stream.ofNullable(dataFile.getParentFile().listFiles(e -> e.getName().matches(dataFile.getName() + "\\.\\d+")))
-                .flatMap(Arrays::stream).sorted(Comparator.comparing(File::getName)).allMatch(chunk -> {
+        return channel.state.getDataFiles().stream()
+                .sorted(Comparator.comparing(File::getName)).allMatch(chunk -> {
                     try {
                         return processChannelData(chunk);
                     } catch (Exception e) {
@@ -515,14 +337,7 @@ public class YoutubeChannelDownloader {
                     continue;
                 }
                 
-                Video video = new Video();
-                video.channelKey = channel.key;
-                video.videoId = videoId;
-                video.originalTitle = title;
-                video.title = YoutubeUtils.cleanTitle(title);
-                video.url = YoutubeUtils.VIDEO_BASE + videoId;
-                video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date.replace("T", " ").replace("Z", ""));
-                video.output = new File(outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
+                Video video = new Video(videoId, title, date, channel);
                 
                 boolean exists = false;
                 for (Video v : videoMap.values()) {
@@ -552,43 +367,35 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
-        List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
-        List<String> queue = new ArrayList<>();
-        Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
-        
-        if (retryFailed) {
-            blocked.clear();
+        channel.state.queue.clear();
+        if (Configurator.Config.retryFailed) {
+            channel.state.blocked.clear();
         }
         
-        ChannelProcesses.performSpecialPreConditions(channel, videoMap, queue, save, blocked);
-        videoMap.forEach((key, value) -> {
-            save.remove(key);
+        ChannelProcesses.performSpecialPreConditions(channel, videoMap, channel.state.queue, channel.state.saved, channel.state.blocked);
+        
+        videoMap.forEach((videoId, video) -> {
+            channel.state.saved.remove(videoId);
             
-            if (YoutubeUtils.videoExists(value.output)) {
-                save.add(key);
-                blocked.remove(key);
-                channelKeyStore.put(key, value.output.getAbsolutePath().replace("/", "\\"));
+            if (YoutubeUtils.videoExists(video.output)) {
+                channel.state.saved.add(videoId);
+                channel.state.blocked.remove(videoId);
+                channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 
-            } else if (!blocked.contains(key)) {
-                if (channelKeyStore.containsKey(key) && new File(channelKeyStore.get(key)).exists() &&
-                        new File(channelKeyStore.get(key)).renameTo(value.output)) {
-                    save.add(key);
-                    channelKeyStore.replace(key, value.output.getAbsolutePath().replace("/", "\\"));
+            } else if (!channel.state.blocked.contains(videoId)) {
+                if (channel.state.keyStore.containsKey(videoId) && new File(channel.state.keyStore.get(videoId)).exists() &&
+                        new File(channel.state.keyStore.get(videoId)).renameTo(video.output)) {
+                    channel.state.saved.add(videoId);
+                    channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 } else {
-                    queue.add(key);
+                    channel.state.queue.add(videoId);
                 }
             }
         });
-        ChannelProcesses.performSpecialPostConditions(channel, videoMap, queue, save, blocked);
         
-        queue.removeAll(blocked);
-        save.removeAll(blocked);
+        ChannelProcesses.performSpecialPostConditions(channel, videoMap, channel.state.queue, channel.state.saved, channel.state.blocked);
         
-        FileUtils.writeLines(queueFile, queue);
-        FileUtils.writeLines(saveFile, save);
-        FileUtils.writeLines(blockedFile, blocked);
-        saveKeyStore();
+        channel.state.save();
         return true;
     }
     
@@ -604,16 +411,11 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        List<String> queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
-        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
-        List<String> blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
-        Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
-        
-        if (!queue.isEmpty()) {
-            System.out.println("Downloading " + queue.size() + " in Queue...");
+        if (!channel.state.queue.isEmpty()) {
+            System.out.println("Downloading " + channel.state.queue.size() + " in Queue...");
         }
         
-        List<String> working = new ArrayList<>(queue);
+        List<String> working = new ArrayList<>(channel.state.queue);
         for (int i = 0; i < working.size(); i++) {
             String videoId = working.get(i);
             Video video = videoMap.get(videoId);
@@ -621,36 +423,32 @@ public class YoutubeChannelDownloader {
             System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
             System.out.print("    ");
             
-            switch (YoutubeUtils.downloadYoutubeVideo(YoutubeUtils.VIDEO_BASE + videoId, video.output, channel.saveAsMp3, logCommand, logWork, channel.sponsorBlockConfig)) {
+            switch (YoutubeUtils.downloadYoutubeVideo(video)) {
                 case SUCCESS:
-                    save.add(videoId);
-                    channelKeyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
-                    totalDownloads++;
-                    totalDataDownloaded += (video.output.length() / 1048576.0);
+                    channel.state.saved.add(videoId);
+                    channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                    Stats.totalDownloads++;
+                    Stats.totalDataDownloaded += (video.output.length() / 1048576.0);
                     System.out.println("    Download Succeeded");
                     break;
                 case ERROR:
-                    blocked.add(videoId);
+                    channel.state.blocked.add(videoId);
                 case FAILURE:
-                    totalDownloadFailures++;
+                    Stats.totalDownloadFailures++;
                     System.out.println("    Download Failed");
                     break;
             }
-            queue.remove(videoId);
+            channel.state.queue.remove(videoId);
             
             File partFile = new File(video.output.getParentFile(), video.output.getName() + ".part");
             if (partFile.exists()) {
                 FileUtils.forceDeleteOnExit(partFile);
-                save.remove(videoId);
-                blocked.add(videoId);
+                channel.state.saved.remove(videoId);
+                channel.state.blocked.add(videoId);
             }
             
-            FileUtils.writeLines(queueFile, queue);
-            FileUtils.writeLines(saveFile, save);
-            FileUtils.writeLines(blockedFile, blocked);
+            channel.state.save();
         }
-        
-        saveKeyStore();
         return true;
     }
     
@@ -672,10 +470,9 @@ public class YoutubeChannelDownloader {
         List<String> existingPlaylist = channel.playlistFile.exists() ? FileUtils.readLines(channel.playlistFile, "UTF-8") : new ArrayList<>();
         String playlistPath = channel.playlistFile.getParentFile().getAbsolutePath() + '\\';
         
-        List<String> save = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
         List<String> playlist = new ArrayList<>();
         for (Map.Entry<String, Video> video : videoMap.entrySet()) {
-            if (save.contains(video.getKey())) {
+            if (channel.state.saved.contains(video.getKey())) {
                 playlist.add(video.getValue().output.getAbsolutePath().replace(playlistPath, ""));
             }
         }
@@ -691,7 +488,7 @@ public class YoutubeChannelDownloader {
             if (!playlist.equals(existingPlaylist)) {
                 FileUtils.writeLines(channel.playlistFile, playlist);
                 
-                if (channel.keepClean && !preventDeletion) {
+                if (channel.keepClean && !Configurator.Config.preventDeletion) {
                     File[] videos = channel.outputFolder.listFiles();
                     if (videos != null) {
                         for (File video : videos) {
@@ -707,143 +504,141 @@ public class YoutubeChannelDownloader {
     }
     
     /**
-     * Loads the map of video keys and their current saved file names for each Channel.
-     *
-     * @throws Exception When there is an error loading the file.
+     * Keeps track of statistics for the Youtube Channel Downloader.
      */
-    private static void loadKeyStore() throws Exception {
-        keyStore.clear();
-        for (Channel channel : Channels.getChannels()) {
-            keyStore.putIfAbsent(channel.name, new LinkedHashMap<>());
-        }
+    private static class Stats {
         
-        if (!KEY_STORE_FILE.exists()) {
-            return;
-        }
+        //Static Fields
         
-        List<String> lines = FileUtils.readLines(KEY_STORE_FILE, Charsets.UTF_8);
-        for (String line : lines) {
-            if (line.isEmpty()) {
-                continue;
-            }
-            String[] lineParts = line.split("\\|\\|\\|");
-            if (lineParts.length == 3) {
-                keyStore.putIfAbsent(lineParts[0], new LinkedHashMap<>());
-                keyStore.get(lineParts[0]).put(lineParts[1], lineParts[2]);
-            }
-        }
-    }
-    
-    /**
-     * Saves the map of video keys and their current saved file names for each Channel.
-     *
-     * @throws Exception When there is an error saving the file.
-     */
-    private static void saveKeyStore() throws Exception {
-        List<String> lines = new ArrayList<>();
-        for (Map.Entry<String, Map<String, String>> keyStoreEntry : keyStore.entrySet()) {
-            for (Map.Entry<String, String> keyStoreChannelEntry : keyStoreEntry.getValue().entrySet()) {
-                lines.add(keyStoreEntry.getKey() + "|||" + keyStoreChannelEntry.getKey() + "|||" + keyStoreChannelEntry.getValue());
-            }
-        }
-        FileUtils.writeLines(KEY_STORE_FILE, lines);
-    }
-    
-    /**
-     * Calculates the total data saved from Youtube.
-     */
-    private static void calculateData() throws Exception {
-        File channelData = new File("data/channel");
+        /**
+         * A counter of the total number of Channels that were processed this run.
+         */
+        static int totalChannels = 0;
         
-        for (Channel channel : Channels.getChannels()) {
-            File channelSaveFile = new File(channelData, channel.name + '/' + channel.name + "-save.txt");
-            if (channelSaveFile.exists()) {
-                List<String> save = FileUtils.readLines(channelSaveFile, StandardCharsets.UTF_8);
-                Map<String, String> channelKeyStore = YoutubeChannelDownloader.keyStore.get(channel.name);
-                
-                for (String saved : save) {
-                    if (!channelKeyStore.containsKey(saved)) {
-                        continue;
-                    }
+        /**
+         * A counter of the total number of videos that were downloaded this run.
+         */
+        static int totalDownloads = 0;
+        
+        /**
+         * A counter of the total number of videos that failed to download this run.
+         */
+        static int totalDownloadFailures = 0;
+        
+        /**
+         * A counter of the total number of times the Youtube Data API was called this run.
+         */
+        static int totalApiCalls = 0;
+        
+        /**
+         * A counter of the total number of times calling the Youtube Data API failed this run.
+         */
+        static int totalApiFailures = 0;
+        
+        /**
+         * A counter of the total number of videos saved from Youtube.
+         */
+        static int totalVideos = 0;
+        
+        /**
+         * A counter of the total number of songs saved from Youtube.
+         */
+        static int totalSongs = 0;
+        
+        /**
+         * A counter of the total data downloaded from Youtube this run.
+         */
+        static double totalDataDownloaded = 0.0;
+        
+        /**
+         * A counter of the total data saved from Youtube, in MB.
+         */
+        static double totalData = 0.0;
+        
+        
+        //Functions
+        
+        /**
+         * Calculates the total data saved from Youtube.
+         */
+        private static void calculateData() throws Exception {
+            for (Channel channel : Channels.getChannels()) {
+                if (channel.state.saveFile.exists()) {
                     
-                    File file = new File(channelKeyStore.get(saved));
-                    if (!file.exists()) {
-                        continue;
-                    }
-                    
-                    totalData += (file.length() / 1048576.0);
-                    if (file.getName().toLowerCase().endsWith(".mp4")) {
-                        totalVideos++;
-                    } else if (file.getName().toLowerCase().endsWith(".mp3")) {
-                        totalSongs++;
+                    for (String saved : channel.state.saved) {
+                        if (!channel.state.keyStore.containsKey(saved)) {
+                            continue;
+                        }
+                        
+                        File file = new File(channel.state.keyStore.get(saved));
+                        if (!file.exists()) {
+                            continue;
+                        }
+                        
+                        Stats.totalData += (file.length() / 1048576.0);
+                        if (file.getName().toLowerCase().endsWith(".mp4")) {
+                            Stats.totalVideos++;
+                        } else if (file.getName().toLowerCase().endsWith(".mp3")) {
+                            Stats.totalSongs++;
+                        }
                     }
                 }
             }
         }
-    }
-    
-    /**
-     * Prints statistics about the completed run.
-     */
-    private static void printStats() {
-        System.out.println("Channels Processed: " + totalChannels);
-        System.out.println("Videos Downloaded:  " + totalDownloads);
-        System.out.println("Videos Failed:      " + totalDownloadFailures);
-        System.out.println("API Calls:          " + totalApiCalls);
-        System.out.println("API Failures:       " + totalApiFailures);
-        System.out.println("Data Downloaded:    " + new DecimalFormat("#.##MB").format(totalDataDownloaded));
         
-        if (channel == null) {
-            System.out.println("Total Videos:       " + totalVideos);
-            System.out.println("Total Songs:        " + totalSongs);
-            System.out.println("Total Data:         " + new DecimalFormat("#.##MB").format(totalData));
+        /**
+         * Prints statistics about the completed run.
+         */
+        public static void print() {
+            System.out.println();
+            new LinkedHashMap<String, Object>() {{
+                put("Channels Processed: ", totalChannels);
+                
+                put("Videos Downloaded:  ", totalDownloads);
+                put("Videos Failed:      ", totalDownloadFailures);
+                put("Data Downloaded:    ", new DecimalFormat("#.##MB").format(totalDataDownloaded));
+                
+                put("API Calls:          ", totalApiCalls);
+                put("API Failures:       ", totalApiFailures);
+                
+                put("Total Videos:       ", totalVideos);
+                put("Total Songs:        ", totalSongs);
+                put("Total Data:         ", new DecimalFormat("#.##MB").format(totalData));
+                
+            }}.forEach((title, value) ->
+                    System.out.println(title + Console.ConsoleEffect.YELLOW.apply(String.valueOf(value))));
+            System.out.println();
         }
+        
     }
     
-    
-    //Inner Classes
-    
     /**
-     * Defines a Video.
+     * Defines a Video.<br>
+     * Kept for backward compatibility.
      */
-    public static class Video {
+    @Deprecated
+    public static class Video extends youtube.channel.Video {
         
-        //Fields
-        
-        /**
-         * The key of the Channel containing the Video.
-         */
-        public String channelKey;
+        //Constructors
         
         /**
-         * The ID of the Video.
+         * Creates a Video.
+         *
+         * @param videoId The ID of the Video.
+         * @param title   The title of the Video.
+         * @param date    The date the Video was uploaded.
+         * @param channel The Channel containing the Video.
+         * @throws Exception When there is an error parsing the upload date.
          */
-        public String videoId;
+        public Video(String videoId, String title, String date, Channel channel) throws Exception {
+            super(videoId, title, date, channel);
+        }
         
         /**
-         * The original title of the Video.
+         * The default no-argument constructor for a Video.
          */
-        public String originalTitle;
-        
-        /**
-         * The title of the Video.
-         */
-        public String title;
-        
-        /**
-         * The url of the Video.
-         */
-        public String url;
-        
-        /**
-         * The date the Video was uploaded.
-         */
-        public Date date;
-        
-        /**
-         * The output file for the Video.
-         */
-        public File output;
+        public Video() {
+        }
         
     }
     

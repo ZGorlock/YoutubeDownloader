@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-import youtube.tools.Configurator;
-import youtube.tools.YoutubeUtils;
+import org.apache.commons.io.FileUtils;
+import youtube.util.Configurator;
+import youtube.util.YoutubeUtils;
 
 /**
  * Downloads Youtube Videos.
@@ -26,17 +27,12 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    private static final File downloadQueue = new File("data/downloadQueue.txt");
-    
-    /**
-     * The list of Youtube video urls to download.
-     */
-    private static final List<String> download = new ArrayList<>();
+    private static final File DOWNLOAD_QUEUE = new File("data/downloadQueue.txt");
     
     /**
      * The output directory for downloaded videos.
      */
-    private static final File outputDir = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
+    private static final File OUTPUT_DIR = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
     
     //Loads the configuration settings in Configurator
     static {
@@ -47,19 +43,9 @@ public class YoutubeDownloader {
     //Static Fields
     
     /**
-     * A flag indicating whether to download the videos as mp3 files or not.
+     * The list of Youtube video urls to download.
      */
-    private static final boolean asMp3 = (boolean) Configurator.getSetting("asMp3", false);
-    
-    /**
-     * A flag indicating whether to the log the download command or not.
-     */
-    private static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand", true);
-    
-    /**
-     * A flag indicating whether to log the download work or not.
-     */
-    private static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
+    private static final List<String> download = new ArrayList<>();
     
     
     //Main Method
@@ -75,23 +61,24 @@ public class YoutubeDownloader {
             return;
         }
         
-        if (!outputDir.exists() && !outputDir.mkdirs()) {
+        if (!OUTPUT_DIR.exists() && !OUTPUT_DIR.mkdirs()) {
             System.err.println("Unable to create output directory");
             return;
         }
-        if (downloadQueue.exists()) {
-            download.addAll(Files.readAllLines(downloadQueue.toPath()));
+        if (DOWNLOAD_QUEUE.exists()) {
+            download.addAll(Files.readAllLines(DOWNLOAD_QUEUE.toPath()));
         }
         
         Scanner in = new Scanner(System.in);
         while (true) {
             List<String> work = new ArrayList<>(download);
-            for (String video : work) {
-                System.out.println("Downloading: " + video);
-                Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(video);
+            for (String url : work) {
+                System.out.println();
+                System.out.println("Downloading: " + url);
+                Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(url);
                 if (videoUrlMatcher.matches()) {
                     String id = videoUrlMatcher.group("id");
-                    switch (YoutubeUtils.downloadYoutubeVideo(video, new File(outputDir, id + ".mp4"), asMp3, logCommand, logWork, null)) {
+                    switch (YoutubeUtils.downloadYoutubeVideo(url, new File(OUTPUT_DIR, id))) {
                         case SUCCESS:
                             System.out.println("Done");
                             break;
@@ -105,14 +92,14 @@ public class YoutubeDownloader {
                 } else {
                     System.err.println("URL is not a Youtube video");
                 }
-                download.remove(video);
+                download.remove(url);
             }
-            Files.write(downloadQueue.toPath(), download);
+            FileUtils.writeLines(DOWNLOAD_QUEUE, download);
             
             String input = in.nextLine();
             if (!input.isEmpty()) {
                 download.add(input);
-                Files.write(downloadQueue.toPath(), download);
+                FileUtils.writeLines(DOWNLOAD_QUEUE, download);
             } else {
                 break;
             }

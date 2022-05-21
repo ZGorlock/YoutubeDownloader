@@ -11,7 +11,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
 import org.json.simple.JSONObject;
-import youtube.tools.SponsorBlocker;
+import youtube.util.SponsorBlocker;
 
 /**
  * Defines a Channel of the Youtube Channel Downloader.
@@ -94,6 +94,11 @@ public class Channel {
     public SponsorBlocker.SponsorBlockConfig sponsorBlockConfig;
     
     /**
+     * The state of the Channel.
+     */
+    public ChannelState state;
+    
+    /**
      * A flag indicating whether there was an error retrieving the Channel this run or not.
      */
     public boolean error;
@@ -102,7 +107,7 @@ public class Channel {
     //Constructors
     
     /**
-     * The default no-argument constructor for a Channel.
+     * Creates a Channel.
      *
      * @param channelJson The json data containing the Channel configuration.
      * @throws InvalidPropertiesFormatException When the Channel configuration does not contain a required field.
@@ -118,7 +123,7 @@ public class Channel {
         
         this.key = (String) channelJson.get("key");
         this.active = (boolean) channelJson.getOrDefault("active", true);
-        this.name = (String) channelJson.get("name");
+        this.name = ((String) channelJson.get("name")).replace("|", "");
         this.group = (String) channelJson.getOrDefault("group", "");
         this.url = (String) channelJson.getOrDefault("url", "");
         this.playlistId = (String) channelJson.get("playlistId");
@@ -132,6 +137,7 @@ public class Channel {
         this.playlistFile = (channelJson.get("playlistFile") == null) ? null :
                             parseFilePath(directoryPrefix, (String) channelJson.get("playlistFile"));
         
+        this.state = new ChannelState(this);
         this.error = false;
         
         if (channelJson.containsKey("sponsorBlock")) {
@@ -167,7 +173,7 @@ public class Channel {
      * @return Whether the Channel is a Channel or not.
      */
     public boolean isChannel() {
-        return playlistId.startsWith("UU");
+        return playlistId.startsWith("U");
     }
     
     

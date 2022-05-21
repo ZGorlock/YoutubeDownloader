@@ -1,10 +1,10 @@
 /*
  * File:    YoutubeUtils.java
- * Package: youtube.tools
+ * Package: youtube.util
  * Author:  Zachary Gill
  */
 
-package youtube.tools;
+package youtube.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +26,7 @@ import commons.access.OperatingSystem;
 import commons.console.ProgressBar;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
+import youtube.channel.Video;
 
 /**
  * Provides utility methods for the Youtube Downloader.
@@ -140,254 +142,78 @@ public final class YoutubeUtils {
      */
     public static final Pattern VIDEO_URL_PATTERN = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
     
+    /**
+     * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
+     */
+    public static final List<String> NON_CRITICAL_ERRORS = List.of(
+            "giving up after 10",
+            "urlopen error",
+            "sign in to"
+    );
+    
     
     //Functions
     
     /**
      * Downloads a Youtube video.
      *
-     * @param video              The video url.
-     * @param output             The output file to create.
-     * @param asMp3              Whether or not to save the video as an mp3.
-     * @param logCommand         Whether or not to log the download command.
-     * @param logWork            Whether or not to log the download work.
+     * @param video              The Video data object.
+     * @param url                The video url.
+     * @param download           The download file to create.
+     * @param asMp3              Whether to save the video as an mp3 or not.
      * @param sponsorBlockConfig The SponsorBlock configuration for the active Channel.
      * @return A download response indicated the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    public static DownloadResponse downloadYoutubeVideo(String video, File output, boolean asMp3, boolean logCommand, boolean logWork, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
-        String outputPath = output.getAbsolutePath();
-        outputPath = outputPath.substring(0, outputPath.lastIndexOf('.'));
-        
+    private static DownloadResponse downloadYoutubeVideo(Video video, String url, File download, boolean asMp3, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
+        boolean ytDlp = EXECUTABLE.equals(Executable.YT_DLP);
         String cmd = EXECUTABLE.getExe().getName() + " " +
-                "--output \"" + outputPath + ".%(ext)s\" " +
+                "--output \"" + download.getAbsolutePath() + ".%(ext)s\" " +
                 "--geo-bypass --rm-cache-dir " +
                 (asMp3 ? "--extract-audio --audio-format mp3 " :
-                 "--format best ") +
+                 ((ytDlp && !Configurator.Config.downloadPreMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
                 SponsorBlocker.getCommand(sponsorBlockConfig) +
-                video;
-        if (logCommand) {
+                url;
+        
+        if (Configurator.Config.logCommand) {
             System.out.println(cmd);
         }
         
-        String result = executeProcess(cmd, logWork);
-        return !result.contains("ERROR: ") ? DownloadResponse.SUCCESS :
-               (result.toLowerCase().indexOf("sign in to ") > result.indexOf("ERROR: ")) ? DownloadResponse.FAILURE :
-               DownloadResponse.ERROR;
+        return performDownload(cmd, video, Configurator.Config.logWork);
     }
     
     /**
-     * Builds a parameter string to be appended to a url.
+     * Downloads a Youtube video.
      *
-     * @param parameters A map of parameters.
-     * @return The parameter string.
-     * @throws Exception When there is an error encoding the string.
+     * @param video The Video data object.
+     * @return A download response indicated the result of the download attempt.
+     * @throws Exception When there is an error downloading the video.
      */
-    public static String buildParameterString(Map<String, String> parameters) throws Exception {
-        StringBuilder parameterString = new StringBuilder("?");
-        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            if (parameterString.length() > 1) {
-                parameterString.append("&");
-            }
-            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), StandardCharsets.UTF_8))
-                    .append("=")
-                    .append(URLEncoder.encode(parameterEntry.getValue(), StandardCharsets.UTF_8));
-        }
-        return parameterString.toString();
+    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
+        return downloadYoutubeVideo(video, video.url, video.download, video.channel.saveAsMp3, video.channel.sponsorBlockConfig);
     }
     
     /**
-     * Cleans the title of a Youtube video.
+     * Downloads a Youtube video.
      *
-     * @param title The title.
-     * @return The cleaned title.
+     * @param url      The video url.
+     * @param download The download file to create.
+     * @return A download response indicated the result of the download attempt.
+     * @throws Exception When there is an error downloading the video.
      */
-    public static String cleanTitle(String title) {
-        title = Normalizer.normalize(title, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS}+", "")
-                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS_SUPPLEMENT}+", "");
-        title = title.replace("\\", "-")
-                .replace("/", "-")
-                .replace(":", "-")
-                .replace("*", "-")
-                .replace("?", "")
-                .replace("\"", "'")
-                .replace("<", "-")
-                .replace(">", "-")
-                .replace("|", "-")
-                .replace("‒", "-")
-                .replace("—", "-")
-                .replace("#", "- ")
-                .replace("С", "C")
-                .replaceAll("[^\\x00-\\x7F]", "")
-                .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
-                .replaceAll("\\s*[.\\-]$", "")
-                .replaceAll("\\s+", " ")
-                .trim();
-        return title;
-    }
-    
-    /**
-     * Determines if a video has already been downloaded or not.
-     *
-     * @param output The output file for the video.
-     * @return Whether the video has already been downloaded or not.
-     */
-    public static boolean videoExists(File output) {
-        File outputDir = output.getParentFile();
-        if (!outputDir.exists()) {
-            return false;
-        }
-        File[] existingFiles = outputDir.listFiles();
-        if (existingFiles == null) {
-            return false;
-        }
-        
-        String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-        for (File existingFile : existingFiles) {
-            String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-            if (existingName.equalsIgnoreCase(outputName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * Performs startup checks.
-     *
-     * @return Whether all checks were successful or not.
-     */
-    public static boolean doStartupChecks() {
-        if (!YoutubeUtils.isOnline()) {
-            System.err.println("Internet access is required");
-            return false;
-        }
-        
-        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
-        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
-        
-        if (EXECUTABLE.getExe().exists() && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
-            System.err.println("Unable to check for " + EXECUTABLE.getName() + " updates");
-            
-        } else if (!currentExecutableVersion.equals(latestExecutableVersion)) {
-            if (!EXECUTABLE.getExe().exists()) {
-                System.err.println("Requires " + EXECUTABLE.getName());
-            } else {
-                System.err.println("An update is available for " + EXECUTABLE.getName());
-                System.err.println("Current Version: " + currentExecutableVersion + " | Latest Version: " + latestExecutableVersion);
-            }
-            System.err.println("Downloading...");
-            
-            File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
-            if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
-                System.err.println("Unable to update " + EXECUTABLE.getName());
-                return false;
-            } else {
-                System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
-                System.out.println();
-                return true;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Returns the latest executable version.
-     *
-     * @return The latest executable version, or an empty string if there was an error.
-     */
-    public static String getLatestExecutableVersion() {
-        String url;
-        String versionPatternRegex;
-        
-        switch (EXECUTABLE) {
-            case YOUTUBE_DL:
-                url = EXECUTABLE.getWebsite();
-                versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:";
-                break;
-            
-            case YT_DLP:
-                url = EXECUTABLE.getWebsite() + "releases/";
-                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[0-9.]+)\"";
-                break;
-            
-            default:
-                return "";
-        }
-        
-        try {
-            String html = Jsoup.connect(url)
-                    .ignoreContentType(true)
-                    .maxBodySize(0)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
-                    .referrer("http://www.google.com")
-                    .timeout(5000)
-                    .followRedirects(true)
-                    .execute()
-                    .parse()
-                    .toString();
-            
-            Pattern versionPattern = Pattern.compile(".*" + versionPatternRegex + ".*");
-            String[] lines = html.split("\n");
-            for (String line : lines) {
-                Matcher versionMatcher = versionPattern.matcher(line);
-                if (versionMatcher.matches()) {
-                    return versionMatcher.group("version");
-                }
-            }
-            
-        } catch (IOException ignored) {
-        }
-        return "";
-    }
-    
-    /**
-     * Downloads the latest executable.
-     *
-     * @param latestVersion The latest version of the executable.
-     * @return The downloaded executable, or null if there was an error.
-     */
-    public static File downloadLatestExecutable(String latestVersion) {
-        switch (EXECUTABLE) {
-            case YOUTUBE_DL:
-                //https://www.youtube-dl.org/downloads/latest/youtube-dl.exe
-                return downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
-            
-            case YT_DLP:
-                //https://github.com/yt-dlp/yt-dlp/releases/download/2021.08.10/yt-dlp.exe
-                return downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
-            
-            default:
-                return null;
-        }
-    }
-    
-    /**
-     * Determines if the system has access to the internet.
-     *
-     * @return Whether the system has access to the internet or not.
-     */
-    public static boolean isOnline() {
-        try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress("youtube.com", 80), 200);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+    public static DownloadResponse downloadYoutubeVideo(String url, File download) throws Exception {
+        return downloadYoutubeVideo(null, url, download, Configurator.Config.asMp3, null);
     }
     
     /**
      * Executes a command line process.
      *
-     * @param cmd The command.
-     * @param log Whether or not to log the response from the process.
-     * @return The response from the process.
+     * @param cmd   The command.
+     * @param video The Video data object.
+     * @param log   Whether or not to log the response from the process.
+     * @return A download response indicated the result of the download attempt.
      */
-    public static String executeProcess(String cmd, boolean log) {
-        String response;
-        String error;
+    private static DownloadResponse performDownload(String cmd, Video video, boolean log) {
         ProgressBar progressBar = null;
         
         try {
@@ -399,6 +225,7 @@ public final class YoutubeUtils {
             
             Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
             Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
+            Pattern existsPattern = Pattern.compile("^\\[download]\\s(?<output>.+)\\shas\\salready\\sbeen\\sdownloaded$");
             long initialProgress = -1L;
             
             StringBuilder responseBuilder = new StringBuilder();
@@ -449,6 +276,17 @@ public final class YoutubeUtils {
                     }
                 }
                 
+                Matcher existsMatcher = existsPattern.matcher(line);
+                if (existsMatcher.matches()) {
+                    long size = new File(existsMatcher.group("output")).length() / 1024;
+                    if (progressBar == null) {
+                        progressBar = new ProgressBar("", size, "KB");
+                        progressBar.setAutoPrint(true);
+                        progressBar.defineInitialProgress(size);
+                    }
+                    progressBar.complete(false, "Already downloaded");
+                }
+                
                 responseBuilder.append(line).append(System.lineSeparator());
             }
             
@@ -456,29 +294,240 @@ public final class YoutubeUtils {
             r.close();
             process.destroy();
             
-            response = responseBuilder.toString().trim();
-            error = !response.contains("ERROR: ") ? null :
-                    response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
+            String response = responseBuilder.toString().trim();
+            String error = !response.contains("ERROR: ") ?
+                           ((progressBar == null) ? "ERROR: Unknown Error" : null) :
+                           response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
             
             if (progressBar == null) {
-                error = (error != null) ? error : "ERROR: Unknown Error";
-                progressBar = new ProgressBar("", 0, "KB");
+                progressBar = new ProgressBar("", 1, "KB");
                 progressBar.setAutoPrint(true);
                 progressBar.update(-1);
             }
-            
-            if (error == null) {
-                progressBar.complete();
-            } else {
-                progressBar.fail(true, error.replaceAll("^ERROR: ", ""));
+            if (!progressBar.isComplete()) {
+                if (error == null) {
+                    progressBar.complete();
+                } else {
+                    progressBar.fail(true, error
+                            .replaceAll("^ERROR:\\s*", "")
+                            .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
+                            .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
+                            .trim());
+                }
             }
-            return responseBuilder.toString();
+            
+            return (error == null) ? DownloadResponse.SUCCESS :
+                   NON_CRITICAL_ERRORS.stream().anyMatch(e -> error.toLowerCase().contains(e.toLowerCase())) ? DownloadResponse.FAILURE :
+                   DownloadResponse.ERROR;
             
         } catch (Exception e) {
             if (progressBar != null) {
                 progressBar.fail(true, "Unknown Error");
             }
-            return "ERROR: Unknown Error";
+            e.printStackTrace(System.err);
+            return DownloadResponse.ERROR;
+        }
+    }
+    
+    /**
+     * Determines if a video has already been downloaded or not.
+     *
+     * @param output The output file for the video.
+     * @return Whether the video has already been downloaded or not.
+     */
+    public static boolean videoExists(File output) {
+        File outputDir = output.getParentFile();
+        if (!outputDir.exists()) {
+            return false;
+        }
+        File[] existingFiles = outputDir.listFiles();
+        if (existingFiles == null) {
+            return false;
+        }
+        
+        String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
+        for (File existingFile : existingFiles) {
+            String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
+            if (existingName.equalsIgnoreCase(outputName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Cleans the title of a Youtube video.
+     *
+     * @param title The title.
+     * @return The cleaned title.
+     */
+    public static String cleanTitle(String title) {
+        title = Normalizer.normalize(title, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS}+", "")
+                .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS_SUPPLEMENT}+", "");
+        title = title.replace("\\", "-")
+                .replace("/", "-")
+                .replace(":", "-")
+                .replace("*", "-")
+                .replace("?", "")
+                .replace("\"", "'")
+                .replace("<", "-")
+                .replace(">", "-")
+                .replace("|", "-")
+                .replace("‒", "-")
+                .replace("—", "-")
+                .replace("#", "- ")
+                .replace("С", "C")
+                .replaceAll("[^\\x00-\\x7F]", "")
+                .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
+                .replaceAll("\\s*[.\\-]$", "")
+                .replaceAll("\\s+", " ")
+                .trim();
+        return title;
+    }
+    
+    /**
+     * Builds a parameter string to be appended to a url.
+     *
+     * @param parameters A map of parameters.
+     * @return The parameter string.
+     * @throws Exception When there is an error encoding the string.
+     */
+    public static String buildParameterString(Map<String, String> parameters) throws Exception {
+        StringBuilder parameterString = new StringBuilder("?");
+        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
+            if (parameterString.length() > 1) {
+                parameterString.append("&");
+            }
+            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), StandardCharsets.UTF_8))
+                    .append("=")
+                    .append(URLEncoder.encode(parameterEntry.getValue(), StandardCharsets.UTF_8));
+        }
+        return parameterString.toString();
+    }
+    
+    /**
+     * Performs startup checks.
+     *
+     * @return Whether all checks were successful or not.
+     */
+    public static boolean doStartupChecks() {
+        if (!YoutubeUtils.isOnline()) {
+            System.err.println("Internet access is required");
+            return false;
+        }
+        
+        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
+        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
+        
+        if (EXECUTABLE.getExe().exists() && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
+            System.err.println("Unable to check for " + EXECUTABLE.getName() + " updates");
+            
+        } else if (!currentExecutableVersion.equals(latestExecutableVersion)) {
+            if (!EXECUTABLE.getExe().exists()) {
+                System.err.println("Requires " + EXECUTABLE.getName());
+            } else {
+                System.err.println("An update is available for " + EXECUTABLE.getName());
+                System.err.println("Current Version: " + currentExecutableVersion + " | Latest Version: " + latestExecutableVersion);
+            }
+            System.err.println("Downloading...");
+            
+            File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
+            if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
+                System.err.println("Unable to update " + EXECUTABLE.getName());
+                return false;
+            } else {
+                System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
+                System.out.println();
+                return true;
+            }
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Determines if the system has access to the internet.
+     *
+     * @return Whether the system has access to the internet or not.
+     */
+    public static boolean isOnline() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("youtube.com", 80), 200);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns the latest executable version.
+     *
+     * @return The latest executable version, or an empty string if there was an error.
+     */
+    private static String getLatestExecutableVersion() {
+        String url;
+        String versionPatternRegex;
+        
+        switch (EXECUTABLE) {
+            case YOUTUBE_DL:
+                url = EXECUTABLE.getWebsite();
+                versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:";
+                break;
+            
+            case YT_DLP:
+                url = EXECUTABLE.getWebsite() + "releases/";
+                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[0-9.]+)\"";
+                break;
+            
+            default:
+                return "";
+        }
+        
+        try {
+            String html = Jsoup.connect(url)
+                    .ignoreContentType(true)
+                    .maxBodySize(0)
+                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                    .referrer("http://www.google.com")
+                    .timeout(5000)
+                    .followRedirects(true)
+                    .execute()
+                    .parse()
+                    .toString();
+            
+            Pattern versionPattern = Pattern.compile(".*" + versionPatternRegex + ".*");
+            String[] lines = html.split("\n");
+            for (String line : lines) {
+                Matcher versionMatcher = versionPattern.matcher(line);
+                if (versionMatcher.matches()) {
+                    return versionMatcher.group("version");
+                }
+            }
+            
+        } catch (IOException ignored) {
+        }
+        return "";
+    }
+    
+    /**
+     * Downloads the latest executable.
+     *
+     * @param latestVersion The latest version of the executable.
+     * @return The downloaded executable, or null if there was an error.
+     */
+    private static File downloadLatestExecutable(String latestVersion) {
+        switch (EXECUTABLE) {
+            case YOUTUBE_DL:
+                //https://www.youtube-dl.org/downloads/latest/youtube-dl.exe
+                return downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+            
+            case YT_DLP:
+                //https://github.com/yt-dlp/yt-dlp/releases/download/2021.08.10/yt-dlp.exe
+                return downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+            
+            default:
+                return null;
         }
     }
     
@@ -491,7 +540,7 @@ public final class YoutubeUtils {
      * @return The downloaded file or null if there was an error.
      * @see FileUtils#copyURLToFile(URL, File, int, int)
      */
-    public static File downloadFile(String url, File download) {
+    private static File downloadFile(String url, File download) {
         try {
             if (!isOnline()) {
                 throw new IOException();

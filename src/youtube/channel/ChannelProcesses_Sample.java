@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 import commons.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 import youtube.YoutubeChannelDownloader;
-import youtube.tools.YoutubeUtils;
+import youtube.util.YoutubeUtils;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
@@ -495,12 +495,7 @@ public class ChannelProcesses_Sample {
                     value.title = newTitle;
                 });
                 if (channel.key.equals("FORENSIC_FILES_S01")) {
-                    YoutubeChannelDownloader.Video video = new YoutubeChannelDownloader.Video();
-                    video.videoId = "OZc6vcGjknI";
-                    video.title = YoutubeUtils.cleanTitle("Forensic Files - S01E01 - The Disappearance of Helle Crafts");
-                    video.url = YoutubeUtils.VIDEO_BASE + video.videoId;
-                    video.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2015-01-23 12:15:00");
-                    video.output = new File(channel.outputFolder, video.title + (channel.saveAsMp3 ? ".mp3" : ".mp4"));
+                    YoutubeChannelDownloader.Video video = new YoutubeChannelDownloader.Video("OZc6vcGjknI", "Forensic Files - S01E01 - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
                     HashMap<String, YoutubeChannelDownloader.Video> tmp = new LinkedHashMap<>(videoMap);
                     videoMap.clear();
                     videoMap.put(video.videoId, video);

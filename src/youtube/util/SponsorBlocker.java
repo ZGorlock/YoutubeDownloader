@@ -1,10 +1,10 @@
 /*
  * File:    SponsorBlocker.java
- * Package: youtube.tools
+ * Package: youtube.util
  * Author:  Zachary Gill
  */
 
-package youtube.tools;
+package youtube.util;
 
 import java.util.ArrayList;
 import java.util.List;
