@@ -81,7 +81,11 @@ public final class CmdLine {
             final AtomicReference<Process> process = new AtomicReference<>(null);
             final List<String> response = Collections.synchronizedList(new ArrayList<>());
             
-            final ExecutorService logReaders = Executors.newFixedThreadPool(2);
+            final ExecutorService logReaders = Executors.newFixedThreadPool(2, task -> {
+                final Thread thread = Executors.defaultThreadFactory().newThread(task);
+                thread.setDaemon(true);
+                return thread;
+            });
             final CountDownLatch logReadersLatch = new CountDownLatch(2);
             logReaders.execute(() -> {
                 while (process.get() == null) {
@@ -121,6 +125,7 @@ public final class CmdLine {
             
             process.get().waitFor();
             logReadersLatch.await();
+            logReaders.shutdown();
             
             process.get().destroy();
             process.get().descendants().forEachOrdered(ProcessHandle::destroy);
