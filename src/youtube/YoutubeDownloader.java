@@ -29,15 +29,19 @@ public class YoutubeDownloader {
      */
     private static final File DOWNLOAD_QUEUE = new File("data/downloadQueue.txt");
     
-    /**
-     * The output directory for downloaded videos.
-     */
-    private static final File OUTPUT_DIR = new File(System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader");
-    
     //Loads the configuration settings in Configurator
     static {
         Configurator.loadSettings("YoutubeDownloader");
     }
+    
+    
+    //Static Fields
+    
+    /**
+     * The output directory for downloaded content.
+     */
+    private static final File outputDir = new File((String) Configurator.getSetting("location.output",
+            (System.getProperty("user.home") + File.separatorChar + "YoutubeDownloader")));
     
     
     //Static Fields
@@ -61,7 +65,7 @@ public class YoutubeDownloader {
             return;
         }
         
-        if (!OUTPUT_DIR.exists() && !OUTPUT_DIR.mkdirs()) {
+        if (!outputDir.exists() && !outputDir.mkdirs()) {
             System.err.println("Unable to create output directory");
             return;
         }
@@ -78,7 +82,7 @@ public class YoutubeDownloader {
                 Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(url);
                 if (videoUrlMatcher.matches()) {
                     String id = videoUrlMatcher.group("id");
-                    switch (YoutubeUtils.downloadYoutubeVideo(url, new File(OUTPUT_DIR, id))) {
+                    switch (YoutubeUtils.downloadYoutubeVideo(url, new File(outputDir, id))) {
                         case SUCCESS:
                             System.out.println("Done");
                             break;

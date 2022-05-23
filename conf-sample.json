@@ -37,6 +37,9 @@
     
     "YoutubeDownloader": {
         "executable": "yt-dlp",
+        "location": {
+            "output": "E:/Downloads/"
+        },
         "format": {
             "asMp3": false,
             "preMerged": true
