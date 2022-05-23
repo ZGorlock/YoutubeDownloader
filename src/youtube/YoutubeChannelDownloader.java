@@ -670,16 +670,9 @@ public class YoutubeChannelDownloader {
          * @param title   The title of the Video.
          * @param date    The date the Video was uploaded.
          * @param channel The Channel containing the Video.
-         * @throws Exception When there is an error parsing the upload date.
          */
-        public Video(String videoId, String title, String date, Channel channel) throws Exception {
+        public Video(String videoId, String title, String date, Channel channel) {
             super(videoId, title, date, channel);
-        }
-        
-        /**
-         * The default no-argument constructor for a Video.
-         */
-        public Video() {
         }
         
     }

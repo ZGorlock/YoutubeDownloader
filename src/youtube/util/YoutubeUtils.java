@@ -19,6 +19,7 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,52 +170,28 @@ public final class YoutubeUtils {
     /**
      * Downloads a Youtube video.
      *
-     * @param video              The Video data object.
-     * @param url                The video url.
-     * @param download           The download file to create.
-     * @param asMp3              Whether to save the video as an mp3 or not.
-     * @param sponsorBlockConfig The SponsorBlock configuration for the active Channel.
+     * @param video The Video data object.
      * @return A download response indicated the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    private static DownloadResponse downloadYoutubeVideo(Video video, String url, File download, boolean asMp3, SponsorBlocker.SponsorBlockConfig sponsorBlockConfig) throws Exception {
+    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
         boolean ytDlp = EXECUTABLE.equals(Executable.YT_DLP);
+        boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
+        SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
+        
         String cmd = EXECUTABLE.getExe().getName() + " " +
-                "--output \"" + download.getAbsolutePath() + ".%(ext)s\" " +
+                "--output \"" + video.download.getAbsolutePath() + ".%(ext)s\" " +
                 "--geo-bypass --rm-cache-dir " +
                 (asMp3 ? "--extract-audio --audio-format mp3 " :
                  ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
                 SponsorBlocker.getCommand(sponsorBlockConfig) +
-                url;
+                video.url;
         
         if (Configurator.Config.logCommand) {
             System.out.println(cmd);
         }
         
         return performDownload(cmd, video, Configurator.Config.logWork);
-    }
-    
-    /**
-     * Downloads a Youtube video.
-     *
-     * @param video The Video data object.
-     * @return A download response indicated the result of the download attempt.
-     * @throws Exception When there is an error downloading the video.
-     */
-    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
-        return downloadYoutubeVideo(video, video.url, video.download, video.channel.saveAsMp3, video.channel.sponsorBlockConfig);
-    }
-    
-    /**
-     * Downloads a Youtube video.
-     *
-     * @param url      The video url.
-     * @param download The download file to create.
-     * @return A download response indicated the result of the download attempt.
-     * @throws Exception When there is an error downloading the video.
-     */
-    public static DownloadResponse downloadYoutubeVideo(String url, File download) throws Exception {
-        return downloadYoutubeVideo(null, url, download, Configurator.Config.asMp3, null);
     }
     
     /**
@@ -434,6 +411,7 @@ public final class YoutubeUtils {
                 .replace("|", "-")
                 .replace("‒", "-")
                 .replace(" ", " ")
+                .replace("&amp;", "&")
                 .replaceAll("^#(sh[oa]rts?)", "$1 - ")
                 .replace("#", "- ")
                 .replaceAll("[—–-]", "-")

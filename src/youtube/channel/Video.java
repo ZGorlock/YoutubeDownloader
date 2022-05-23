@@ -7,6 +7,7 @@
 package youtube.channel;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -65,21 +66,39 @@ public class Video {
     /**
      * Creates a Video.
      *
-     * @param videoId The ID of the Video.
-     * @param title   The title of the Video.
-     * @param date    The date the Video was uploaded.
-     * @param channel The Channel containing the Video.
-     * @throws Exception When there is an error parsing the upload date.
+     * @param videoId   The ID of the Video.
+     * @param title     The title of the Video.
+     * @param date      The date the Video was uploaded.
+     * @param outputDir The output directory for the Video.
+     * @param saveAsMp3 Whether the Video is an mp3 or not.
      */
-    public Video(String videoId, String title, String date, Channel channel) throws Exception {
-        this.channel = channel;
+    public Video(String videoId, String title, String date, File outputDir, boolean saveAsMp3) {
+        this.channel = null;
         this.videoId = videoId;
         this.originalTitle = title;
         this.title = YoutubeUtils.cleanTitle(title);
         this.url = YoutubeUtils.VIDEO_BASE + videoId;
-        this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date.replace("T", " ").replace("Z", ""));
-        this.download = new File(this.channel.outputFolder, this.title);
-        this.output = new File(this.channel.outputFolder, (this.title + '.' + (channel.saveAsMp3 ? "mp3" : "mp4")));
+        try {
+            this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date
+                    .replace("T", " ").replace("Z", ""));
+        } catch (ParseException ignored) {
+            this.date = new Date();
+        }
+        this.download = new File(outputDir, this.title);
+        this.output = new File(outputDir, (this.title + '.' + (saveAsMp3 ? "mp3" : "mp4")));
+    }
+    
+    /**
+     * Creates a Video.
+     *
+     * @param videoId The ID of the Video.
+     * @param title   The title of the Video.
+     * @param date    The date the Video was uploaded.
+     * @param channel The Channel containing the Video.
+     */
+    public Video(String videoId, String title, String date, Channel channel) {
+        this(videoId, title, date, channel.outputFolder, channel.saveAsMp3);
+        this.channel = channel;
     }
     
     /**
