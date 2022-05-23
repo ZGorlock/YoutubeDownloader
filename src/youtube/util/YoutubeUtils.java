@@ -143,12 +143,23 @@ public final class YoutubeUtils {
     public static final Pattern VIDEO_URL_PATTERN = Pattern.compile("^.*/watch?.*v=(?<id>[^=?&]+).*$");
     
     /**
+     * A list of possible video formats.
+     */
+    public static final List<String> VIDEO_FORMATS = List.of("3gp", "flv", "mp4", "webm");
+    
+    /**
+     * A list of possible audio formats.
+     */
+    public static final List<String> AUDIO_FORMATS = List.of("aac", "m4a", "mp3", "ogg", "wav");
+    
+    /**
      * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
      */
     public static final List<String> NON_CRITICAL_ERRORS = List.of(
             "giving up after 10",
             "urlopen error",
-            "sign in to"
+            "sign in to",
+            "please install or provide the path"
     );
     
     
@@ -171,7 +182,7 @@ public final class YoutubeUtils {
                 "--output \"" + download.getAbsolutePath() + ".%(ext)s\" " +
                 "--geo-bypass --rm-cache-dir " +
                 (asMp3 ? "--extract-audio --audio-format mp3 " :
-                 ((ytDlp && !Configurator.Config.downloadPreMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
+                 ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
                 SponsorBlocker.getCommand(sponsorBlockConfig) +
                 url;
         
@@ -226,10 +237,14 @@ public final class YoutubeUtils {
             Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
             Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
             Pattern existsPattern = Pattern.compile("^\\[download]\\s(?<output>.+)\\shas\\salready\\sbeen\\sdownloaded$");
-            long initialProgress = -1L;
+            Pattern destinationPattern = Pattern.compile("^\\[[^]]+]\\s*Destination:\\s*(?<destination>.+)$");
+            Pattern mergePattern = Pattern.compile("^\\[Merger]\\s*Merging\\s*formats\\s*into\\s*\"(?<merge>.+)\"$");
             
             StringBuilder responseBuilder = new StringBuilder();
             String line;
+            long initialProgress = -1L;
+            long saveProgress = 0L;
+            boolean newPart = true;
             while (true) {
                 line = r.readLine();
                 if (line == null) {
@@ -250,7 +265,7 @@ public final class YoutubeUtils {
                     Matcher progressMatcher = progressPattern.matcher(line);
                     if (progressMatcher.matches()) {
                         double percentage = Double.parseDouble(progressMatcher.group("percentage")) / 100.0;
-                        double total = Double.parseDouble(progressMatcher.group("total"));
+                        long total = (long) Double.parseDouble(progressMatcher.group("total"));
                         
                         String units = progressMatcher.group("units").replace("i", "");
                         switch (units) {
@@ -264,27 +279,55 @@ public final class YoutubeUtils {
                             default:
                         }
                         
-                        if (progressBar == null) {
-                            progressBar = new ProgressBar("", (long) total, "KB");
-                            progressBar.setAutoPrint(true);
-                            initialProgress = Math.max(initialProgress, 0);
-                            progressBar.defineInitialProgress(initialProgress);
+                        if (newPart) {
+                            if (progressBar == null) {
+                                progressBar = new ProgressBar("", total, "KB");
+                                progressBar.setAutoPrint(true);
+                                initialProgress = Math.max(initialProgress, 0);
+                                progressBar.defineInitialProgress(initialProgress);
+                            } else {
+                                progressBar.updateTotal(progressBar.getTotal() + total);
+                                saveProgress = progressBar.getProgress();
+                            }
+                            newPart = false;
                         }
                         
-                        long progress = (long) (percentage * total);
+                        long progress = ((long) (percentage * total)) + saveProgress;
                         progressBar.update(progress);
                     }
                 }
                 
                 Matcher existsMatcher = existsPattern.matcher(line);
                 if (existsMatcher.matches()) {
-                    long size = new File(existsMatcher.group("output")).length() / 1024;
+                    File output = new File(existsMatcher.group("output"));
+                    if (video != null) {
+                        video.output = output;
+                    }
+                    long size = output.length() / 1024;
                     if (progressBar == null) {
                         progressBar = new ProgressBar("", size, "KB");
                         progressBar.setAutoPrint(true);
                         progressBar.defineInitialProgress(size);
                     }
                     progressBar.complete(false, "Already downloaded");
+                }
+                
+                Matcher destinationMatcher = destinationPattern.matcher(line);
+                if (destinationMatcher.matches()) {
+                    File destination = new File(destinationMatcher.group("destination"));
+                    if (video != null) {
+                        video.output = destination;
+                    }
+                    newPart = true;
+                }
+                
+                Matcher mergeMatcher = mergePattern.matcher(line);
+                if (mergeMatcher.matches()) {
+                    File merge = new File(mergeMatcher.group("merge"));
+                    if (video != null) {
+                        video.output = merge;
+                    }
+                    newPart = true;
                 }
                 
                 responseBuilder.append(line).append(System.lineSeparator());
@@ -348,7 +391,7 @@ public final class YoutubeUtils {
         String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
         for (File existingFile : existingFiles) {
             String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-            if (existingName.equalsIgnoreCase(outputName)) {
+            if (existingName.equalsIgnoreCase(outputName) && (existingFile.length() > 0)) {
                 return true;
             }
         }
@@ -382,8 +425,19 @@ public final class YoutubeUtils {
                 .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
                 .replaceAll("\\s*[.\\-]$", "")
                 .replaceAll("\\s+", " ")
+                .replaceAll("\\$+", Matcher.quoteReplacement("$"))
                 .trim();
         return title;
+    }
+    
+    /**
+     * Returns the file format of a file name.
+     *
+     * @param fileName The file name.
+     * @return The file format of the file name.
+     */
+    public static String getFormat(String fileName) {
+        return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
     }
     
     /**

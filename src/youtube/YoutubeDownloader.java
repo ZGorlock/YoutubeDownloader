@@ -69,11 +69,11 @@ public class YoutubeDownloader {
             download.addAll(Files.readAllLines(DOWNLOAD_QUEUE.toPath()));
         }
         
+        System.out.println();
         Scanner in = new Scanner(System.in);
         while (true) {
             List<String> work = new ArrayList<>(download);
             for (String url : work) {
-                System.out.println();
                 System.out.println("Downloading: " + url);
                 Matcher videoUrlMatcher = YoutubeUtils.VIDEO_URL_PATTERN.matcher(url);
                 if (videoUrlMatcher.matches()) {
@@ -93,6 +93,7 @@ public class YoutubeDownloader {
                     System.err.println("URL is not a Youtube video");
                 }
                 download.remove(url);
+                System.out.println();
             }
             FileUtils.writeLines(DOWNLOAD_QUEUE, download);
             

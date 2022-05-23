@@ -139,6 +139,17 @@ public class Configurator {
         //Static Fields
         
         /**
+         * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         */
+        public static final boolean preMerged = (boolean) Configurator.getSetting("format.preMerged", true);
+        
+        /**
+         * A flag indicating whether to download the videos as mp3 files or not.
+         */
+        public static final boolean asMp3 = (boolean) Configurator.getSetting("format.asMp3", false) ||
+                (boolean) Configurator.getSetting("asMp3", false);
+        
+        /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
         public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
@@ -147,16 +158,6 @@ public class Configurator {
          * A flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
-        
-        /**
-         * A flag indicating whether to download the videos as mp3 files or not.
-         */
-        public static final boolean asMp3 = (boolean) Configurator.getSetting("asMp3", false);
-        
-        /**
-         * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
-         */
-        public static final boolean downloadPreMerged = (boolean) Configurator.getSetting("flag.downloadPreMerged", true);
         
         /**
          * A flag indicating whether to the log the download command or not.

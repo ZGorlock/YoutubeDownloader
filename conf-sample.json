@@ -6,6 +6,9 @@
             "musicDir": "Music/",
             "videoDir": "Videos/"
         },
+        "format": {
+            "preMerged": true
+        },
         "filter": {
             "channel": null,
             "group": null,
@@ -34,7 +37,10 @@
     
     "YoutubeDownloader": {
         "executable": "yt-dlp",
-        "asMp3": false,
+        "format": {
+            "asMp3": false,
+            "preMerged": true
+        },
         "sponsorBlock": {
             "enabled": false,
             "skipAll": false,

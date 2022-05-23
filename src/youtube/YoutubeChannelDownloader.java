@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import commons.console.Console;
@@ -278,6 +279,7 @@ public class YoutubeChannelDownloader {
                     try {
                         return processChannelData(chunk);
                     } catch (Exception e) {
+                        System.err.println("Error while parsing Channel data");
                         return false;
                     }
                 });
@@ -383,8 +385,13 @@ public class YoutubeChannelDownloader {
                 channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 
             } else if (!channel.state.blocked.contains(videoId)) {
+                String newFormat = YoutubeUtils.getFormat(video.output.getName());
+                String oldFormat = Optional.ofNullable(channel.state.keyStore.get(videoId)).map(YoutubeUtils::getFormat).orElse(newFormat);
+                File newOutput = new File(video.channel.outputFolder, video.output.getName().replace(("." + newFormat), ("." + oldFormat)));
                 if (channel.state.keyStore.containsKey(videoId) && new File(channel.state.keyStore.get(videoId)).exists() &&
-                        new File(channel.state.keyStore.get(videoId)).renameTo(video.output)) {
+                        (oldFormat.equals(newFormat) || (YoutubeUtils.VIDEO_FORMATS.contains(oldFormat) && YoutubeUtils.VIDEO_FORMATS.contains(newFormat))) &&
+                        new File(channel.state.keyStore.get(videoId)).renameTo(newOutput)) {
+                    video.output = newOutput;
                     channel.state.saved.add(videoId);
                     channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 } else {
@@ -440,15 +447,16 @@ public class YoutubeChannelDownloader {
             }
             channel.state.queue.remove(videoId);
             
-            File partFile = new File(video.output.getParentFile(), video.output.getName() + ".part");
-            if (partFile.exists()) {
-                FileUtils.forceDeleteOnExit(partFile);
-                channel.state.saved.remove(videoId);
-                channel.state.blocked.add(videoId);
-            }
-            
             channel.state.save();
         }
+        
+        File[] partFiles = channel.outputFolder.listFiles(e -> e.getName().endsWith(".part"));
+        if (partFiles != null) {
+            for (File partFile : partFiles) {
+                FileUtils.forceDeleteOnExit(partFile);
+            }
+        }
+        
         return true;
     }
     
@@ -487,14 +495,14 @@ public class YoutubeChannelDownloader {
         if (!channel.error) {
             if (!playlist.equals(existingPlaylist)) {
                 FileUtils.writeLines(channel.playlistFile, playlist);
-                
-                if (channel.keepClean && !Configurator.Config.preventDeletion) {
-                    File[] videos = channel.outputFolder.listFiles();
-                    if (videos != null) {
-                        for (File video : videos) {
-                            if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
-                                FileUtils.forceDeleteOnExit(video);
-                            }
+            }
+            
+            if (channel.keepClean && !Configurator.Config.preventDeletion) {
+                File[] videos = channel.outputFolder.listFiles();
+                if (videos != null) {
+                    for (File video : videos) {
+                        if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
+                            FileUtils.forceDeleteOnExit(video);
                         }
                     }
                 }
@@ -576,9 +584,9 @@ public class YoutubeChannelDownloader {
                         }
                         
                         Stats.totalData += (file.length() / 1048576.0);
-                        if (file.getName().toLowerCase().endsWith(".mp4")) {
+                        if (YoutubeUtils.VIDEO_FORMATS.contains(YoutubeUtils.getFormat(file.getName()))) {
                             Stats.totalVideos++;
-                        } else if (file.getName().toLowerCase().endsWith(".mp3")) {
+                        } else if (YoutubeUtils.AUDIO_FORMATS.contains(YoutubeUtils.getFormat(file.getName()))) {
                             Stats.totalSongs++;
                         }
                     }
