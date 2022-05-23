@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -373,29 +374,43 @@ public final class YoutubeUtils {
     }
     
     /**
-     * Determines if a video has already been downloaded or not.
+     * Tries to find a video.
      *
      * @param output The output file for the video.
-     * @return Whether the video has already been downloaded or not.
+     * @return The found file or files.
      */
-    public static boolean videoExists(File output) {
+    public static File findVideo(File output) {
         File outputDir = output.getParentFile();
         if (!outputDir.exists()) {
-            return false;
-        }
-        File[] existingFiles = outputDir.listFiles();
-        if (existingFiles == null) {
-            return false;
+            return null;
         }
         
-        String outputName = output.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
+        File[] existingFiles = outputDir.listFiles();
+        if (existingFiles == null) {
+            return null;
+        }
+        
+        String name = output.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
+        
+        List<File> found = new ArrayList<>();
         for (File existingFile : existingFiles) {
-            String existingName = existingFile.getName().replaceAll("[^a-zA-Z0-9]", "").replaceAll("\\s+", " ");
-            if (existingName.equalsIgnoreCase(outputName) && (existingFile.length() > 0)) {
-                return true;
+            String existingName = existingFile.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
+            if (existingName.equalsIgnoreCase(name) && (existingFile.length() > 0)) {
+                String format = getFormat(output.getName());
+                String existingFormat = getFormat(existingFile.getName());
+                if (format.equalsIgnoreCase(existingFormat) ||
+                        (YoutubeUtils.VIDEO_FORMATS.contains(format) && YoutubeUtils.VIDEO_FORMATS.contains(existingFormat)) ||
+                        (YoutubeUtils.AUDIO_FORMATS.contains(format) && YoutubeUtils.AUDIO_FORMATS.contains(existingFormat))) {
+                    found.add(existingFile);
+                }
             }
         }
-        return false;
+        
+        if (found.size() == 1) {
+            return found.get(0);
+        } else {
+            return null;
+        }
     }
     
     /**
@@ -418,12 +433,29 @@ public final class YoutubeUtils {
                 .replace(">", "-")
                 .replace("|", "-")
                 .replace("‒", "-")
-                .replace("—", "-")
+                .replace(" ", " ")
+                .replaceAll("^#(sh[oa]rts?)", "$1 - ")
                 .replace("#", "- ")
+                .replaceAll("[—–-]", "-")
+                .replaceAll("[’‘]", "'")
                 .replace("С", "C")
-                .replaceAll("[^\\x00-\\x7F]", "")
+                .replaceAll("[™©®†]", "")
+                .replace("¹", "1")
+                .replace("²", "2")
+                .replace("³", "3")
+                .replace("×", "x")
+                .replace("÷", "%")
+                .replace("⋯", "...")
+                .replaceAll("[^\\x00-\\x7F£¢€º]", "+")
                 .replaceAll("[\\p{Cntrl}&&[^\r\n\t]]", "")
                 .replaceAll("\\s*[.\\-]$", "")
+                .replaceAll("(?:\\+\\s+)+", "+ ")
+                .replaceAll("\\++", "+")
+                .replaceAll("^\\s*\\+\\s*", "")
+                .replaceAll("(?:-\\s+)+", "- ")
+                .replaceAll("-+", "-")
+                .replaceAll("^\\s*-\\s*", "")
+                .replace("+-", "+ -")
                 .replaceAll("\\s+", " ")
                 .replaceAll("\\$+", Matcher.quoteReplacement("$"))
                 .trim();
@@ -526,12 +558,12 @@ public final class YoutubeUtils {
         switch (EXECUTABLE) {
             case YOUTUBE_DL:
                 url = EXECUTABLE.getWebsite();
-                versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[0-9.]+)\\)\\sdownloads:";
+                versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[\\d.]+)\\)\\sdownloads:";
                 break;
             
             case YT_DLP:
                 url = EXECUTABLE.getWebsite() + "releases/";
-                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[0-9.]+)\"";
+                versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[\\d.]+)\"";
                 break;
             
             default:

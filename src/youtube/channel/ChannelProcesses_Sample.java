@@ -64,6 +64,14 @@ public class ChannelProcesses_Sample {
                     value.title = newTitle;
                 });
                 break;
+            case "LITTLE_SOUL":
+            case "KURUMI":
+            case "ASUNA":
+            case "ARIA":
+            case "ARIA_NIGHTCORE":
+                videoMap.forEach((key, value) ->
+                        value.updateTitle(value.title + " - " + new SimpleDateFormat("yyyy-MM-dd").format(value.date)));
+                break;
             
             case "SOUND_LIBRARY":
                 videoMap.forEach((key, value) -> {

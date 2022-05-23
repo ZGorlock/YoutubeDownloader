@@ -88,4 +88,27 @@ public class Video {
     public Video() {
     }
     
+    
+    //Methods
+    
+    /**
+     * Updates the title of the Video.
+     *
+     * @param title The title.
+     */
+    public void updateTitle(String title) {
+        this.title = title;
+        this.download = new File(this.channel.outputFolder, this.title);
+        this.output = new File(this.channel.outputFolder, (this.title + '.' + YoutubeUtils.getFormat(output.getName())));
+    }
+    
+    /**
+     * Updates the output of the Video.
+     *
+     * @param output The output.
+     */
+    public void updateOutput(File output) {
+        updateTitle(output.getName().replaceAll("\\.[^.]+$", ""));
+    }
+    
 }

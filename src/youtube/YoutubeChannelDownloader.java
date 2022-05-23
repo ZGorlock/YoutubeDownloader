@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import commons.console.Console;
@@ -363,6 +362,7 @@ public class YoutubeChannelDownloader {
      * @return Whether the queue was successfully produced or not.
      * @throws Exception When there is an error.
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean produceQueue() throws Exception {
         if (videoMap.isEmpty()) {
             System.err.println("Must populate video map before producing the queue");
@@ -376,26 +376,40 @@ public class YoutubeChannelDownloader {
         
         ChannelProcesses.performSpecialPreConditions(channel, videoMap, channel.state.queue, channel.state.saved, channel.state.blocked);
         
+        videoMap.values().stream().collect(Collectors.groupingBy(e -> e.title)).entrySet()
+                .stream().filter(e -> (e.getValue().size() > 1)).forEach(e ->
+                        System.err.println("The title: '" + e.getValue().get(0) + "' appears " + e.getValue().size() + " times"));
+        
         videoMap.forEach((videoId, video) -> {
             channel.state.saved.remove(videoId);
             
-            if (YoutubeUtils.videoExists(video.output)) {
+            if (video.output.exists()) {
                 channel.state.saved.add(videoId);
                 channel.state.blocked.remove(videoId);
                 channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                 
             } else if (!channel.state.blocked.contains(videoId)) {
-                String newFormat = YoutubeUtils.getFormat(video.output.getName());
-                String oldFormat = Optional.ofNullable(channel.state.keyStore.get(videoId)).map(YoutubeUtils::getFormat).orElse(newFormat);
-                File newOutput = new File(video.channel.outputFolder, video.output.getName().replace(("." + newFormat), ("." + oldFormat)));
-                if (channel.state.keyStore.containsKey(videoId) && new File(channel.state.keyStore.get(videoId)).exists() &&
-                        (oldFormat.equals(newFormat) || (YoutubeUtils.VIDEO_FORMATS.contains(oldFormat) && YoutubeUtils.VIDEO_FORMATS.contains(newFormat))) &&
-                        new File(channel.state.keyStore.get(videoId)).renameTo(newOutput)) {
-                    video.output = newOutput;
-                    channel.state.saved.add(videoId);
-                    channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
-                } else {
+                File oldOutput = (channel.state.keyStore.containsKey(videoId) && new File(channel.state.keyStore.get(videoId)).exists()) ?
+                                 new File(channel.state.keyStore.get(videoId)) : YoutubeUtils.findVideo(video.output);
+                
+                if ((oldOutput == null) || !oldOutput.exists()) {
                     channel.state.queue.add(videoId);
+                    
+                } else {
+                    File newOutput = new File(video.channel.outputFolder, video.output.getName()
+                            .replace(("." + YoutubeUtils.getFormat(video.output.getName())), ("." + YoutubeUtils.getFormat(oldOutput.getName()))));
+                    
+                    if (!oldOutput.getName().equals(newOutput.getName())) {
+                        oldOutput.renameTo(newOutput);
+                        video.updateOutput(newOutput);
+                        channel.state.saved.add(videoId);
+                        channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                        
+                    } else {
+                        video.output = newOutput;
+                        channel.state.saved.add(videoId);
+                        channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                    }
                 }
             }
         });
