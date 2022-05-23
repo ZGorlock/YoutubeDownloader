@@ -204,6 +204,10 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean fetchChannelData() throws Exception {
+        if (Configurator.Config.preventChannelFetch) {
+            return true;
+        }
+        
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");
@@ -400,10 +404,16 @@ public class YoutubeChannelDownloader {
                             .replace(("." + YoutubeUtils.getFormat(video.output.getName())), ("." + YoutubeUtils.getFormat(oldOutput.getName()))));
                     
                     if (!oldOutput.getName().equals(newOutput.getName())) {
-                        oldOutput.renameTo(newOutput);
-                        video.updateOutput(newOutput);
-                        channel.state.saved.add(videoId);
-                        channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                        if (!Configurator.Config.preventRenaming) {
+                            System.out.println("Renaming: '" + oldOutput.getName() + "' to: '" + newOutput.getName() + "'");
+                            oldOutput.renameTo(newOutput);
+                            video.updateOutput(newOutput);
+                            channel.state.saved.add(videoId);
+                            channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                        } else {
+                            System.out.println("Would have renamed: '" + oldOutput.getName() + "' to: '" + newOutput.getName() + "' but renaming is disabled");
+                            channel.state.queue.add(videoId);
+                        }
                         
                     } else {
                         video.output = newOutput;
@@ -433,7 +443,7 @@ public class YoutubeChannelDownloader {
         }
         
         if (!channel.state.queue.isEmpty()) {
-            System.out.println("Downloading " + channel.state.queue.size() + " in Queue...");
+            System.out.println(channel.state.queue.size() + " in Queue...");
         }
         
         List<String> working = new ArrayList<>(channel.state.queue);
@@ -441,8 +451,13 @@ public class YoutubeChannelDownloader {
             String videoId = working.get(i);
             Video video = videoMap.get(videoId);
             
-            System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
-            System.out.print("    ");
+            if (!Configurator.Config.preventDownload) {
+                System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
+                System.out.print("    ");
+            } else {
+                System.out.println("Would have downloaded: '" + video.title + "' but downloading is disabled");
+                continue;
+            }
             
             switch (YoutubeUtils.downloadYoutubeVideo(video)) {
                 case SUCCESS:
@@ -511,12 +526,17 @@ public class YoutubeChannelDownloader {
                 FileUtils.writeLines(channel.playlistFile, playlist);
             }
             
-            if (channel.keepClean && !Configurator.Config.preventDeletion) {
+            if (channel.keepClean) {
                 File[] videos = channel.outputFolder.listFiles();
                 if (videos != null) {
                     for (File video : videos) {
                         if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
-                            FileUtils.forceDeleteOnExit(video);
+                            if (!Configurator.Config.preventDeletion) {
+                                System.err.println("Deleting: '" + video.getName() + "'");
+                                FileUtils.forceDeleteOnExit(video);
+                            } else {
+                                System.err.println("Would have deleted: '" + video.getName() + "' but deletion is disabled");
+                            }
                         }
                     }
                 }

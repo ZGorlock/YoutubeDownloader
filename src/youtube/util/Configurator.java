@@ -155,6 +155,21 @@ public class Configurator {
         public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
         
         /**
+         * A flag indicating whether to globally prevent any media renaming or not.
+         */
+        public static final boolean preventRenaming = (boolean) Configurator.getSetting("flag.preventRenaming", false);
+        
+        /**
+         * A flag indicating whether to disable downloading content or not.
+         */
+        public static final boolean preventDownload = (boolean) Configurator.getSetting("flag.preventDownload", false);
+        
+        /**
+         * A flag indicating whether to disable fetching the latest data for Channels or not.
+         */
+        public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", false);
+        
+        /**
          * A flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);

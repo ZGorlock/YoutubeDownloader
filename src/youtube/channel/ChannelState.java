@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import youtube.util.Configurator;
 
 /**
  * Manages the state of a Channel.
@@ -174,8 +175,10 @@ public class ChannelState {
      * @throws Exception When there is an error cleaning the state directory.
      */
     public void cleanup() throws Exception {
-        for (File dataFile : getDataFiles()) {
-            FileUtils.deleteQuietly(dataFile);
+        if (!Configurator.Config.preventChannelFetch) {
+            for (File dataFile : getDataFiles()) {
+                FileUtils.deleteQuietly(dataFile);
+            }
         }
         cleanupLegacyState();
     }

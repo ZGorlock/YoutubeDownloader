@@ -29,6 +29,9 @@
         },
         "flag": {
             "preventDeletion": false,
+            "preventRenaming": false,
+            "preventDownload": false,
+            "preventChannelFetch": false,
             "retryFailed": false,
             "logCommand": true,
             "logWork": false
