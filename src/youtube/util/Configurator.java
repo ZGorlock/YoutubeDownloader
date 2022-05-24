@@ -9,7 +9,7 @@ package youtube.util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,7 +44,7 @@ public class Configurator {
     /**
      * A cache of configuration settings from the configuration file.
      */
-    private static final Map<String, Object> settings = new LinkedHashMap<>();
+    private static final Map<String, Map<String, Object>> settings = new HashMap<>();
     
     /**
      * A flag indicating whether the configuration settings have been loaded yet or not.
@@ -57,10 +57,34 @@ public class Configurator {
     /**
      * Returns a list of configuration settings.
      *
+     * @param section The section of the configuration.
      * @return The list of configuration settings.
      */
+    public static Map<String, Object> getSettings(String section) {
+        return new HashMap<>(settings.get(section));
+    }
+    
+    /**
+     * Returns a list of configuration settings.
+     *
+     * @return The list of configuration settings.
+     * @see #getSettings(String)
+     */
     public static Map<String, Object> getSettings() {
-        return new LinkedHashMap<>(settings);
+        return getSettings(activeProject);
+    }
+    
+    /**
+     * Returns a configuration setting by name.
+     *
+     * @param section The section of the configuration setting.
+     * @param name    The name of the configuration setting.
+     * @param def     The default value to return if the configuration setting does not exist.
+     * @return The value of the configuration setting, or the default value if it does not exist.
+     */
+    public static Object getSetting(String section, String name, Object def) {
+        return !settings.containsKey(section) ? def :
+               settings.get(section).getOrDefault(name, def);
     }
     
     /**
@@ -69,9 +93,10 @@ public class Configurator {
      * @param name The name of the configuration setting.
      * @param def  The default value to return if the configuration setting does not exist.
      * @return The value of the configuration setting, or the default value if it does not exist.
+     * @see #getSetting(String, String, Object)
      */
     public static Object getSetting(String name, Object def) {
-        return settings.getOrDefault(name, def);
+        return getSetting(activeProject, name, def);
     }
     
     /**
@@ -99,9 +124,10 @@ public class Configurator {
                 String jsonString = FileUtils.readFileToString(CONF_FILE, StandardCharsets.UTF_8);
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(jsonString);
-                JSONObject conf = (JSONObject) json.get(activeProject);
                 
-                loadSettings(conf, "");
+                loadSettings(json, activeProject);
+                loadSettings(json, "sponsorBlock");
+                loadSettings(json, "log");
                 
             } catch (IOException | ParseException e) {
                 System.err.println("Could not load settings from: " + CONF_FILE.getAbsolutePath());
@@ -110,23 +136,41 @@ public class Configurator {
     }
     
     /**
+     * Loads the configuration settings from a configuration section.
+     *
+     * @param json    The root configuration json object.
+     * @param section The section of the configuration.
+     * @see #loadSettings(JSONObject, String, String)
+     */
+    private static void loadSettings(JSONObject json, String section) {
+        JSONObject conf = (JSONObject) json.get(section);
+        if (conf != null) {
+            if (section.equals("sponsorBlock") && (SponsorBlocker.globalConfig == null)) {
+                SponsorBlocker.loadGlobalConfig(conf);
+            }
+            loadSettings(conf, section, "");
+        }
+    }
+    
+    /**
      * Loads the configuration settings from a configuration JSON object.
      *
-     * @param conf   The configuration JSON object.
-     * @param prefix The name prefix of the settings in the current configuration JSON object.
+     * @param conf    The configuration JSON object.
+     * @param section The section of the configuration.
+     * @param prefix  The name prefix of the settings in the current configuration JSON object.
      */
     @SuppressWarnings("unchecked")
-    private static void loadSettings(JSONObject conf, String prefix) {
+    private static void loadSettings(JSONObject conf, String section, String prefix) {
         for (Object setting : conf.entrySet()) {
             Map.Entry<String, Object> settingEntry = (Map.Entry<String, Object>) setting;
             if ((settingEntry.getValue() != null) && (settingEntry.getValue() instanceof JSONObject)) {
                 if (settingEntry.getKey().equals("sponsorBlock")) {
                     SponsorBlocker.loadGlobalConfig(((JSONObject) settingEntry.getValue()));
-                } else {
-                    loadSettings(((JSONObject) settingEntry.getValue()), (prefix + settingEntry.getKey() + '.'));
                 }
+                loadSettings(((JSONObject) settingEntry.getValue()), section, (prefix + settingEntry.getKey() + '.'));
             } else {
-                settings.put((prefix + settingEntry.getKey()), settingEntry.getValue());
+                settings.putIfAbsent(section, new HashMap<>());
+                settings.get(section).put((prefix + settingEntry.getKey()), settingEntry.getValue());
             }
         }
     }
@@ -177,12 +221,14 @@ public class Configurator {
         /**
          * A flag indicating whether to the log the download command or not.
          */
-        public static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand", true);
+        public static final boolean logCommand = (boolean) Configurator.getSetting("log", "logCommand",
+                Configurator.getSetting("flag.logCommand", true));
         
         /**
          * A flag indicating whether to log the download work or not.
          */
-        public static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork", false);
+        public static final boolean logWork = (boolean) Configurator.getSetting("log", "logWork",
+                Configurator.getSetting("flag.logWork", false));
         
         /**
          * The Channel to process, or null if all Channels should be processed.

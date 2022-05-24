@@ -35,8 +35,6 @@ You can configure the operation of the Downloader project by changing the values
 * ***location.output*** - The folder where downloaded content will be stored. For example: "C:/". By leaving this blank ("") content will be saved in a folder named "YoutubeDownloader" in your user directory.
 * ***format.asMp3*** - When set to true, the Youtube Downloader will download content as mp3 files instead of videos. To use this option, you must have ffmpeg installed and accessible on the path. You can set this variable to true or false, by default it is set to false.
 * ***format.preMerged*** - When set to false, and when ***executable*** is set to '*yt-dlp*', the Youtube Downloader will download videos in the best possible format, not just the best pre-merged format. When using this option, videos will not necessarily be downloaded in mp4 format. To use this option, you must have ffmpeg installed and accessible on the path. You can set this variable to true or false, by default it is set to true.
-* ***flag.logCommand*** - When set to true, the commands sent to the executable will be printed to the console for each video. You can set this variable to true or false, by default it is set to true.
-* ***flag.logWork*** - When set to true, the work done by the executable while downloading each video will be printed to the console. You can set this variable to true or false, by default it is set to false.
 
 You can also specify a global SponsorBlock configuration for videos downloaded by the Downloader. For more information on how to do this see the SponsorBlock Configuration section in the Channel Downloader chapter below.
 
@@ -81,8 +79,6 @@ You can configure the operation of the Channel Downloader project by changing th
 * ***flag.preventDownload*** - When set to true, the Youtube Channel Downloader will not attempt to download any videos; for use in testing. You can set this variable to true or false, by default it is set to false.
 * ***flag.preventChannelFetch*** - When set to true, the Youtube Channel Downloader will not attempt to fetch the latest data for Channels; this will result in the last previously fetched data being used; for use in testing. You can set this variable to true or false, by default it is set to false.
 * ***flag.retryFailed*** - When the Youtube Channel Downloader fails to download a video (either because of a connection issue or because a video is "not available in your country") it will mark that video as blocked and will not automatically attempt to download it again. Sometimes the download will succeed if tried again though. You can set this variable to true or false, by default it is set to false. This should only be turned on occasionally because it will cause all previously failed downloads from all Channels to be reattempted in the next run. You do not want this to happen during every run, so set it back to false after the run.
-* ***flag.logCommand*** - When set to true, the commands sent to the executable will be printed to the console for each video. You can set this variable to true or false, by default it is set to true.
-* ***flag.logWork*** - When set to true, the work done by the executable while downloading each video will be printed to the console. You can set this variable to true or false, by default it is set to false.
 
 ### Executable Options:
 
@@ -170,9 +166,13 @@ There are many examples of these processes in the file *./src/youtube/ChannelPro
 
 If you chose to use ***yt-dlp*** as the Youtube Downloader executable then you have the option to set up [SponsorBlock](https://sponsor.ajay.app/) as part of your configuration. SponsorBlock is able to automatically cut out unwanted parts from the Youtube videos you download, for example, sponsored sections, self promotions, intros, etc.
 
-You can set up a Global SponsorBlock configuration for the entire Channel Downloader or Downloader project, and you can also have custom SponsorBlock configurations for individual Channels.
+You can set up a global SponsorBlock configuration for the entire program, or for the Channel Downloader or Downloader project individually, and you can also have custom SponsorBlock configurations for individual Channels.
 
-The Global and the Channel configuration are basically the same. To start, add a new "sponsorBlock" object to either *./conf.json* inside the "YoutubeChannelDownloader" or the "YoutubeDownloader" object, or for a Channel, to *./channels.json* inside the Channel object that you want to use SponsorBlock with.
+The Global and the Channel configurations are basically the same.
+\
+To start, add a new "sponsorBlock" object to *./conf.json* inside the "YoutubeChannelDownloader" or the "YoutubeDownloader" object, or as a top level object to configure both projects (project-level configurations will take precedent).
+\
+Or for a Channel, add the "sponsorBlock" object to *./channels.json* inside the Channel object that you want to use SponsorBlock with.
 
     "sponsorBlock": {
     }
@@ -200,12 +200,23 @@ If you have a Global configuration and a Channel configuration and both are enab
 * If both configurations have ***enabled*** set to true, but the Global configuration has ***forceGlobally*** set to true, then the Global configuration will be used.
 * If both configurations have ***enabled*** set to true, but the Channel configuration has ***overrideGlobal*** set to true, regardless of whether the Global configuration has ***forceGlobally*** set to true or not, then the Channel configuration will be used.
 
+### Logging Configuration:
+
+You can set up a global logging configuration for the program.
+
+To start, add a new "log" object to *./conf.json* as a top level object.
+
+You can add the following fields inside the "log" object. All fields are booleans (true or false).
+
+* ***logCommand*** - Whether to print the commands sent to the executable for each video to the console or not. *(optional; defaults to true)*
+* ***logWork*** - Whether to print the work done by the executable while downloading each video to the console or not. *(optional; defaults to false)*
+
 ### Note about Updates:
 
 The project should work as it does now indefinitely, as long as *youtube-dl* and *yt-dlp* continue to exist on the same websites they do now. However, additional improvements and features may be added from time to time.
-\
+
 If you wish to receive these updates then you would just have to do a *git pull* or re-download the master branch.
-\
+
 Before you do this though, make sure you back up your versions of the configuration files (*./conf.json*, *./channels.json*, and *./src/youtube/ChannelProcesses.java*). Updating may cause merge conflicts with your version if you have customized it.
 
  
