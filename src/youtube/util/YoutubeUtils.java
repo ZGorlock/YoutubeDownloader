@@ -515,7 +515,8 @@ public final class YoutubeUtils {
      * @return Whether the exe exists.
      */
     private static boolean checkExe() {
-        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
+        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version")
+                .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
         String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
         boolean exists = EXECUTABLE.getExe().exists();
         boolean update = exists && !currentExecutableVersion.equals(latestExecutableVersion);
