@@ -9,6 +9,11 @@ package commons.math;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +31,7 @@ public class MathUtility {
     private static final Logger logger = LoggerFactory.getLogger(MathUtility.class);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns a random number between two values.
@@ -34,43 +39,94 @@ public class MathUtility {
      * @param min The minimum possible value.
      * @param max The maximum possible value.
      * @return A random number between the minimum and maximum values.
+     * @see ThreadLocalRandom#nextLong(long, long)
      */
     public static long random(long min, long max) {
-        return (long) (Math.random() * (max - min + 1)) + min;
-    }
-    
-    /**
-     * Returns a random number between two values.
-     *
-     * @param min The minimum possible value.
-     * @param max The maximum possible value.
-     * @return A random number between the minimum and maximum values.
-     * @see #random(long, long)
-     */
-    public static int random(int min, int max) {
-        return (int) random(min, (long) max);
+        return ThreadLocalRandom.current().nextLong(max - min + 1) + min;
     }
     
     /**
      * Returns a random number between 0 and a value.
      *
      * @param max The maximum possible value.
-     * @return A random number between 0 and the maximum values.
+     * @return A random number between 0 and the maximum value.
      * @see #random(long, long)
      */
     public static long random(long max) {
-        return random(0, max);
+        return random(0L, max);
+    }
+    
+    /**
+     * Returns a random number between two values.
+     *
+     * @param min The minimum possible value.
+     * @param max The maximum possible value.
+     * @return A random number between the minimum and maximum values.
+     * @see ThreadLocalRandom#nextInt(int, int)
+     */
+    public static int random(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
     }
     
     /**
      * Returns a random number between 0 and a value.
      *
      * @param max The maximum possible value.
-     * @return A random number between 0 and the maximum values.
+     * @return A random number between 0 and the maximum value.
      * @see #random(int, int)
      */
     public static int random(int max) {
         return random(0, max);
+    }
+    
+    /**
+     * Returns a random int.
+     *
+     * @return A random int.
+     * @see ThreadLocalRandom#nextInt()
+     */
+    public static int randomInt() {
+        return ThreadLocalRandom.current().nextInt();
+    }
+    
+    /**
+     * Returns a random long.
+     *
+     * @return A random long.
+     * @see ThreadLocalRandom#nextLong()
+     */
+    public static long randomLong() {
+        return ThreadLocalRandom.current().nextLong();
+    }
+    
+    /**
+     * Returns a random float.
+     *
+     * @return A random float.
+     * @see ThreadLocalRandom#nextFloat()
+     */
+    public static float randomFloat() {
+        return ThreadLocalRandom.current().nextFloat();
+    }
+    
+    /**
+     * Returns a random double.
+     *
+     * @return A random double.
+     * @see ThreadLocalRandom#nextDouble()
+     */
+    public static double randomDouble() {
+        return ThreadLocalRandom.current().nextDouble();
+    }
+    
+    /**
+     * Returns a random boolean.
+     *
+     * @return A random boolean.
+     * @see ThreadLocalRandom#nextBoolean()
+     */
+    public static boolean randomBoolean() {
+        return ThreadLocalRandom.current().nextBoolean();
     }
     
     /**
@@ -82,27 +138,7 @@ public class MathUtility {
      * @see #random(long, long)
      */
     public static long dice(long sides, long rolls) {
-        if ((sides <= 0) || (rolls <= 0)) {
-            return 0;
-        }
-        
-        long roll = 0;
-        for (int i = 0; i < rolls; i++) {
-            roll += random(1, sides);
-        }
-        return roll;
-    }
-    
-    /**
-     * Returns the result of a dice roll.
-     *
-     * @param sides The number of sides on the dice.
-     * @param rolls The number of rolls to perform.
-     * @return The result of the dice roll.
-     * @see #dice(long, long)
-     */
-    public static int dice(int sides, int rolls) {
-        return (int) dice(sides, (long) rolls);
+        return LongStream.range(0, rolls).map(l -> random(1L, sides)).sum();
     }
     
     /**
@@ -120,6 +156,18 @@ public class MathUtility {
      * Returns the result of a dice roll.
      *
      * @param sides The number of sides on the dice.
+     * @param rolls The number of rolls to perform.
+     * @return The result of the dice roll.
+     * @see #random(int, int)
+     */
+    public static int dice(int sides, int rolls) {
+        return IntStream.range(0, rolls).map(i -> random(1, sides)).sum();
+    }
+    
+    /**
+     * Returns the result of a dice roll.
+     *
+     * @param sides The number of sides on the dice.
      * @return The result of the dice roll.
      * @see #dice(int, int)
      */
@@ -131,9 +179,10 @@ public class MathUtility {
      * Returns the result of a coin flip.
      *
      * @return The result of the coin flip; 50% true / 50% false.
+     * @see #randomBoolean()
      */
     public static boolean coinFlip() {
-        return (Math.random() < 0.5);
+        return randomBoolean();
     }
     
     /**
@@ -147,8 +196,8 @@ public class MathUtility {
             return false;
         }
         
-        double sqrt = Math.sqrt(value);
-        return sqrt - Math.floor(sqrt) == 0;
+        final double sqrt = Math.sqrt(value);
+        return (sqrt == Math.floor(sqrt));
     }
     
     /**
@@ -195,24 +244,48 @@ public class MathUtility {
     }
     
     /**
-     * Rounds a decimal number with a certain precision.
+     * Calculates the modulus of a number but returns a value in the range [1,mod] rather than [0,mod-1].
      *
-     * @param value         The number.
-     * @param decimalPlaces The maximum number of decimal places of the result.
-     * @return The rounded number.
+     * @param num The number.
+     * @param mod The modulus.
+     * @return The adjusted modulus of the number.
+     * @see #xmod(long, long)
      */
-    public static double roundWithPrecision(double value, int decimalPlaces) {
-        double decimalInverse = Math.pow(10.0, decimalPlaces);
-        return (double) Math.round(value * decimalInverse) / decimalInverse;
+    public static int xmod(int num, int mod) {
+        return (int) xmod((long) num, mod);
     }
     
     /**
-     * Rounds a Big Decimal number with a certain precision.
+     * Rounds a float with a certain precision.
+     *
+     * @param value         The number.
+     * @param decimalPlaces The maximum number of decimal places of the result.
+     * @return The rounded float.
+     * @see #roundWithPrecision(double, int)
+     */
+    public static float roundWithPrecision(float value, int decimalPlaces) {
+        return (float) roundWithPrecision((double) value, decimalPlaces);
+    }
+    
+    /**
+     * Rounds a double with a certain precision.
+     *
+     * @param value         The number.
+     * @param decimalPlaces The maximum number of decimal places of the result.
+     * @return The rounded double.
+     */
+    public static double roundWithPrecision(double value, int decimalPlaces) {
+        final double decimalInverse = Math.pow(10.0, decimalPlaces);
+        return Math.round(value * decimalInverse) / decimalInverse;
+    }
+    
+    /**
+     * Rounds a Big Decimal with a certain precision.
      *
      * @param value         The number.
      * @param decimalPlaces The maximum number of decimal places of the result.
      * @param roundingMode  The rounding mode to use when rounding the result.
-     * @return The rounded number.
+     * @return The rounded Big Decimal.
      */
     public static BigDecimal roundWithPrecision(BigDecimal value, int decimalPlaces, RoundingMode roundingMode) {
         return new BigDecimal(value.setScale(decimalPlaces, roundingMode).stripTrailingZeros().toPlainString());
@@ -228,6 +301,30 @@ public class MathUtility {
      */
     public static BigDecimal roundWithPrecision(BigDecimal value, int decimalPlaces) {
         return roundWithPrecision(value, decimalPlaces, RoundingMode.HALF_UP);
+    }
+    
+    /**
+     * Finds the minimum value of a set of numbers.
+     *
+     * @param values The set of numbers.
+     * @param <T>    The type of the numbers.
+     * @return The minimum value.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Number> T min(T... values) {
+        return Arrays.stream(values).min(Comparator.comparingDouble(Number::doubleValue)).orElse((T) ((Integer) 0));
+    }
+    
+    /**
+     * Finds the maximum value of a set of numbers.
+     *
+     * @param values The set of numbers.
+     * @param <T>    The type of the numbers.
+     * @return The maximum value.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Number> T max(T... values) {
+        return Arrays.stream(values).max(Comparator.comparingDouble(Number::doubleValue)).orElse((T) ((Integer) 0));
     }
     
     /**
@@ -299,13 +396,9 @@ public class MathUtility {
      * @return The value after it has been mapped from the input range to the output range.
      */
     public static double mapValue(double value, double inputStart, double inputEnd, double outputStart, double outputEnd) {
-        if (value < inputStart) {
-            return outputStart;
-        }
-        if (value > inputEnd) {
-            return outputEnd;
-        }
-        return (value - inputStart) / (inputEnd - inputStart) * (outputEnd - outputStart) + outputStart;
+        return (value < inputStart) ? outputStart :
+               (value > inputEnd) ? outputEnd :
+               (value - inputStart) / (inputEnd - inputStart) * (outputEnd - outputStart) + outputStart;
     }
     
 }

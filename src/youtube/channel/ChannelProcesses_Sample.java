@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import commons.string.StringUtility;
+import commons.object.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 import youtube.YoutubeChannelDownloader;
 import youtube.util.YoutubeUtils;

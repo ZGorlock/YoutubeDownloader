@@ -25,7 +25,7 @@ public class StringMathUtility {
     private static final Logger logger = LoggerFactory.getLogger(StringMathUtility.class);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Adds two numbers represented by strings.

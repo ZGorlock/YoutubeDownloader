@@ -28,58 +28,6 @@ public final class BigMathUtility {
     private static final Logger logger = LoggerFactory.getLogger(BigMathUtility.class);
     
     
-    //Enums
-    
-    /**
-     * An enumeration of precision modes for decimal places for math operations.
-     */
-    public enum PrecisionMode {
-        
-        //Values
-        
-        DEFAULT_PRECISION(-1),
-        NO_PRECISION(0),
-        LOW_PRECISION(8),
-        MID_PRECISION(16),
-        HIGH_PRECISION(64),
-        MAX_PRECISION(512),
-        MATH_PRECISION(1024);
-        
-        
-        //Fields
-        
-        /**
-         * The number of decimal places for the PrecisionMode.
-         */
-        private final int precision;
-        
-        
-        //Constructors
-        
-        /**
-         * Constructs a PrecisionMode.
-         *
-         * @param precision The number of decimal places for the PrecisionMode.
-         */
-        PrecisionMode(int precision) {
-            this.precision = precision;
-        }
-        
-        
-        //Getters
-        
-        /**
-         * Returns the number of decimal places for the PrecisionMode.
-         *
-         * @return The number of decimal places for the PrecisionMode.
-         */
-        public int getPrecision() {
-            return precision;
-        }
-        
-    }
-    
-    
     //Constants
     
     /**
@@ -123,7 +71,59 @@ public final class BigMathUtility {
     public static final BigDecimal ONE_THOUSAND = BigDecimal.valueOf(1000);
     
     
-    //Functions
+    //Enums
+    
+    /**
+     * An enumeration of math operation Precision Modes.
+     */
+    public enum PrecisionMode {
+        
+        //Values
+        
+        DEFAULT_PRECISION(-1),
+        NO_PRECISION(0),
+        LOW_PRECISION(8),
+        MID_PRECISION(16),
+        HIGH_PRECISION(64),
+        MAX_PRECISION(512),
+        MATH_PRECISION(1024);
+        
+        
+        //Fields
+        
+        /**
+         * The number of decimal places for the Precision Mode.
+         */
+        private final int precision;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs a Precision Mode.
+         *
+         * @param precision The number of decimal places for the Precision Mode.
+         */
+        PrecisionMode(int precision) {
+            this.precision = precision;
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the number of decimal places for the Precision Mode.
+         *
+         * @return The number of decimal places for the Precision Mode.
+         */
+        public int getPrecision() {
+            return precision;
+        }
+        
+    }
+    
+    
+    //Static Methods
     
     /**
      * Adds two numbers.

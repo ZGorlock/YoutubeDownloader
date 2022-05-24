@@ -23,9 +23,9 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import commons.list.ArrayUtility;
-import commons.list.ListUtility;
-import commons.string.StringUtility;
+import commons.object.collection.ArrayUtility;
+import commons.object.collection.ListUtility;
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,71 +40,6 @@ public final class NumberStringUtility {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(NumberStringUtility.class);
-    
-    
-    //Enums
-    
-    /**
-     * An enumeration of the sets in the number names token table.
-     */
-    private enum NumberNameSet {
-        
-        //Values
-        
-        DIGITS,
-        TENS,
-        HUNDREDS,
-        TEENS,
-        LATIN_SPECIAL,
-        LATIN_ONES_PREFIXES,
-        LATIN_TENS_PREFIXES,
-        LATIN_HUNDREDS_PREFIXES,
-        LATIN_THOUSANDS_SEPARATORS,
-        SUFFIXES,
-        FRACTIONAL,
-        RECIPROCAL,
-        MODIFIERS
-    }
-    
-    /**
-     * An enumeration of the suffixes available in the number names token table.
-     */
-    private enum NumberNameSuffix {
-        
-        //Values
-        
-        SPECIAL,
-        SMALL,
-        STANDARD
-    }
-    
-    /**
-     * An enumeration of the modifiers available in the number names token table.
-     */
-    private enum NumberNameModifier {
-        
-        //Values
-        
-        NEGATIVE,
-        POINT,
-        AND,
-        OH_HUNDRED,
-        O_HUNDRED,
-        EXPONENTIATED,
-        PLURAL
-    }
-    
-    /**
-     * An enumeration of the fraction modes available.
-     */
-    public enum FractionMode {
-        
-        //Values
-        
-        DEFAULT,
-        SIMPLE,
-        FANCY
-    }
     
     
     //Constants
@@ -141,7 +76,7 @@ public final class NumberStringUtility {
      */
     private static final List<String> VALID_LATIN_POWER_NAME_TOKENS = Stream.of(
                     IntStream.rangeClosed(NumberNameSet.LATIN_SPECIAL.ordinal(), NumberNameSet.LATIN_THOUSANDS_SEPARATORS.ordinal()).boxed()
-                            .map(e -> NUMBER_NAMES[e]).flatMap(Arrays::stream).filter(e -> !e.isEmpty())
+                            .map(i -> NUMBER_NAMES[i]).flatMap(Arrays::stream).filter(e -> !e.isEmpty())
                             .sorted((o1, o2) -> Integer.compare(o2.length(), o1.length())).toArray(),
                     Arrays.stream(NUMBER_NAMES[NumberNameSet.SUFFIXES.ordinal()])
                             .sorted((o1, o2) -> Integer.compare(o2.length(), o1.length())).toArray())
@@ -193,22 +128,91 @@ public final class NumberStringUtility {
      */
     public static final Pattern LATIN_POWER_NAME_PATTERN = Pattern.compile("^" +
             IntStream.rangeClosed(NumberNameSet.LATIN_SPECIAL.ordinal(), NumberNameSet.SUFFIXES.ordinal()).boxed()
-                    .map(e -> NUMBER_NAMES[e]).flatMap(Arrays::stream).filter(e -> !e.isEmpty())
+                    .map(i -> NUMBER_NAMES[i]).flatMap(Arrays::stream).filter(e -> !e.isEmpty())
                     .collect(Collectors.joining("|", "(?:", ")")) + "+$"
     );
     
     /**
      * A regex pattern for validating number phrases.
      */
-    public static final Pattern NUMBER_PHRASE_PATTERN = Pattern.compile("^(?:" +
-            Stream.of(VALID_TOKENS,
-                            Collections.singletonList("(?:" + NUMBER_PATTERN.pattern() + ")"),
-                            Collections.singletonList("(?:" + EXPONENTIAL_NOTATION_PATTERN.pattern().replaceAll("\\?<[^>]+>", "?:") + ")")
-                    ).flatMap(Collection::stream)
-                    .collect(Collectors.joining("|", "(?:", ")")) + "[\\s\\-]?)+$");
+    public static final Pattern NUMBER_PHRASE_PATTERN = Pattern.compile("^(?:" + Stream.of(
+                    VALID_TOKENS,
+                    Collections.singletonList("(?:" + NUMBER_PATTERN.pattern() + ")"),
+                    Collections.singletonList("(?:" + EXPONENTIAL_NOTATION_PATTERN.pattern().replaceAll("\\?<[^>]+>", "?:") + ")"))
+            .flatMap(Collection::stream)
+            .collect(Collectors.joining("|", "(?:", ")")) + "[\\s\\-]?)+$");
     
     
-    //Functions
+    //Enums
+    
+    /**
+     * An enumeration of the token table Number Name Sets.
+     */
+    private enum NumberNameSet {
+        
+        //Values
+        
+        DIGITS,
+        TENS,
+        HUNDREDS,
+        TEENS,
+        LATIN_SPECIAL,
+        LATIN_ONES_PREFIXES,
+        LATIN_TENS_PREFIXES,
+        LATIN_HUNDREDS_PREFIXES,
+        LATIN_THOUSANDS_SEPARATORS,
+        SUFFIXES,
+        FRACTIONAL,
+        RECIPROCAL,
+        MODIFIERS
+        
+    }
+    
+    /**
+     * An enumeration of the token table Number Name Suffixes.
+     */
+    private enum NumberNameSuffix {
+        
+        //Values
+        
+        SPECIAL,
+        SMALL,
+        STANDARD
+        
+    }
+    
+    /**
+     * An enumeration of the token table Number Name Modifiers.
+     */
+    private enum NumberNameModifier {
+        
+        //Values
+        
+        NEGATIVE,
+        POINT,
+        AND,
+        OH_HUNDRED,
+        O_HUNDRED,
+        EXPONENTIATED,
+        PLURAL
+        
+    }
+    
+    /**
+     * An enumeration of supported Fraction Modes.
+     */
+    public enum FractionMode {
+        
+        //Values
+        
+        DEFAULT,
+        SIMPLE,
+        FANCY
+        
+    }
+    
+    
+    //Static Methods
     
     /**
      * Returns the string value of a number.
@@ -332,12 +336,12 @@ public final class NumberStringUtility {
      * @return The phrase equivalent of the number string.
      * @throws NumberFormatException When the string does not represent a number.
      */
-    @SuppressWarnings("DuplicateExpressions")
+    @SuppressWarnings({"DuplicateExpressions", "RedundantSuppression"})
     public static String numberStringToNumberPhrase(String numberString, FractionMode fractionMode) throws NumberFormatException {
         final String originalNumberString = numberString;
         numberString = cleanNumberString(numberString);
         if (!numberString.matches(NUMBER_PATTERN.pattern()) && !numberString.matches(EXPONENTIAL_NOTATION_PATTERN.pattern())) {
-            throw new NumberFormatException("The string: '" + originalNumberString + "' does not represent a number");
+            throw new NumberFormatException("The string: " + StringUtility.quote(originalNumberString, true) + " does not represent a number");
         }
         final String cleanedNumberString = numberString;
         
@@ -554,7 +558,7 @@ public final class NumberStringUtility {
     public static String numberStringToExponentialNotationPhrase(String numberString) throws NumberFormatException {
         numberString = cleanNumberString(numberString);
         if (!numberString.matches(EXPONENTIAL_NOTATION_PATTERN.pattern())) {
-            throw new NumberFormatException("The string: '" + numberString + "' does not represent a number in exponential notation");
+            throw new NumberFormatException("The string: " + StringUtility.quote(numberString, true) + " does not represent a number in exponential notation");
         }
         
         String value = StringUtility.lSnip(numberString, numberString.indexOf('E'));
@@ -876,8 +880,7 @@ public final class NumberStringUtility {
                     
                     final Matcher integerStringMatcher = INTEGER_STRING_PATTERN.matcher(StringUtility.removeWhiteSpace(simpleFractional));
                     if (integerStringMatcher.matches()) {
-                        fractionalTokens = StringUtility.removeWhiteSpace(simpleFractional).chars()
-                                .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.toList());
+                        fractionalTokens = StringUtility.stringStream(StringUtility.removeWhiteSpace(simpleFractional)).collect(Collectors.toList());
                     }
                     
                     int chunk = 0;
@@ -941,7 +944,7 @@ public final class NumberStringUtility {
                         final long powerOffset = (latinPowers.get(0) * 3) + components.get(latinPowers.get(0)).toPlainString().length() - 1;
                         final String baseNumber = LongStream.rangeClosed(((latinPowers.size() > 1) ? latinPowers.get(latinPowers.size() - 1) : latinPowers.get(0)), latinPowers.get(0))
                                 .boxed().sorted(Collections.reverseOrder())
-                                .map(e -> StringUtility.padZero((components.containsKey(e) ? components.get(e).toPlainString() : ""), 3))
+                                .map(l -> StringUtility.padZero((components.containsKey(l) ? components.get(l).toPlainString() : ""), 3))
                                 .collect(Collectors.joining()).replaceAll("(?:^0+)|(?:0+$)", "");
                         final long zeroCount = Math.max(((powerOffset >= 0) ? (powerOffset - baseNumber.length() + 1) : (-powerOffset - 1)), 0);
                         final long numberSize = (powerOffset >= 0) ? powerOffset : (baseNumber.length() + zeroCount);
@@ -975,7 +978,7 @@ public final class NumberStringUtility {
             return result.toString();
             
         } catch (NumberFormatException ignored) {
-            throw new NumberFormatException("The string: '" + originalNumberPhrase + "' does not represent a valid number phrase");
+            throw new NumberFormatException("The string: " + StringUtility.quote(originalNumberPhrase, true) + " does not represent a valid number phrase");
         }
     }
     
@@ -997,6 +1000,7 @@ public final class NumberStringUtility {
      * @param numberString The number string.
      * @return The cleaned number string.
      */
+    @SuppressWarnings("ConditionCoveredByFurtherCondition")
     public static String cleanNumberString(String numberString) {
         numberString = StringUtility.removeWhiteSpace(numberString.toUpperCase());
         
@@ -1443,7 +1447,7 @@ public final class NumberStringUtility {
             return (latinPower + 1L) * (isNegative ? -1 : 1);
             
         } catch (NumberFormatException ignored) {
-            throw new NumberFormatException("The string: '" + originalLatinPowerName + "' does not represent a valid latin power name");
+            throw new NumberFormatException("The string: " + StringUtility.quote(originalLatinPowerName, true) + " does not represent a valid latin power name");
         }
     }
     

@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.math.NumberStringUtility;
-import commons.string.StringUtility;
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,48 +30,6 @@ public final class DateTimeUtility {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(DateTimeUtility.class);
-    
-    
-    //Enums
-    
-    /**
-     * An enumerations of the months in a year.
-     */
-    public enum Month {
-        
-        //Values
-        
-        JANUARY,
-        FEBRUARY,
-        MARCH,
-        APRIL,
-        MAY,
-        JUNE,
-        JULY,
-        AUGUST,
-        SEPTEMBER,
-        OCTOBER,
-        NOVEMBER,
-        DECEMBER
-        
-    }
-    
-    /**
-     * An enumeration of the days of the week.
-     */
-    public enum Weekday {
-        
-        //Values
-        
-        MONDAY,
-        TUESDAY,
-        WEDNESDAY,
-        THURSDAY,
-        FRIDAY,
-        SATURDAY,
-        SUNDAY
-        
-    }
     
     
     //Constants
@@ -147,7 +105,49 @@ public final class DateTimeUtility {
     public static final Pattern TIME_PATTERN = Pattern.compile("(?<hour>\\d{2}):(?<minute>\\d{2})(:(?<second>\\d{2}))?");
     
     
-    //Functions
+    //Enums
+    
+    /**
+     * An enumerations of Months.
+     */
+    public enum Month {
+        
+        //Values
+        
+        JANUARY,
+        FEBRUARY,
+        MARCH,
+        APRIL,
+        MAY,
+        JUNE,
+        JULY,
+        AUGUST,
+        SEPTEMBER,
+        OCTOBER,
+        NOVEMBER,
+        DECEMBER
+        
+    }
+    
+    /**
+     * An enumeration of Weekdays.
+     */
+    public enum Weekday {
+        
+        //Values
+        
+        MONDAY,
+        TUESDAY,
+        WEDNESDAY,
+        THURSDAY,
+        FRIDAY,
+        SATURDAY,
+        SUNDAY
+        
+    }
+    
+    
+    //Static Methods
     
     /**
      * Converts a date to a formatted date string.

@@ -105,7 +105,7 @@ public final class Console {
         //Constructors
         
         /**
-         * The constructor for a Console Effect enumeration.
+         * Constructs a Console Effect.
          *
          * @param code The code of the Console Effect.
          */
@@ -152,7 +152,7 @@ public final class Console {
     }
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns the code for an effect.
@@ -198,7 +198,7 @@ public final class Console {
             }
             codeBuilder.append(codeEntry);
         }
-        return (codeBuilder.length() > 0) ? ("\u001B[" + codeBuilder.toString() + 'm') : "";
+        return (codeBuilder.length() > 0) ? ("\u001B[" + codeBuilder + 'm') : "";
     }
     
     /**
