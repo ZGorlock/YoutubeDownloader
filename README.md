@@ -204,11 +204,37 @@ If you have a Global configuration and a Channel configuration and both are enab
 * If both configurations have ***enabled*** set to true, but the Global configuration has ***forceGlobally*** set to true, then the Global configuration will be used.
 * If both configurations have ***enabled*** set to true, but the Channel configuration has ***overrideGlobal*** set to true, regardless of whether the Global configuration has ***forceGlobally*** set to true or not, then the Channel configuration will be used.
 
+### Color Configuration:
+
+To configure a custom color configuration add a new "color" object to *./conf.json* as a top level object.
+
+The following is a list of the available colors options:
+
+    DEFAULT_COLOR,
+    WHITE, BLACK, DARK_GREY, GREY, 
+    DARK_RED, RED, ORANGE, 
+    DARK_GREEN, GREEN, CYAN, YELLOW, 
+    DARK_BLUE, BLUE, LIGHT_BLUE, PURPLE, MAGENTA
+
+You can add the following fields inside the "color" object.
+
+* ***enableColors*** - Whether to enable colors in the program, if this is set to false all output will be the default console color. *(optional; defaults to true)*
+* ***base*** - The base color to print in. The valid options for this setting is one of the colors listed above. *(optional; defaults to GREEN)*
+* ***good*** - The color to print "good" text in. The valid options for this setting is one of the colors listed above. *(optional; defaults to CYAN)*
+* ***bad*** - The color to print "bad" text in. The valid options for this setting is one of the colors listed above. *(optional; defaults to RED)*
+* ***log*** - The color to print logs in. The valid options for this setting is one of the colors listed above. *(optional; defaults to DARK_GREY)*
+* ***channel*** - The color to print channel names in. The valid options for this setting is one of the colors listed above. *(optional; defaults to YELLOW)*
+* ***video*** - The color to print video titles in. The valid options for this setting is one of the colors listed above. *(optional; defaults to PURPLE)*
+* ***number*** - The color to print numbers in. The valid options for this setting is one of the colors listed above. *(optional; defaults to WHITE)*
+* ***file*** - The color to print file names and file paths in. The valid options for this setting is one of the colors listed above. *(optional; defaults to GREY)*
+* ***exe*** - The color to print the name of the ***executable*** in. The valid options for this setting is one of the colors listed above. *(optional; defaults to ORANGE)*
+* ***link*** - The color to print links in. The valid options for this setting is one of the colors listed above. *(optional; defaults to LIGHT_BLUE)*
+
+**NOTE**: The colors of the progress bar cannot be changed.
+
 ### Logging Configuration:
 
-You can set up a global logging configuration for the program.
-
-To start, add a new "log" object to *./conf.json* as a top level object.
+To configure a custom logging configuration add a new "log" object to *./conf.json* as a top level object.
 
 You can add the following fields inside the "log" object. All fields are booleans (true or false).
 

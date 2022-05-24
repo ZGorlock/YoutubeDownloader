@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import youtube.channel.Video;
+import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.YoutubeUtils;
 
@@ -72,14 +73,14 @@ public class YoutubeDownloader {
         }
         
         if (!outputDir.exists() && !outputDir.mkdirs()) {
-            System.err.println("Unable to create output directory");
+            System.out.println(Color.bad("Unable to create output directory: ") + Color.file(outputDir.getAbsolutePath()));
             return;
         }
         if (DOWNLOAD_QUEUE.exists()) {
             download.addAll(Files.readAllLines(DOWNLOAD_QUEUE.toPath()));
         }
         
-        System.out.println();
+        System.out.println(YoutubeUtils.NEWLINE);
         Scanner in = new Scanner(System.in);
         while (true) {
             List<String> work = new ArrayList<>(download);
@@ -89,26 +90,26 @@ public class YoutubeDownloader {
                     Video video = fetchVideo(url);
                     
                     if (!Configurator.Config.preventDownload) {
-                        System.out.println("Downloading: " + video.title);
+                        System.out.println(Color.base("Downloading: ") + Color.video(video.title));
                         switch (YoutubeUtils.downloadYoutubeVideo(video)) {
                             case SUCCESS:
-                                System.out.println("Done");
+                                System.out.println(Color.good("Done"));
                                 break;
                             case FAILURE:
-                                System.err.println("Failed");
+                                System.out.println(Color.bad("Failed"));
                                 break;
                             case ERROR:
-                                System.err.println("Error");
+                                System.out.println(Color.bad("Error"));
                                 break;
                         }
                     } else {
-                        System.out.println("Would have downloaded: '" + video.title + "' but downloading is disabled");
+                        System.out.println(Color.bad("Would have downloaded: '") + Color.video(video.title) + Color.bad("' but downloading is disabled"));
                     }
                 } else {
-                    System.err.println("URL is not a Youtube video");
+                    System.out.println(Color.bad("URL is not a Youtube video"));
                 }
                 download.remove(url);
-                System.out.println();
+                System.out.println(YoutubeUtils.NEWLINE);
             }
             FileUtils.writeLines(DOWNLOAD_QUEUE, download);
             

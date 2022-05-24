@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import commons.console.Console;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -34,6 +33,7 @@ import youtube.channel.Channel;
 import youtube.channel.ChannelProcesses;
 import youtube.channel.Channels;
 import youtube.channel.KeyStore;
+import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.YoutubeUtils;
 
@@ -72,7 +72,7 @@ public class YoutubeChannelDownloader {
                 throw new Exception();
             }
         } catch (Exception e) {
-            System.err.println("Must supply a Google API key with Youtube Data API enabled in /apiKey");
+            System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.file("./apiKey"));
             System.exit(0);
         }
     }
@@ -183,8 +183,7 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
-        System.out.println();
-        System.out.println("Processing Channel: " + Console.ConsoleEffect.YELLOW.apply(channel.name));
+        System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.name));
         
         boolean success = YoutubeUtils.isOnline() &&
                 fetchChannelData() &&
@@ -194,6 +193,8 @@ public class YoutubeChannelDownloader {
                 createPlaylist();
         
         Stats.totalChannels++;
+        
+        System.out.println(YoutubeUtils.NEWLINE);
         return success;
     }
     
@@ -282,7 +283,7 @@ public class YoutubeChannelDownloader {
                     try {
                         return processChannelData(chunk);
                     } catch (Exception e) {
-                        System.err.println("Error while parsing Channel data");
+                        System.out.println(Color.bad("Error while parsing Channel data"));
                         return false;
                     }
                 });
@@ -299,11 +300,11 @@ public class YoutubeChannelDownloader {
         String data = FileUtils.readFileToString(chunk, "UTF-8");
         
         if (data.contains("\"code\": 404")) {
-            System.err.println("The Channel " + channel.name + " does not exist");
+            System.out.println(Color.bad("The Channel ") + Color.channel(channel.name) + Color.bad(" does not exist"));
             return false;
         }
         if (data.contains("\"code\": 403")) {
-            System.err.println("Your API Key is not authorized or has exceeded its quota");
+            System.out.println(Color.bad("Your API Key is not authorized or has exceeded its quota"));
             return false;
         }
         
@@ -313,7 +314,7 @@ public class YoutubeChannelDownloader {
             JSONObject dataChunkJson = (JSONObject) dataChunk;
             JSONArray dataItems = (JSONArray) dataChunkJson.get("items");
             if (dataItems == null) {
-                System.err.println("Error reading the Channel " + channel.name + "; Skipping this run");
+                System.out.println(Color.bad("Error reading the Channel ") + Color.channel(channel.name) + Color.bad("; Skipping this run"));
                 continue;
             }
             for (Object dataItem : dataItems) {
@@ -369,7 +370,7 @@ public class YoutubeChannelDownloader {
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static boolean produceQueue() throws Exception {
         if (videoMap.isEmpty()) {
-            System.err.println("Must populate video map before producing the queue");
+            System.out.println(Color.bad("Must populate video map before producing the queue"));
             return false;
         }
         
@@ -382,7 +383,7 @@ public class YoutubeChannelDownloader {
         
         videoMap.values().stream().collect(Collectors.groupingBy(e -> e.title)).entrySet()
                 .stream().filter(e -> (e.getValue().size() > 1)).forEach(e ->
-                        System.err.println("The title: '" + e.getValue().get(0) + "' appears " + e.getValue().size() + " times"));
+                        System.out.println(Color.bad("The title: '") + Color.video(e.getValue().get(0).title) + Color.bad("' appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
         
         videoMap.forEach((videoId, video) -> {
             channel.state.saved.remove(videoId);
@@ -405,13 +406,13 @@ public class YoutubeChannelDownloader {
                     
                     if (!oldOutput.getName().equals(newOutput.getName())) {
                         if (!Configurator.Config.preventRenaming) {
-                            System.out.println("Renaming: '" + oldOutput.getName() + "' to: '" + newOutput.getName() + "'");
+                            System.out.println(Color.base("Renaming: '") + Color.video(oldOutput.getName()) + Color.base("' to: '") + Color.video(newOutput.getName()) + Color.base("'"));
                             oldOutput.renameTo(newOutput);
                             video.updateOutput(newOutput);
                             channel.state.saved.add(videoId);
                             channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                         } else {
-                            System.out.println("Would have renamed: '" + oldOutput.getName() + "' to: '" + newOutput.getName() + "' but renaming is disabled");
+                            System.out.println(Color.bad("Would have renamed: '") + Color.video(oldOutput.getName()) + Color.bad("' to: '") + Color.video(newOutput.getName()) + Color.bad("' but renaming is disabled"));
                             channel.state.queue.add(videoId);
                         }
                         
@@ -438,12 +439,12 @@ public class YoutubeChannelDownloader {
      */
     private static boolean downloadVideos() throws Exception {
         if (videoMap.isEmpty()) {
-            System.err.println("Must populate video map before downloading videos");
+            System.out.println(Color.bad("Must populate video map before downloading videos"));
             return false;
         }
         
         if (!channel.state.queue.isEmpty()) {
-            System.out.println(channel.state.queue.size() + " in Queue...");
+            System.out.println(Color.number(String.valueOf(channel.state.queue.size())) + Color.base(" in Queue..."));
         }
         
         List<String> working = new ArrayList<>(channel.state.queue);
@@ -452,10 +453,9 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             if (!Configurator.Config.preventDownload) {
-                System.out.println("Downloading (" + (i + 1) + '/' + working.size() + "): " + video.title);
-                System.out.print("    ");
+                System.out.println(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.video(video.title));
             } else {
-                System.out.println("Would have downloaded: '" + video.title + "' but downloading is disabled");
+                System.out.println(Color.bad("Would have downloaded: '") + Color.video(video.title) + Color.bad("' but downloading is disabled"));
                 continue;
             }
             
@@ -465,13 +465,13 @@ public class YoutubeChannelDownloader {
                     channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
                     Stats.totalDownloads++;
                     Stats.totalDataDownloaded += (video.output.length() / 1048576.0);
-                    System.out.println("    Download Succeeded");
+                    System.out.println(YoutubeUtils.INDENT + Color.good("Download Succeeded"));
                     break;
                 case ERROR:
                     channel.state.blocked.add(videoId);
                 case FAILURE:
                     Stats.totalDownloadFailures++;
-                    System.out.println("    Download Failed");
+                    System.out.println(YoutubeUtils.INDENT + Color.bad("Download Failed"));
                     break;
             }
             channel.state.queue.remove(videoId);
@@ -482,7 +482,12 @@ public class YoutubeChannelDownloader {
         File[] partFiles = channel.outputFolder.listFiles(e -> e.getName().endsWith(".part"));
         if (partFiles != null) {
             for (File partFile : partFiles) {
-                FileUtils.forceDeleteOnExit(partFile);
+                if (!Configurator.Config.preventDeletion) {
+                    System.out.println(Color.base("Deleting: '") + Color.video(partFile.getName()) + Color.base("'"));
+                    FileUtils.forceDelete(partFile);
+                } else {
+                    System.out.println(Color.bad("Would have deleted: '") + Color.video(partFile.getName()) + Color.bad("' but deletion is disabled"));
+                }
             }
         }
         
@@ -497,7 +502,7 @@ public class YoutubeChannelDownloader {
      */
     private static boolean createPlaylist() throws Exception {
         if (videoMap.isEmpty()) {
-            System.err.println("Must populate video map before creating a playlist");
+            System.out.println(Color.bad("Must populate video map before creating a playlist"));
             return false;
         }
         
@@ -532,10 +537,10 @@ public class YoutubeChannelDownloader {
                     for (File video : videos) {
                         if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
                             if (!Configurator.Config.preventDeletion) {
-                                System.err.println("Deleting: '" + video.getName() + "'");
+                                System.out.println(Color.base("Deleting: '") + Color.video(video.getName()) + Color.base("'"));
                                 FileUtils.forceDeleteOnExit(video);
                             } else {
-                                System.err.println("Would have deleted: '" + video.getName() + "' but deletion is disabled");
+                                System.out.println(Color.bad("Would have deleted: '") + Color.video(video.getName()) + Color.bad("' but deletion is disabled"));
                             }
                         }
                     }
@@ -632,24 +637,23 @@ public class YoutubeChannelDownloader {
          * Prints statistics about the completed run.
          */
         public static void print() {
-            System.out.println();
             new LinkedHashMap<String, Object>() {{
                 put("Channels Processed: ", totalChannels);
                 
                 put("Videos Downloaded:  ", totalDownloads);
                 put("Videos Failed:      ", totalDownloadFailures);
-                put("Data Downloaded:    ", new DecimalFormat("#.##MB").format(totalDataDownloaded));
+                put("Data Downloaded:    ", new DecimalFormat("#.##").format(totalDataDownloaded));
                 
                 put("API Calls:          ", totalApiCalls);
                 put("API Failures:       ", totalApiFailures);
                 
                 put("Total Videos:       ", totalVideos);
                 put("Total Songs:        ", totalSongs);
-                put("Total Data:         ", new DecimalFormat("#.##MB").format(totalData));
+                put("Total Data:         ", new DecimalFormat("#.##").format(totalData));
                 
             }}.forEach((title, value) ->
-                    System.out.println(title + Console.ConsoleEffect.YELLOW.apply(String.valueOf(value))));
-            System.out.println();
+                    System.out.println(Color.base(title) + Color.number(value) + Color.base(title.contains("Data") ? "MB" : "")));
+            System.out.println(YoutubeUtils.NEWLINE);
         }
         
     }

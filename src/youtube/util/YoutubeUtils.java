@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import commons.access.CmdLine;
 import commons.access.OperatingSystem;
 import commons.console.ProgressBar;
+import commons.object.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import youtube.channel.Video;
@@ -164,6 +165,16 @@ public final class YoutubeUtils {
             "please install or provide the path"
     );
     
+    /**
+     * The newline string.
+     */
+    public static final String NEWLINE = Color.base("");
+    
+    /**
+     * The indentation string.
+     */
+    public static final String INDENT = Color.base("     ");
+    
     
     //Functions
     
@@ -179,19 +190,19 @@ public final class YoutubeUtils {
         boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
         SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
         
-        String cmd = EXECUTABLE.getExe().getName() + " " +
-                "--output \"" + video.download.getAbsolutePath() + ".%(ext)s\" " +
-                "--geo-bypass --rm-cache-dir " +
-                (asMp3 ? "--extract-audio --audio-format mp3 " :
-                 ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
-                SponsorBlocker.getCommand(sponsorBlockConfig) +
-                video.url;
+        String cmd = Color.exe(EXECUTABLE.getExe().getName()) + Color.log(" ") +
+                Color.log("--output \"") + Color.file(video.download.getAbsolutePath().replace("\\", "/") + ".%(ext)s") + Color.log("\" ") +
+                Color.log("--geo-bypass --rm-cache-dir ") +
+                Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
+                          ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
+                Color.log(SponsorBlocker.getCommand(sponsorBlockConfig)) +
+                Color.link(video.url);
         
         if (Configurator.Config.logCommand) {
-            System.out.println(cmd);
+            System.out.println(INDENT + Color.base(cmd));
         }
         
-        return performDownload(cmd, video, Configurator.Config.logWork);
+        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video, Configurator.Config.logWork);
     }
     
     /**
@@ -230,7 +241,7 @@ public final class YoutubeUtils {
                 }
                 
                 if (log) {
-                    System.out.println(line);
+                    System.out.println(Color.log(line));
                     
                 } else {
                     if (initialProgress == -1) {
@@ -259,8 +270,8 @@ public final class YoutubeUtils {
                         
                         if (newPart) {
                             if (progressBar == null) {
-                                progressBar = new ProgressBar("", total, "KB");
-                                progressBar.setAutoPrint(true);
+                                progressBar = new ProgressBar("", total, 32, "KB", true);
+                                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
                                 initialProgress = Math.max(initialProgress, 0);
                                 progressBar.defineInitialProgress(initialProgress);
                             } else {
@@ -283,11 +294,11 @@ public final class YoutubeUtils {
                     }
                     long size = output.length() / 1024;
                     if (progressBar == null) {
-                        progressBar = new ProgressBar("", size, "KB");
-                        progressBar.setAutoPrint(true);
+                        progressBar = new ProgressBar("", size, 32, "KB", true);
+                        progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
                         progressBar.defineInitialProgress(size);
                     }
-                    progressBar.complete(false, "Already downloaded");
+                    progressBar.complete(false, Color.good("Already downloaded"));
                 }
                 
                 Matcher destinationMatcher = destinationPattern.matcher(line);
@@ -321,19 +332,19 @@ public final class YoutubeUtils {
                            response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
             
             if (progressBar == null) {
-                progressBar = new ProgressBar("", 1, "KB");
-                progressBar.setAutoPrint(true);
+                progressBar = new ProgressBar("", 1, 32, "KB", true);
+                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
                 progressBar.update(-1);
             }
             if (!progressBar.isComplete()) {
                 if (error == null) {
                     progressBar.complete();
                 } else {
-                    progressBar.fail(true, error
+                    progressBar.fail(true, Color.bad(error
                             .replaceAll("^ERROR:\\s*", "")
                             .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
                             .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
-                            .trim());
+                            .trim()));
                 }
             }
             
@@ -343,9 +354,9 @@ public final class YoutubeUtils {
             
         } catch (Exception e) {
             if (progressBar != null) {
-                progressBar.fail(true, "Unknown Error");
+                progressBar.fail(true, Color.bad("Unknown Error"));
             }
-            e.printStackTrace(System.err);
+            System.out.println(Color.bad(e.getStackTrace()));
             return DownloadResponse.ERROR;
         }
     }
@@ -477,39 +488,11 @@ public final class YoutubeUtils {
      */
     public static boolean doStartupChecks() {
         if (!YoutubeUtils.isOnline()) {
-            System.err.println("Internet access is required");
+            System.out.println(Color.bad("Internet access is required"));
             return false;
         }
         
-        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
-        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
-        
-        if (EXECUTABLE.getExe().exists() && !Configurator.Config.preventExeAutoUpdate && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
-            System.err.println("Unable to check for " + EXECUTABLE.getName() + " updates");
-            
-        } else if (!currentExecutableVersion.equals(latestExecutableVersion)) {
-            if (!EXECUTABLE.getExe().exists()) {
-                System.err.println("Requires " + EXECUTABLE.getName());
-            } else {
-                System.err.println("An update is available for " + EXECUTABLE.getName());
-                System.err.println("Current Version: " + currentExecutableVersion + " | Latest Version: " + latestExecutableVersion);
-            }
-            
-            if (!Configurator.Config.preventExeAutoUpdate) {
-                System.err.println("Downloading...");
-                File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
-                if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
-                    System.err.println("Unable to update " + EXECUTABLE.getName());
-                } else {
-                    System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
-                    System.out.println();
-                }
-            } else {
-                System.err.println("Would have downloaded " + EXECUTABLE.getName() + " v" + latestExecutableVersion + " but executable updating is disabled");
-            }
-        }
-        
-        return EXECUTABLE.getExe().exists();
+        return checkExe();
     }
     
     /**
@@ -524,6 +507,49 @@ public final class YoutubeUtils {
         } catch (IOException e) {
             return false;
         }
+    }
+    
+    /**
+     * Determines if the exe exists and attempts to update it, or attempts to download it if it does not exist.
+     *
+     * @return Whether the exe exists.
+     */
+    private static boolean checkExe() {
+        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
+        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
+        boolean exists = EXECUTABLE.getExe().exists();
+        boolean update = exists && !currentExecutableVersion.equals(latestExecutableVersion);
+        
+        if (exists) {
+            System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + Color.number(" v" + currentExecutableVersion));
+        } else {
+            System.out.println(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
+        }
+        
+        if (exists && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
+            System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
+            
+        } else if (!exists || update) {
+            if (exists) {
+                System.out.println(Color.base("Current Version: ") + Color.number(currentExecutableVersion) + Color.base(" Latest Version: ") + Color.number(latestExecutableVersion));
+            }
+            
+            if (!Configurator.Config.preventExeAutoUpdate) {
+                System.out.println(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion));
+                File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
+                
+                if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
+                    System.out.println(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exe(EXECUTABLE.getName()));
+                } else {
+                    System.out.println(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion));
+                }
+            } else {
+                System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion) + Color.bad(" but auto updating is disabled"));
+            }
+        }
+        
+        System.out.println(YoutubeUtils.NEWLINE);
+        return EXECUTABLE.getExe().exists();
     }
     
     /**

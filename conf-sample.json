@@ -54,6 +54,20 @@
         "skipMusicOffTopic": false
     },
     
+    "color": {
+        "enableColors": true,
+        "base": "GREEN",
+        "good": "CYAN",
+        "bad": "RED",
+        "log": "DARK_GREY",
+        "channel": "YELLOW",
+        "video": "PURPLE",
+        "number": "WHITE",
+        "file": "GREY",
+        "exe": "ORANGE",
+        "link": "LIGHT_BLUE"
+    },
+    
     "log": {
         "logCommand": true,
         "logWork": false

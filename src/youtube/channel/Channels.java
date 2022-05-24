@@ -20,7 +20,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import youtube.util.Color;
 import youtube.util.Configurator;
+import youtube.util.YoutubeUtils;
 
 /**
  * Holds Channels and Playlists for the Youtube Channel Downloader.
@@ -114,14 +116,17 @@ public class Channels {
                         channel.state.load();
                         
                     } catch (Exception e) {
-                        System.err.println("Could not load channel: " + channelJson.getOrDefault("key", "null").toString());
-                        System.err.println("    " + e.getMessage());
+                        System.out.println(Color.bad("Could not load channel: ") + Color.channel(channelJson.getOrDefault("key", "null")));
+                        if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
+                            System.out.println(YoutubeUtils.INDENT + Color.bad(e.getMessage()));
+                        }
                     }
                 }
                 
             } catch (IOException | ParseException e) {
-                System.err.println("Could not load channels from: " + CHANNELS_FILE.getAbsolutePath());
-                System.err.println("    " + e.getMessage());
+                System.out.println(Color.bad("Could not load channels from: ") + Color.file("./" + CHANNELS_FILE.getName()));
+                System.out.println(YoutubeUtils.INDENT + Color.bad(e));
+                System.exit(0);
             }
         }
     }

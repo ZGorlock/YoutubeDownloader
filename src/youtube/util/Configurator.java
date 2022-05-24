@@ -113,12 +113,12 @@ public class Configurator {
     /**
      * Loads the configuration settings from the configuration file.
      *
-     * @param activeProject The current active project.
+     * @param project The current active project.
      * @see #loadSettings(JSONObject, String)
      */
-    public static void loadSettings(String activeProject) {
+    public static void loadSettings(String project) {
         if (loaded.compareAndSet(false, true)) {
-            Configurator.activeProject = activeProject;
+            activeProject = project;
             
             try {
                 String jsonString = FileUtils.readFileToString(CONF_FILE, StandardCharsets.UTF_8);
@@ -127,10 +127,13 @@ public class Configurator {
                 
                 loadSettings(json, activeProject);
                 loadSettings(json, "sponsorBlock");
+                loadSettings(json, "color");
                 loadSettings(json, "log");
                 
             } catch (IOException | ParseException e) {
-                System.err.println("Could not load settings from: " + CONF_FILE.getAbsolutePath());
+                System.out.println(Color.bad("Could not load settings from: ") + Color.file("./" + CONF_FILE.getName()));
+                System.out.println(YoutubeUtils.INDENT + Color.bad(e));
+                System.exit(0);
             }
         }
     }
