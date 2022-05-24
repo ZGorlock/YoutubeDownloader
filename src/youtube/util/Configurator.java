@@ -194,6 +194,11 @@ public class Configurator {
                 (boolean) Configurator.getSetting("asMp3", false);
         
         /**
+         * A flag indicating whether to retry previously failed videos or not.
+         */
+        public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
+        
+        /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
         public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
@@ -214,9 +219,14 @@ public class Configurator {
         public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", false);
         
         /**
-         * A flag indicating whether to retry previously failed videos or not.
+         * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
+        public static final boolean preventVideoFetch = (boolean) Configurator.getSetting("flag.preventVideoFetch", false);
+        
+        /**
+         * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean preventExeAutoUpdate = (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", false);
         
         /**
          * A flag indicating whether to the log the download command or not.

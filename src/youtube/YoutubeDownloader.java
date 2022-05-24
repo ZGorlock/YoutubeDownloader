@@ -88,17 +88,21 @@ public class YoutubeDownloader {
                 if (YoutubeUtils.VIDEO_URL_PATTERN.matcher(url).matches()) {
                     Video video = fetchVideo(url);
                     
-                    System.out.println("Downloading: " + video.title);
-                    switch (YoutubeUtils.downloadYoutubeVideo(video)) {
-                        case SUCCESS:
-                            System.out.println("Done");
-                            break;
-                        case FAILURE:
-                            System.err.println("Failed");
-                            break;
-                        case ERROR:
-                            System.err.println("Error");
-                            break;
+                    if (!Configurator.Config.preventDownload) {
+                        System.out.println("Downloading: " + video.title);
+                        switch (YoutubeUtils.downloadYoutubeVideo(video)) {
+                            case SUCCESS:
+                                System.out.println("Done");
+                                break;
+                            case FAILURE:
+                                System.err.println("Failed");
+                                break;
+                            case ERROR:
+                                System.err.println("Error");
+                                break;
+                        }
+                    } else {
+                        System.out.println("Would have downloaded: '" + video.title + "' but downloading is disabled");
                     }
                 } else {
                     System.err.println("URL is not a Youtube video");
@@ -125,39 +129,41 @@ public class YoutubeDownloader {
         String title = videoId;
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         
-        try {
-            String html = Jsoup.connect(url)
-                    .ignoreContentType(true)
-                    .maxBodySize(0)
-                    .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
-                    .referrer("http://www.google.com")
-                    .timeout(5000)
-                    .followRedirects(true)
-                    .execute()
-                    .parse()
-                    .toString();
-            
-            Pattern metaPattern = Pattern.compile("^\\s*<meta\\s*itemprop=\"(?<prop>[^\"]+)\"\\s*content=\"(?<value>[^\"]+)\"\\s*>\\s*$");
-            
-            String[] lines = html.split("\n");
-            for (String line : lines) {
-                Matcher metaMatcher = metaPattern.matcher(line);
-                if (metaMatcher.matches()) {
-                    switch (metaMatcher.group("prop")) {
-                        case "videoId":
-                            videoId = metaMatcher.group("value");
-                            break;
-                        case "name":
-                            title = metaMatcher.group("value");
-                            break;
-                        case "datePublished":
-                            date = metaMatcher.group("value");
-                            break;
+        if (!Configurator.Config.preventVideoFetch) {
+            try {
+                String html = Jsoup.connect(url)
+                        .ignoreContentType(true)
+                        .maxBodySize(0)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36")
+                        .referrer("http://www.google.com")
+                        .timeout(5000)
+                        .followRedirects(true)
+                        .execute()
+                        .parse()
+                        .toString();
+                
+                Pattern metaPattern = Pattern.compile("^\\s*<meta\\s*itemprop=\"(?<prop>[^\"]+)\"\\s*content=\"(?<value>[^\"]+)\"\\s*>\\s*$");
+                
+                String[] lines = html.split("\n");
+                for (String line : lines) {
+                    Matcher metaMatcher = metaPattern.matcher(line);
+                    if (metaMatcher.matches()) {
+                        switch (metaMatcher.group("prop")) {
+                            case "videoId":
+                                videoId = metaMatcher.group("value");
+                                break;
+                            case "name":
+                                title = metaMatcher.group("value");
+                                break;
+                            case "datePublished":
+                                date = metaMatcher.group("value");
+                                break;
+                        }
                     }
                 }
+                
+            } catch (IOException ignored) {
             }
-            
-        } catch (IOException ignored) {
         }
         
         return new Video(videoId, title, (date + " 00:00:00"), outputDir, Configurator.Config.asMp3);

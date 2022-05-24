@@ -484,7 +484,7 @@ public final class YoutubeUtils {
         String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version").trim() : "";
         String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
         
-        if (EXECUTABLE.getExe().exists() && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
+        if (EXECUTABLE.getExe().exists() && !Configurator.Config.preventExeAutoUpdate && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
             System.err.println("Unable to check for " + EXECUTABLE.getName() + " updates");
             
         } else if (!currentExecutableVersion.equals(latestExecutableVersion)) {
@@ -494,20 +494,22 @@ public final class YoutubeUtils {
                 System.err.println("An update is available for " + EXECUTABLE.getName());
                 System.err.println("Current Version: " + currentExecutableVersion + " | Latest Version: " + latestExecutableVersion);
             }
-            System.err.println("Downloading...");
             
-            File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
-            if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
-                System.err.println("Unable to update " + EXECUTABLE.getName());
-                return false;
+            if (!Configurator.Config.preventExeAutoUpdate) {
+                System.err.println("Downloading...");
+                File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
+                if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
+                    System.err.println("Unable to update " + EXECUTABLE.getName());
+                } else {
+                    System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
+                    System.out.println();
+                }
             } else {
-                System.err.println("Successfully updated " + EXECUTABLE.getName() + " to " + latestExecutableVersion);
-                System.out.println();
-                return true;
+                System.err.println("Would have downloaded " + EXECUTABLE.getName() + " v" + latestExecutableVersion + " but executable updating is disabled");
             }
         }
         
-        return true;
+        return EXECUTABLE.getExe().exists();
     }
     
     /**

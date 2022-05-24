@@ -16,11 +16,12 @@
             "stopAt": null
         },
         "flag": {
+            "retryFailed": false,
             "preventDeletion": false,
             "preventRenaming": false,
             "preventDownload": false,
             "preventChannelFetch": false,
-            "retryFailed": false
+            "preventExeAutoUpdate": false
         }
     },
     
@@ -32,11 +33,16 @@
         "format": {
             "asMp3": false,
             "preMerged": true
+        },
+        "flag": {
+            "preventDownload": false,
+            "preventVideoFetch": false,
+            "preventExeUpdate": false
         }
     },
     
     "sponsorBlock": {
-        "enabled": true,
+        "enabled": false,
         "forceGlobally": false,
         "skipAll": false,
         "skipSponsor": false,
