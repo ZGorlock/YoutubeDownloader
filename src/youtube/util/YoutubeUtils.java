@@ -526,9 +526,11 @@ public final class YoutubeUtils {
         } else {
             System.out.println(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
         }
+        System.out.println(YoutubeUtils.NEWLINE);
         
         if (exists && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
             System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
+            System.out.println(YoutubeUtils.NEWLINE);
             
         } else if (!exists || update) {
             if (exists) {
@@ -547,6 +549,7 @@ public final class YoutubeUtils {
             } else {
                 System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion) + Color.bad(" but auto updating is disabled"));
             }
+            System.out.println(YoutubeUtils.NEWLINE);
         }
         
         System.out.println(YoutubeUtils.NEWLINE);

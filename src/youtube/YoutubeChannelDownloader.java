@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
@@ -127,6 +128,7 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {
+        System.out.println(YoutubeUtils.NEWLINE);
         if (!YoutubeUtils.doStartupChecks()) {
             return;
         }
@@ -157,8 +159,8 @@ public class YoutubeChannelDownloader {
         
         KeyStore.save();
         
-        Stats.calculateData();
         Stats.print();
+        System.out.println(YoutubeUtils.NEWLINE);
     }
     
     
@@ -408,9 +410,17 @@ public class YoutubeChannelDownloader {
                         if (!Configurator.Config.preventRenaming) {
                             System.out.println(Color.base("Renaming: '") + Color.video(oldOutput.getName()) + Color.base("' to: '") + Color.video(newOutput.getName()) + Color.base("'"));
                             oldOutput.renameTo(newOutput);
+                            
                             video.updateOutput(newOutput);
                             channel.state.saved.add(videoId);
                             channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                            
+                            if (channel.saveAsMp3) {
+                                Stats.totalAudioRenames++;
+                            } else {
+                                Stats.totalVideoRenames++;
+                            }
+                            
                         } else {
                             System.out.println(Color.bad("Would have renamed: '") + Color.video(oldOutput.getName()) + Color.bad("' to: '") + Color.video(newOutput.getName()) + Color.bad("' but renaming is disabled"));
                             channel.state.queue.add(videoId);
@@ -463,14 +473,26 @@ public class YoutubeChannelDownloader {
                 case SUCCESS:
                     channel.state.saved.add(videoId);
                     channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
-                    Stats.totalDownloads++;
-                    Stats.totalDataDownloaded += (video.output.length() / 1048576.0);
+                    
+                    if (channel.saveAsMp3) {
+                        Stats.totalAudioDownloads++;
+                        Stats.totalAudioDataDownloaded += video.output.length();
+                    } else {
+                        Stats.totalVideoDownloads++;
+                        Stats.totalVideoDataDownloaded += video.output.length();
+                    }
                     System.out.println(YoutubeUtils.INDENT + Color.good("Download Succeeded"));
                     break;
+                
                 case ERROR:
                     channel.state.blocked.add(videoId);
+                
                 case FAILURE:
-                    Stats.totalDownloadFailures++;
+                    if (channel.saveAsMp3) {
+                        Stats.totalAudioDownloadFailures++;
+                    } else {
+                        Stats.totalVideoDownloadFailures++;
+                    }
                     System.out.println(YoutubeUtils.INDENT + Color.bad("Download Failed"));
                     break;
             }
@@ -539,6 +561,15 @@ public class YoutubeChannelDownloader {
                             if (!Configurator.Config.preventDeletion) {
                                 System.out.println(Color.base("Deleting: '") + Color.video(video.getName()) + Color.base("'"));
                                 FileUtils.forceDeleteOnExit(video);
+                                
+                                if (!video.getName().endsWith(".part")) {
+                                    if (channel.saveAsMp3) {
+                                        Stats.totalAudioDeletions++;
+                                    } else {
+                                        Stats.totalVideoDeletions++;
+                                    }
+                                }
+                                
                             } else {
                                 System.out.println(Color.bad("Would have deleted: '") + Color.video(video.getName()) + Color.bad("' but deletion is disabled"));
                             }
@@ -563,14 +594,54 @@ public class YoutubeChannelDownloader {
         static int totalChannels = 0;
         
         /**
-         * A counter of the total number of videos that were downloaded this run.
+         * A counter of the total number of video files that were downloaded this run.
          */
-        static int totalDownloads = 0;
+        static int totalVideoDownloads = 0;
         
         /**
-         * A counter of the total number of videos that failed to download this run.
+         * A counter of the total number of audio files that were downloaded this run.
          */
-        static int totalDownloadFailures = 0;
+        static int totalAudioDownloads = 0;
+        
+        /**
+         * A counter of the total number of video files that were renamed this run.
+         */
+        static int totalVideoRenames = 0;
+        
+        /**
+         * A counter of the total number of audio files that were renamed this run.
+         */
+        static int totalAudioRenames = 0;
+        
+        /**
+         * A counter of the total number of video files that were deleted this run.
+         */
+        static int totalVideoDeletions = 0;
+        
+        /**
+         * A counter of the total number of audio files that were deleted this run.
+         */
+        static int totalAudioDeletions = 0;
+        
+        /**
+         * A counter of the total number of video files that failed to download this run.
+         */
+        static int totalVideoDownloadFailures = 0;
+        
+        /**
+         * A counter of the total number of audio files that failed to download this run.
+         */
+        static int totalAudioDownloadFailures = 0;
+        
+        /**
+         * A counter of the total video data downloaded from Youtube this run, in bytes.
+         */
+        static long totalVideoDataDownloaded = 0L;
+        
+        /**
+         * A counter of the total audio data downloaded from Youtube this run, in bytes.
+         */
+        static long totalAudioDataDownloaded = 0L;
         
         /**
          * A counter of the total number of times the Youtube Data API was called this run.
@@ -583,24 +654,24 @@ public class YoutubeChannelDownloader {
         static int totalApiFailures = 0;
         
         /**
-         * A counter of the total number of videos saved from Youtube.
+         * A counter of the total number of video files saved from Youtube.
          */
-        static int totalVideos = 0;
+        static int totalVideo = 0;
         
         /**
-         * A counter of the total number of songs saved from Youtube.
+         * A counter of the total number of audio files saved from Youtube.
          */
-        static int totalSongs = 0;
+        static int totalAudio = 0;
         
         /**
-         * A counter of the total data downloaded from Youtube this run.
+         * A counter of the total video data saved from Youtube, in bytes.
          */
-        static double totalDataDownloaded = 0.0;
+        static long totalVideoData = 0L;
         
         /**
-         * A counter of the total data saved from Youtube, in MB.
+         * A counter of the total audio data saved from Youtube, in bytes.
          */
-        static double totalData = 0.0;
+        static long totalAudioData = 0L;
         
         
         //Functions
@@ -608,7 +679,7 @@ public class YoutubeChannelDownloader {
         /**
          * Calculates the total data saved from Youtube.
          */
-        private static void calculateData() throws Exception {
+        private static void calculateData() {
             for (Channel channel : Channels.getChannels()) {
                 if (channel.state.saveFile.exists()) {
                     
@@ -622,11 +693,12 @@ public class YoutubeChannelDownloader {
                             continue;
                         }
                         
-                        Stats.totalData += (file.length() / 1048576.0);
                         if (YoutubeUtils.VIDEO_FORMATS.contains(YoutubeUtils.getFormat(file.getName()))) {
-                            Stats.totalVideos++;
+                            Stats.totalVideo++;
+                            Stats.totalVideoData += file.length();
                         } else if (YoutubeUtils.AUDIO_FORMATS.contains(YoutubeUtils.getFormat(file.getName()))) {
-                            Stats.totalSongs++;
+                            Stats.totalAudio++;
+                            Stats.totalAudioData += file.length();
                         }
                     }
                 }
@@ -637,23 +709,44 @@ public class YoutubeChannelDownloader {
          * Prints statistics about the completed run.
          */
         public static void print() {
-            new LinkedHashMap<String, Object>() {{
-                put("Channels Processed: ", totalChannels);
-                
-                put("Videos Downloaded:  ", totalDownloads);
-                put("Videos Failed:      ", totalDownloadFailures);
-                put("Data Downloaded:    ", new DecimalFormat("#.##").format(totalDataDownloaded));
-                
-                put("API Calls:          ", totalApiCalls);
-                put("API Failures:       ", totalApiFailures);
-                
-                put("Total Videos:       ", totalVideos);
-                put("Total Songs:        ", totalSongs);
-                put("Total Data:         ", new DecimalFormat("#.##").format(totalData));
-                
-            }}.forEach((title, value) ->
-                    System.out.println(Color.base(title) + Color.number(value) + Color.base(title.contains("Data") ? "MB" : "")));
+            DecimalFormat dataMbFormat = new DecimalFormat("#,##0.00");
+            double bytesInMb = 1048576.0;
+            BiConsumer<String, Object> printer = (String title, Object value) ->
+                    System.out.println(Color.base(title) + Color.number(value) + Color.base((value instanceof String) ? "MB" : ""));
+            
+            calculateData();
+            
             System.out.println(YoutubeUtils.NEWLINE);
+            printer.accept("Channels Processed: ", totalChannels);
+            System.out.println(YoutubeUtils.NEWLINE);
+            
+            printer.accept("Downloaded: ....... ", (totalVideoDownloads + totalAudioDownloads));
+            printer.accept("    Video: ........ ", totalVideoDownloads);
+            printer.accept("    Audio: ........ ", totalAudioDownloads);
+            printer.accept("Renamed: .......... ", (totalVideoRenames + totalAudioRenames));
+            printer.accept("    Video: ........ ", totalVideoRenames);
+            printer.accept("    Audio: ........ ", totalAudioRenames);
+            printer.accept("Deleted: .......... ", (totalVideoDeletions + totalAudioDeletions));
+            printer.accept("    Video: ........ ", totalVideoDeletions);
+            printer.accept("    Audio: ........ ", totalAudioDeletions);
+            printer.accept("Failed: ........... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
+            printer.accept("    Video: ........ ", totalVideoDownloadFailures);
+            printer.accept("    Audio: ........ ", totalAudioDownloadFailures);
+            printer.accept("Data Downloaded: .. ", dataMbFormat.format((totalVideoDataDownloaded + totalAudioDataDownloaded) / bytesInMb));
+            printer.accept("    Video: ........ ", dataMbFormat.format(totalVideoDataDownloaded / bytesInMb));
+            printer.accept("    Audio: ........ ", dataMbFormat.format(totalAudioDataDownloaded / bytesInMb));
+            System.out.println(YoutubeUtils.NEWLINE);
+            
+            printer.accept("API Calls: ........ ", totalApiCalls);
+            printer.accept("API Failures: ..... ", totalApiFailures);
+            System.out.println(YoutubeUtils.NEWLINE);
+            
+            printer.accept("Total: ............ ", (totalVideo + totalAudio));
+            printer.accept("    Video: ........ ", totalVideo);
+            printer.accept("    Audio: ........ ", totalAudio);
+            printer.accept("Total Data: ....... ", dataMbFormat.format((totalVideoData + totalAudioData) / bytesInMb));
+            printer.accept("    Video: ........ ", dataMbFormat.format(totalVideoData / bytesInMb));
+            printer.accept("    Audio: ........ ", dataMbFormat.format(totalAudioData / bytesInMb));
         }
         
     }
