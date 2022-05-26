@@ -356,6 +356,19 @@
     "reversePlaylist": true,
     "keepClean": false
   },
+  {
+    "key": "NIGHTBLUE_MUSIC",
+    "active": true,
+    "name": "NightblueMusic",
+    "group": "VOCAL_DUBSTEP",
+    "url": "https://www.youtube.com/channel/UCe55Gy-hFDvLZp8C8BZhBnw",
+    "playlistId": "UUe55Gy-hFDvLZp8C8BZhBnw",
+    "outputFolder": "Youtube/Vocal Dubstep/Nightblue Music",
+    "saveAsMp3": true,
+    "playlistFile": "Youtube/Vocal Dubstep/Nightblue Music.m3u",
+    "reversePlaylist": true,
+    "keepClean": false
+  },
   
   {
     "key": "KURUMI_VIDEOS",
@@ -1776,7 +1789,7 @@
   },
   {
     "key": "SURI_NGUYEN",
-    "active": true,
+    "active": false,
     "name": "SuriNguyen",
     "group": "MEDICINE",
     "url": "https://www.youtube.com/channel/UCMRXymZEaLVlllBmqS2sQtQ",
