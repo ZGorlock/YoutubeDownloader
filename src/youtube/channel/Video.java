@@ -116,7 +116,7 @@ public class Video {
      * @param title The title.
      */
     public void updateTitle(String title) {
-        this.title = title;
+        this.title = YoutubeUtils.cleanTitle(title);
         this.download = new File(this.channel.outputFolder, this.title);
         this.output = new File(this.channel.outputFolder, (this.title + '.' + YoutubeUtils.getFormat(output.getName())));
     }

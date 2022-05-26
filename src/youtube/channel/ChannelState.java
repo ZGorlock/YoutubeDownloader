@@ -154,9 +154,10 @@ public class ChannelState {
      *
      * @return The list of data files.
      */
-    @SuppressWarnings("ConstantConditions")
     public List<File> getDataFiles() {
-        return Arrays.asList(stateLocation.listFiles(e -> e.getName().startsWith(dataFile.getName())));
+        File[] dataFiles = stateLocation.listFiles(e -> e.getName().startsWith(dataFile.getName()));
+        return (dataFiles == null) ? new ArrayList<>() :
+               Arrays.asList(dataFiles);
     }
     
     /**

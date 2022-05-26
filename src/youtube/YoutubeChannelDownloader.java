@@ -755,7 +755,6 @@ public class YoutubeChannelDownloader {
      * Defines a Video.<br>
      * Kept for backward compatibility.
      */
-    @Deprecated
     public static class Video extends youtube.channel.Video {
         
         //Constructors
