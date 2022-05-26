@@ -217,6 +217,11 @@ public class Configurator {
         public static final boolean preventDownload = (boolean) Configurator.getSetting("flag.preventDownload", false);
         
         /**
+         * A flag indicating whether to disable playlist modification or not.
+         */
+        public static final boolean preventPlaylistEdit = (boolean) Configurator.getSetting("flag.preventPlaylistEdit", false);
+        
+        /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
         public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", false);

@@ -192,7 +192,8 @@ public class YoutubeChannelDownloader {
                 processChannelData() &&
                 produceQueue() &&
                 downloadVideos() &&
-                createPlaylist();
+                createPlaylist() &&
+                cleanChannel();
         
         Stats.totalChannels++;
         
@@ -548,31 +549,56 @@ public class YoutubeChannelDownloader {
             Collections.reverse(playlist);
         }
         
-        if (!channel.error) {
-            if (!playlist.equals(existingPlaylist)) {
+        if (!channel.error && !playlist.equals(existingPlaylist)) {
+            if (!Configurator.Config.preventPlaylistEdit) {
+                System.out.println(Color.base("Updating playlist: '") + Color.file(channel.playlistFile) + Color.base("'"));
                 FileUtils.writeLines(channel.playlistFile, playlist);
+            } else {
+                System.out.println(Color.bad("Would have updated playlist: '") + Color.file(channel.playlistFile) + Color.base("' but playlist modification is disabled"));
             }
-            
-            if (channel.keepClean) {
-                File[] videos = channel.outputFolder.listFiles();
-                if (videos != null) {
-                    for (File video : videos) {
-                        if (video.isFile() && !playlist.contains(video.getAbsolutePath().replace(playlistPath, ""))) {
-                            if (!Configurator.Config.preventDeletion) {
-                                System.out.println(Color.base("Deleting: '") + Color.video(video.getName()) + Color.base("'"));
-                                FileUtils.forceDeleteOnExit(video);
-                                
-                                if (!video.getName().endsWith(".part")) {
-                                    if (channel.saveAsMp3) {
-                                        Stats.totalAudioDeletions++;
-                                    } else {
-                                        Stats.totalVideoDeletions++;
-                                    }
+        }
+        return true;
+    }
+    
+    /**
+     * Cleans the output directory of the active Channel.
+     *
+     * @return Whether the output directory was successfully cleaned or not.
+     * @throws Exception When there is an error.
+     */
+    private static boolean cleanChannel() throws Exception {
+        if (videoMap.isEmpty()) {
+            System.out.println(Color.bad("Must populate video map before cleaning the channel directory"));
+            return false;
+        }
+        
+        List<String> saved = new ArrayList<>();
+        for (Map.Entry<String, Video> video : videoMap.entrySet()) {
+            if (channel.state.saved.contains(video.getKey())) {
+                saved.add(video.getValue().output.getAbsolutePath());
+            }
+        }
+        
+        if (!channel.error && channel.keepClean) {
+            File[] videos = channel.outputFolder.listFiles();
+            if (videos != null) {
+                for (File video : videos) {
+                    if (video.isFile() && !saved.contains(video.getAbsolutePath())) {
+                        
+                        if (!Configurator.Config.preventDeletion) {
+                            System.out.println(Color.base("Deleting: '") + (video.getName().endsWith(".part") ? Color.file(video.getName()) : Color.video(video.getName())) + Color.base("'"));
+                            FileUtils.forceDeleteOnExit(video);
+                            
+                            if (!video.getName().endsWith(".part")) {
+                                if (channel.saveAsMp3) {
+                                    Stats.totalAudioDeletions++;
+                                } else {
+                                    Stats.totalVideoDeletions++;
                                 }
-                                
-                            } else {
-                                System.out.println(Color.bad("Would have deleted: '") + Color.video(video.getName()) + Color.bad("' but deletion is disabled"));
                             }
+                            
+                        } else {
+                            System.out.println(Color.bad("Would have deleted: '") + (video.getName().endsWith(".part") ? Color.file(video.getName()) : Color.video(video.getName())) + Color.bad("' but deletion is disabled"));
                         }
                     }
                 }

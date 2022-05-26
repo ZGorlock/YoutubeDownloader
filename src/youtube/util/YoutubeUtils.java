@@ -348,6 +348,7 @@ public final class YoutubeUtils {
                 }
             }
             
+            Thread.sleep(200);
             return (error == null) ? DownloadResponse.SUCCESS :
                    NON_CRITICAL_ERRORS.stream().anyMatch(e -> error.toLowerCase().contains(e.toLowerCase())) ? DownloadResponse.FAILURE :
                    DownloadResponse.ERROR;
