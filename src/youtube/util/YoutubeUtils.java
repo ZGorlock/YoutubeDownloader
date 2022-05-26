@@ -436,7 +436,7 @@ public final class YoutubeUtils {
                 .replace("×", "x")
                 .replace("÷", "%")
                 .replace("⋯", "...")
-                .replaceAll("[^\\x00-\\x7F£¢€º]", "+")
+                .replaceAll("[^\\x00-\\x7F]", "+")
                 .replaceAll("\\p{Cntrl}&&[^\r\n\t]", "")
                 .replaceAll("\\s*[.!\\-]+$", "")
                 .replaceAll("(?:\\+\\s+)+", "+ ")
