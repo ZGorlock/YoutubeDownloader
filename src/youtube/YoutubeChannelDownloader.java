@@ -551,10 +551,10 @@ public class YoutubeChannelDownloader {
         
         if (!channel.error && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
-                System.out.println(Color.base("Updating playlist: '") + Color.file(channel.playlistFile) + Color.base("'"));
+                System.out.println(Color.base("Updating playlist: '") + Color.file(channel.playlistFile.getName()) + Color.base("'"));
                 FileUtils.writeLines(channel.playlistFile, playlist);
             } else {
-                System.out.println(Color.bad("Would have updated playlist: '") + Color.file(channel.playlistFile) + Color.base("' but playlist modification is disabled"));
+                System.out.println(Color.bad("Would have updated playlist: '") + Color.file(channel.playlistFile.getName()) + Color.base("' but playlist modification is disabled"));
             }
         }
         return true;
@@ -580,16 +580,18 @@ public class YoutubeChannelDownloader {
         }
         
         if (!channel.error && channel.keepClean) {
+            
             File[] videos = channel.outputFolder.listFiles();
             if (videos != null) {
                 for (File video : videos) {
                     if (video.isFile() && !saved.contains(video.getAbsolutePath())) {
+                        boolean isPartFile = video.getName().endsWith(".part");
                         
                         if (!Configurator.Config.preventDeletion) {
-                            System.out.println(Color.base("Deleting: '") + (video.getName().endsWith(".part") ? Color.file(video.getName()) : Color.video(video.getName())) + Color.base("'"));
-                            FileUtils.forceDeleteOnExit(video);
+                            System.out.println(Color.base("Deleting: '") + (isPartFile ? Color.file(video.getName()) : Color.video(video.getName())) + Color.base("'"));
+                            FileUtils.forceDelete(video);
                             
-                            if (!video.getName().endsWith(".part")) {
+                            if (!isPartFile) {
                                 if (channel.saveAsMp3) {
                                     Stats.totalAudioDeletions++;
                                 } else {
@@ -598,7 +600,7 @@ public class YoutubeChannelDownloader {
                             }
                             
                         } else {
-                            System.out.println(Color.bad("Would have deleted: '") + (video.getName().endsWith(".part") ? Color.file(video.getName()) : Color.video(video.getName())) + Color.bad("' but deletion is disabled"));
+                            System.out.println(Color.bad("Would have deleted: '") + (isPartFile ? Color.file(video.getName()) : Color.video(video.getName())) + Color.bad("' but deletion is disabled"));
                         }
                     }
                 }
@@ -743,36 +745,37 @@ public class YoutubeChannelDownloader {
             calculateData();
             
             System.out.println(YoutubeUtils.NEWLINE);
-            printer.accept("Channels Processed: ", totalChannels);
+            printer.accept("Channels Processed: ... ", totalChannels);
+            printer.accept("Total Channels: ....... ", Channels.getChannels().size());
             System.out.println(YoutubeUtils.NEWLINE);
             
-            printer.accept("Downloaded: ....... ", (totalVideoDownloads + totalAudioDownloads));
-            printer.accept("    Video: ........ ", totalVideoDownloads);
-            printer.accept("    Audio: ........ ", totalAudioDownloads);
-            printer.accept("Renamed: .......... ", (totalVideoRenames + totalAudioRenames));
-            printer.accept("    Video: ........ ", totalVideoRenames);
-            printer.accept("    Audio: ........ ", totalAudioRenames);
-            printer.accept("Deleted: .......... ", (totalVideoDeletions + totalAudioDeletions));
-            printer.accept("    Video: ........ ", totalVideoDeletions);
-            printer.accept("    Audio: ........ ", totalAudioDeletions);
-            printer.accept("Failed: ........... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
-            printer.accept("    Video: ........ ", totalVideoDownloadFailures);
-            printer.accept("    Audio: ........ ", totalAudioDownloadFailures);
-            printer.accept("Data Downloaded: .. ", dataMbFormat.format((totalVideoDataDownloaded + totalAudioDataDownloaded) / bytesInMb));
-            printer.accept("    Video: ........ ", dataMbFormat.format(totalVideoDataDownloaded / bytesInMb));
-            printer.accept("    Audio: ........ ", dataMbFormat.format(totalAudioDataDownloaded / bytesInMb));
+            printer.accept("Downloaded: ........... ", (totalVideoDownloads + totalAudioDownloads));
+            printer.accept("    Video: ............ ", totalVideoDownloads);
+            printer.accept("    Audio: ............ ", totalAudioDownloads);
+            printer.accept("Renamed: .............. ", (totalVideoRenames + totalAudioRenames));
+            printer.accept("    Video: ............ ", totalVideoRenames);
+            printer.accept("    Audio: ............ ", totalAudioRenames);
+            printer.accept("Deleted: .............. ", (totalVideoDeletions + totalAudioDeletions));
+            printer.accept("    Video: ............ ", totalVideoDeletions);
+            printer.accept("    Audio: ............ ", totalAudioDeletions);
+            printer.accept("Failed: ............... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
+            printer.accept("    Video: ............ ", totalVideoDownloadFailures);
+            printer.accept("    Audio: ............ ", totalAudioDownloadFailures);
+            printer.accept("Data Downloaded: ...... ", dataMbFormat.format((totalVideoDataDownloaded + totalAudioDataDownloaded) / bytesInMb));
+            printer.accept("    Video: ............ ", dataMbFormat.format(totalVideoDataDownloaded / bytesInMb));
+            printer.accept("    Audio: ............ ", dataMbFormat.format(totalAudioDataDownloaded / bytesInMb));
             System.out.println(YoutubeUtils.NEWLINE);
             
-            printer.accept("API Calls: ........ ", totalApiCalls);
-            printer.accept("API Failures: ..... ", totalApiFailures);
+            printer.accept("API Calls: ............ ", totalApiCalls);
+            printer.accept("API Failures: ......... ", totalApiFailures);
             System.out.println(YoutubeUtils.NEWLINE);
             
-            printer.accept("Total: ............ ", (totalVideo + totalAudio));
-            printer.accept("    Video: ........ ", totalVideo);
-            printer.accept("    Audio: ........ ", totalAudio);
-            printer.accept("Total Data: ....... ", dataMbFormat.format((totalVideoData + totalAudioData) / bytesInMb));
-            printer.accept("    Video: ........ ", dataMbFormat.format(totalVideoData / bytesInMb));
-            printer.accept("    Audio: ........ ", dataMbFormat.format(totalAudioData / bytesInMb));
+            printer.accept("Total: ................ ", (totalVideo + totalAudio));
+            printer.accept("    Video: ............ ", totalVideo);
+            printer.accept("    Audio: ............ ", totalAudio);
+            printer.accept("Total Data: ........... ", dataMbFormat.format((totalVideoData + totalAudioData) / bytesInMb));
+            printer.accept("    Video: ............ ", dataMbFormat.format(totalVideoData / bytesInMb));
+            printer.accept("    Audio: ............ ", dataMbFormat.format(totalAudioData / bytesInMb));
         }
         
     }

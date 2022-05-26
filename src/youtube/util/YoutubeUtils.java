@@ -348,7 +348,10 @@ public final class YoutubeUtils {
                 }
             }
             
-            Thread.sleep(200);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
+            }
             return (error == null) ? DownloadResponse.SUCCESS :
                    NON_CRITICAL_ERRORS.stream().anyMatch(e -> error.toLowerCase().contains(e.toLowerCase())) ? DownloadResponse.FAILURE :
                    DownloadResponse.ERROR;
@@ -356,6 +359,11 @@ public final class YoutubeUtils {
         } catch (Exception e) {
             if (progressBar != null) {
                 progressBar.fail(true, Color.bad("Unknown Error"));
+            }
+            
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ignored) {
             }
             System.out.println(Color.bad(e.getStackTrace()));
             return DownloadResponse.ERROR;
