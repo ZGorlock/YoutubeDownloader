@@ -494,12 +494,23 @@ public final class YoutubeUtils {
     }
     
     /**
+     * Formats a header that will be printed to the console.
+     *
+     * @param header The header.
+     * @return The formatted header.
+     */
+    public static String formatHeader(String header) {
+        return StringUtility.toTitleCase(header.toLowerCase().replace("_", " "));
+    }
+    
+    /**
      * Performs startup checks.
      *
      * @return Whether all checks were successful or not.
      */
     public static boolean doStartupChecks() {
         if (!YoutubeUtils.isOnline()) {
+            System.out.println(YoutubeUtils.NEWLINE);
             System.out.println(Color.bad("Internet access is required"));
             return false;
         }
@@ -534,19 +545,30 @@ public final class YoutubeUtils {
         boolean update = exists && !currentExecutableVersion.equals(latestExecutableVersion);
         
         if (exists) {
-            System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + Color.number(" v" + currentExecutableVersion));
+            if (Configurator.Config.printExeVersion) {
+                System.out.println(YoutubeUtils.NEWLINE);
+                System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + Color.number(" v" + currentExecutableVersion));
+                System.out.println(YoutubeUtils.NEWLINE);
+            }
         } else {
+            System.out.println(YoutubeUtils.NEWLINE);
             System.out.println(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
+            System.out.println(YoutubeUtils.NEWLINE);
         }
-        System.out.println(YoutubeUtils.NEWLINE);
         
         if (exists && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
-            System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
-            System.out.println(YoutubeUtils.NEWLINE);
+            if (Configurator.Config.printExeVersion) {
+                System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
+                System.out.println(YoutubeUtils.NEWLINE);
+            }
             
         } else if (!exists || update) {
             if (exists) {
-                System.out.println(Color.base("Current Version: ") + Color.number(currentExecutableVersion) + Color.base(" Latest Version: ") + Color.number(latestExecutableVersion));
+                if (Configurator.Config.printExeVersion) {
+                    System.out.println(Color.base("Current Version: ") + Color.number(currentExecutableVersion) + Color.base(" Latest Version: ") + Color.number(latestExecutableVersion));
+                } else {
+                    System.out.println(YoutubeUtils.NEWLINE);
+                }
             }
             
             if (!Configurator.Config.preventExeAutoUpdate) {
@@ -564,7 +586,6 @@ public final class YoutubeUtils {
             System.out.println(YoutubeUtils.NEWLINE);
         }
         
-        System.out.println(YoutubeUtils.NEWLINE);
         return EXECUTABLE.getExe().exists();
     }
     

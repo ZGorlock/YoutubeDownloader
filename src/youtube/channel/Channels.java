@@ -14,6 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
@@ -77,6 +78,29 @@ public class Channels {
     }
     
     /**
+     * Returns the list of Channel groups.
+     *
+     * @return The list of Channel groups.
+     */
+    public static List<String> getGroups() {
+        return channels.values().stream().map(channel -> channel.group).distinct().collect(Collectors.toList());
+    }
+    
+    /**
+     * Returns the Channel map.
+     *
+     * @return The Channel map.
+     */
+    public static Map<String, List<Channel>> getChannelMap() {
+        Map<String, List<Channel>> channelMap = new LinkedHashMap<>();
+        channels.values().forEach(channel -> {
+            channelMap.putIfAbsent(channel.group, new ArrayList<>());
+            channelMap.get(channel.group).add(channel);
+        });
+        return channelMap;
+    }
+    
+    /**
      * Returns a Channel of a specified key.
      *
      * @param key The key of the Channel.
@@ -129,6 +153,26 @@ public class Channels {
                 System.exit(0);
             }
         }
+    }
+    
+    /**
+     * Prints the Channel map.
+     */
+    public static void print() {
+        if (!Configurator.Config.printChannels) {
+            return;
+        }
+        
+        System.out.println(YoutubeUtils.NEWLINE);
+        System.out.println(Color.number("--- Channels ---"));
+        
+        getChannelMap().forEach((group, channels) -> {
+            System.out.println(Color.link(YoutubeUtils.formatHeader(group) + ":"));
+            channels.forEach(channel -> System.out.println(YoutubeUtils.INDENT +
+                    Color.apply((channel.active ? Color.CHANNEL : Color.BAD), YoutubeUtils.formatHeader(channel.key))));
+        });
+        
+        System.out.println(YoutubeUtils.NEWLINE);
     }
     
 }

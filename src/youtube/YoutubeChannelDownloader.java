@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -128,11 +129,26 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {
-        System.out.println(YoutubeUtils.NEWLINE);
         if (!YoutubeUtils.doStartupChecks()) {
             return;
         }
         
+        Channels.print();
+        
+        run();
+        
+        Stats.print();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Processes all Channels.
+     *
+     * @throws Exception When there is an error.
+     */
+    private static void run() throws Exception {
         if (Configurator.Config.channel == null) {
             boolean skip = (Configurator.Config.startAt != null);
             boolean stop = (Configurator.Config.stopAt != null);
@@ -159,12 +175,8 @@ public class YoutubeChannelDownloader {
         
         KeyStore.save();
         
-        Stats.print();
         System.out.println(YoutubeUtils.NEWLINE);
     }
-    
-    
-    //Methods
     
     /**
      * Sets the active Channel.
@@ -185,6 +197,7 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
+        System.out.println(YoutubeUtils.NEWLINE);
         System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.name));
         
         boolean success = YoutubeUtils.isOnline() &&
@@ -197,7 +210,6 @@ public class YoutubeChannelDownloader {
         
         Stats.totalChannels++;
         
-        System.out.println(YoutubeUtils.NEWLINE);
         return success;
     }
     
@@ -586,9 +598,10 @@ public class YoutubeChannelDownloader {
                 for (File video : videos) {
                     if (video.isFile() && !saved.contains(video.getAbsolutePath())) {
                         boolean isPartFile = video.getName().endsWith(".part");
+                        String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
                         
                         if (!Configurator.Config.preventDeletion) {
-                            System.out.println(Color.base("Deleting: '") + (isPartFile ? Color.file(video.getName()) : Color.video(video.getName())) + Color.base("'"));
+                            System.out.println(Color.base("Deleting: '") + printedFile + Color.base("'"));
                             FileUtils.forceDelete(video);
                             
                             if (!isPartFile) {
@@ -600,7 +613,7 @@ public class YoutubeChannelDownloader {
                             }
                             
                         } else {
-                            System.out.println(Color.bad("Would have deleted: '") + (isPartFile ? Color.file(video.getName()) : Color.video(video.getName())) + Color.bad("' but deletion is disabled"));
+                            System.out.println(Color.bad("Would have deleted: '") + printedFile + Color.bad("' but deletion is disabled"));
                         }
                     }
                 }
@@ -737,18 +750,43 @@ public class YoutubeChannelDownloader {
          * Prints statistics about the completed run.
          */
         public static void print() {
-            DecimalFormat dataMbFormat = new DecimalFormat("#,##0.00");
+            if (!Configurator.Config.printStats) {
+                return;
+            }
+            
+            DecimalFormat integerFormat = new DecimalFormat("#,##0");
+            DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
             double bytesInMb = 1048576.0;
-            BiConsumer<String, Object> printer = (String title, Object value) ->
-                    System.out.println(Color.base(title) + Color.number(value) + Color.base((value instanceof String) ? "MB" : ""));
+            BiConsumer<String, Object> printer = (String title, Object value) -> {
+                switch (Optional.ofNullable(value).map(e -> e.getClass().getSimpleName()).orElse("String")) {
+                    case "Integer":
+                    case "int":
+                    case "Long":
+                    case "long":
+                        System.out.println(YoutubeUtils.INDENT +
+                                Color.base(title) + Color.number(integerFormat.format(value)));
+                        break;
+                    case "Double":
+                    case "double":
+                        System.out.println(YoutubeUtils.INDENT +
+                                Color.base(title) + Color.number(decimalFormat.format((double) value / bytesInMb)) + Color.base("MB"));
+                        break;
+                    case "String":
+                        System.out.println(Color.link(YoutubeUtils.formatHeader(title)));
+                        break;
+                }
+            };
             
             calculateData();
             
             System.out.println(YoutubeUtils.NEWLINE);
+            System.out.println(Color.number("--- Stats ---"));
+            
+            printer.accept("CHANNEL:", null);
             printer.accept("Channels Processed: ... ", totalChannels);
             printer.accept("Total Channels: ....... ", Channels.getChannels().size());
-            System.out.println(YoutubeUtils.NEWLINE);
             
+            printer.accept("RUN:", null);
             printer.accept("Downloaded: ........... ", (totalVideoDownloads + totalAudioDownloads));
             printer.accept("    Video: ............ ", totalVideoDownloads);
             printer.accept("    Audio: ............ ", totalAudioDownloads);
@@ -761,21 +799,23 @@ public class YoutubeChannelDownloader {
             printer.accept("Failed: ............... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
             printer.accept("    Video: ............ ", totalVideoDownloadFailures);
             printer.accept("    Audio: ............ ", totalAudioDownloadFailures);
-            printer.accept("Data Downloaded: ...... ", dataMbFormat.format((totalVideoDataDownloaded + totalAudioDataDownloaded) / bytesInMb));
-            printer.accept("    Video: ............ ", dataMbFormat.format(totalVideoDataDownloaded / bytesInMb));
-            printer.accept("    Audio: ............ ", dataMbFormat.format(totalAudioDataDownloaded / bytesInMb));
-            System.out.println(YoutubeUtils.NEWLINE);
+            printer.accept("Data Downloaded: ...... ", (double) (totalVideoDataDownloaded + totalAudioDataDownloaded));
+            printer.accept("    Video: ............ ", (double) totalVideoDataDownloaded);
+            printer.accept("    Audio: ............ ", (double) totalAudioDataDownloaded);
             
-            printer.accept("API Calls: ............ ", totalApiCalls);
-            printer.accept("API Failures: ......... ", totalApiFailures);
-            System.out.println(YoutubeUtils.NEWLINE);
+            printer.accept("API:", null);
+            printer.accept("Api Calls: ............ ", totalApiCalls);
+            printer.accept("Api Failures: ......... ", totalApiFailures);
             
+            printer.accept("OVERALL:", null);
             printer.accept("Total: ................ ", (totalVideo + totalAudio));
             printer.accept("    Video: ............ ", totalVideo);
             printer.accept("    Audio: ............ ", totalAudio);
-            printer.accept("Total Data: ........... ", dataMbFormat.format((totalVideoData + totalAudioData) / bytesInMb));
-            printer.accept("    Video: ............ ", dataMbFormat.format(totalVideoData / bytesInMb));
-            printer.accept("    Audio: ............ ", dataMbFormat.format(totalAudioData / bytesInMb));
+            printer.accept("Total Data: ........... ", (double) (totalVideoData + totalAudioData));
+            printer.accept("    Video: ............ ", (double) totalVideoData);
+            printer.accept("    Audio: ............ ", (double) totalAudioData);
+            
+            System.out.println(YoutubeUtils.NEWLINE);
         }
         
     }

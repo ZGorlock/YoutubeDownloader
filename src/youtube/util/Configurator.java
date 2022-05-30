@@ -197,6 +197,21 @@ public class Configurator {
                 (boolean) Configurator.getSetting("asMp3", false);
         
         /**
+         * A flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static final boolean printStats = (boolean) Configurator.getSetting("output.printStats", true);
+        
+        /**
+         * A flag indicating whether to print the Channel list at the beginning of the run or not.
+         */
+        public static final boolean printChannels = (boolean) Configurator.getSetting("output.printChannels", false);
+        
+        /**
+         * A flag indicating whether to print the executable version at the beginning of the run or not.
+         */
+        public static final boolean printExeVersion = (boolean) Configurator.getSetting("output.printExeVersion", true);
+        
+        /**
          * A flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);

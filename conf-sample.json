@@ -15,6 +15,11 @@
             "startAt": null,
             "stopAt": null
         },
+        "output": {
+            "printStats": true,
+            "printChannels": false,
+            "printExeVersion": true
+        },
         "flag": {
             "retryFailed": false,
             "preventDeletion": false,
