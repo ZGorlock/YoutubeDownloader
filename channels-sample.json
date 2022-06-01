@@ -1764,6 +1764,18 @@
     "keepClean": true
   },
   {
+    "key": "INSTITUTE_OF_HUMAN_ANATOMY",
+    "active": true,
+    "name": "InstituteOfHumanAnatomy",
+    "group": "MEDICINE",
+    "url": "https://www.youtube.com/c/InstituteofHumanAnatomy",
+    "playlistId": "UUgBg0aacyJnw4qUnb1FlfEQ",
+    "outputFolder": "Youtube/Medicine/Institute of Human Anatomy",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Medicine/Institute of Human Anatomy.m3u",
+    "keepClean": true
+  },
+  {
     "key": "NHAT_BANG_SPA",
     "active": false,
     "name": "NhatBangSpa",
