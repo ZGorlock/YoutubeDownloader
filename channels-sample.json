@@ -1168,6 +1168,18 @@
     "keepClean": true
   },
   {
+    "key": "THOUGHTY2_NEW_INTRO_ONLY",
+    "active": true,
+    "name": "Thoughty2NewIntroOnly",
+    "group": "SCIENCE",
+    "url": "https://www.youtube.com/channel/UCRlICXvO4XR4HMeEB9JjDlA",
+    "playlistId": "UURlICXvO4XR4HMeEB9JjDlA",
+    "outputFolder": "Youtube/Science/Thoughty2",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Science/Thoughty2 - New Intro Only.m3u",
+    "keepClean": false
+  },
+  {
     "key": "VSAUCE",
     "active": true,
     "name": "Vsauce",

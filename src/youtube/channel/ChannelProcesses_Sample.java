@@ -253,6 +253,10 @@ public class ChannelProcesses_Sample {
             case "ANSWERS_WITH_JOE":
                 FilterProcess.containsIgnoreCase(videoMap, blocked, "live stream");
                 break;
+            case "THOUGHTY2_NEW_INTRO_ONLY":
+                FilterProcess.dateBefore(videoMap, blocked,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
+                break;
             
             case "VSAUCE":
                 FilterProcess.contains(videoMap, blocked, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
