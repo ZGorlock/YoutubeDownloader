@@ -257,7 +257,7 @@ public class Configurator {
         public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", false);
         
         /**
-         * A flag indicating whether to the log the download command or not.
+         * A flag indicating whether to log the download command or not.
          */
         public static final boolean logCommand = (boolean) Configurator.getSetting("log", "logCommand",
                 Configurator.getSetting("flag.logCommand", true));
@@ -267,6 +267,12 @@ public class Configurator {
          */
         public static final boolean logWork = (boolean) Configurator.getSetting("log", "logWork",
                 Configurator.getSetting("flag.logWork", false));
+        
+        /**
+         * A flag indicating whether to print a progress bar for downloads or not.
+         */
+        public static final boolean showProgressBar = (boolean) Configurator.getSetting("log", "showProgressBar",
+                Configurator.getSetting("flag.showProgressBar", true));
         
         /**
          * The Channel to process, or null if all Channels should be processed.

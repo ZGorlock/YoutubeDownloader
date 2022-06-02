@@ -92,17 +92,10 @@ public class YoutubeDownloader {
                     
                     if (!Configurator.Config.preventDownload) {
                         System.out.println(Color.base("Downloading: ") + Color.video(video.title));
-                        switch (YoutubeDownloadUtils.downloadYoutubeVideo(video)) {
-                            case SUCCESS:
-                                System.out.println(Color.good("Done"));
-                                break;
-                            case FAILURE:
-                                System.out.println(Color.bad("Failed"));
-                                break;
-                            case ERROR:
-                                System.out.println(Color.bad("Error"));
-                                break;
-                        }
+                        
+                        YoutubeDownloadUtils.DownloadResponse response = YoutubeDownloadUtils.downloadYoutubeVideo(video);
+                        System.out.println(YoutubeUtils.INDENT + response.printedResponse());
+                        
                     } else {
                         System.out.println(Color.bad("Would have downloaded: '") + Color.video(video.title) + Color.bad("' but downloading is disabled"));
                     }

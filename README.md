@@ -245,7 +245,8 @@ To configure a custom logging configuration add a new "log" object to *./conf.js
 You can add the following fields inside the "log" object. All fields are booleans (true or false).
 
 * ***logCommand*** - Whether to print the commands sent to the executable for each video to the console or not. *(optional; defaults to true)*
-* ***logWork*** - Whether to print the work done by the executable while downloading each video to the console or not. *(optional; defaults to false)*
+* ***logWork*** - Whether to print the work done by the executable while downloading each video to the console or not. If this is enabled then ***showProgressBar*** will be disabled. *(optional; defaults to false)*
+* ***showProgressBar*** - Whether to print a progress bar while downloading each video to the console or not. This is ignored if ***logWork*** is enabled. *(optional; defaults to true)*
 
 ### Note about Updates:
 

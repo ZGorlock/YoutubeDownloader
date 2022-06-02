@@ -486,7 +486,8 @@ public class YoutubeChannelDownloader {
                 continue;
             }
             
-            switch (YoutubeDownloadUtils.downloadYoutubeVideo(video)) {
+            YoutubeDownloadUtils.DownloadResponse response = YoutubeDownloadUtils.downloadYoutubeVideo(video);
+            switch (response.status) {
                 case SUCCESS:
                     channel.state.saved.add(videoId);
                     channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
@@ -498,36 +499,22 @@ public class YoutubeChannelDownloader {
                         Stats.totalVideoDownloads++;
                         Stats.totalVideoDataDownloaded += video.output.length();
                     }
-                    System.out.println(YoutubeUtils.INDENT + Color.good("Download Succeeded"));
                     break;
                 
                 case ERROR:
                     channel.state.blocked.add(videoId);
-                
                 case FAILURE:
                     if (channel.saveAsMp3) {
                         Stats.totalAudioDownloadFailures++;
                     } else {
                         Stats.totalVideoDownloadFailures++;
                     }
-                    System.out.println(YoutubeUtils.INDENT + Color.bad("Download Failed"));
                     break;
             }
-            channel.state.queue.remove(videoId);
+            System.out.println(YoutubeUtils.INDENT + response.printedResponse());
             
+            channel.state.queue.remove(videoId);
             channel.state.save();
-        }
-        
-        File[] partFiles = channel.outputFolder.listFiles(e -> e.getName().endsWith(".part"));
-        if (partFiles != null) {
-            for (File partFile : partFiles) {
-                if (!Configurator.Config.preventDeletion) {
-                    System.out.println(Color.base("Deleting: '") + Color.video(partFile.getName()) + Color.base("'"));
-                    FileUtils.forceDelete(partFile);
-                } else {
-                    System.out.println(Color.bad("Would have deleted: '") + Color.video(partFile.getName()) + Color.bad("' but deletion is disabled"));
-                }
-            }
         }
         
         return true;

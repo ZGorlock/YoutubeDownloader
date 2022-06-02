@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
+import commons.console.Console;
 import commons.console.ProgressBar;
 import commons.object.string.StringUtility;
 import youtube.channel.Video;
@@ -27,15 +28,41 @@ public final class YoutubeDownloadUtils {
     //Enums
     
     /**
-     * An enumeration of Download Responses.
+     * An enumeration of Download Response Statuses.
      */
-    public enum DownloadResponse {
+    public enum DownloadResponseStatus {
         
         //Values
         
-        SUCCESS,
-        FAILURE,
-        ERROR
+        SUCCESS("Succeeded", Color.GOOD),
+        FAILURE("Failed", Color.BAD),
+        ERROR("Error", Color.BAD);
+        
+        
+        //Fields
+        
+        /**
+         * The message associated with the Status.
+         */
+        public final String message;
+        
+        /**
+         * The color of the Status.
+         */
+        public final Console.ConsoleEffect color;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs a Download Response Status.
+         *
+         * @param message The message associated with the Status.
+         */
+        DownloadResponseStatus(String message, Console.ConsoleEffect color) {
+            this.message = message;
+            this.color = color;
+        }
         
     }
     
@@ -84,7 +111,7 @@ public final class YoutubeDownloadUtils {
      * Downloads a Youtube video.
      *
      * @param video The Video data object.
-     * @return A download response indicated the result of the download attempt.
+     * @return A download response indicating the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
     public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
@@ -104,7 +131,7 @@ public final class YoutubeDownloadUtils {
             System.out.println(YoutubeUtils.INDENT + Color.base(cmd));
         }
         
-        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video, Configurator.Config.logWork);
+        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video);
     }
     
     /**
@@ -112,10 +139,10 @@ public final class YoutubeDownloadUtils {
      *
      * @param cmd   The command.
      * @param video The Video data object.
-     * @param log   Whether to log the response from the process or not.
-     * @return A download response indicated the result of the download attempt.
+     * @return A download response indicating the result of the download attempt.
      */
-    private static DownloadResponse performDownload(String cmd, Video video, boolean log) {
+    private static DownloadResponse performDownload(String cmd, Video video) {
+        DownloadResponse response = new DownloadResponse();
         ProgressBar progressBar = null;
         
         try {
@@ -138,10 +165,10 @@ public final class YoutubeDownloadUtils {
                 }
                 responseBuilder.append(line).append(System.lineSeparator());
                 
-                if (log) {
+                if (Configurator.Config.logWork) {
                     System.out.println(Color.log(line));
                     
-                } else {
+                } else if (Configurator.Config.showProgressBar) {
                     if (initialProgress == -1) {
                         Matcher resumeMatcher = RESUME_PATTERN.matcher(line);
                         if (resumeMatcher.matches()) {
@@ -193,12 +220,16 @@ public final class YoutubeDownloadUtils {
                         video.output = output;
                     }
                     long size = output.length() / 1024;
-                    if (progressBar == null) {
-                        progressBar = new ProgressBar("", size, 32, "KB", true);
-                        progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
-                        progressBar.defineInitialProgress(size);
+                    
+                    response.message = "Already downloaded";
+                    if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
+                        if (progressBar == null) {
+                            progressBar = new ProgressBar("", size, 32, "KB", true);
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                            progressBar.defineInitialProgress(size);
+                        }
+                        progressBar.complete(false, Color.good(response.message));
                     }
-                    progressBar.complete(false, Color.good("Already downloaded"));
                     continue;
                 }
                 
@@ -229,50 +260,127 @@ public final class YoutubeDownloadUtils {
             r.close();
             process.destroy();
             
-            String response = responseBuilder.toString().trim();
-            String error = !response.contains("ERROR: ") ?
-                           ((progressBar == null) ? "ERROR: Unknown Error" : null) :
-                           response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
+            response.log = responseBuilder.toString().trim();
+            response.error = !response.log.contains("ERROR: ") ? null :
+                             response.log.substring(response.log.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
+            response.message = (response.error == null) ? response.message :
+                               response.error
+                                       .replaceAll("^ERROR:\\s*", "")
+                                       .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
+                                       .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
+                                       .trim();
+            response.status = (response.error == null) ? DownloadResponseStatus.SUCCESS :
+                              NON_CRITICAL_ERRORS.stream().anyMatch(e -> response.error.toLowerCase().contains(e.toLowerCase())) ?
+                              DownloadResponseStatus.FAILURE : DownloadResponseStatus.ERROR;
             
-            if (progressBar == null) {
-                progressBar = new ProgressBar("", 1, 32, "KB", true);
-                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
-                progressBar.update(-1);
-            }
-            if (!progressBar.isComplete()) {
-                if (error == null) {
-                    progressBar.complete();
-                } else {
-                    progressBar.fail(true, Color.bad(error
-                            .replaceAll("^ERROR:\\s*", "")
-                            .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
-                            .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
-                            .trim()));
+            if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
+                if (progressBar == null) {
+                    progressBar = new ProgressBar("", 1, 32, "KB", true);
+                    progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                    progressBar.update(-1);
+                }
+                if (!progressBar.isComplete()) {
+                    if (response.error == null) {
+                        progressBar.complete();
+                    } else {
+                        progressBar.fail(true, Color.bad(response.message));
+                    }
+                }
+                response.message = null;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
                 }
             }
             
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
-            }
-            return (error == null) ? DownloadResponse.SUCCESS :
-                   NON_CRITICAL_ERRORS.stream().anyMatch(e -> error.toLowerCase().contains(e.toLowerCase())) ? DownloadResponse.FAILURE :
-                   DownloadResponse.ERROR;
+        } catch (Exception e) {
+            response.error = "Unknown Error";
+            response.message = "Unknown Error";
+            response.status = DownloadResponseStatus.ERROR;
             
-        } catch (
-                
-                Exception e) {
-            if (progressBar != null) {
-                progressBar.fail(true, Color.bad("Unknown Error"));
-            }
-            
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
+            if (Configurator.Config.showProgressBar && !Configurator.Config.logWork && (progressBar != null)) {
+                progressBar.fail(true, Color.bad(response.message));
+                response.message = null;
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ignored) {
+                }
             }
             System.out.println(Color.bad(e.getStackTrace()));
-            return DownloadResponse.ERROR;
         }
+        
+        return response;
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Defines a Download Response.
+     */
+    public static class DownloadResponse {
+        
+        //Fields
+        
+        /**
+         * The download status.
+         */
+        public DownloadResponseStatus status;
+        
+        /**
+         * The download message.
+         */
+        public String message;
+        
+        /**
+         * The download error.
+         */
+        public String error;
+        
+        /**
+         * The download log.
+         */
+        public String log;
+        
+        
+        //Methods
+        
+        /**
+         * Returns a simple string representing the Response.
+         *
+         * @return The simple string representing the Response.
+         */
+        public String simpleResponse() {
+            return "Download " + status.message;
+        }
+        
+        /**
+         * Returns a string representing the Response.
+         *
+         * @return The string representing the Response.
+         */
+        public String response() {
+            return simpleResponse() + (((message == null) || message.isEmpty()) ? "" : (" - " + message));
+        }
+        
+        /**
+         * Returns a printable simple string representing the Response.
+         *
+         * @return The printable simple string representing the Response.
+         */
+        public String printedSimpleResponse() {
+            return Color.apply(status.color, simpleResponse());
+        }
+        
+        /**
+         * Returns a printable string representing the Response.
+         *
+         * @return The printable string representing the Response.
+         */
+        public String printedResponse() {
+            return Color.apply(status.color, response());
+        }
+        
     }
     
 }
