@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
@@ -724,19 +725,11 @@ public class YoutubeChannelDownloader {
          * Calculates the total data saved from Youtube.
          */
         private static void calculateData() {
-            for (Channel channel : Channels.getChannels()) {
-                if (channel.state.saveFile.exists()) {
-                    
-                    for (String saved : channel.state.saved) {
-                        if (!channel.state.keyStore.containsKey(saved)) {
-                            continue;
-                        }
-                        
-                        File file = new File(channel.state.keyStore.get(saved));
-                        if (!file.exists()) {
-                            continue;
-                        }
-                        
+            Channels.getChannels().stream()
+                    .flatMap(channel -> channel.state.saved.stream().map(saved -> channel.state.keyStore.get(saved)))
+                    .filter(Objects::nonNull).distinct()
+                    .map(File::new).filter(File::exists)
+                    .forEach(file -> {
                         if (YoutubeUtils.VIDEO_FORMATS.contains(YoutubeUtils.getFormat(file.getName()))) {
                             Stats.totalVideo++;
                             Stats.totalVideoData += file.length();
@@ -744,9 +737,7 @@ public class YoutubeChannelDownloader {
                             Stats.totalAudio++;
                             Stats.totalAudioData += file.length();
                         }
-                    }
-                }
-            }
+                    });
         }
         
         /**
