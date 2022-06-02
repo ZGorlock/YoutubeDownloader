@@ -37,6 +37,7 @@ import youtube.channel.Channels;
 import youtube.channel.KeyStore;
 import youtube.util.Color;
 import youtube.util.Configurator;
+import youtube.util.YoutubeDownloadUtils;
 import youtube.util.YoutubeUtils;
 
 /**
@@ -484,7 +485,7 @@ public class YoutubeChannelDownloader {
                 continue;
             }
             
-            switch (YoutubeUtils.downloadYoutubeVideo(video)) {
+            switch (YoutubeDownloadUtils.downloadYoutubeVideo(video)) {
                 case SUCCESS:
                     channel.state.saved.add(videoId);
                     channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));

@@ -6,10 +6,8 @@
 
 package youtube.util;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
@@ -19,17 +17,14 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
 import commons.access.OperatingSystem;
-import commons.console.ProgressBar;
 import commons.object.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
-import youtube.channel.Video;
 
 /**
  * Provides utility methods for the Youtube Downloader.
@@ -113,19 +108,6 @@ public final class YoutubeUtils {
         
     }
     
-    /**
-     * An enumeration of Download Responses.
-     */
-    public enum DownloadResponse {
-        
-        //Values
-        
-        SUCCESS,
-        FAILURE,
-        ERROR
-        
-    }
-    
     
     //Constants
     
@@ -156,16 +138,6 @@ public final class YoutubeUtils {
     public static final List<String> AUDIO_FORMATS = List.of("aac", "m4a", "mp3", "ogg", "wav");
     
     /**
-     * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
-     */
-    public static final List<String> NON_CRITICAL_ERRORS = List.of(
-            "giving up after 10",
-            "urlopen error",
-            "sign in to",
-            "please install or provide the path"
-    );
-    
-    /**
      * The newline string.
      */
     public static final String NEWLINE = Color.base("");
@@ -173,202 +145,10 @@ public final class YoutubeUtils {
     /**
      * The indentation string.
      */
-    public static final String INDENT = Color.base("     ");
+    public static final String INDENT = Color.base(StringUtility.spaces(5));
     
     
     //Functions
-    
-    /**
-     * Downloads a Youtube video.
-     *
-     * @param video The Video data object.
-     * @return A download response indicated the result of the download attempt.
-     * @throws Exception When there is an error downloading the video.
-     */
-    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
-        boolean ytDlp = EXECUTABLE.equals(Executable.YT_DLP);
-        boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
-        SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
-        
-        String cmd = Color.exe(EXECUTABLE.getExe().getName()) + Color.log(" ") +
-                Color.log("--output \"") + Color.file(video.download.getAbsolutePath().replace("\\", "/") + ".%(ext)s") + Color.log("\" ") +
-                Color.log("--geo-bypass --rm-cache-dir ") +
-                Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
-                          ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
-                Color.log(SponsorBlocker.getCommand(sponsorBlockConfig)) +
-                Color.link(video.url);
-        
-        if (Configurator.Config.logCommand) {
-            System.out.println(INDENT + Color.base(cmd));
-        }
-        
-        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video, Configurator.Config.logWork);
-    }
-    
-    /**
-     * Executes a command line process.
-     *
-     * @param cmd   The command.
-     * @param video The Video data object.
-     * @param log   Whether or not to log the response from the process.
-     * @return A download response indicated the result of the download attempt.
-     */
-    private static DownloadResponse performDownload(String cmd, Video video, boolean log) {
-        ProgressBar progressBar = null;
-        
-        try {
-            ProcessBuilder builder = CmdLine.buildProcess(cmd);
-            builder.redirectErrorStream(true);
-            
-            Process process = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            
-            Pattern progressPattern = log ? null : Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
-            Pattern resumePattern = log ? null : Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
-            Pattern existsPattern = Pattern.compile("^\\[download]\\s(?<output>.+)\\shas\\salready\\sbeen\\sdownloaded$");
-            Pattern destinationPattern = Pattern.compile("^\\[[^]]+]\\s*Destination:\\s*(?<destination>.+)$");
-            Pattern mergePattern = Pattern.compile("^\\[Merger]\\s*Merging\\s*formats\\s*into\\s*\"(?<merge>.+)\"$");
-            
-            StringBuilder responseBuilder = new StringBuilder();
-            String line;
-            long initialProgress = -1L;
-            long saveProgress = 0L;
-            boolean newPart = true;
-            while (true) {
-                line = r.readLine();
-                if (line == null) {
-                    break;
-                }
-                
-                if (log) {
-                    System.out.println(Color.log(line));
-                    
-                } else {
-                    if (initialProgress == -1) {
-                        Matcher resumeMatcher = resumePattern.matcher(line);
-                        if (resumeMatcher.matches()) {
-                            initialProgress = Long.parseLong(resumeMatcher.group("initialProgress")) / 1024;
-                        }
-                    }
-                    
-                    Matcher progressMatcher = progressPattern.matcher(line);
-                    if (progressMatcher.matches()) {
-                        double percentage = Double.parseDouble(progressMatcher.group("percentage")) / 100.0;
-                        long total = (long) Double.parseDouble(progressMatcher.group("total"));
-                        
-                        String units = progressMatcher.group("units").replace("i", "");
-                        switch (units) {
-                            case "TB":
-                                total *= 1024;
-                            case "GB":
-                                total *= 1024;
-                            case "MB":
-                                total *= 1024;
-                            case "KB":
-                            default:
-                        }
-                        
-                        if (newPart) {
-                            if (progressBar == null) {
-                                progressBar = new ProgressBar("", total, 32, "KB", true);
-                                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
-                                initialProgress = Math.max(initialProgress, 0);
-                                progressBar.defineInitialProgress(initialProgress);
-                            } else {
-                                progressBar.updateTotal(progressBar.getTotal() + total);
-                                saveProgress = progressBar.getProgress();
-                            }
-                            newPart = false;
-                        }
-                        
-                        long progress = ((long) (percentage * total)) + saveProgress;
-                        progressBar.update(progress);
-                    }
-                }
-                
-                Matcher existsMatcher = existsPattern.matcher(line);
-                if (existsMatcher.matches()) {
-                    File output = new File(existsMatcher.group("output"));
-                    if (video != null) {
-                        video.output = output;
-                    }
-                    long size = output.length() / 1024;
-                    if (progressBar == null) {
-                        progressBar = new ProgressBar("", size, 32, "KB", true);
-                        progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
-                        progressBar.defineInitialProgress(size);
-                    }
-                    progressBar.complete(false, Color.good("Already downloaded"));
-                }
-                
-                Matcher destinationMatcher = destinationPattern.matcher(line);
-                if (destinationMatcher.matches()) {
-                    File destination = new File(destinationMatcher.group("destination"));
-                    if (video != null) {
-                        video.output = destination;
-                    }
-                    newPart = true;
-                }
-                
-                Matcher mergeMatcher = mergePattern.matcher(line);
-                if (mergeMatcher.matches()) {
-                    File merge = new File(mergeMatcher.group("merge"));
-                    if (video != null) {
-                        video.output = merge;
-                    }
-                    newPart = true;
-                }
-                
-                responseBuilder.append(line).append(System.lineSeparator());
-            }
-            
-            process.waitFor();
-            r.close();
-            process.destroy();
-            
-            String response = responseBuilder.toString().trim();
-            String error = !response.contains("ERROR: ") ?
-                           ((progressBar == null) ? "ERROR: Unknown Error" : null) :
-                           response.substring(response.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
-            
-            if (progressBar == null) {
-                progressBar = new ProgressBar("", 1, 32, "KB", true);
-                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(INDENT).length());
-                progressBar.update(-1);
-            }
-            if (!progressBar.isComplete()) {
-                if (error == null) {
-                    progressBar.complete();
-                } else {
-                    progressBar.fail(true, Color.bad(error
-                            .replaceAll("^ERROR:\\s*", "")
-                            .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
-                            .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
-                            .trim()));
-                }
-            }
-            
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
-            }
-            return (error == null) ? DownloadResponse.SUCCESS :
-                   NON_CRITICAL_ERRORS.stream().anyMatch(e -> error.toLowerCase().contains(e.toLowerCase())) ? DownloadResponse.FAILURE :
-                   DownloadResponse.ERROR;
-            
-        } catch (Exception e) {
-            if (progressBar != null) {
-                progressBar.fail(true, Color.bad("Unknown Error"));
-            }
-            
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ignored) {
-            }
-            System.out.println(Color.bad(e.getStackTrace()));
-            return DownloadResponse.ERROR;
-        }
-    }
     
     /**
      * Tries to find a video.
@@ -396,8 +176,8 @@ public final class YoutubeUtils {
                 String format = getFormat(output.getName());
                 String existingFormat = getFormat(existingFile.getName());
                 if (format.equalsIgnoreCase(existingFormat) ||
-                        (YoutubeUtils.VIDEO_FORMATS.contains(format) && YoutubeUtils.VIDEO_FORMATS.contains(existingFormat)) ||
-                        (YoutubeUtils.AUDIO_FORMATS.contains(format) && YoutubeUtils.AUDIO_FORMATS.contains(existingFormat))) {
+                        (VIDEO_FORMATS.contains(format) && VIDEO_FORMATS.contains(existingFormat)) ||
+                        (AUDIO_FORMATS.contains(format) && AUDIO_FORMATS.contains(existingFormat))) {
                     found.add(existingFile);
                 }
             }
@@ -509,8 +289,8 @@ public final class YoutubeUtils {
      * @return Whether all checks were successful or not.
      */
     public static boolean doStartupChecks() {
-        if (!YoutubeUtils.isOnline()) {
-            System.out.println(YoutubeUtils.NEWLINE);
+        if (!isOnline()) {
+            System.out.println(NEWLINE);
             System.out.println(Color.bad("Internet access is required"));
             return false;
         }
@@ -546,20 +326,20 @@ public final class YoutubeUtils {
         
         if (exists) {
             if (Configurator.Config.printExeVersion) {
-                System.out.println(YoutubeUtils.NEWLINE);
+                System.out.println(NEWLINE);
                 System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + printedCurrentVersion);
-                System.out.println(YoutubeUtils.NEWLINE);
+                System.out.println(NEWLINE);
             }
         } else {
-            System.out.println(YoutubeUtils.NEWLINE);
+            System.out.println(NEWLINE);
             System.out.println(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
-            System.out.println(YoutubeUtils.NEWLINE);
+            System.out.println(NEWLINE);
         }
         
         if (exists && (currentVersion.isEmpty() || latestVersion.isEmpty())) {
             if (Configurator.Config.printExeVersion) {
                 System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
-                System.out.println(YoutubeUtils.NEWLINE);
+                System.out.println(NEWLINE);
             }
             
         } else if (!exists || (!currentVersion.equals(latestVersion))) {
@@ -567,7 +347,7 @@ public final class YoutubeUtils {
                 if (Configurator.Config.printExeVersion) {
                     System.out.println(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);
                 } else {
-                    System.out.println(YoutubeUtils.NEWLINE);
+                    System.out.println(NEWLINE);
                 }
             }
             
@@ -575,7 +355,7 @@ public final class YoutubeUtils {
                 latestVersion = latestVersion.equals("?") ? getLatestExecutableVersion() : latestVersion;
                 
                 System.out.println(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
-                File executable = YoutubeUtils.downloadLatestExecutable(latestVersion);
+                File executable = downloadLatestExecutable(latestVersion);
                 
                 if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
                     System.out.println(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exe(EXECUTABLE.getName()));
@@ -585,7 +365,7 @@ public final class YoutubeUtils {
             } else {
                 System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
             }
-            System.out.println(YoutubeUtils.NEWLINE);
+            System.out.println(NEWLINE);
         }
         
         return EXECUTABLE.getExe().exists();

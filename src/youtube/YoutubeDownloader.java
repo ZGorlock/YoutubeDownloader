@@ -22,6 +22,7 @@ import org.jsoup.Jsoup;
 import youtube.channel.Video;
 import youtube.util.Color;
 import youtube.util.Configurator;
+import youtube.util.YoutubeDownloadUtils;
 import youtube.util.YoutubeUtils;
 
 /**
@@ -91,7 +92,7 @@ public class YoutubeDownloader {
                     
                     if (!Configurator.Config.preventDownload) {
                         System.out.println(Color.base("Downloading: ") + Color.video(video.title));
-                        switch (YoutubeUtils.downloadYoutubeVideo(video)) {
+                        switch (YoutubeDownloadUtils.downloadYoutubeVideo(video)) {
                             case SUCCESS:
                                 System.out.println(Color.good("Done"));
                                 break;
