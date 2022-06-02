@@ -28,6 +28,11 @@ public class KeyStore {
      */
     private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
     
+    /**
+     * The backup file of the keystore.
+     */
+    private static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getAbsolutePath() + ".bak");
+    
     
     //Static Fields
     
@@ -53,6 +58,13 @@ public class KeyStore {
      * Loads the map of video keys and their current saved file names for each Channel.
      */
     public static void load() {
+        if ((!KEY_STORE_FILE.exists() || (KEY_STORE_FILE.length() == 0)) && KEY_STORE_BACKUP.exists()) {
+            try {
+                FileUtils.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE, true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         if (!KEY_STORE_FILE.exists()) {
             return;
         }
@@ -94,6 +106,7 @@ public class KeyStore {
         }
         
         try {
+            FileUtils.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP, true);
             FileUtils.writeLines(KEY_STORE_FILE, lines);
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -115,10 +115,13 @@ public class ChannelState {
      */
     public void load() {
         try {
+            cleanupLegacyState();
+            
             queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
             saved = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
             blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
-        } catch (IOException e) {
+            
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -145,8 +148,6 @@ public class ChannelState {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
-        KeyStore.save();
     }
     
     /**
@@ -171,17 +172,16 @@ public class ChannelState {
     }
     
     /**
-     * Cleans up the state directory.
+     * Clears the saved data files.
      *
-     * @throws Exception When there is an error cleaning the state directory.
+     * @throws Exception When there is an error clearing the saved data files.
      */
-    public void cleanup() throws Exception {
+    public void cleanupData() throws Exception {
         if (!Configurator.Config.preventChannelFetch) {
             for (File dataFile : getDataFiles()) {
                 FileUtils.deleteQuietly(dataFile);
             }
         }
-        cleanupLegacyState();
     }
     
     /**

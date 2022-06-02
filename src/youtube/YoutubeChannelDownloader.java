@@ -157,10 +157,8 @@ public class YoutubeChannelDownloader {
                 for (Channel currentChannel : Channels.getChannels()) {
                     if (!(skip &= (currentChannel != Configurator.Config.startAt)) &&
                             ((Configurator.Config.group == null) || (currentChannel.group.equalsIgnoreCase(Configurator.Config.group)))) {
-                        if (currentChannel.active) {
-                            setChannel(currentChannel);
-                            processChannel();
-                        }
+                        setChannel(currentChannel);
+                        processChannel();
                         if (stop && (currentChannel == Configurator.Config.stopAt)) {
                             break;
                         }
@@ -168,7 +166,7 @@ public class YoutubeChannelDownloader {
                 }
             }
             
-        } else if (Configurator.Config.channel.active) {
+        } else {
             setChannel(Configurator.Config.channel);
             processChannel();
         }
@@ -186,7 +184,6 @@ public class YoutubeChannelDownloader {
      */
     private static void setChannel(Channel newChannel) throws Exception {
         channel = newChannel;
-        channel.state.cleanup();
         channel.state.load();
     }
     
@@ -197,6 +194,10 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
+        if (!channel.active) {
+            return false;
+        }
+        
         System.out.println(YoutubeUtils.NEWLINE);
         System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.name));
         
@@ -221,8 +222,9 @@ public class YoutubeChannelDownloader {
      */
     private static boolean fetchChannelData() throws Exception {
         if (Configurator.Config.preventChannelFetch) {
-            return true;
+            return !channel.state.getDataFiles().isEmpty();
         }
+        channel.state.cleanupData();
         
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
