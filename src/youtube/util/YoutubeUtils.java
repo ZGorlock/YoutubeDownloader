@@ -538,16 +538,16 @@ public final class YoutubeUtils {
      * @return Whether the exe exists.
      */
     private static boolean checkExe() {
-        String currentExecutableVersion = EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version")
-                .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
-        String latestExecutableVersion = YoutubeUtils.getLatestExecutableVersion();
         boolean exists = EXECUTABLE.getExe().exists();
-        boolean update = exists && !currentExecutableVersion.equals(latestExecutableVersion);
+        String currentVersion = Configurator.Config.preventExeVersionCheck ? "?" : getCurrentExecutableVersion();
+        String latestVersion = Configurator.Config.preventExeVersionCheck ? "?" : getLatestExecutableVersion();
+        String printedCurrentVersion = currentVersion.equals("?") ? "" : Color.number(" v" + currentVersion);
+        String printedLatestVersion = latestVersion.equals("?") ? "" : Color.number(" v" + latestVersion);
         
         if (exists) {
             if (Configurator.Config.printExeVersion) {
                 System.out.println(YoutubeUtils.NEWLINE);
-                System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + Color.number(" v" + currentExecutableVersion));
+                System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + printedCurrentVersion);
                 System.out.println(YoutubeUtils.NEWLINE);
             }
         } else {
@@ -556,37 +556,49 @@ public final class YoutubeUtils {
             System.out.println(YoutubeUtils.NEWLINE);
         }
         
-        if (exists && (currentExecutableVersion.isEmpty() || latestExecutableVersion.isEmpty())) {
+        if (exists && (currentVersion.isEmpty() || latestVersion.isEmpty())) {
             if (Configurator.Config.printExeVersion) {
                 System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
                 System.out.println(YoutubeUtils.NEWLINE);
             }
             
-        } else if (!exists || update) {
+        } else if (!exists || (!currentVersion.equals(latestVersion))) {
             if (exists) {
                 if (Configurator.Config.printExeVersion) {
-                    System.out.println(Color.base("Current Version: ") + Color.number(currentExecutableVersion) + Color.base(" Latest Version: ") + Color.number(latestExecutableVersion));
+                    System.out.println(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);
                 } else {
                     System.out.println(YoutubeUtils.NEWLINE);
                 }
             }
             
             if (!Configurator.Config.preventExeAutoUpdate) {
-                System.out.println(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion));
-                File executable = YoutubeUtils.downloadLatestExecutable(latestExecutableVersion);
+                latestVersion = latestVersion.equals("?") ? getLatestExecutableVersion() : latestVersion;
+                
+                System.out.println(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
+                File executable = YoutubeUtils.downloadLatestExecutable(latestVersion);
                 
                 if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
                     System.out.println(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exe(EXECUTABLE.getName()));
                 } else {
-                    System.out.println(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion));
+                    System.out.println(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
                 }
             } else {
-                System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + Color.number(" v" + latestExecutableVersion) + Color.bad(" but auto updating is disabled"));
+                System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
             }
             System.out.println(YoutubeUtils.NEWLINE);
         }
         
         return EXECUTABLE.getExe().exists();
+    }
+    
+    /**
+     * Returns the current executable version.
+     *
+     * @return The current executable version, or an empty string if there was an error.
+     */
+    private static String getCurrentExecutableVersion() {
+        return EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version")
+                .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
     }
     
     /**

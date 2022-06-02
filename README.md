@@ -38,6 +38,7 @@ You can configure the operation of the Downloader project by changing the values
 * ***flag.preventDownload*** - When set to true, the Youtube Downloader will not attempt to download any videos; for use in testing. You can set this variable to true or false, by default it is set to false.
 * ***flag.preventVideoFetch*** - When set to true, the Youtube Downloader will not attempt to fetch the video information (title, publish date, etc.) prior to downloading. You can set this variable to true or false, by default it is set to false.
 * ***flag.preventExeAutoUpdate*** - When set to true, the Youtube Downloader will not attempt to download or auto-update the selected ***executable***. You can set this variable to true or false, by default it is set to false.
+* ***flag.preventExeVersionCheck*** - When set to true, the Youtube Downloader will not attempt to check the current or latest version of the selected ***executable***. You can set this variable to true or false, by default it is set to false.
 
 You can also specify a global SponsorBlock configuration for videos downloaded by the Downloader. For more information on how to do this see the SponsorBlock Configuration section in the Channel Downloader chapter below.
 
@@ -87,6 +88,7 @@ You can configure the operation of the Channel Downloader project by changing th
 * ***flag.preventPlaylistEdit*** - When the Youtube Channel Downloader detects that a video has been added, removed, or renamed on Youtube, from a Channel that has a ***playlistFile***, or when you edit your *ChannelProcesses.java*, then the playlist file will be edited to reflect the changes. You can set this variable to true or false, by default it is set to false. When set to true, playlist modification will be disabled.
 * ***flag.preventChannelFetch*** - When set to true, the Youtube Channel Downloader will not attempt to fetch the latest data for Channels; this will result in the last previously fetched data being used; for use in testing. You can set this variable to true or false, by default it is set to false.
 * ***flag.preventExeAutoUpdate*** - When set to true, the Youtube Channel Downloader will not attempt to download or auto-update the selected ***executable***. You can set this variable to true or false, by default it is set to false.
+* ***flag.preventExeVersionCheck*** - When set to true, the Youtube Channel Downloader will not attempt to check the current or latest version of the selected ***executable***. You can set this variable to true or false, by default it is set to false.
 
 ### Executable Options:
 

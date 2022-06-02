@@ -27,7 +27,8 @@
             "preventDownload": false,
             "preventPlaylistEdit": false,
             "preventChannelFetch": false,
-            "preventExeAutoUpdate": false
+            "preventExeAutoUpdate": false,
+            "preventExeVersionCheck": false
         }
     },
     

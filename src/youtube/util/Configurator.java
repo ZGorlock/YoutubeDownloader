@@ -252,6 +252,11 @@ public class Configurator {
         public static final boolean preventExeAutoUpdate = (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", false);
         
         /**
+         * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", false);
+        
+        /**
          * A flag indicating whether to the log the download command or not.
          */
         public static final boolean logCommand = (boolean) Configurator.getSetting("log", "logCommand",
