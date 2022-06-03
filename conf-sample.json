@@ -44,7 +44,8 @@
         "flag": {
             "preventDownload": false,
             "preventVideoFetch": false,
-            "preventExeUpdate": false
+            "preventExeAutoUpdate": false,
+            "preventExeVersionCheck": false
         }
     },
     
