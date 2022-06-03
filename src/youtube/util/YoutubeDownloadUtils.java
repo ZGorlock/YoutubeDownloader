@@ -87,7 +87,12 @@ public final class YoutubeDownloadUtils {
     /**
      * A regex pattern matching a 'output destination' line from the executable output.
      */
-    public static final Pattern DESTINATION_PATTERN = Pattern.compile("^\\[[^]]+]\\s*Destination:\\s*(?<destination>.+)$");
+    public static final Pattern DESTINATION_PATTERN = Pattern.compile("^\\[download]\\s*Destination:\\s*(?<destination>.+)$");
+    
+    /**
+     * A regex pattern matching a 'extracting audio' line from the executable output.
+     */
+    public static final Pattern EXTRACT_AUDIO_PATTERN = Pattern.compile("^\\[ExtractAudio]\\s*Destination:\\s*(?<audio>.+)$");
     
     /**
      * A regex pattern matching a 'merging formats' line from the executable output.
@@ -228,7 +233,6 @@ public final class YoutubeDownloadUtils {
                             progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
                             progressBar.defineInitialProgress(size);
                         }
-                        progressBar.complete(false, Color.good(response.message));
                     }
                     continue;
                 }
@@ -243,13 +247,37 @@ public final class YoutubeDownloadUtils {
                     continue;
                 }
                 
+                Matcher extractAudioMatcher = EXTRACT_AUDIO_PATTERN.matcher(line);
+                if (extractAudioMatcher.matches()) {
+                    File audio = new File(extractAudioMatcher.group("audio"));
+                    if (video != null) {
+                        video.output = audio;
+                    }
+                    if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
+                        if (progressBar == null) {
+                            progressBar = new ProgressBar("", 1, 32, "KB", true);
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                        }
+                        progressBar.complete(true, Color.good("Extracting Audio..."));
+                    }
+                    response.message = null;
+                    continue;
+                }
+                
                 Matcher mergeMatcher = MERGE_PATTERN.matcher(line);
                 if (mergeMatcher.matches()) {
                     File merge = new File(mergeMatcher.group("merge"));
                     if (video != null) {
                         video.output = merge;
                     }
-                    newPart = true;
+                    if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
+                        if (progressBar == null) {
+                            progressBar = new ProgressBar("", 1, 32, "KB", true);
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                        }
+                        progressBar.complete(true, Color.good("Merging Formats..."));
+                    }
+                    response.message = null;
                     continue;
                 }
                 
@@ -281,16 +309,12 @@ public final class YoutubeDownloadUtils {
                 }
                 if (!progressBar.isComplete()) {
                     if (response.error == null) {
-                        progressBar.complete();
+                        progressBar.complete(true, Optional.ofNullable(response.message).map(Color::good).orElse(""));
                     } else {
                         progressBar.fail(true, Color.bad(response.message));
                     }
                 }
                 response.message = null;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-                }
             }
             
         } catch (Exception e) {
@@ -301,14 +325,14 @@ public final class YoutubeDownloadUtils {
             if (Configurator.Config.showProgressBar && !Configurator.Config.logWork && (progressBar != null)) {
                 progressBar.fail(true, Color.bad(response.message));
                 response.message = null;
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-                }
             }
             System.out.println(Color.bad(e.getStackTrace()));
         }
         
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignored) {
+        }
         return response;
     }
     
