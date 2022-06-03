@@ -9,7 +9,7 @@
     "playlistId": "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Hacker Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Hacker Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -22,7 +22,7 @@
     "playlistId": "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Work Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Work Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -35,7 +35,7 @@
     "playlistId": "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Chillstep Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Chillstep Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -48,7 +48,7 @@
     "playlistId": "PLdE7uo_7KBkeSTmryNClNxUkioFpq3Btx",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Chillout Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Chillout Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -61,7 +61,7 @@
     "playlistId": "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Ambient Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Ambient Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -74,7 +74,7 @@
     "playlistId": "PLdE7uo_7KBkcywzGlsZ9c6aerJr3tK058",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Lo-Fi Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Lo-Fi Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -87,7 +87,7 @@
     "playlistId": "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Contemporary Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Contemporary Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -100,7 +100,7 @@
     "playlistId": "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Study Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Study Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -113,7 +113,7 @@
     "playlistId": "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Chillhop Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Chillhop Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -126,7 +126,7 @@
     "playlistId": "PLdE7uo_7KBkcp_XPf2GiTOqUWAdvqM4ap",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Energy Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Energy Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -139,7 +139,7 @@
     "playlistId": "PLdE7uo_7KBkdbssGgnnIDm3EnE2gmHyEQ",
     "outputFolder": "Youtube/Beats/Music Lab",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Future Garage Music.m3u",
+    "playlistFile": "Youtube/Beats/Music Lab - Future Garage Music.m3u",
     "reversePlaylist": true,
     "keepClean": false
   },
@@ -152,9 +152,9 @@
     "playlistId": "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y",
     "outputFolder": "Youtube/Beats/JimTV",
     "saveAsMp3": true,
-    "playlistFile": "Youtube/Beats/Programming Music.m3u",
+    "playlistFile": "Youtube/Beats/JimTV - Programming Music.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "DREAMHOP_MUSIC",
@@ -167,7 +167,7 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Beats/Dreamhop Music.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "LITTLE_SOUL",
@@ -180,7 +180,20 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Beats/Little Soul.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
+  },
+  {
+    "key": "ENTER_DYSTOPIA",
+    "active": true,
+    "name": "EnterDystopia",
+    "group": "BEATS",
+    "url": "https://www.youtube.com/channel/UC-NM1_vcSZ0O2dtuASOwRew",
+    "playlistId": "UU-NM1_vcSZ0O2dtuASOwRew",
+    "outputFolder": "Youtube/Beats/Enter Dystopia",
+    "saveAsMp3": true,
+    "playlistFile": "Youtube/Beats/Enter Dystopia.m3u",
+    "reversePlaylist": true,
+    "keepClean": true
   },
 
   {
@@ -250,46 +263,17 @@
   },
 
   {
-    "key": "MR_MOM_MUSIC_VIDEOS",
+    "key": "VOCAL_DUBSTEP_FAVORITES",
     "active": true,
-    "name": "MrMomMusicVideos",
-    "group": "VOCAL_DUBSTEP",
-    "url": "https://www.youtube.com/c/MrMoM",
-    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos - All.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "MR_MOM_MUSIC_VIDEOS_NEW",
-    "active": true,
-    "name": "MrMomMusicVideosNew",
-    "group": "VOCAL_DUBSTEP",
-    "url": "https://www.youtube.com/c/MrMoM",
-    "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-    "outputFolder": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "MR_MOM_MUSIC_VIDEOS_FAVORITES",
-    "active": true,
-    "name": "MrMomMusicVideosFavorites",
+    "name": "VocalDubstepFavorites",
     "group": "VOCAL_DUBSTEP",
     "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
     "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-    "outputFolder": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Vocal Dubstep/Mr Mom Music - Music Videos - Favorites.m3u",
+    "outputFolder": "Youtube/Vocal Dubstep/Favorites",
+    "saveAsMp3": true,
+    "playlistFile": "Youtube/Vocal Dubstep/Vocal Dubstep Favorites.m3u",
     "reversePlaylist": false,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "MR_MOM_MUSIC",
@@ -302,7 +286,7 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Vocal Dubstep/Mr Mom Music - All.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "MR_MOM_MUSIC_NEW",
@@ -318,32 +302,6 @@
     "keepClean": false
   },
   {
-    "key": "MR_MOM_MUSIC_FAVORITES",
-    "active": true,
-    "name": "MrMomMusicFavorites",
-    "group": "VOCAL_DUBSTEP",
-    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-    "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-    "outputFolder": "Youtube/Vocal Dubstep/Mr Mom Music",
-    "saveAsMp3": true,
-    "playlistFile": "Youtube/Vocal Dubstep/Mr Mom Music - Favorites.m3u",
-    "reversePlaylist": false,
-    "keepClean": false
-  },
-  {
-    "key": "MR_MOM_MUSIC_PLAYLIST",
-    "active": true,
-    "name": "MrMomMusicPlaylist",
-    "group": "VOCAL_DUBSTEP",
-    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-    "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-    "outputFolder": "Music/MrMomMusic",
-    "saveAsMp3": true,
-    "playlistFile": "My Playlists/Mr Mom Music.m3u",
-    "reversePlaylist": false,
-    "keepClean": true
-  },
-  {
     "key": "MR_SUICIDE_SHEEP",
     "active": true,
     "name": "MrSuicideSheep",
@@ -354,7 +312,7 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Vocal Dubstep/Mr Suicide Sheep.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "NIGHTBLUE_MUSIC",
@@ -367,23 +325,9 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Vocal Dubstep/Nightblue Music.m3u",
     "reversePlaylist": true,
-    "keepClean": false
+    "keepClean": true
   },
-  
-  {
-    "key": "KURUMI_VIDEOS",
-    "active": false,
-    "name": "KurumiVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/c/KurumiMixes",
-    "playlistId": "UUN1UX97MkTb-nuiqJaBPRTA",
-    "outputFolder": "${M}/Youtube/Nightcore/Kurumi - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Kurumi - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
+
   {
     "key": "KURUMI",
     "active": true,
@@ -395,21 +339,7 @@
     "saveAsMp3": true,
     "playlistFile": "Youtube/Nightcore/Kurumi.m3u",
     "reversePlaylist": true,
-    "keepClean": false
-  },
-  {
-    "key": "NEZUKO_VIDEOS",
-    "active": false,
-    "name": "NezukoVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/channel/UCcW7SgXcpV421npo9BSJGVg",
-    "playlistId": "UUcW7SgXcpV421npo9BSJGVg",
-    "outputFolder": "${M}/Youtube/Nightcore/Nezuko - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Nezuko - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "NEZUKO",
@@ -423,21 +353,7 @@
     "playlistFile": "${M}/Youtube/Nightcore/Nezuko.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "ASUNA_VIDEOS",
-    "active": false,
-    "name": "AsunaVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/channel/UC2oGnY6k_f1ZgT2fZ-dHlNw",
-    "playlistId": "UU2oGnY6k_f1ZgT2fZ-dHlNw",
-    "outputFolder": "${M}/Youtube/Nightcore/Asuna - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Asuna - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "ASUNA",
@@ -451,21 +367,7 @@
     "playlistFile": "${M}/Youtube/Nightcore/Asuna.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "ARIA_VIDEOS",
-    "active": false,
-    "name": "AriaVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/channel/UCn1icliVp7N5EcLosJ-zJXg",
-    "playlistId": "UUn1icliVp7N5EcLosJ-zJXg",
-    "outputFolder": "${M}/Youtube/Nightcore/Aria - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Aria - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "ARIA",
@@ -479,21 +381,7 @@
     "playlistFile": "${M}/Youtube/Nightcore/Aria.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "ARIA_NIGHTCORE_VIDEOS",
-    "active": false,
-    "name": "AriaNightcoreVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/channel/UCjml6tSyKyS2nYCP1vGScPw",
-    "playlistId": "UUjml6tSyKyS2nYCP1vGScPw",
-    "outputFolder": "${M}/Youtube/Nightcore/Aria Nightcore - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Aria Nightcore - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "ARIA_NIGHTCORE",
@@ -507,21 +395,7 @@
     "playlistFile": "${M}/Youtube/Nightcore/Aria Nightcore.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
-    "keepClean": false
-  },
-  {
-    "key": "SYREX_VIDEOS",
-    "active": false,
-    "name": "SyrexVideos",
-    "group": "NIGHTCORE",
-    "url": "https://www.youtube.com/channel/UCeZje_7vr6CPK9vPQDfV3WA",
-    "playlistId": "UUeZje_7vr6CPK9vPQDfV3WA",
-    "outputFolder": "${M}/Youtube/Nightcore/Syrex - Music Videos",
-    "saveAsMp3": false,
-    "playlistFile": "${M}/Youtube/Nightcore/Syrex - Music Videos.m3u",
-    "reversePlaylist": true,
-    "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "SYREX",
@@ -535,7 +409,7 @@
     "playlistFile": "${M}/Youtube/Nightcore/Syrex.m3u",
     "reversePlaylist": true,
     "ignoreGlobalLocations": true,
-    "keepClean": false
+    "keepClean": true
   },
 
   {
@@ -561,7 +435,7 @@
     "outputFolder": "Sound Bytes",
     "saveAsMp3": true,
     "playlistFile": null,
-    "keepClean": false
+    "keepClean": true
   },
 
   {
@@ -756,7 +630,7 @@
     "outputFolder": "Youtube/Space/Isaac Arthur",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Space/Isaac Arthur.m3u",
-    "keepClean": false
+    "keepClean": true
   },
   {
     "key": "ISAAC_ARTHUR_P01",
@@ -1305,7 +1179,7 @@
     "active": true,
     "name": "FreeDocumentary",
     "group": "NATURE",
-    "url": "https://www.youtube.com/c/FreeDocumentaryNature/videos",
+    "url": "https://www.youtube.com/c/FreeDocumentaryNature",
     "playlistId": "UUQtW2oz8ec8pHjjxawujNjg",
     "outputFolder": "Youtube/Nature/Free Documentary",
     "saveAsMp3": false,
@@ -1317,7 +1191,7 @@
     "active": false,
     "name": "RealWild",
     "group": "NATURE",
-    "url": "https://www.youtube.com/c/WildThingsChannel/videos",
+    "url": "https://www.youtube.com/c/WildThingsChannel",
     "playlistId": "UUbq-4OJxnziD3awH-aTezeA",
     "outputFolder": "Youtube/Nature/Real Wild",
     "saveAsMp3": false,
