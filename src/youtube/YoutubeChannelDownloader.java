@@ -575,12 +575,10 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        List<String> saved = new ArrayList<>();
-        for (Map.Entry<String, Video> video : videoMap.entrySet()) {
-            if (channel.state.saved.contains(video.getKey())) {
-                saved.add(video.getValue().output.getAbsolutePath());
-            }
-        }
+        List<String> saved = Channels.getChannels().stream()
+                .filter(e -> e.key.matches(channel.key + "(?:_P\\d+)?"))
+                .flatMap(e -> e.state.saved.stream().map(save -> e.state.keyStore.get(save)))
+                .distinct().collect(Collectors.toList());
         
         if (!channel.error && channel.keepClean) {
             
