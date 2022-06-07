@@ -1369,18 +1369,6 @@
     "keepClean": true
   },
   {
-    "key": "BEN_EATER",
-    "active": true,
-    "name": "BenEater",
-    "group": "COMPUTING",
-    "url": "https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA",
-    "playlistId": "UUS0N5baNlQWJCUrhCEo8WlA",
-    "outputFolder": "Youtube/Computing/Ben Eater",
-    "saveAsMp3": false,
-    "playlistFile": "Youtube/Computing/Ben Eater.m3u",
-    "keepClean": true
-  },
-  {
     "key": "CODE_BULLET",
     "active": true,
     "name": "CodeBullet",
@@ -1443,17 +1431,30 @@
   },
 
   {
-    "key": "AVE",
+    "key": "ELECTROBOOM",
     "active": true,
-    "name": "Ave",
-    "group": "ENGINEERING",
-    "url": "https://www.youtube.com/c/arduinoversusevil2025",
-    "playlistId": "UUhWv6Pn_zP0rI6lgGt3MyfA",
-    "outputFolder": "Youtube/Engineering/AvE",
+    "name": "Electroboom",
+    "group": "ELECTRONICS",
+    "url": "https://www.youtube.com/c/Electroboom",
+    "playlistId": "UUJ0-OtVpF0wOKEqT2Z1HEtA",
+    "outputFolder": "Youtube/Electronics/ElectroBOOM",
     "saveAsMp3": false,
-    "playlistFile": "Youtube/Engineering/AvE.m3u",
+    "playlistFile": "Youtube/Electronics/ElectroBOOM.m3u",
     "keepClean": true
   },
+  {
+    "key": "BEN_EATER",
+    "active": true,
+    "name": "BenEater",
+    "group": "ELECTRONICS",
+    "url": "https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA",
+    "playlistId": "UUS0N5baNlQWJCUrhCEo8WlA",
+    "outputFolder": "Youtube/Electronics/Ben Eater",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Electronics/Ben Eater.m3u",
+    "keepClean": true
+  },
+
   {
     "key": "STUFF_MADE_HERE",
     "active": true,
@@ -1464,18 +1465,6 @@
     "outputFolder": "Youtube/Engineering/Stuff Made Here",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Engineering/Stuff Made Here.m3u",
-    "keepClean": true
-  },
-  {
-    "key": "ELECTROBOOM",
-    "active": true,
-    "name": "Electroboom",
-    "group": "ENGINEERING",
-    "url": "https://www.youtube.com/c/Electroboom",
-    "playlistId": "UUJ0-OtVpF0wOKEqT2Z1HEtA",
-    "outputFolder": "Youtube/Engineering/ElectroBOOM",
-    "saveAsMp3": false,
-    "playlistFile": "Youtube/Engineering/ElectroBOOM.m3u",
     "keepClean": true
   },
   {
@@ -1539,18 +1528,6 @@
     "keepClean": true
   },
   {
-    "key": "THIS_OLD_TONY",
-    "active": true,
-    "name": "ThisOldTony",
-    "group": "ENGINEERING",
-    "url": "https://www.youtube.com/c/ThisOldTony",
-    "playlistId": "UU5NO8MgTQKHAWXp6z8Xl7yQ",
-    "outputFolder": "Youtube/Engineering/This Old Tony",
-    "saveAsMp3": false,
-    "playlistFile": "Youtube/Engineering/This Old Tony.m3u",
-    "keepClean": true
-  },
-  {
     "key": "LOCK_PICKING_LAWYER",
     "active": false,
     "name": "LockPickingLawyer",
@@ -1572,6 +1549,43 @@
     "outputFolder": "Youtube/Engineering/Machine Thinking",
     "saveAsMp3": false,
     "playlistFile": "Youtube/Engineering/Machine Thinking.m3u",
+    "keepClean": true
+  },
+
+  {
+    "key": "AVE",
+    "active": true,
+    "name": "Ave",
+    "group": "TOOLS",
+    "url": "https://www.youtube.com/c/arduinoversusevil2025",
+    "playlistId": "UUhWv6Pn_zP0rI6lgGt3MyfA",
+    "outputFolder": "Youtube/Tools/AvE",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Tools/AvE.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "THIS_OLD_TONY",
+    "active": true,
+    "name": "ThisOldTony",
+    "group": "TOOLS",
+    "url": "https://www.youtube.com/c/ThisOldTony",
+    "playlistId": "UU5NO8MgTQKHAWXp6z8Xl7yQ",
+    "outputFolder": "Youtube/Tools/This Old Tony",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Tools/This Old Tony.m3u",
+    "keepClean": true
+  },
+  {
+    "key": "TORQUE_TEST_CHANNEL",
+    "active": true,
+    "name": "TorqueTestChannel",
+    "group": "TOOLS",
+    "url": "https://www.youtube.com/c/TorqueTestChannel",
+    "playlistId": "UUZem9C5rWjSb0B8tV3k2EZg",
+    "outputFolder": "Youtube/Tools/Torque Test Channel",
+    "saveAsMp3": false,
+    "playlistFile": "Youtube/Tools/Torque Test Channel.m3u",
     "keepClean": true
   },
 
