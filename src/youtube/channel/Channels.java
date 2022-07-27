@@ -123,7 +123,6 @@ public class Channels {
     /**
      * Loads the Channel configuration from the channels file.
      */
-    @SuppressWarnings("unchecked")
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
@@ -131,26 +130,41 @@ public class Channels {
                 JSONParser parser = new JSONParser();
                 JSONArray channelList = (JSONArray) parser.parse(jsonString);
                 
-                for (Object channelEntry : channelList) {
-                    JSONObject channelJson = (JSONObject) channelEntry;
-                    
-                    try {
-                        Channel channel = new Channel(channelJson);
-                        channels.put(channel.key, channel);
-                        channel.state.load();
-                        
-                    } catch (Exception e) {
-                        System.out.println(Color.bad("Could not load channel: ") + Color.channel(channelJson.getOrDefault("key", "null")));
-                        if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
-                            System.out.println(YoutubeUtils.INDENT + Color.bad(e.getMessage()));
-                        }
-                    }
-                }
+                loadChannelList(channelList);
                 
             } catch (IOException | ParseException e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.file("./" + CHANNELS_FILE.getName()));
                 System.out.println(YoutubeUtils.INDENT + Color.bad(e));
                 System.exit(0);
+            }
+        }
+    }
+    
+    /**
+     * Loads the Channel configuration from a channel json list.
+     *
+     * @param channelList The json channel list.
+     */
+    @SuppressWarnings("unchecked")
+    private static void loadChannelList(JSONArray channelList) {
+        for (Object channelEntry : channelList) {
+            JSONObject channelJson = (JSONObject) channelEntry;
+            
+            try {
+                if (channelJson.containsKey("channels")) {
+                    loadChannelList((JSONArray) channelJson.get("channels"));
+                    
+                } else {
+                    Channel channel = new Channel(channelJson);
+                    channels.put(channel.key, channel);
+                    channel.state.load();
+                }
+                
+            } catch (Exception e) {
+                System.out.println(Color.bad("Could not load channel: ") + Color.channel(channelJson.getOrDefault("key", "null")));
+                if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
+                    System.out.println(YoutubeUtils.INDENT + Color.bad(e.getMessage()));
+                }
             }
         }
     }
