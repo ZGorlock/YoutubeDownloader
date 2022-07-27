@@ -207,6 +207,10 @@ public class ChannelProcesses_Sample {
                 FilterProcess.containsIgnoreCase(videoMap, blocked, "live 24-7");
                 break;
             
+            case "SPEEDSOUND":
+                blocked.add("FhOSu5fq5eE");
+                break;
+            
             case "MR_MOM_MUSIC_NEW":
                 FilterProcess.dateBefore(videoMap, blocked,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-24"));
