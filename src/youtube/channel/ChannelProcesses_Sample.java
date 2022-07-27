@@ -52,6 +52,10 @@ public class ChannelProcesses_Sample {
                 RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
                 break;
             
+            case "AIM_TO_HEAD":
+                RenameProcess.regexRemove(videoMap, "(?i)\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*");
+                break;
+            
             case "SOUND_LIBRARY":
                 RenameProcess.regexRemove(videoMap,
                         "(?i)\\s*-\\s*(?:Sound Effects?|Music) for Editing");
@@ -95,6 +99,11 @@ public class ChannelProcesses_Sample {
                 RenameProcess.pattern(videoMap,
                         "^(?<title>.+?)\\s\\((?:Swampletics\\s?)?(?:#|-\\s)(?<episode>\\d+)\\)$",
                         "Swampletics - $i - $title");
+                break;
+            case "TILEMAN":
+                RenameProcess.pattern(videoMap,
+                        "^(?<title>.+?)\\s(?:[|\\-]\\s)?(?:tileman\\s?)?[#\\-]\\s*(?<episode>\\d+)$",
+                        "Tileman - $i - $title");
                 break;
             case "LOWER_THE_BETTER":
                 RenameProcess.pattern(videoMap,
