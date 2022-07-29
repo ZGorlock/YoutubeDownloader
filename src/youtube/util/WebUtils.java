@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
+import youtube.channel.Channel;
 import youtube.channel.Video;
 
 /**
@@ -41,6 +42,16 @@ public final class WebUtils {
      * The regex pattern for a Youtube video url.
      */
     public static final Pattern VIDEO_URL_PATTERN = Pattern.compile("^.*[?&]v=(?<video>[^=?&]+).*$");
+    
+    /**
+     * The regex pattern for a Youtube playlist url.
+     */
+    public static final Pattern PLAYLIST_URL_PATTERN = Pattern.compile("^.*[?&]list=(?<playlist>[^=?&]+).*$");
+    
+    /**
+     * The regex pattern for a Youtube channel url.
+     */
+    public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:c(?:hannel)?|u(?:ser)?)/(?<channel>\\w+).*$");
     
     
     //Functions
@@ -142,6 +153,60 @@ public final class WebUtils {
         }
         
         return new Video(videoId, title, (date + " 00:00:00"), Utils.TMP_DIR, Configurator.Config.asMp3);
+    }
+    
+    /**
+     * Fetches the Channel playlist id from a Youtube channel url.
+     *
+     * @param url The Youtube channel url.
+     * @return The fetched playlist id, or an empty string if there was an error.
+     */
+    public static String fetchPlaylistId(String url) {
+        Matcher playlistUrlMatcher = PLAYLIST_URL_PATTERN.matcher(url);
+        if (playlistUrlMatcher.matches()) {
+            String playlistId = playlistUrlMatcher.group("playlist");
+            if (playlistId != null) {
+                return playlistId;
+            }
+        }
+        
+        Matcher channelUrlMatcher = CHANNEL_URL_PATTERN.matcher(url);
+        if (channelUrlMatcher.matches()) {
+            Pattern externalIdPattern = Pattern.compile("^.*\"externalId\":\"(?<externalId>[^\"]+)\".*$");
+            
+            String html = getHtml(url);
+            String[] lines = html.split("\n");
+            
+            for (String line : lines) {
+                Matcher externalIdMatcher = externalIdPattern.matcher(line);
+                if (externalIdMatcher.matches()) {
+                    String externalId = externalIdMatcher.group("externalId");
+                    if (externalId != null) {
+                        return externalId.replaceAll("^UC", "UU");
+                    }
+                }
+            }
+        }
+        
+        return "";
+    }
+    
+    /**
+     * Checks and attempts to automatically fetch the playlist id for a Channel if needed.
+     *
+     * @param channel The Channel.
+     */
+    public static void checkPlaylistId(Channel channel) {
+        if ((channel.playlistId == null) || channel.playlistId.isEmpty()) {
+            channel.playlistId = WebUtils.fetchPlaylistId(channel.url);
+            
+            System.out.println(Color.bad("Channel does not have a playlistId defined, please add this to the Channel configuration"));
+            if (channel.playlistId.isEmpty()) {
+                throw new RuntimeException();
+            }
+            System.out.println(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.EXE.apply(channel.playlistId));
+            System.out.println(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.file("./channels.conf"));
+        }
     }
     
 }

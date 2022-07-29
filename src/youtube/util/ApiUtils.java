@@ -104,6 +104,8 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static int fetchApiChannelData(Channel channel) throws Exception {
+        WebUtils.checkPlaylistId(channel);
+        
         Map<String, String> parameters = new HashMap<>();
         parameters.put("part", "snippet");
         parameters.put("maxResults", "50");

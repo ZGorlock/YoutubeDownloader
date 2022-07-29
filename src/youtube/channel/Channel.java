@@ -130,8 +130,10 @@ public class Channel {
         this.active = (boolean) channelJson.getOrDefault("active", true);
         this.name = ((String) channelJson.get("name")).replaceAll("[.|]", "");
         this.group = ((String) channelJson.getOrDefault("group", "")).replaceAll(".+\\.", "");
+        
         this.url = (String) channelJson.getOrDefault("url", "");
         this.playlistId = (String) channelJson.get("playlistId");
+        
         this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
         this.ignoreGlobalLocations = (boolean) channelJson.getOrDefault("ignoreGlobalLocations", false);
         this.reversePlaylist = (boolean) channelJson.getOrDefault("reversePlaylist", false);
