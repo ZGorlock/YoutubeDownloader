@@ -124,6 +124,23 @@ A "Channel object" is a section in the file that starts with '{' and ends with '
 * ***ignoreGlobalLocations*** - A boolean specifying whether to disregard the ***location.storageDrive*** and the ***location.musicDir*** or ***location.videoDir*** for the Channel file paths. If this is enabled then you will need to specify the absolute path for ***outputFolder*** and ***playlistFile***. ***outputFolder*** and ***playlistFile*** can also contain *${D}*, *${V}*, or *${M}* which will translate to ***location.storageDrive***, ***location.videoDir***, and ***location.musicDir*** respectively. *(optional; defaults to false)*
 * ***keepClean*** - A boolean specifying whether to keep the Channel directory clean or not; if this is enabled and ***playlistFile*** is set, then videos that are deleted off of Youtube will also be deleted from your hard drive. *(optional; defaults to false)*
 
+Example:
+
+    {
+        "key": "MY_CHANNEL",
+        "active": true,
+        "name": "MyChannel",
+        "group": "FAVORITES",
+        "url": "https://www.youtube.com/MyChannel",
+        "playlistId": "UU65aMyFavoriteChannelXY",
+        "outputFolder": "Youtube/My Channel",
+        "saveAsMp3": false,
+        "playlistFile": "Youtube/My Channel.m3u",
+        "reversePlaylist": true,
+        "ignoreGlobalLocations": false,
+        "keepClean": false
+    }
+
 **IMPORTANT**: Again, make sure you set the ***outputFolder*** for each Channel to an empty directory or a directory that does not exist yet. These directories may have files deleted from them in certain circumstances. Files that are deleted in this way are not sent to the recycle bin and would be difficult, if not impossible, to recover.
 
 Examples:
@@ -131,6 +148,30 @@ Examples:
 * **BAD**: A directory that also contains important work documents
 * **BAD**: A directory that also contains videos that you have also downloaded previously for this Channel before starting to use this project
 * **GOOD**: An empty directory or a directory that does not exist yet
+
+### Grouping Channels:
+
+Once you have Channels in the file *./channels.json*, you can optionally group them to make them easier to read and easier to search.
+
+To add a new group you need to create a new json object in the json array of *./channels.json*.
+\
+A "Group object" is a section in the file that starts with '{' and ends with '}'; just like a Channel object.
+
+* ***key*** - The Group key can be anything as long as it is unique among all the Groups in your configuration.
+* ***active*** - A boolean specifying whether the Group will be active or inactive. This will be inherited by all the children in the ***channels*** list. If a child explitly specifies its own ***active*** value, then both values will be considered. If an inactive child is in an active group then it will be inactive, if an active child is in an inactive group then it will be inactive. *(optional; defaults to true)*
+* ***channels*** - The list of Channels and/or Groups that are a member of this the Group. This is a json array.
+
+Example:
+
+    {
+        "key": "MY_GROUP",
+        "active": true,
+        "channels": [
+            <list of comma-separated Channel and/or Group json objects>
+        ]
+    }
+
+You can also nest Groups inside other Groups. When a Channel is within a nested Group, it will be a member of all of the enclosing Groups. The key of any parent group can be used when filtering that Channel.
 
 ### Finding Youtube Playlist IDs:
 
