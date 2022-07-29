@@ -46,6 +46,11 @@ public final class ExecutableUtils {
         private final File exe;
         
         /**
+         * The call to the Executable.
+         */
+        private final String call;
+        
+        /**
          * The website of the Executable.
          */
         private final String website;
@@ -61,7 +66,8 @@ public final class ExecutableUtils {
          */
         Executable(String name, String website) {
             this.name = name;
-            this.exe = new File(name + (OperatingSystem.isWindows() ? ".exe" : ""));
+            this.exe = new File(this.name + (OperatingSystem.isWindows() ? ".exe" : ""));
+            this.call = (OperatingSystem.isWindows() ? "" : "./") + this.exe.getName();
             this.website = website;
         }
         
@@ -84,6 +90,15 @@ public final class ExecutableUtils {
          */
         public File getExe() {
             return exe;
+        }
+        
+        /**
+         * Returns the call to the Executable.
+         *
+         * @return The call to the Executable.
+         */
+        public String getCall() {
+            return call;
         }
         
         /**
@@ -174,7 +189,7 @@ public final class ExecutableUtils {
      * @return The current executable version, or an empty string if there was an error.
      */
     private static String getCurrentExecutableVersion() {
-        return EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getExe().getName() + " --version")
+        return EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getCall() + " --version")
                 .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
     }
     

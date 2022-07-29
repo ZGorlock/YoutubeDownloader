@@ -124,7 +124,7 @@ public final class DownloadUtils {
         boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
         SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
         
-        String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getExe().getName()) + Color.log(" ") +
+        String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getCall()) + Color.log(" ") +
                 Color.log("--output \"") + Color.file(video.download.getAbsolutePath().replace("\\", "/") + ".%(ext)s") + Color.log("\" ") +
                 Color.log("--geo-bypass --rm-cache-dir ") +
                 Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
