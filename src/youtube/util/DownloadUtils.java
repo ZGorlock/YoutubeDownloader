@@ -1,5 +1,5 @@
 /*
- * File:    YoutubeDownloadUtils.java
+ * File:    DownloadUtils.java
  * Package: youtube.util
  * Author:  Zachary Gill
  */
@@ -23,7 +23,7 @@ import youtube.channel.Video;
 /**
  * Provides download utility methods for the Youtube Downloader.
  */
-public final class YoutubeDownloadUtils {
+public final class DownloadUtils {
     
     //Enums
     
@@ -120,11 +120,11 @@ public final class YoutubeDownloadUtils {
      * @throws Exception When there is an error downloading the video.
      */
     public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
-        boolean ytDlp = YoutubeUtils.EXECUTABLE.equals(YoutubeUtils.Executable.YT_DLP);
+        boolean ytDlp = ExecutableUtils.EXECUTABLE.equals(ExecutableUtils.Executable.YT_DLP);
         boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
         SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
         
-        String cmd = Color.exe(YoutubeUtils.EXECUTABLE.getExe().getName()) + Color.log(" ") +
+        String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getExe().getName()) + Color.log(" ") +
                 Color.log("--output \"") + Color.file(video.download.getAbsolutePath().replace("\\", "/") + ".%(ext)s") + Color.log("\" ") +
                 Color.log("--geo-bypass --rm-cache-dir ") +
                 Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
@@ -133,7 +133,7 @@ public final class YoutubeDownloadUtils {
                 Color.link(video.url);
         
         if (Configurator.Config.logCommand) {
-            System.out.println(YoutubeUtils.INDENT + Color.base(cmd));
+            System.out.println(Utils.INDENT + Color.base(cmd));
         }
         
         return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video);
@@ -202,7 +202,7 @@ public final class YoutubeDownloadUtils {
                         if (newPart) {
                             if (progressBar == null) {
                                 progressBar = new ProgressBar("", total, 32, "KB", true);
-                                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                                 initialProgress = Math.max(initialProgress, 0);
                                 progressBar.defineInitialProgress(initialProgress);
                             } else {
@@ -230,7 +230,7 @@ public final class YoutubeDownloadUtils {
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
                             progressBar = new ProgressBar("", size, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                             progressBar.defineInitialProgress(size);
                         }
                     }
@@ -256,7 +256,7 @@ public final class YoutubeDownloadUtils {
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
                             progressBar = new ProgressBar("", 1, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                         }
                         progressBar.complete(true, Color.good("Extracting Audio..."));
                     }
@@ -273,7 +273,7 @@ public final class YoutubeDownloadUtils {
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
                             progressBar = new ProgressBar("", 1, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                         }
                         progressBar.complete(true, Color.good("Merging Formats..."));
                     }
@@ -304,7 +304,7 @@ public final class YoutubeDownloadUtils {
             if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                 if (progressBar == null) {
                     progressBar = new ProgressBar("", 1, 32, "KB", true);
-                    progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(YoutubeUtils.INDENT).length());
+                    progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                     progressBar.update(-1);
                 }
                 if (!progressBar.isComplete()) {

@@ -12,7 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import youtube.YoutubeChannelDownloader;
 import youtube.channel.process.FilterProcess;
 import youtube.channel.process.RenameProcess;
 
@@ -29,12 +28,9 @@ public class ChannelProcesses_Sample {
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
-     * @param queue    The list of queued videos.
-     * @param save     The list of saved videos.
-     * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
         switch (channel.key) {
             
             case "JIMTV_PROGRAMMING":
@@ -151,8 +147,8 @@ public class ChannelProcesses_Sample {
                 break;
             
             case "FORENSIC_FILES_S01":
-                YoutubeChannelDownloader.Video video = new YoutubeChannelDownloader.Video("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
-                HashMap<String, YoutubeChannelDownloader.Video> tmp = new LinkedHashMap<>(videoMap);
+                Video video = new Video("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
+                HashMap<String, Video> tmp = new LinkedHashMap<>(videoMap);
                 videoMap.clear();
                 videoMap.put(video.videoId, video);
                 videoMap.putAll(tmp);
@@ -186,13 +182,10 @@ public class ChannelProcesses_Sample {
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
-     * @param queue    The list of queued videos.
-     * @param save     The list of saved videos.
-     * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("DuplicateBranchesInSwitch")
-    public static void performSpecialPostConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
         switch (channel.key) {
             
             case "MUSIC_LAB_HACKER":
@@ -204,26 +197,26 @@ public class ChannelProcesses_Sample {
             case "MUSIC_LAB_CONTEMPORARY":
             case "MUSIC_LAB_STUDY":
             case "MUSIC_LAB_CHILLHOP":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, "live 24-7");
+                FilterProcess.containsIgnoreCase(videoMap, "live 24-7");
                 break;
             
             case "SPEEDSOUND":
-                blocked.add("FhOSu5fq5eE");
+                channel.state.blocked.add("FhOSu5fq5eE");
                 break;
             
             case "MR_MOM_MUSIC_NEW":
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-24"));
                 break;
             
             case "OSRS_BEATZ":
-                FilterProcess.notContainsIgnoreCase(videoMap, blocked, "runescape");
+                FilterProcess.notContainsIgnoreCase(videoMap, "runescape");
                 break;
             case "OSRS_WEEKLY_RECAP":
-                FilterProcess.notContainsIgnoreCase(videoMap, blocked, "weekly recap");
+                FilterProcess.notContainsIgnoreCase(videoMap, "weekly recap");
                 break;
             case "OSRS_MARKET_ANALYSIS":
-                FilterProcess.notContainsIgnoreCase(videoMap, blocked, List.of("market", "economy"));
+                FilterProcess.notContainsIgnoreCase(videoMap, List.of("market", "economy"));
                 break;
             
             case "ISAAC_ARTHUR":
@@ -254,61 +247,61 @@ public class ChannelProcesses_Sample {
             case "ISAAC_ARTHUR_P25":
             case "ISAAC_ARTHUR_P27":
             case "ISAAC_ARTHUR_P28":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, List.of(
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
                         "livestream", "hades", "in the beginning", "collab", "colab"));
                 break;
             case "PBS_SPACE_TIME_MATT_ONLY":
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2015-09-01"));
                 break;
             
             case "ANSWERS_WITH_JOE":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, "live stream");
+                FilterProcess.containsIgnoreCase(videoMap, "live stream");
                 break;
             case "THOUGHTY2_NEW_INTRO_ONLY":
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
                 break;
             
             case "VSAUCE":
-                FilterProcess.contains(videoMap, blocked, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.contains(videoMap, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15"));
                 break;
             
             case "DOMAIN_OF_SCIENCE":
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2016-11-27"));
                 break;
             
             case "ADAM_SAVAGE_ONE_DAY_BUILDS":
-                FilterProcess.notContainsIgnoreCase(videoMap, blocked, "one day build");
-                FilterProcess.containsIgnoreCase(videoMap, blocked, "last call");
+                FilterProcess.notContainsIgnoreCase(videoMap, "one day build");
+                FilterProcess.containsIgnoreCase(videoMap, "last call");
                 break;
             
             case "NILE_BLUE":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, "announcement");
+                FilterProcess.containsIgnoreCase(videoMap, "announcement");
                 break;
             
             case "CHUBBYEMU":
-                FilterProcess.dateBefore(videoMap, blocked,
+                FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07"));
                 break;
             case "LIKE_YOU":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, List.of(
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
                         "photographer", "phone", "friend", "my son", "dogs"));
                 break;
             
             case "KITBOGA_UNCUT":
-                FilterProcess.containsIgnoreCase(videoMap, blocked, "live stream");
+                FilterProcess.containsIgnoreCase(videoMap, "live stream");
                 break;
             
             case "BEST_CUBE_COUBOY":
             case "BEST_CUBE_SPARTA":
-                FilterProcess.regexNotContainsIgnoreCase(videoMap, blocked, "best c(?:ube|oub)");
+                FilterProcess.regexNotContainsIgnoreCase(videoMap, "best c(?:ube|oub)");
                 break;
             case "SEXY_CUBE":
-                FilterProcess.regexNotContainsIgnoreCase(videoMap, blocked, "sexy c(?:ube|oub)");
+                FilterProcess.regexNotContainsIgnoreCase(videoMap, "sexy c(?:ube|oub)");
                 break;
         }
     }

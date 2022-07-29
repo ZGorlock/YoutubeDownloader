@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import youtube.YoutubeChannelDownloader;
+import youtube.channel.Video;
 
 /**
  * Provides Channel Process macros to help with renaming.
@@ -30,7 +30,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param action   The action.
      */
-    public static void forEach(Map<String, YoutubeChannelDownloader.Video> videoMap, BiConsumer<String, YoutubeChannelDownloader.Video> action) {
+    public static void forEach(Map<String, Video> videoMap, BiConsumer<String, Video> action) {
         videoMap.forEach(action);
     }
     
@@ -40,7 +40,7 @@ public class RenameProcess {
      * @param videoMap     The video map.
      * @param replacements The list of search strings and the corresponding replacement strings.
      */
-    public static void replace(Map<String, YoutubeChannelDownloader.Video> videoMap, List<Map.Entry<String, String>> replacements) {
+    public static void replace(Map<String, Video> videoMap, List<Map.Entry<String, String>> replacements) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(replacements.stream().reduce(Map.entry(video.title, ""), (s, e) ->
                         Map.entry(s.getKey().replace(e.getKey(), e.getValue()), "")).getKey()));
@@ -53,7 +53,7 @@ public class RenameProcess {
      * @param search   The search string.
      * @param replace  The replacement string.
      */
-    public static void replace(Map<String, YoutubeChannelDownloader.Video> videoMap, String search, String replace) {
+    public static void replace(Map<String, Video> videoMap, String search, String replace) {
         replace(videoMap, List.of(Map.entry(search, replace)));
     }
     
@@ -63,7 +63,7 @@ public class RenameProcess {
      * @param videoMap          The video map.
      * @param regexReplacements The list of regex search strings and the corresponding replacement strings.
      */
-    public static void regexReplace(Map<String, YoutubeChannelDownloader.Video> videoMap, List<Map.Entry<String, String>> regexReplacements) {
+    public static void regexReplace(Map<String, Video> videoMap, List<Map.Entry<String, String>> regexReplacements) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(regexReplacements.stream().reduce(Map.entry(video.title, ""), (s, e) ->
                         Map.entry(s.getKey().replaceAll(e.getKey(), e.getValue()), "")).getKey()));
@@ -76,7 +76,7 @@ public class RenameProcess {
      * @param regex    The regex search string.
      * @param replace  The replacement string.
      */
-    public static void regexReplace(Map<String, YoutubeChannelDownloader.Video> videoMap, String regex, String replace) {
+    public static void regexReplace(Map<String, Video> videoMap, String regex, String replace) {
         regexReplace(videoMap, List.of(Map.entry(regex, replace)));
     }
     
@@ -86,7 +86,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param removals The list of strings to remove.
      */
-    public static void remove(Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> removals) {
+    public static void remove(Map<String, Video> videoMap, List<String> removals) {
         replace(videoMap, removals.stream().map(e -> Map.entry(e, "")).collect(Collectors.toList()));
     }
     
@@ -96,7 +96,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param search   The string to remove.
      */
-    public static void remove(Map<String, YoutubeChannelDownloader.Video> videoMap, String search) {
+    public static void remove(Map<String, Video> videoMap, String search) {
         replace(videoMap, search, "");
     }
     
@@ -106,7 +106,7 @@ public class RenameProcess {
      * @param videoMap      The video map.
      * @param regexRemovals The list of regex strings to remove.
      */
-    public static void regexRemove(Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> regexRemovals) {
+    public static void regexRemove(Map<String, Video> videoMap, List<String> regexRemovals) {
         regexReplace(videoMap, regexRemovals.stream().map(e -> Map.entry(e, "")).collect(Collectors.toList()));
     }
     
@@ -116,7 +116,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param regex    The regex string to remove.
      */
-    public static void regexRemove(Map<String, YoutubeChannelDownloader.Video> videoMap, String regex) {
+    public static void regexRemove(Map<String, Video> videoMap, String regex) {
         regexReplace(videoMap, regex, "");
     }
     
@@ -128,7 +128,7 @@ public class RenameProcess {
      * @param strict   Whether to fail if a title does not match the pattern or not.
      * @param result   The resulting title pattern.
      */
-    public static void pattern(Map<String, YoutubeChannelDownloader.Video> videoMap, String pattern, boolean strict, String result) {
+    public static void pattern(Map<String, Video> videoMap, String pattern, boolean strict, String result) {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         final AtomicInteger index = new AtomicInteger(0);
         final Pattern groupPattern = Pattern.compile("\\(\\?<(?<name>[A-Za-z\\d]+)>");
@@ -156,7 +156,7 @@ public class RenameProcess {
      * @param pattern  The regex pattern.
      * @param result   The resulting title pattern.
      */
-    public static void pattern(Map<String, YoutubeChannelDownloader.Video> videoMap, String pattern, String result) {
+    public static void pattern(Map<String, Video> videoMap, String pattern, String result) {
         pattern(videoMap, pattern, true, result);
     }
     
@@ -166,7 +166,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param suffix   The suffix.
      */
-    public static void append(Map<String, YoutubeChannelDownloader.Video> videoMap, String suffix) {
+    public static void append(Map<String, Video> videoMap, String suffix) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(video.title + suffix));
     }
@@ -177,7 +177,7 @@ public class RenameProcess {
      * @param videoMap The video map.
      * @param prefix   The prefix.
      */
-    public static void prepend(Map<String, YoutubeChannelDownloader.Video> videoMap, String prefix) {
+    public static void prepend(Map<String, Video> videoMap, String prefix) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(prefix + video.title));
     }
@@ -188,7 +188,7 @@ public class RenameProcess {
      * @param videoMap   The video map.
      * @param dateFormat The format of the date.
      */
-    public static void appendUploadDate(Map<String, YoutubeChannelDownloader.Video> videoMap, String dateFormat) {
+    public static void appendUploadDate(Map<String, Video> videoMap, String dateFormat) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(video.title + " - " + new SimpleDateFormat(dateFormat).format(video.date)));
     }

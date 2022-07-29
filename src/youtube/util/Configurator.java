@@ -39,7 +39,7 @@ public class Configurator {
     /**
      * The current active project.
      */
-    public static String activeProject = null;
+    public static Utils.Project activeProject = null;
     
     /**
      * A cache of configuration settings from the configuration file.
@@ -60,7 +60,7 @@ public class Configurator {
      * @param section The section of the configuration.
      * @return The list of configuration settings.
      */
-    public static Map<String, Object> getSettings(String section) {
+    public static Map<String, Object> getSettings(Utils.Project section) {
         return new HashMap<>(settings.get(section));
     }
     
@@ -68,7 +68,7 @@ public class Configurator {
      * Returns a list of configuration settings.
      *
      * @return The list of configuration settings.
-     * @see #getSettings(String)
+     * @see #getSettings(Utils.Project)
      */
     public static Map<String, Object> getSettings() {
         return getSettings(activeProject);
@@ -96,7 +96,7 @@ public class Configurator {
      * @see #getSetting(String, String, Object)
      */
     public static Object getSetting(String name, Object def) {
-        return getSetting(activeProject, name, def);
+        return getSetting(activeProject.getTitle(), name, def);
     }
     
     /**
@@ -116,7 +116,7 @@ public class Configurator {
      * @param project The current active project.
      * @see #loadSettings(JSONObject, String)
      */
-    public static void loadSettings(String project) {
+    public static void loadSettings(Utils.Project project) {
         if (loaded.compareAndSet(false, true)) {
             activeProject = project;
             
@@ -125,14 +125,14 @@ public class Configurator {
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(jsonString);
                 
-                loadSettings(json, activeProject);
+                loadSettings(json, activeProject.getTitle());
                 loadSettings(json, "sponsorBlock");
                 loadSettings(json, "color");
                 loadSettings(json, "log");
                 
             } catch (IOException | ParseException e) {
                 System.out.println(Color.bad("Could not load settings from: ") + Color.file("./" + CONF_FILE.getName()));
-                System.out.println(YoutubeUtils.INDENT + Color.bad(e));
+                System.out.println(Utils.INDENT + Color.bad(e));
                 System.exit(0);
             }
         }

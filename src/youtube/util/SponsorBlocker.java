@@ -42,7 +42,7 @@ public class SponsorBlocker {
     public static String getCommand(SponsorBlockConfig config) {
         boolean configValid = (config != null) && config.enabled;
         boolean globalConfigValid = (globalConfig != null) && globalConfig.enabled;
-        if ((YoutubeUtils.EXECUTABLE != YoutubeUtils.Executable.YT_DLP) ||
+        if ((ExecutableUtils.EXECUTABLE != ExecutableUtils.Executable.YT_DLP) ||
                 (!configValid && !globalConfigValid)) {
             return "";
         }

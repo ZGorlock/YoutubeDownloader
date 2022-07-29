@@ -11,7 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import youtube.util.YoutubeUtils;
+import youtube.util.Utils;
+import youtube.util.WebUtils;
 
 /**
  * Defines a Video.
@@ -76,8 +77,8 @@ public class Video {
         this.channel = null;
         this.videoId = videoId;
         this.originalTitle = title;
-        this.title = YoutubeUtils.cleanTitle(title);
-        this.url = YoutubeUtils.VIDEO_BASE + videoId;
+        this.title = Utils.cleanVideoTitle(title);
+        this.url = WebUtils.VIDEO_BASE + videoId;
         try {
             this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date
                     .replace("T", " ").replace("Z", ""));
@@ -116,18 +117,29 @@ public class Video {
      * @param title The title.
      */
     public void updateTitle(String title) {
-        this.title = YoutubeUtils.cleanTitle(title);
-        this.download = new File(this.channel.outputFolder, this.title);
-        this.output = new File(this.channel.outputFolder, (this.title + '.' + YoutubeUtils.getFormat(output.getName())));
+        this.title = Utils.cleanVideoTitle(title);
+        this.download = new File(this.download.getParentFile(), this.title);
+        this.output = new File(this.output.getParentFile(), (this.title + '.' + Utils.getFileFormat(this.output.getName())));
     }
     
     /**
-     * Updates the output of the Video.
+     * Updates the output folder of the Video.
      *
-     * @param output The output.
+     * @param outputDir The output folder.
+     */
+    public void updateOutputDir(File outputDir) {
+        this.download = new File(outputDir, this.download.getName());
+        this.output = new File(outputDir, this.output.getName());
+    }
+    
+    /**
+     * Updates the output file of the Video.
+     *
+     * @param output The output file.
      */
     public void updateOutput(File output) {
         updateTitle(output.getName().replaceAll("\\.[^.]+$", ""));
+        updateOutputDir(output.getParentFile());
     }
     
 }

@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import commons.console.Console;
 import commons.object.string.StringUtility;
 import youtube.util.Color;
-import youtube.util.YoutubeUtils;
+import youtube.util.Utils;
 
 /**
  * Defines a Channel Tree entry of the Youtube Channel Downloader.
@@ -235,8 +235,8 @@ public class ChannelTree {
             Console.ConsoleEffect color = isGroup() ? (isActive() ? Color.LINK : (active ? Color.LOG : Color.BAD)) :
                                           (isActive() ? Color.CHANNEL : (channel.active ? Color.LOG : Color.BAD));
             
-            System.out.println(StringUtility.repeatString(YoutubeUtils.INDENT, indent) +
-                    Color.apply(color, YoutubeUtils.formatHeader(title)));
+            System.out.println(StringUtility.repeatString(Utils.INDENT, indent) +
+                    Color.apply(color, Utils.formatUnderscoredString(title)));
         }
         
         for (ChannelTree child : children) {
