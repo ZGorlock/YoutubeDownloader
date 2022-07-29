@@ -157,8 +157,7 @@ public class YoutubeChannelDownloader {
             
             if (!((skip && stop) && (Channels.indexOf(Configurator.Config.stopAt.key) < Channels.indexOf(Configurator.Config.startAt.key)))) {
                 for (Channel currentChannel : Channels.getChannels()) {
-                    if (!(skip &= (currentChannel != Configurator.Config.startAt)) &&
-                            ((Configurator.Config.group == null) || (currentChannel.group.equalsIgnoreCase(Configurator.Config.group)))) {
+                    if (!(skip &= (currentChannel != Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
                         setChannel(currentChannel);
                         processChannel();
                         if (stop && (currentChannel == Configurator.Config.stopAt)) {
@@ -196,7 +195,7 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
-        if (!channel.active) {
+        if (!channel.isActive()) {
             return false;
         }
         

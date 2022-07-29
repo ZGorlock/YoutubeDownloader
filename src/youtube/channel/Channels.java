@@ -46,6 +46,11 @@ public class Channels {
     private static final Map<String, Channel> channels = new LinkedHashMap<>();
     
     /**
+     * The Channel Tree root entry.
+     */
+    private static final ChannelTree channelTree = ChannelTree.getChannelTreeRoot();
+    
+    /**
      * A flag indicating whether the Channel configuration has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
@@ -83,7 +88,7 @@ public class Channels {
      * @return The list of Channel groups.
      */
     public static List<String> getGroups() {
-        return channels.values().stream().map(channel -> channel.group).distinct().collect(Collectors.toList());
+        return channelTree.getAllChildGroups().stream().map(group -> group.key).collect(Collectors.toList());
     }
     
     /**
@@ -130,7 +135,7 @@ public class Channels {
                 JSONParser parser = new JSONParser();
                 JSONArray channelList = (JSONArray) parser.parse(jsonString);
                 
-                loadChannelList(channelList);
+                loadChannelList(channelList, channelTree);
                 
             } catch (IOException | ParseException e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.file("./" + CHANNELS_FILE.getName()));
@@ -143,21 +148,31 @@ public class Channels {
     /**
      * Loads the Channel configuration from a channel json list.
      *
-     * @param channelList The json channel list.
+     * @param channelList  The json channel list.
+     * @param currentGroup The current group being loaded.
      */
     @SuppressWarnings("unchecked")
-    private static void loadChannelList(JSONArray channelList) {
+    private static void loadChannelList(JSONArray channelList, ChannelTree currentGroup) {
         for (Object channelEntry : channelList) {
             JSONObject channelJson = (JSONObject) channelEntry;
             
+            ChannelTree currentChannel = new ChannelTree();
+            currentChannel.key = ((String) channelJson.getOrDefault("key", "")).replace(".", "");
+            currentChannel.active = (boolean) channelJson.getOrDefault("active", true);
+            currentChannel.parent = currentGroup;
+            currentGroup.children.add(currentChannel);
+            
             try {
                 if (channelJson.containsKey("channels")) {
-                    loadChannelList((JSONArray) channelJson.get("channels"));
+                    loadChannelList((JSONArray) channelJson.get("channels"), currentChannel);
                     
                 } else {
                     Channel channel = new Channel(channelJson);
-                    channels.put(channel.key, channel);
+                    channel.treeEntry = currentChannel;
                     channel.state.load();
+                    
+                    channels.put(channel.key, channel);
+                    currentChannel.channel = channel;
                 }
                 
             } catch (Exception e) {
@@ -180,11 +195,7 @@ public class Channels {
         System.out.println(YoutubeUtils.NEWLINE);
         System.out.println(Color.number("--- Channels ---"));
         
-        getChannelMap().forEach((group, channels) -> {
-            System.out.println(Color.link(YoutubeUtils.formatHeader(group) + ":"));
-            channels.forEach(channel -> System.out.println(YoutubeUtils.INDENT +
-                    Color.apply((channel.active ? Color.CHANNEL : Color.BAD), YoutubeUtils.formatHeader(channel.key))));
-        });
+        channelTree.print();
         
         System.out.println(YoutubeUtils.NEWLINE);
     }

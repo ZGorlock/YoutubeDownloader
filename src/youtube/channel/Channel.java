@@ -99,6 +99,11 @@ public class Channel {
     public ChannelState state;
     
     /**
+     * The Channel Tree entry of the Channel.
+     */
+    public ChannelTree treeEntry;
+    
+    /**
      * A flag indicating whether there was an error retrieving the Channel this run or not.
      */
     public boolean error;
@@ -121,10 +126,10 @@ public class Channel {
             }
         }
         
-        this.key = (String) channelJson.get("key");
+        this.key = ((String) channelJson.get("key")).replace(".", "");
         this.active = (boolean) channelJson.getOrDefault("active", true);
-        this.name = ((String) channelJson.get("name")).replace("|", "");
-        this.group = (String) channelJson.getOrDefault("group", "");
+        this.name = ((String) channelJson.get("name")).replaceAll("[.|]", "");
+        this.group = ((String) channelJson.getOrDefault("group", "")).replaceAll(".+\\.", "");
         this.url = (String) channelJson.getOrDefault("url", "");
         this.playlistId = (String) channelJson.get("playlistId");
         this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
@@ -174,6 +179,25 @@ public class Channel {
      */
     public boolean isChannel() {
         return playlistId.startsWith("U");
+    }
+    
+    /**
+     * Returns whether the Channel is active or not.
+     *
+     * @return Whether the Channel is active or not.
+     */
+    public boolean isActive() {
+        return treeEntry.isActive();
+    }
+    
+    /**
+     * Returns whether the Channel is a member of a specific group or not.
+     *
+     * @param group The group.
+     * @return Whether the Channel is a member of the specified group or not.
+     */
+    public boolean isMemberOfGroup(String group) {
+        return treeEntry.isMemberOfGroup(group);
     }
     
     
