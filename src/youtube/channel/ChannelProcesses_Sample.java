@@ -59,7 +59,7 @@ public class ChannelProcesses_Sample {
             
             case "BY_RELEASE":
                 RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)(?:\\s*-\\s*By\\sRelease\\s*-?-\\s(?<episode>\\d*))?$",
+                        "^(?<title>.+?)(?:\\s*-\\s*By\\sRelease\\s*-?\\s#?(?<episode>\\d*))?$",
                         "By Release - $i - $title");
                 break;
             case "OSRS_CHALLENGES_TANZOO":
@@ -77,18 +77,18 @@ public class ChannelProcesses_Sample {
                 break;
             case "MUDKIP_HCIM":
                 RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?:Maxed HCIM\\s)?(?<title>.+?)\\s(?:Maxed HCIM\\s)?(?:-\\s|\\(|)-\\s(?<episode>\\d*\\.?\\d+)\\)?$", false,
+                        "^(?:\\[OSRS]\\s*)?(?:Maxed HCIM\\s)?(?<title>.+?)\\s(?:Maxed HCIM\\s)?(?:-\\s|\\(|)[#\\-]\\s?(?<episode>\\d*\\.?\\d+)\\)?$", false,
                         "Maxed HCIM - $episode - $title");
                 RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?:HCIM\\s)?(?<episode>\\d+)\\s*-\\s*(?<title>.+?)$", false,
+                        "^(?:\\[OSRS]\\s*)?(?:HCIM\\s)?#?(?<episode>\\d+)\\s*-\\s*(?<title>.+?)$", false,
                         "HCIM - $episode - $title");
                 RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:[Ee]p(?:isode|\\.)\\s*)?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$", false,
+                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:[Ee]p(?:isode|\\.)\\s*)?#?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$", false,
                         "HCIM - $episode - $title $level");
                 break;
             case "MUDKIP_UIM":
                 RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)(\\s(?:\\(UIM\\s-\\s|\\(-\\s)(?<episode>\\d+)\\))$", false,
+                        "^(?<title>.+?)\\s\\((?:UIM\\s)?[#\\-]\\s*(?<episode>\\d+)\\)$", false,
                         "UIM - $episode - $title");
                 break;
             case "SWAMPLETICS":
@@ -103,7 +103,7 @@ public class ChannelProcesses_Sample {
                 break;
             case "LOWER_THE_BETTER":
                 RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)(?:\\s?[:\\-]\\s?Lower\\s[Tt]he\\sBetter\\s?(?:Ep\\.\\s)?(?:#|-\\s)(?<episode>\\d+))?$",
+                        "^(?<title>.+?)(?:\\s?[:\\-]\\s?Lower\\s[Tt]he\\sBetter\\s?(?:Ep\\.\\s)?(?:[#\\-]\\s?)(?<episode>\\d+))?$",
                         "Lower the Better - $i - $title");
                 break;
             case "OSRS_WEEKLY_RECAP":
@@ -119,7 +119,7 @@ public class ChannelProcesses_Sample {
             case "ONE_KICK_RICK":
                 RenameProcess.replace(videoMap, "Series Trailer", "ep.0");
                 RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)\\s*-\\s*(?:Lumbridge-Draynor\\s(?:Only\\s)?HCIM\\s-\\s)?(?:One\\sKick\\sRick\\s-\\s)?ep\\.(?<episode>\\d+)$",
+                        "^(?<title>.+?)\\s*-\\s*(?:Lumbridge\\s*-\\s*Draynor\\s(?:Only\\s)?HCIM\\s-\\s)?(?:One\\sKick\\sRick\\s-\\s)?ep\\.(?<episode>\\d+)$",
                         "One Kick Rick - $episode - $title");
                 break;
             
