@@ -215,6 +215,11 @@ public class Configurator {
                 Configurator.getSetting("flag.retryFailed", false));
         
         /**
+         * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
+         */
+        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", true);
+        
+        /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
         public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
@@ -271,6 +276,11 @@ public class Configurator {
          */
         public static final boolean showProgressBar = (boolean) Configurator.getSetting("log", "showProgressBar",
                 Configurator.getSetting("flag.showProgressBar", true));
+        
+        /**
+         * The browser that cookies will be used from when attempting to retry certain failed downloads.
+         */
+        public static final String browser = (String) Configurator.getSetting("location.browser");
         
         /**
          * The Channel to process, or null if all Channels should be processed.

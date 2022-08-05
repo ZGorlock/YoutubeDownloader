@@ -4,7 +4,8 @@
         "location": {
             "storageDrive": "E:/",
             "musicDir": "Music/",
-            "videoDir": "Videos/"
+            "videoDir": "Videos/",
+            "browser": "Chrome"
         },
         "format": {
             "preMerged": true
@@ -22,6 +23,7 @@
         },
         "flag": {
             "retryPreviousFailures": false,
+            "neverUseBrowserCookies": false,
             "preventDeletion": false,
             "preventRenaming": false,
             "preventDownload": false,
@@ -35,13 +37,15 @@
     "YoutubeDownloader": {
         "executable": "yt-dlp",
         "location": {
-            "output": "E:/Downloads/"
+            "output": "E:/Downloads/",
+            "browser": "Chrome"
         },
         "format": {
             "asMp3": false,
             "preMerged": true
         },
         "flag": {
+            "neverUseBrowserCookies": false,
             "preventDownload": false,
             "preventVideoFetch": false,
             "preventExeAutoUpdate": false,

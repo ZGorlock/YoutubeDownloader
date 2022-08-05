@@ -109,6 +109,13 @@ public final class DownloadUtils {
             "please install or provide the path"
     );
     
+    /**
+     * A list of error responses that will trigger a retry attempt using browser cookies, if configured.
+     */
+    public static final List<String> RETRY_WITH_COOKIES_ERRORS = List.of(
+            "sign in to"
+    );
+    
     
     //Functions
     
@@ -120,13 +127,31 @@ public final class DownloadUtils {
      * @throws Exception When there is an error downloading the video.
      */
     public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
+        return downloadYoutubeVideo(video, false);
+    }
+    
+    /**
+     * Downloads a Youtube video.
+     *
+     * @param video   The Video data object.
+     * @param isRetry Whether this download attempt is a retry or not.
+     * @return A download response indicating the result of the download attempt.
+     * @throws Exception When there is an error downloading the video.
+     */
+    private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) throws Exception {
         boolean ytDlp = ExecutableUtils.EXECUTABLE.equals(ExecutableUtils.Executable.YT_DLP);
         boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
         SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
         
+        if (isRetry && (Configurator.Config.neverUseBrowserCookies ||
+                (Configurator.Config.browser == null) || Configurator.Config.browser.isEmpty())) {
+            return null;
+        }
+        
         String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getCall()) + Color.log(" ") +
                 Color.log("--output \"") + Color.file(video.download.getAbsolutePath().replace("\\", "/") + ".%(ext)s") + Color.log("\" ") +
-                Color.log("--geo-bypass --rm-cache-dir ") +
+                Color.log("--geo-bypass --rm-cache-dir " +
+                        (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
                 Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
                           ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig)) +
@@ -136,7 +161,7 @@ public final class DownloadUtils {
             System.out.println(Utils.INDENT + Color.base(cmd));
         }
         
-        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video);
+        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video, isRetry);
     }
     
     /**
@@ -146,7 +171,7 @@ public final class DownloadUtils {
      * @param video The Video data object.
      * @return A download response indicating the result of the download attempt.
      */
-    private static DownloadResponse performDownload(String cmd, Video video) {
+    private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
         DownloadResponse response = new DownloadResponse();
         ProgressBar progressBar = null;
         
@@ -289,11 +314,12 @@ public final class DownloadUtils {
             process.destroy();
             
             response.log = responseBuilder.toString().trim();
-            response.error = !response.log.contains("ERROR: ") ? null :
-                             response.log.substring(response.log.lastIndexOf("ERROR: ")).replaceAll("\r?\n", " - ");
+            response.error = (!response.log.contains("ERROR: ") && !response.log.contains(".exe: error: ")) ? null :
+                             response.log.substring(Math.max(response.log.lastIndexOf("ERROR: "), response.log.lastIndexOf(".exe: error: ")))
+                                     .replaceAll("\r?\n", " - ").replaceAll("^\\.exe:\\s*", "");
             response.message = (response.error == null) ? response.message :
                                response.error
-                                       .replaceAll("^ERROR:\\s*", "")
+                                       .replaceAll("(?i)^ERROR:\\s*", "")
                                        .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
                                        .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
                                        .trim();
@@ -315,6 +341,14 @@ public final class DownloadUtils {
                     }
                 }
                 response.message = null;
+            }
+            
+            if ((response.error != null) && !isRetry && (video != null) &&
+                    RETRY_WITH_COOKIES_ERRORS.stream().anyMatch(e -> response.error.toLowerCase().contains(e.toLowerCase()))) {
+                DownloadResponse retryResponse = downloadYoutubeVideo(video, true);
+                if (retryResponse != null) {
+                    return retryResponse;
+                }
             }
             
         } catch (Exception e) {
