@@ -11,15 +11,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import youtube.channel.Channel;
-import youtube.channel.Channels;
 
 /**
  * Handles configuration of the Youtube Downloader.
@@ -214,7 +211,8 @@ public class Configurator {
         /**
          * A flag indicating whether to retry previously failed videos or not.
          */
-        public static final boolean retryFailed = (boolean) Configurator.getSetting("flag.retryFailed", false);
+        public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
+                Configurator.getSetting("flag.retryFailed", false));
         
         /**
          * A flag indicating whether to globally prevent any media deletion or not.
@@ -277,7 +275,7 @@ public class Configurator {
         /**
          * The Channel to process, or null if all Channels should be processed.
          */
-        public static final Channel channel = Optional.ofNullable((String) Configurator.getSetting("filter.channel")).map(Channels::getChannel).orElse(null);
+        public static final String channel = (String) Configurator.getSetting("filter.channel");
         
         /**
          * The group to process, or null if all groups should be processed.
@@ -287,12 +285,12 @@ public class Configurator {
         /**
          * The Channel to start processing from, if processing all Channels.
          */
-        public static final Channel startAt = Optional.ofNullable((String) Configurator.getSetting("filter.startAt")).map(Channels::getChannel).orElse(null);
+        public static final String startAt = (String) Configurator.getSetting("filter.startAt");
         
         /**
          * The Channel to stop processing at, if processing all Channels.
          */
-        public static final Channel stopAt = Optional.ofNullable((String) Configurator.getSetting("filter.stopAt")).map(Channels::getChannel).orElse(null);
+        public static final String stopAt = (String) Configurator.getSetting("filter.stopAt");
         
     }
     

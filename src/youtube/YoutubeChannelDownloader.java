@@ -81,12 +81,12 @@ public class YoutubeChannelDownloader {
             boolean skip = (Configurator.Config.startAt != null);
             boolean stop = (Configurator.Config.stopAt != null);
             
-            if (!((skip && stop) && (Channels.indexOf(Configurator.Config.stopAt.key) < Channels.indexOf(Configurator.Config.startAt.key)))) {
+            if (!((skip && stop) && (Channels.indexOf(Configurator.Config.stopAt) < Channels.indexOf(Configurator.Config.startAt)))) {
                 for (Channel currentChannel : Channels.getChannels()) {
-                    if (!(skip &= (currentChannel != Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
+                    if (!(skip &= !currentChannel.key.equals(Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
                         setChannel(currentChannel);
                         processChannel();
-                        if (stop && (currentChannel == Configurator.Config.stopAt)) {
+                        if (stop && currentChannel.key.equals(Configurator.Config.stopAt)) {
                             break;
                         }
                     }
@@ -111,7 +111,19 @@ public class YoutubeChannelDownloader {
      */
     private static void setChannel(Channel newChannel) throws Exception {
         channel = newChannel;
-        channel.state.load();
+        if (channel != null) {
+            channel.state.load();
+        }
+    }
+    
+    /**
+     * Sets the active Channel.
+     *
+     * @param newChannelKey The key of the Channel to be processed.
+     * @throws Exception When there is an error.
+     */
+    private static void setChannel(String newChannelKey) throws Exception {
+        setChannel(Channels.getChannel(newChannelKey));
     }
     
     /**
@@ -121,7 +133,7 @@ public class YoutubeChannelDownloader {
      * @throws Exception When there is an error.
      */
     private static boolean processChannel() throws Exception {
-        if (!channel.isActive()) {
+        if ((channel == null) || !channel.isActive()) {
             return false;
         }
         
@@ -194,7 +206,7 @@ public class YoutubeChannelDownloader {
         }
         
         channel.state.queue.clear();
-        if (Configurator.Config.retryFailed) {
+        if (Configurator.Config.retryPreviousFailures) {
             channel.state.blocked.clear();
         }
         

@@ -21,7 +21,7 @@
             "printExeVersion": true
         },
         "flag": {
-            "retryFailed": false,
+            "retryPreviousFailures": false,
             "preventDeletion": false,
             "preventRenaming": false,
             "preventDownload": false,

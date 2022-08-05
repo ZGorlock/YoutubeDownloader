@@ -66,12 +66,12 @@ public final class Utils {
     /**
      * The newline string.
      */
-    public static final String NEWLINE = Color.base("");
+    public static final String NEWLINE = "";
     
     /**
      * The indentation string.
      */
-    public static final String INDENT = Color.base(StringUtility.spaces(5));
+    public static final String INDENT = StringUtility.spaces(5);
     
     
     //Functions
@@ -83,13 +83,13 @@ public final class Utils {
      * @return Whether startup was successful or not.
      */
     public static boolean startup(Project project) {
+        Configurator.loadSettings(project);
+        
         if (!WebUtils.isOnline()) {
             System.out.println(NEWLINE);
             System.out.println(Color.bad("Internet access is required"));
             return false;
         }
-        
-        Configurator.loadSettings(project);
         
         return ExecutableUtils.checkExe();
     }
