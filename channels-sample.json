@@ -78,6 +78,17 @@
                 "keepClean": true
               },
               {
+                "key": "BE_SMART",
+                "active": true,
+                "name": "BeSmart",
+                "url": "https://www.youtube.com/c/itsokaytobesmart",
+                "playlistId": "UUH4BNI0-FOK2dMXoFtViWHw",
+                "outputFolder": "Youtube/Science/Be Smart",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/Science/Be Smart.m3u",
+                "keepClean": true
+              },
+              {
                 "key": "THOUGHTY2",
                 "active": true,
                 "channels": [
@@ -1856,24 +1867,30 @@
               {
                 "key": "BEST_CUBE",
                 "active": true,
-                "name": "BestCube",
-                "url": "https://www.youtube.com/channel/UCIGBzvhOm5Hwxs9u_LY2XLQ",
-                "playlistId": "UUIGBzvhOm5Hwxs9u_LY2XLQ",
-                "outputFolder": "Youtube/Best Cube/Best Cube",
-                "saveAsMp3": false,
-                "playlistFile": "Youtube/Best Cube/Best Cube.m3u",
-                "keepClean": true
-              },
-              {
-                "key": "BEST_CUBE_2",
-                "active": true,
-                "name": "BestCube2",
-                "url": "https://www.youtube.com/channel/UC0s-sfNvOloiNBkCBYlfmUw",
-                "playlistId": "UU0s-sfNvOloiNBkCBYlfmUw",
-                "outputFolder": "Youtube/Best Cube/Best Cube 2",
-                "saveAsMp3": false,
-                "playlistFile": "Youtube/Best Cube/Best Cube 2.m3u",
-                "keepClean": true
+                "channels": [
+                  {
+                    "key": "BEST_CUBE",
+                    "active": false,
+                    "name": "BestCube",
+                    "url": "https://www.youtube.com/channel/UCIGBzvhOm5Hwxs9u_LY2XLQ",
+                    "playlistId": "UUIGBzvhOm5Hwxs9u_LY2XLQ",
+                    "outputFolder": "Youtube/Best Cube/Best Cube",
+                    "saveAsMp3": false,
+                    "playlistFile": "Youtube/Best Cube/Best Cube.m3u",
+                    "keepClean": true
+                  },
+                  {
+                    "key": "BEST_CUBE_2",
+                    "active": true,
+                    "name": "BestCube2",
+                    "url": "https://www.youtube.com/channel/UC0s-sfNvOloiNBkCBYlfmUw",
+                    "playlistId": "UU0s-sfNvOloiNBkCBYlfmUw",
+                    "outputFolder": "Youtube/Best Cube/Best Cube 2",
+                    "saveAsMp3": false,
+                    "playlistFile": "Youtube/Best Cube/Best Cube 2.m3u",
+                    "keepClean": true
+                  }
+                ]
               },
               {
                 "key": "BEST_CUBE_COUBOY",
@@ -1898,6 +1915,34 @@
                 "keepClean": true
               },
               {
+                "key": "TRAMBOLINO_COMPILATION",
+                "active": true,
+                "channels": [
+                  {
+                    "key": "TRAMBOLINO_COMPILATION",
+                    "active": false,
+                    "name": "TrambolinoCompilation",
+                    "url": "https://www.youtube.com/channel/UCn42HkmbUavCnHhwnvwpl_g",
+                    "playlistId": "UUn42HkmbUavCnHhwnvwpl_g",
+                    "outputFolder": "Youtube/Best Cube/Trambolino Compilation",
+                    "saveAsMp3": false,
+                    "playlistFile": "Youtube/Best Cube/Trambolino Compilation.m3u",
+                    "keepClean": true
+                  },
+                  {
+                    "key": "TRAMBOLINO_COMPILATION_2",
+                    "active": true,
+                    "name": "TrambolinoCompilation2",
+                    "url": "https://www.youtube.com/channel/UCsfXJ3GUu-6dV2553rpDfdg",
+                    "playlistId": "UUsfXJ3GUu-6dV2553rpDfdg",
+                    "outputFolder": "Youtube/Best Cube/Trambolino Compilation 2",
+                    "saveAsMp3": false,
+                    "playlistFile": "Youtube/Best Cube/Trambolino Compilation 2.m3u",
+                    "keepClean": true
+                  }
+                ]
+              },
+              {
                 "key": "SEXY_CUBE",
                 "active": false,
                 "name": "SexyCube",
@@ -1917,17 +1962,6 @@
                 "outputFolder": "Youtube/Best Cube/Anime Cube",
                 "saveAsMp3": false,
                 "playlistFile": "Youtube/Best Cube/Anime Cube.m3u",
-                "keepClean": true
-              },
-              {
-                "key": "TRAMBOLINO_COMPILATION",
-                "active": true,
-                "name": "TrambolinoCompilation",
-                "url": "https://www.youtube.com/channel/UCn42HkmbUavCnHhwnvwpl_g",
-                "playlistId": "UUn42HkmbUavCnHhwnvwpl_g",
-                "outputFolder": "Youtube/Best Cube/Trambolino Compilation",
-                "saveAsMp3": false,
-                "playlistFile": "Youtube/Best Cube/Trambolino Compilation.m3u",
                 "keepClean": true
               }
             ]
