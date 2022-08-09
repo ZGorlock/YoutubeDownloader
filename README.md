@@ -1,7 +1,14 @@
 # Youtube Downloader
-This repo contains two projects, the **Youtube Downloader** and the **Youtube Channel Downloader**.
 
-To run these projects you will need to have [**Java 13.0.2**](https://jdk.java.net/archive/) or higher, as well as [**Maven 3.6.3**](https://maven.apache.org/download.cgi) or higher.
+## Download Youtube Videos and Channels
+
+***
+
+## Usage
+
+To run this project you will need to have [**Java 13.0.2**](https://jdk.java.net/archive/) or higher, as well as [**Maven 3.8.6**](https://maven.apache.org/download.cgi) or higher.
+
+This repo contains two projects, the **Youtube Downloader** and the **Youtube Channel Downloader**.
 
 Both projects can be run within an IDE or by using the scripts in the project directory which compile and execute it using Maven.
 \
@@ -19,7 +26,7 @@ Alternatively you could run it with Maven directly from the command line using a
  
 ***
 
-## Downloader:
+## Downloader
 
 This is just a simple Youtube Downloader.
 
@@ -27,7 +34,7 @@ You can create a list of Youtube urls in the file *./data/downloadQueue.txt* and
 
 You can also enter additional Youtube urls while the program is running and they will be similarly downloaded. The program will continue to run until and empty line in received (Enter).
 
-### Configuration:
+### Configuration
 
 You can configure the operation of the Downloader project by changing the values inside the file *./conf.json*. There are two sections in the conf file, the settings for the Downloader project are under the "YoutubeDownloader" section:
 
@@ -47,11 +54,11 @@ You can also specify a global SponsorBlock configuration for videos downloaded b
  
 ***
 
-## Channel Downloader:
+## Channel Downloader
 
 This is a more complex Youtube Downloader and is the main focus of this repo. It will download and keep entire playlists or channels up to date on your hard drive. Everything you need to know for configuring the project to work for you will be explained below.
 
-### Getting an API Key:
+### Getting an API Key
 
 In order to use the Youtube Channel Downloader, you will need to have a Google API key. This is used to query the Youtube Data API for the video lists of channels and playlists.
 
@@ -67,7 +74,7 @@ Use the following steps to get your Google API key:
 
 Copy your API key to the file *./apiKey* in the project.
 
-### Configuration:
+### Configuration
 
 You can configure the operation of the Channel Downloader project by changing the values inside the file *./conf.json*. There are two sections in the conf file, the settings for the Channel Downloader project are under the "YoutubeChannelDownloader" section:
 
@@ -94,7 +101,7 @@ You can configure the operation of the Channel Downloader project by changing th
 * ***flag.preventExeAutoUpdate*** - When set to true, the Youtube Channel Downloader will not attempt to download or auto-update the selected ***executable***. You can set this variable to true or false, by default it is set to false.
 * ***flag.preventExeVersionCheck*** - When set to true, the Youtube Channel Downloader will not attempt to check the current or latest version of the selected ***executable***. You can set this variable to true or false, by default it is set to false.
 
-### Executable Options:
+### Executable Options
 
 You can configure this project to use either [youtube-dl](https://youtube-dl.org/) or [yt-dlp](https://github.com/yt-dlp/yt-dlp/).
 
@@ -105,7 +112,7 @@ Set your choice of executable in the configuration file as explain in the Config
 \
 Whichever Executable you choose will be automatically downloaded by the project and it will ensure the latest version is always being used.
 
-### Adding a Channel or Playlist:
+### Adding a Channel or Playlist
 
 Next add the channels or playlists that you want to process to the file *./channels.json*. There are many examples in *./channels-sample.json* that you can use as a reference.
 \
@@ -153,7 +160,7 @@ Examples:
 * **BAD**: A directory that also contains videos that you have also downloaded previously for this Channel before starting to use this project
 * **GOOD**: An empty directory or a directory that does not exist yet
 
-### Grouping Channels:
+### Grouping Channels
 
 Once you have Channels in the file *./channels.json*, you can optionally group them to make them easier to read and easier to search.
 
@@ -177,25 +184,25 @@ Example:
 
 You can also nest Groups inside other Groups. When a Channel is within a nested Group, it will be a member of all of the enclosing Groups. The key of any parent group can be used when filtering that Channel.
 
-### Finding Youtube Playlist IDs:
+### Finding Youtube Playlist IDs
 
 Now you will need to set the playlist ID for your Channel. The way of obtaining this will be different depending on if your Channel is an actual Youtube channel, or if it is a playlist.
 
-#### For a Youtube playlist:
+#### For a Youtube playlist
 
     1. Go to the Youtube Playlist
     2. Simply copy it from the url:
         https://www.youtube.com/watch?v=3qiLI1ILMlU&list=PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr
                                                         <PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr>
 
-#### For a Youtube channel:
+#### For a Youtube channel
 
     1. Go to the Youtube Channel
     2. Right click and View the Page Source
     3. Search for "externalId" and copy that value
     4. Change the second character from a 'C' to a 'U'
 
-### Special Channel Processing:
+### Special Channel Processing
 
 There are certain instances where you may want to perform some additional processing on the Channel to filter which videos are downloaded, to rename the downloaded videos to something that you prefer, etc. This functionality is possible granted that you know a bit of Java.
 
@@ -217,7 +224,7 @@ These methods have no return value, any changes that you want to make should be 
 
 There are many examples of these processes in the file *./src/youtube/ChannelProcesses_Sample.java*. These are also the personal pre and post processes for my Channel configuration. If you did copy some of my Channels from *./channels-sample.json* then you should also copy the corresponding pre and post processes.
 
-### SponsorBlock Configuration:
+### SponsorBlock Configuration
 
 If you chose to use ***yt-dlp*** as the Youtube Downloader executable then you have the option to set up [SponsorBlock](https://sponsor.ajay.app/) as part of your configuration. SponsorBlock is able to automatically cut out unwanted parts from the Youtube videos you download, for example, sponsored sections, self promotions, intros, etc.
 
@@ -255,7 +262,7 @@ If you have a Global configuration and a Channel configuration and both are enab
 * If both configurations have ***enabled*** set to true, but the Global configuration has ***forceGlobally*** set to true, then the Global configuration will be used.
 * If both configurations have ***enabled*** set to true, but the Channel configuration has ***overrideGlobal*** set to true, regardless of whether the Global configuration has ***forceGlobally*** set to true or not, then the Channel configuration will be used.
 
-### Color Configuration:
+### Color Configuration
 
 To configure a custom color configuration add a new "color" object to *./conf.json* as a top level object.
 
@@ -283,7 +290,7 @@ You can add the following fields inside the "color" object.
 
 **NOTE**: The colors of the progress bar cannot be changed.
 
-### Logging Configuration:
+### Logging Configuration
 
 To configure a custom logging configuration add a new "log" object to *./conf.json* as a top level object.
 
@@ -293,7 +300,10 @@ You can add the following fields inside the "log" object. All fields are boolean
 * ***logWork*** - Whether to print the work done by the executable while downloading each video to the console or not. If this is enabled then ***showProgressBar*** will be disabled. *(optional; defaults to false)*
 * ***showProgressBar*** - Whether to print a progress bar while downloading each video to the console or not. This is ignored if ***logWork*** is enabled. *(optional; defaults to true)*
 
-### Note about Updates:
+ 
+***
+
+## Note about Updates
 
 The project should work as it does now indefinitely, as long as *youtube-dl* and *yt-dlp* continue to exist on the same websites they do now. However, additional improvements and features may be added from time to time.
 
@@ -304,4 +314,5 @@ Before you do this though, make sure you back up your versions of the configurat
  
 ***
 
+\
 --- This program is for educational and testing purposes only and is not intended to be used in any way that would violate the Youtube ToS or to download copyrighted material ---
