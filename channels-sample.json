@@ -1429,6 +1429,17 @@
                 "keepClean": true
               },
               {
+                "key": "HISTORY_OF_EARTH",
+                "active": true,
+                "name": "HistoryOfEarth",
+                "url": "https://www.youtube.com/c/HistoryoftheEarth",
+                "playlistId": "UU_aOteuWIY8ITg7DQQspG1g",
+                "outputFolder": "Youtube/Nature/History of Earth",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/Nature/History of Earth.m3u",
+                "keepClean": true
+              },
+              {
                 "key": "REAL_WILD",
                 "active": false,
                 "name": "RealWild",
@@ -1980,6 +1991,17 @@
                 "saveAsMp3": false,
                 "playlistFile": "Youtube/Trippy/Felix Cosgrave.m3u",
                 "keepClean": true
+              },
+              {
+                "key": "MICHAEL_CUSACK",
+                "active": true,
+                "name": "MichaelCusack",
+                "url": "https://www.youtube.com/c/MichaelCusackCartoons",
+                "playlistId": "UUkHPqmBsJkws8HbPP1cd_NA",
+                "outputFolder": "Youtube/Trippy/Michael Cusack",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/Trippy/Michael Cusack.m3u",
+                "keepClean": true
               }
             ]
           }
@@ -2292,9 +2314,9 @@
                 "name": "TrapFavorites",
                 "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
                 "playlistId": "PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
-                "outputFolder": "Youtube/Trap/Trap Favorites",
+                "outputFolder": "Youtube/Trap/Youtube Trap Favorites",
                 "saveAsMp3": true,
-                "playlistFile": "Youtube/Trap/Trap Favorites.m3u",
+                "playlistFile": "Youtube/Trap/Youtube Trap Favorites.m3u",
                 "reversePlaylist": false,
                 "keepClean": true
               },
@@ -2349,18 +2371,18 @@
             ]
           },
           {
-            "key": "VOCAL",
+            "key": "POP",
             "active": true,
             "channels": [
               {
-                "key": "VOCAL_FAVORITES",
+                "key": "POP_FAVORITES",
                 "active": true,
-                "name": "VocalFavorites",
+                "name": "PopFavorites",
                 "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
                 "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
-                "outputFolder": "Youtube/Vocal/Favorites",
+                "outputFolder": "Youtube/Pop/Youtube Pop Favorites",
                 "saveAsMp3": true,
-                "playlistFile": "Youtube/Vocal/Favorites.m3u",
+                "playlistFile": "Youtube/Pop/Youtube Pop Favorites.m3u",
                 "reversePlaylist": false,
                 "keepClean": true
               },
@@ -2374,9 +2396,9 @@
                     "name": "MrMomMusic",
                     "url": "https://www.youtube.com/c/MrMoM",
                     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-                    "outputFolder": "Youtube/Vocal/Mr Mom Music",
+                    "outputFolder": "Youtube/Pop/Mr Mom Music",
                     "saveAsMp3": true,
-                    "playlistFile": "Youtube/Vocal/Mr Mom Music - All.m3u",
+                    "playlistFile": "Youtube/Pop/Mr Mom Music - All.m3u",
                     "reversePlaylist": true,
                     "keepClean": true
                   },
@@ -2386,9 +2408,9 @@
                     "name": "MrMomMusicNew",
                     "url": "https://www.youtube.com/c/MrMoM",
                     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
-                    "outputFolder": "Youtube/Vocal/Mr Mom Music",
+                    "outputFolder": "Youtube/Pop/Mr Mom Music",
                     "saveAsMp3": true,
-                    "playlistFile": "Youtube/Vocal/Mr Mom Music.m3u",
+                    "playlistFile": "Youtube/Pop/Mr Mom Music.m3u",
                     "reversePlaylist": true,
                     "keepClean": false
                   }
@@ -2400,9 +2422,9 @@
                 "name": "MrSuicideSheep",
                 "url": "https://www.youtube.com/user/MrSuicideSheep",
                 "playlistId": "UU5nc_ZtjKW1htCVZVRxlQAQ",
-                "outputFolder": "Youtube/Vocal/Mr Suicide Sheep",
+                "outputFolder": "Youtube/Pop/Mr Suicide Sheep",
                 "saveAsMp3": true,
-                "playlistFile": "Youtube/Vocal/Mr Suicide Sheep.m3u",
+                "playlistFile": "Youtube/Pop/Mr Suicide Sheep.m3u",
                 "reversePlaylist": true,
                 "keepClean": true
               },
@@ -2412,9 +2434,9 @@
                 "name": "NightblueMusic",
                 "url": "https://www.youtube.com/channel/UCe55Gy-hFDvLZp8C8BZhBnw",
                 "playlistId": "UUe55Gy-hFDvLZp8C8BZhBnw",
-                "outputFolder": "Youtube/Vocal/Nightblue Music",
+                "outputFolder": "Youtube/Pop/Nightblue Music",
                 "saveAsMp3": true,
-                "playlistFile": "Youtube/Vocal/Nightblue Music.m3u",
+                "playlistFile": "Youtube/Pop/Nightblue Music.m3u",
                 "reversePlaylist": true,
                 "keepClean": true
               }
