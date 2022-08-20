@@ -8,7 +8,7 @@
         "active": true,
         "channels": [
           {
-            "key": "SCIENCE",
+            "key": "GENERAL",
             "active": true,
             "channels": [
               {
@@ -17,9 +17,9 @@
                 "name": "Kurzgesagt",
                 "url": "https://www.youtube.com/c/inanutshell",
                 "playlistId": "UUsXVk37bltHxD1rDPwtNM8Q",
-                "outputFolder": "Youtube/Science/Kurzgesagt",
+                "outputFolder": "Youtube/General/Kurzgesagt",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Kurzgesagt.m3u",
+                "playlistFile": "Youtube/General/Kurzgesagt.m3u",
                 "keepClean": true
               },
               {
@@ -28,9 +28,9 @@
                 "name": "SciShow",
                 "url": "https://www.youtube.com/c/SciShow",
                 "playlistId": "UUZYTClx2T1of7BRZ86-8fow",
-                "outputFolder": "Youtube/Science/SciShow",
+                "outputFolder": "Youtube/General/SciShow",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/SciShow.m3u",
+                "playlistFile": "Youtube/General/SciShow.m3u",
                 "keepClean": true
               },
               {
@@ -39,9 +39,9 @@
                 "name": "Veritasium",
                 "url": "https://www.youtube.com/c/veritasium",
                 "playlistId": "UUHnyfMqiRRG1u-2MsSQLbXA",
-                "outputFolder": "Youtube/Science/Veritasium",
+                "outputFolder": "Youtube/General/Veritasium",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Veritasium.m3u",
+                "playlistFile": "Youtube/General/Veritasium.m3u",
                 "keepClean": true
               },
               {
@@ -50,9 +50,9 @@
                 "name": "SteveMould",
                 "url": "https://www.youtube.com/c/SteveMould",
                 "playlistId": "UUEIwxahdLz7bap-VDs9h35A",
-                "outputFolder": "Youtube/Science/Steve Mould",
+                "outputFolder": "Youtube/General/Steve Mould",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Steve Mould.m3u",
+                "playlistFile": "Youtube/General/Steve Mould.m3u",
                 "keepClean": true
               },
               {
@@ -61,9 +61,9 @@
                 "name": "AppliedScience",
                 "url": "https://www.youtube.com/c/AppliedScience",
                 "playlistId": "UUivA7_KLKWo43tFcCkFvydw",
-                "outputFolder": "Youtube/Science/Applied Science",
+                "outputFolder": "Youtube/General/Applied Science",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Applied Science.m3u",
+                "playlistFile": "Youtube/General/Applied Science.m3u",
                 "keepClean": true
               },
               {
@@ -72,9 +72,9 @@
                 "name": "AnswersWithJoe",
                 "url": "https://www.youtube.com/playlist?list=PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl",
                 "playlistId": "PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl",
-                "outputFolder": "Youtube/Science/Answers With Joe",
+                "outputFolder": "Youtube/General/Answers With Joe",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Answers With Joe.m3u",
+                "playlistFile": "Youtube/General/Answers With Joe.m3u",
                 "keepClean": true
               },
               {
@@ -83,9 +83,9 @@
                 "name": "BeSmart",
                 "url": "https://www.youtube.com/c/itsokaytobesmart",
                 "playlistId": "UUH4BNI0-FOK2dMXoFtViWHw",
-                "outputFolder": "Youtube/Science/Be Smart",
+                "outputFolder": "Youtube/General/Be Smart",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Be Smart.m3u",
+                "playlistFile": "Youtube/General/Be Smart.m3u",
                 "keepClean": true
               },
               {
@@ -98,9 +98,9 @@
                     "name": "Thoughty2",
                     "url": "https://www.youtube.com/channel/UCRlICXvO4XR4HMeEB9JjDlA",
                     "playlistId": "UURlICXvO4XR4HMeEB9JjDlA",
-                    "outputFolder": "Youtube/Science/Thoughty2",
+                    "outputFolder": "Youtube/General/Thoughty2",
                     "saveAsMp3": false,
-                    "playlistFile": "Youtube/Science/Thoughty2.m3u",
+                    "playlistFile": "Youtube/General/Thoughty2.m3u",
                     "keepClean": true
                   },
                   {
@@ -109,9 +109,9 @@
                     "name": "Thoughty2NewIntroOnly",
                     "url": "https://www.youtube.com/channel/UCRlICXvO4XR4HMeEB9JjDlA",
                     "playlistId": "UURlICXvO4XR4HMeEB9JjDlA",
-                    "outputFolder": "Youtube/Science/Thoughty2",
+                    "outputFolder": "Youtube/General/Thoughty2",
                     "saveAsMp3": false,
-                    "playlistFile": "Youtube/Science/Thoughty2 - New Intro Only.m3u",
+                    "playlistFile": "Youtube/General/Thoughty2 - New Intro Only.m3u",
                     "keepClean": false
                   }
                 ]
@@ -126,9 +126,9 @@
                     "name": "Vsauce",
                     "url": "https://www.youtube.com/c/vsauce1",
                     "playlistId": "UU6nSFpj9HTCZ5t-N3Rm3-HA",
-                    "outputFolder": "Youtube/Science/Vsauce",
+                    "outputFolder": "Youtube/General/Vsauce",
                     "saveAsMp3": false,
-                    "playlistFile": "Youtube/Science/Vsauce.m3u",
+                    "playlistFile": "Youtube/General/Vsauce.m3u",
                     "keepClean": true
                   },
                   {
@@ -141,9 +141,9 @@
                         "name": "MindFieldS1",
                         "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
                         "playlistId": "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
-                        "outputFolder": "Youtube/Science/Vsauce/Mind Field/Season 1",
+                        "outputFolder": "Youtube/General/Vsauce/Mind Field/Season 1",
                         "saveAsMp3": false,
-                        "playlistFile": "Youtube/Science/Vsauce/Mind Field/Season 1.m3u",
+                        "playlistFile": "Youtube/General/Vsauce/Mind Field/Season 1.m3u",
                         "keepClean": false
                       },
                       {
@@ -152,9 +152,9 @@
                         "name": "MindFieldS2",
                         "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
                         "playlistId": "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
-                        "outputFolder": "Youtube/Science/Vsauce/Mind Field/Season 2",
+                        "outputFolder": "Youtube/General/Vsauce/Mind Field/Season 2",
                         "saveAsMp3": false,
-                        "playlistFile": "Youtube/Science/Vsauce/Mind Field/Season 2.m3u",
+                        "playlistFile": "Youtube/General/Vsauce/Mind Field/Season 2.m3u",
                         "keepClean": false
                       },
                       {
@@ -163,9 +163,9 @@
                         "name": "MindFieldS3",
                         "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
                         "playlistId": "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
-                        "outputFolder": "Youtube/Science/Vsauce/Mind Field/Season 3",
+                        "outputFolder": "Youtube/General/Vsauce/Mind Field/Season 3",
                         "saveAsMp3": false,
-                        "playlistFile": "Youtube/Science/Vsauce/Mind Field/Season 3.m3u",
+                        "playlistFile": "Youtube/General/Vsauce/Mind Field/Season 3.m3u",
                         "keepClean": false
                       }
                     ]
@@ -178,9 +178,9 @@
                 "name": "CgpGrey",
                 "url": "https://www.youtube.com/greymatter",
                 "playlistId": "UU2C_jShtL725hvbm1arSV9w",
-                "outputFolder": "Youtube/Science/CGP Grey",
+                "outputFolder": "Youtube/General/CGP Grey",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/CGP Grey.m3u",
+                "playlistFile": "Youtube/General/CGP Grey.m3u",
                 "keepClean": true
               },
               {
@@ -189,9 +189,9 @@
                 "name": "CodysLab",
                 "url": "https://www.youtube.com/user/theCodyReeder",
                 "playlistId": "UUu6mSoMNzHQiBIOCkHUa2Aw",
-                "outputFolder": "Youtube/Science/Cody's Lab",
+                "outputFolder": "Youtube/General/Cody's Lab",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Cody's Lab.m3u",
+                "playlistFile": "Youtube/General/Cody's Lab.m3u",
                 "keepClean": true
               },
               {
@@ -200,9 +200,9 @@
                 "name": "SmarterEveryDay",
                 "url": "https://www.youtube.com/c/smartereveryday",
                 "playlistId": "UU6107grRI4m0o2-emgoDnAA",
-                "outputFolder": "Youtube/Science/Smarter Every Day",
+                "outputFolder": "Youtube/General/Smarter Every Day",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Smarter Every Day.m3u",
+                "playlistFile": "Youtube/General/Smarter Every Day.m3u",
                 "keepClean": true
               },
               {
@@ -211,9 +211,9 @@
                 "name": "MinutePhysics",
                 "url": "https://www.youtube.com/user/minutephysics",
                 "playlistId": "UUUHW94eEFW7hkUMVaZz4eDg",
-                "outputFolder": "Youtube/Science/Minute Physics",
+                "outputFolder": "Youtube/General/Minute Physics",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Minute Physics.m3u",
+                "playlistFile": "Youtube/General/Minute Physics.m3u",
                 "keepClean": true
               },
               {
@@ -222,9 +222,9 @@
                 "name": "RationalAnimations",
                 "url": "https://www.youtube.com/c/RationalAnimations",
                 "playlistId": "UUgqt1RE0k0MIr0LoyJRy2lg",
-                "outputFolder": "Youtube/Science/Rational Animations",
+                "outputFolder": "Youtube/General/Rational Animations",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Rational Animations.m3u",
+                "playlistFile": "Youtube/General/Rational Animations.m3u",
                 "keepClean": true
               },
               {
@@ -233,9 +233,31 @@
                 "name": "DomainOfScience",
                 "url": "https://www.youtube.com/c/DomainofScience",
                 "playlistId": "UUxqAWLTk1CmBvZFPzeZMd9A",
-                "outputFolder": "Youtube/Science/Domain of Science",
+                "outputFolder": "Youtube/General/Domain of Science",
                 "saveAsMp3": false,
-                "playlistFile": "Youtube/Science/Domain of Science.m3u",
+                "playlistFile": "Youtube/General/Domain of Science.m3u",
+                "keepClean": true
+              },
+              {
+                "key": "SOUP_EMPORIUM",
+                "active": true,
+                "name": "SoupEmporium",
+                "url": "https://www.youtube.com/c/SoupEmporiums-Emporium-Of-Regrettable-Choices",
+                "playlistId": "UU60sV1b2e_EQRDnueRxgiIQ",
+                "outputFolder": "Youtube/General/Soup Emporium",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/General/Soup Emporium.m3u",
+                "keepClean": true
+              },
+              {
+                "key": "DOWN_THE_RABBIT_HOLE",
+                "active": true,
+                "name": "DownTheRabbitHole",
+                "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
+                "playlistId": "PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
+                "outputFolder": "Youtube/General/Down The Rabbit Hole",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/General/Down The Rabbit Hole.m3u",
                 "keepClean": true
               }
             ]
@@ -645,17 +667,6 @@
                 "outputFolder": "Youtube/Engineering/How its Made",
                 "saveAsMp3": false,
                 "playlistFile": "Youtube/Engineering/How its Made.m3u",
-                "keepClean": true
-              },
-              {
-                "key": "PRACTICAL_ENGINEERING",
-                "active": true,
-                "name": "PracticalEngineering",
-                "url": "https://www.youtube.com/c/PracticalEngineeringChannel",
-                "playlistId": "UUMOqf8ab-42UUQIdVoKwjlQ",
-                "outputFolder": "Youtube/Engineering/Practical Engineering",
-                "saveAsMp3": false,
-                "playlistFile": "Youtube/Engineering/Practical Engineering.m3u",
                 "keepClean": true
               },
               {
@@ -1190,6 +1201,17 @@
                 "outputFolder": "Youtube/Infrastructure/Not Just Bikes",
                 "saveAsMp3": false,
                 "playlistFile": "Youtube/Infrastructure/Not Just Bikes.m3u",
+                "keepClean": true
+              },
+              {
+                "key": "PRACTICAL_ENGINEERING",
+                "active": true,
+                "name": "PracticalEngineering",
+                "url": "https://www.youtube.com/c/PracticalEngineeringChannel",
+                "playlistId": "UUMOqf8ab-42UUQIdVoKwjlQ",
+                "outputFolder": "Youtube/Infrastructure/Practical Engineering",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/Infrastructure/Practical Engineering.m3u",
                 "keepClean": true
               }
             ]
