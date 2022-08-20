@@ -30,7 +30,7 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    private static final File DOWNLOAD_QUEUE = new File("data/downloadQueue.txt");
+    private static final File DOWNLOAD_QUEUE = new File(Utils.DATA_DIR, "downloadQueue.txt");
     
     
     //Static Fields

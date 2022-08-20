@@ -49,6 +49,16 @@ public final class Utils {
     //Constants
     
     /**
+     * The data directory.
+     */
+    public static final File DATA_DIR = new File("data");
+    
+    /**
+     * The resources directory.
+     */
+    public static final File RESOURCES_DIR = new File("resources");
+    
+    /**
      * The temporary directory.
      */
     public static final File TMP_DIR = new File("tmp");

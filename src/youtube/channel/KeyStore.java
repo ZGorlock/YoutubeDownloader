@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
+import youtube.util.Utils;
 
 /**
  * Manages the key store.
@@ -26,7 +27,7 @@ public class KeyStore {
     /**
      * The store of video keys and their current saved file name.
      */
-    private static final File KEY_STORE_FILE = new File("data/keyStore.txt");
+    private static final File KEY_STORE_FILE = new File(Utils.DATA_DIR, "keyStore.txt");
     
     /**
      * The backup file of the keystore.

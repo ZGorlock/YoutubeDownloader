@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import youtube.util.Configurator;
+import youtube.util.Utils;
 
 /**
  * Manages the state of a Channel.
@@ -97,7 +98,7 @@ public class ChannelState {
         
         this.keyStore = new LinkedHashMap<>();
         
-        this.stateLocation = new File("data/channel/" + channel.name);
+        this.stateLocation = new File(Utils.DATA_DIR, "channel/" + channel.name);
         this.dataFile = new File(this.stateLocation, (channel.name + "-data.txt"));
         this.callLogFile = new File(this.stateLocation, (channel.name + "-callLog.txt"));
         this.saveFile = new File(this.stateLocation, (channel.name + "-save.txt"));
