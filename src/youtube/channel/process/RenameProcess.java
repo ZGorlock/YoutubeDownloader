@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import youtube.channel.Video;
+import youtube.util.Color;
 
 /**
  * Provides Channel Process macros to help with renaming.
@@ -144,7 +145,8 @@ public class RenameProcess {
                         .replace("$i", String.valueOf(index.get()))
                         .replace("$d", dateFormat.format(video.date))));
             } else if (strict) {
-                throw new RuntimeException("The video: '" + video.title + "' does not match the pattern '" + pattern + "'");
+                System.out.println(Color.bad("The video: ") + Color.videoName(video.title) + Color.bad(" does not match the pattern: ") + Color.quoted(Color.base(pattern)));
+                throw new RuntimeException();
             }
         });
     }

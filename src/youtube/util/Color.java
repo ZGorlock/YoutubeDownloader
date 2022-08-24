@@ -27,6 +27,15 @@ public class Color {
             "DARK_GREEN", "GREEN", "CYAN", "YELLOW",
             "DARK_BLUE", "BLUE", "LIGHT_BLUE", "PURPLE", "MAGENTA");
     
+    //Ensure config is loaded prior to using colors
+    static {
+        if (Configurator.activeProject == null) {
+            System.out.println(Utils.NEWLINE);
+            System.out.println(Color.bad("Attempted to load colors before the config was initialized"));
+            throw new RuntimeException();
+        }
+    }
+    
     
     //Functions
     
@@ -214,6 +223,72 @@ public class Color {
      */
     public static String link(Object o) {
         return apply(LINK, o);
+    }
+    
+    /**
+     * Adds colored quotes around output.
+     *
+     * @param output The output.
+     * @return The quoted output.
+     */
+    public static String quoted(String output) {
+        final String quote = Color.log("'");
+        return quote + output + quote;
+    }
+    
+    /**
+     * Colors the output indicating a file.
+     *
+     * @param fileName The file name.
+     * @param quote    Whether to quote the file name or not.
+     * @return The colored output.
+     */
+    public static String fileName(String fileName, boolean quote) {
+        final String fileNameOutput = Color.file(fileName);
+        return quote ? quoted(fileNameOutput) : fileNameOutput;
+    }
+    
+    /**
+     * Colors the output indicating a file.
+     *
+     * @param fileName The file name.
+     * @return The colored output.
+     */
+    public static String fileName(String fileName) {
+        return fileName(fileName, true);
+    }
+    
+    /**
+     * Colors the output indicating a video.
+     *
+     * @param title The video title.
+     * @param quote Whether to quote the title or not.
+     * @return The colored output.
+     */
+    public static String videoName(String title, boolean quote) {
+        final String videoNameOutput = Color.video(title);
+        return quote ? quoted(videoNameOutput) : videoNameOutput;
+    }
+    
+    /**
+     * Colors the output indicating a video.
+     *
+     * @param title The video title.
+     * @return The colored output.
+     */
+    public static String videoName(String title) {
+        return videoName(title, true);
+    }
+    
+    /**
+     * Colors the output indicating a video rename.
+     *
+     * @param originalTitle The video title.
+     * @param renamedTitle  The renamed video title.
+     * @return The colored output.
+     */
+    public static String videoRename(String originalTitle, String renamedTitle) {
+        return quoted(Color.video(originalTitle)) + Color.log(" to: ") + quoted(Color.video(renamedTitle));
     }
     
 }

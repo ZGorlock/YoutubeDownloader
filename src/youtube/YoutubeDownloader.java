@@ -80,7 +80,7 @@ public class YoutubeDownloader {
                         System.out.println(Utils.INDENT + response.printedResponse());
                         
                     } else {
-                        System.out.println(Color.bad("Would have downloaded: '") + Color.video(video.title) + Color.bad("' but downloading is disabled"));
+                        System.out.println(Color.bad("Would have downloaded: ") + Color.videoName(video.title) + Color.bad(" but downloading is disabled"));
                     }
                 } else {
                     System.out.println(Color.bad("URL is not a Youtube video"));

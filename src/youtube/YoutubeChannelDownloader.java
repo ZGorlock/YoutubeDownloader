@@ -214,7 +214,7 @@ public class YoutubeChannelDownloader {
         
         videoMap.values().stream().collect(Collectors.groupingBy(e -> e.title)).entrySet()
                 .stream().filter(e -> (e.getValue().size() > 1)).forEach(e ->
-                        System.out.println(Color.bad("The title: '") + Color.video(e.getValue().get(0).title) + Color.bad("' appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
+                        System.out.println(Color.bad("The title: ") + Color.videoName(e.getValue().get(0).title) + Color.bad(" appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
         
         videoMap.forEach((videoId, video) -> {
             channel.state.saved.remove(videoId);
@@ -237,7 +237,7 @@ public class YoutubeChannelDownloader {
                     
                     if (!oldOutput.getName().equals(newOutput.getName())) {
                         if (!Configurator.Config.preventRenaming) {
-                            System.out.println(Color.base("Renaming: '") + Color.video(oldOutput.getName()) + Color.base("' to: '") + Color.video(newOutput.getName()) + Color.base("'"));
+                            System.out.println(Color.base("Renaming: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()));
                             oldOutput.renameTo(newOutput);
                             
                             video.updateOutput(newOutput);
@@ -251,7 +251,7 @@ public class YoutubeChannelDownloader {
                             }
                             
                         } else {
-                            System.out.println(Color.bad("Would have renamed: '") + Color.video(oldOutput.getName()) + Color.bad("' to: '") + Color.video(newOutput.getName()) + Color.bad("' but renaming is disabled"));
+                            System.out.println(Color.bad("Would have renamed: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()) + Color.bad(" but renaming is disabled"));
                             channel.state.queue.add(videoId);
                         }
                         
@@ -292,9 +292,9 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             if (!Configurator.Config.preventDownload) {
-                System.out.println(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.video(video.title));
+                System.out.println(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.videoName(video.title, false));
             } else {
-                System.out.println(Color.bad("Would have downloaded: '") + Color.video(video.title) + Color.bad("' but downloading is disabled"));
+                System.out.println(Color.bad("Would have downloaded: ") + Color.videoName(video.title) + Color.bad(" but downloading is disabled"));
                 continue;
             }
             
@@ -365,10 +365,10 @@ public class YoutubeChannelDownloader {
         
         if (!channel.error && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
-                System.out.println(Color.base("Updating playlist: '") + Color.file(channel.playlistFile.getName()) + Color.base("'"));
+                System.out.println(Color.base("Updating playlist: ") + Color.fileName(channel.playlistFile.getName()));
                 FileUtils.writeLines(channel.playlistFile, playlist);
             } else {
-                System.out.println(Color.bad("Would have updated playlist: '") + Color.file(channel.playlistFile.getName()) + Color.base("' but playlist modification is disabled"));
+                System.out.println(Color.bad("Would have updated playlist: ") + Color.fileName(channel.playlistFile.getName()) + Color.base(" but playlist modification is disabled"));
             }
         }
         return true;
@@ -401,7 +401,7 @@ public class YoutubeChannelDownloader {
                         String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
                         
                         if (!Configurator.Config.preventDeletion) {
-                            System.out.println(Color.base("Deleting: '") + printedFile + Color.base("'"));
+                            System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
                             FileUtils.forceDelete(video);
                             
                             if (!isPartFile) {
@@ -413,7 +413,7 @@ public class YoutubeChannelDownloader {
                             }
                             
                         } else {
-                            System.out.println(Color.bad("Would have deleted: '") + printedFile + Color.bad("' but deletion is disabled"));
+                            System.out.println(Color.bad("Would have deleted: ") + Color.quoted(printedFile) + Color.bad(" but deletion is disabled"));
                         }
                     }
                 }
