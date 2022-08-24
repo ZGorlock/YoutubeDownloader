@@ -272,6 +272,9 @@ public class ChannelProcesses_Sample {
                 FilterProcess.dateBefore(videoMap,
                         new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
                 break;
+            case "UP_AND_ATOM":
+                FilterProcess.containsIgnoreCase(videoMap, List.of("Merchandise", "Livestream", "Live Stream"));
+                break;
             
             case "VSAUCE":
                 FilterProcess.contains(videoMap, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));

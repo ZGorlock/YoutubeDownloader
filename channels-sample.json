@@ -56,6 +56,17 @@
                 "keepClean": true
               },
               {
+                "key": "UP_AND_ATOM",
+                "active": true,
+                "name": "UpAndAtom",
+                "url": "https://www.youtube.com/c/UpandAtom",
+                "playlistId": "UUSIvk78tK2TiviLQn4fSHaw",
+                "outputFolder": "Youtube/General/Up and Atom",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/General/Up and Atom.m3u",
+                "keepClean": true
+              },
+              {
                 "key": "APPLIED_SCIENCE",
                 "active": true,
                 "name": "AppliedScience",
@@ -1459,6 +1470,17 @@
                 "outputFolder": "Youtube/Nature/History of Earth",
                 "saveAsMp3": false,
                 "playlistFile": "Youtube/Nature/History of Earth.m3u",
+                "keepClean": true
+              },
+              {
+                "key": "PBS_EONS",
+                "active": true,
+                "name": "PbsEons",
+                "url": "https://www.youtube.com/c/eons",
+                "playlistId": "UUzR-rom72PHN9Zg7RML9EbA",
+                "outputFolder": "Youtube/Nature/PBS Eons",
+                "saveAsMp3": false,
+                "playlistFile": "Youtube/Nature/PBS Eons.m3u",
                 "keepClean": true
               },
               {
