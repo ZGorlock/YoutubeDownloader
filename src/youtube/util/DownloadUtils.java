@@ -319,7 +319,7 @@ public final class DownloadUtils {
                                      .replaceAll("\r?\n", " - ").replaceAll("^\\.exe:\\s*", "");
             response.message = (response.error == null) ? response.message :
                                response.error
-                                       .replaceAll("(?i)^ERROR:\\s*", "")
+                                       .replaceAll("(?i)^ERROR:\\s*(?:-\\s*)?", "")
                                        .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
                                        .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
                                        .trim();
@@ -333,7 +333,7 @@ public final class DownloadUtils {
                     progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
                     progressBar.update(-1);
                 }
-                if (!progressBar.isComplete()) {
+                if (!progressBar.isCompleted()) {
                     if (response.error == null) {
                         progressBar.complete(true, Optional.ofNullable(response.message).map(Color::good).orElse(""));
                     } else {
