@@ -15,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 import youtube.util.Color;
 
@@ -22,6 +24,14 @@ import youtube.util.Color;
  * Provides Channel Process macros to help with renaming.
  */
 public class RenameProcess {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(RenameProcess.class);
+    
     
     //Static Methods
     

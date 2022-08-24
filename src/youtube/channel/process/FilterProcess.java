@@ -11,12 +11,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 
 /**
  * Provides Channel Process macros to help with filtering.
  */
 public class FilterProcess {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(FilterProcess.class);
+    
     
     //Static Methods
     

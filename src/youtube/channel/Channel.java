@@ -11,12 +11,22 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.SponsorBlocker;
 
 /**
  * Defines a Channel of the Youtube Channel Downloader.
  */
 public class Channel {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Channel.class);
+    
     
     //Constants
     

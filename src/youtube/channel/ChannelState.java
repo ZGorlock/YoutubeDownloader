@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.Configurator;
 import youtube.util.Utils;
 
@@ -23,6 +25,14 @@ import youtube.util.Utils;
  * Manages the state of a Channel.
  */
 public class ChannelState {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ChannelState.class);
+    
     
     //Fields
     

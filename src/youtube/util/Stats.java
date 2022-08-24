@@ -12,12 +12,22 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 
 /**
  * Keeps track of statistics for the Youtube Channel Downloader.
  */
 public final class Stats {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Stats.class);
+    
     
     //Static Fields
     

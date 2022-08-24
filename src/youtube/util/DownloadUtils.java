@@ -18,12 +18,22 @@ import commons.access.CmdLine;
 import commons.console.Console;
 import commons.console.ProgressBar;
 import commons.object.string.StringUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 
 /**
  * Provides download utility methods for the Youtube Downloader.
  */
 public final class DownloadUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(DownloadUtils.class);
+    
     
     //Enums
     
@@ -175,6 +185,12 @@ public final class DownloadUtils {
         DownloadResponse response = new DownloadResponse();
         ProgressBar progressBar = null;
         
+        logger.debug("");
+        logger.debug(StringUtility.repeatString("-", 200));
+        logger.debug("");
+        logger.info(cmd);
+        logger.debug("");
+        
         try {
             ProcessBuilder builder = CmdLine.buildProcess(cmd);
             builder.redirectErrorStream(true);
@@ -193,6 +209,7 @@ public final class DownloadUtils {
                 if (line == null) {
                     break;
                 }
+                logger.trace(line);
                 responseBuilder.append(line).append(System.lineSeparator());
                 
                 if (Configurator.Config.logWork) {

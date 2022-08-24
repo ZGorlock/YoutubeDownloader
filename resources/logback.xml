@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration level="trace">
+    
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
+    
+    <property scope="context" name="logroot" value="log/"/>
+    <property scope="context" name="log" value="YoutubeDownloader"/>
+    
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logroot}%d{yyyy-MM-dd}/${log}.log</file>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logroot}/${log}-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %5level - %message%n</pattern>
+        </encoder>
+        
+        <append>true</append>
+        <prudent>true</prudent>
+    </appender>
+    
+    
+    <root level="trace">
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

@@ -15,6 +15,8 @@ import java.util.stream.Stream;
 
 import commons.console.Console;
 import commons.object.string.StringUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.Color;
 import youtube.util.Utils;
 
@@ -22,6 +24,14 @@ import youtube.util.Utils;
  * Defines a Channel Tree entry of the Youtube Channel Downloader.
  */
 public class ChannelTree {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ChannelTree.class);
+    
     
     //Static Fields
     

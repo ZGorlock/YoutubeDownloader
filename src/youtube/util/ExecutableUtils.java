@@ -14,11 +14,21 @@ import java.util.regex.Pattern;
 import commons.access.CmdLine;
 import commons.access.OperatingSystem;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Provides executable utility methods for the Youtube Downloader
+ * Provides executable utility methods for the Youtube Downloader.
  */
 public final class ExecutableUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ExecutableUtils.class);
+    
     
     //Enums
     
@@ -72,7 +82,7 @@ public final class ExecutableUtils {
         }
         
         
-        //Methods
+        //Getters
         
         /**
          * Returns the name of the Executable.

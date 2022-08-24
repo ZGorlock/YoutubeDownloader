@@ -12,6 +12,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.process.FilterProcess;
 import youtube.channel.process.RenameProcess;
 
@@ -19,6 +21,14 @@ import youtube.channel.process.RenameProcess;
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
  */
 public class ChannelProcesses_Sample {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ChannelProcesses_Sample.class);
+    
     
     //Functions
     

@@ -27,10 +27,10 @@
         <commons-io.version>2.7</commons-io.version>
         <commons-codec.version>1.12</commons-codec.version>
         <commons-lang3.version>3.9</commons-lang3.version>
-    
+        
         <!-- LOGGING -->
-        <slf4j.version>1.7.32</slf4j.version>
-        <logback.version>1.2.9</logback.version>
+        <slf4j.version>1.7.36</slf4j.version>
+        <logback.version>1.2.11</logback.version>
         
         <!-- JSON -->
         <json-simple.version>1.1.1</json-simple.version>
@@ -124,6 +124,11 @@
         
         <sourceDirectory>${project.basedir}/src</sourceDirectory>
         <outputDirectory>${project.basedir}/bin/classes</outputDirectory>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/resources</directory>
+            </resource>
+        </resources>
         
         <pluginManagement>
             <plugins>

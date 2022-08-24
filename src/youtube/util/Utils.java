@@ -13,11 +13,26 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import commons.object.string.StringUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides utility methods for the Youtube Downloader.
  */
 public final class Utils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Utils.class);
+    
+    //Set logback configuration file
+    static {
+        System.setProperty("logback.configurationFile", "resources/logback.xml");
+    }
+    
     
     //Enums
     

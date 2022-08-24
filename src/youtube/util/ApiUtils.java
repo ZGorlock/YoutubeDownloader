@@ -28,6 +28,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.Video;
 
@@ -35,6 +37,14 @@ import youtube.channel.Video;
  * Provides API utility methods for the Youtube Downloader.
  */
 public final class ApiUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ApiUtils.class);
+    
     
     //Constants
     

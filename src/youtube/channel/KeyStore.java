@@ -15,12 +15,22 @@ import java.util.Map;
 
 import org.apache.commons.codec.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.Utils;
 
 /**
  * Manages the key store.
  */
 public class KeyStore {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(KeyStore.class);
+    
     
     //Constants
     

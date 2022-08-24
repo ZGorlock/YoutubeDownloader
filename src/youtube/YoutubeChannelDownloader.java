@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelProcesses;
 import youtube.channel.Channels;
@@ -33,8 +35,15 @@ import youtube.util.WebUtils;
 /**
  * Downloads Youtube Channels and Playlists.
  */
-@SuppressWarnings("FieldMayBeFinal")
 public class YoutubeChannelDownloader {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(YoutubeChannelDownloader.class);
+    
     
     //Static Fields
     

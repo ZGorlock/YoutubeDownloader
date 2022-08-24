@@ -21,6 +21,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.Utils;
@@ -29,6 +31,14 @@ import youtube.util.Utils;
  * Holds Channels and Playlists for the Youtube Channel Downloader.
  */
 public class Channels {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Channels.class);
+    
     
     //Constants
     

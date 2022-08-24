@@ -12,11 +12,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles configurations and commands for using SponsorBlock with yt-dlp.
  */
 public class SponsorBlocker {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(SponsorBlocker.class);
+    
     
     //Static Fields
     

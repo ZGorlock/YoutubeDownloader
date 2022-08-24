@@ -10,11 +10,21 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import commons.console.Console;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles coloring of console output.
  */
 public class Color {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Color.class);
+    
     
     //Constants
     

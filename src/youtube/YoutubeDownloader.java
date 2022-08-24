@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 import youtube.util.Color;
 import youtube.util.Configurator;
@@ -24,6 +26,14 @@ import youtube.util.WebUtils;
  * Downloads Youtube Videos.
  */
 public class YoutubeDownloader {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(YoutubeDownloader.class);
+    
     
     //Constants
     

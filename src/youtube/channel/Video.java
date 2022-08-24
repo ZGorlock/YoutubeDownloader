@@ -11,6 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 
@@ -18,6 +20,14 @@ import youtube.util.WebUtils;
  * Defines a Video.
  */
 public class Video {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(Video.class);
+    
     
     //Fields
     

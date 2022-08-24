@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.Video;
 
@@ -25,6 +27,14 @@ import youtube.channel.Video;
  * Provides web utility methods for the Youtube Downloader.
  */
 public final class WebUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(WebUtils.class);
+    
     
     //Constants
     
