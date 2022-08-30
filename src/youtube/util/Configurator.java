@@ -78,7 +78,8 @@ public class Configurator {
      * @see #getSettings(Utils.Project)
      */
     public static Map<String, Object> getSettings() {
-        return getSettings(activeProject);
+        return (activeProject == null) ? new HashMap<>() :
+               getSettings(activeProject);
     }
     
     /**
@@ -103,7 +104,8 @@ public class Configurator {
      * @see #getSetting(String, String, Object)
      */
     public static Object getSetting(String name, Object def) {
-        return getSetting(activeProject.getTitle(), name, def);
+        return (activeProject == null) ? def :
+               getSetting(activeProject.getTitle(), name, def);
     }
     
     /**

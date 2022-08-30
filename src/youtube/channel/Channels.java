@@ -68,17 +68,17 @@ public class Channels {
     /**
      * The drive to use for storage of downloaded files.
      */
-    public static final String storageDrive = (String) Configurator.getSetting("location.storageDrive");
+    public static final String storageDrive = (String) Configurator.getSetting("location.storageDrive", "C:/");
     
     /**
      * The Music directory in the storage drive.
      */
-    public static final String musicDir = storageDrive + Configurator.getSetting("location.musicDir");
+    public static final String musicDir = storageDrive + Configurator.getSetting("location.musicDir", "Music/");
     
     /**
      * The Videos directory in the storage drive.
      */
-    public static final String videoDir = storageDrive + Configurator.getSetting("location.videoDir");
+    public static final String videoDir = storageDrive + Configurator.getSetting("location.videoDir", "Videos/");
     
     
     //Functions
