@@ -10,17 +10,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.Channels;
 import youtube.channel.Video;
 
 /**
@@ -117,7 +116,7 @@ public final class WebUtils {
                 throw new IOException();
             }
             
-            FileUtils.copyURLToFile(new URL(url), download, 200, Integer.MAX_VALUE);
+            FileUtils.downloadFile(url, download);
             return download;
             
         } catch (IOException ignored) {
@@ -162,7 +161,7 @@ public final class WebUtils {
             }
         }
         
-        return new Video(videoId, title, (date + " 00:00:00"), Utils.TMP_DIR, Configurator.Config.asMp3);
+        return new Video(videoId, title, (date + " 00:00:00"), PathUtils.TMP_DIR, Configurator.Config.asMp3);
     }
     
     /**
@@ -215,7 +214,7 @@ public final class WebUtils {
                 throw new RuntimeException();
             }
             System.out.println(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.EXE.apply(channel.playlistId));
-            System.out.println(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.file("./channels.conf"));
+            System.out.println(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.filePath(Channels.CHANNELS_FILE));
         }
     }
     

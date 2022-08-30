@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
 import commons.access.OperatingSystem;
+import commons.object.string.StringUtility;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,20 @@ public final class ExecutableUtils {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(ExecutableUtils.class);
+    
+    
+    //Constants
+    
+    /**
+     * The executable directory.
+     */
+    public static final File EXECUTABLE_DIR = PathUtils.WORKING_DIR;
+    
+    /**
+     * The Youtube Downloader executable to use.
+     */
+    public static final Executable EXECUTABLE = Executable.valueOf(
+            ((String) Configurator.getSetting("executable", Executable.YT_DLP.name)).toUpperCase().replace("-", "_"));
     
     
     //Enums
@@ -76,8 +91,9 @@ public final class ExecutableUtils {
          */
         Executable(String name, String website) {
             this.name = name;
-            this.exe = new File(this.name + (OperatingSystem.isWindows() ? ".exe" : ""));
-            this.call = (OperatingSystem.isWindows() ? "" : "./") + this.exe.getName();
+            this.exe = new File(EXECUTABLE_DIR, (this.name + (OperatingSystem.isWindows() ? ".exe" : "")));
+            this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(this.exe.getAbsolutePath()) :
+                        ((OperatingSystem.isWindows() ? "" : ("." + PathUtils.SEPARATOR)) + this.exe.getName());
             this.website = website;
         }
         
@@ -121,15 +137,6 @@ public final class ExecutableUtils {
         }
         
     }
-    
-    
-    //Constants
-    
-    /**
-     * The Youtube Downloader executable to use.
-     */
-    public static final Executable EXECUTABLE = Executable.valueOf(
-            ((String) Configurator.getSetting("executable", Executable.YT_DLP.name)).toUpperCase().replace("-", "_"));
     
     
     //Functions

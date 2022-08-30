@@ -6,6 +6,7 @@
 
 package youtube.util;
 
+import java.io.File;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -247,7 +248,50 @@ public class Color {
     }
     
     /**
-     * Colors the output indicating a file.
+     * Colors the output indicating a file path.
+     *
+     * @param filePath The file path.
+     * @param quote    Whether to quote the file path or not.
+     * @return The colored output.
+     */
+    public static String filePath(String filePath, boolean quote) {
+        final String filePathOutput = Color.file(PathUtils.path(filePath));
+        return quote ? quoted(filePathOutput) : filePathOutput;
+    }
+    
+    /**
+     * Colors the output indicating a file path.
+     *
+     * @param filePath The file path.
+     * @return The colored output.
+     */
+    public static String filePath(String filePath) {
+        return filePath(filePath, true);
+    }
+    
+    /**
+     * Colors the output indicating a file path.
+     *
+     * @param file  The file.
+     * @param quote Whether to quote the file path or not.
+     * @return The colored output.
+     */
+    public static String filePath(File file, boolean quote) {
+        return filePath(file.getAbsolutePath(), quote);
+    }
+    
+    /**
+     * Colors the output indicating a file path.
+     *
+     * @param file The file.
+     * @return The colored output.
+     */
+    public static String filePath(File file) {
+        return filePath(file, true);
+    }
+    
+    /**
+     * Colors the output indicating a file name.
      *
      * @param fileName The file name.
      * @param quote    Whether to quote the file name or not.
@@ -259,13 +303,34 @@ public class Color {
     }
     
     /**
-     * Colors the output indicating a file.
+     * Colors the output indicating a file name.
      *
      * @param fileName The file name.
      * @return The colored output.
      */
     public static String fileName(String fileName) {
         return fileName(fileName, true);
+    }
+    
+    /**
+     * Colors the output indicating a file name.
+     *
+     * @param file  The file.
+     * @param quote Whether to quote the file name or not.
+     * @return The colored output.
+     */
+    public static String fileName(File file, boolean quote) {
+        return fileName(file.getName(), quote);
+    }
+    
+    /**
+     * Colors the output indicating a file name.
+     *
+     * @param file The file.
+     * @return The colored output.
+     */
+    public static String fileName(File file) {
+        return fileName(file, true);
     }
     
     /**

@@ -7,18 +7,19 @@
 package youtube;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.DownloadUtils;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 
@@ -40,7 +41,7 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    private static final File DOWNLOAD_QUEUE = new File(Utils.DATA_DIR, "downloadQueue.txt");
+    public static final File DOWNLOAD_QUEUE = new File(PathUtils.DATA_DIR, "downloadQueue.txt");
     
     
     //Static Fields
@@ -66,12 +67,10 @@ public class YoutubeDownloader {
         
         File outputDir = getOutputDir();
         if (!outputDir.exists() && !outputDir.mkdirs()) {
-            System.out.println(Color.bad("Unable to create output directory: ") + Color.file(outputDir.getAbsolutePath()));
+            System.out.println(Color.bad("Unable to create output directory: ") + Color.filePath(outputDir));
             return;
         }
-        if (DOWNLOAD_QUEUE.exists()) {
-            download.addAll(Files.readAllLines(DOWNLOAD_QUEUE.toPath()));
-        }
+        download.addAll(FileUtils.readLines(DOWNLOAD_QUEUE));
         
         System.out.println(Utils.NEWLINE);
         Scanner in = new Scanner(System.in);
@@ -116,8 +115,9 @@ public class YoutubeDownloader {
      * @return The output directory.
      */
     private static File getOutputDir() {
-        return new File((String) Configurator.getSetting("location.output",
-                (System.getProperty("user.home") + File.separatorChar + "Youtube")));
+        return Optional.ofNullable((String) Configurator.getSetting("location.output"))
+                .map(File::new)
+                .orElseGet(() -> new File(PathUtils.getUserHome(), "Youtube"));
     }
     
 }

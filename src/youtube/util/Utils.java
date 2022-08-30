@@ -10,6 +10,7 @@ import java.io.File;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 
 import commons.object.string.StringUtility;
@@ -30,7 +31,7 @@ public final class Utils {
     
     //Set logback configuration file
     static {
-        System.setProperty("logback.configurationFile", "resources/logback.xml");
+        System.setProperty("logback.configurationFile", new File(PathUtils.RESOURCES_DIR, "logback.xml").getAbsolutePath());
     }
     
     
@@ -62,21 +63,6 @@ public final class Utils {
     
     
     //Constants
-    
-    /**
-     * The data directory.
-     */
-    public static final File DATA_DIR = new File("data");
-    
-    /**
-     * The resources directory.
-     */
-    public static final File RESOURCES_DIR = new File("resources");
-    
-    /**
-     * The temporary directory.
-     */
-    public static final File TMP_DIR = new File("tmp");
     
     /**
      * A list of possible video formats.
@@ -136,11 +122,14 @@ public final class Utils {
             return null;
         }
         
-        String name = output.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
+        final Function<File, String> fileNameFormatter = (File file) ->
+                file.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
+        
+        String name = fileNameFormatter.apply(output);
         
         List<File> found = new ArrayList<>();
         for (File existingFile : existingFiles) {
-            String existingName = existingFile.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
+            String existingName = fileNameFormatter.apply(existingFile);
             if (existingName.equalsIgnoreCase(name) && (existingFile.length() > 0)) {
                 String format = getFileFormat(output.getName());
                 String existingFormat = getFileFormat(existingFile.getName());

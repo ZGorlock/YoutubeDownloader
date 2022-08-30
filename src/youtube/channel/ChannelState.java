@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.Configurator;
-import youtube.util.Utils;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 
 /**
  * Manages the state of a Channel.
@@ -32,6 +32,14 @@ public class ChannelState {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(ChannelState.class);
+    
+    
+    //Constants
+    
+    /**
+     * The Channel data directory.
+     */
+    public static final File CHANNEL_DATA_DIR = new File(PathUtils.DATA_DIR, "channel");
     
     
     //Fields
@@ -108,7 +116,7 @@ public class ChannelState {
         
         this.keyStore = new LinkedHashMap<>();
         
-        this.stateLocation = new File(Utils.DATA_DIR, "channel/" + channel.name);
+        this.stateLocation = new File(CHANNEL_DATA_DIR, channel.name);
         this.dataFile = new File(this.stateLocation, (channel.name + "-data.txt"));
         this.callLogFile = new File(this.stateLocation, (channel.name + "-callLog.txt"));
         this.saveFile = new File(this.stateLocation, (channel.name + "-save.txt"));
@@ -128,9 +136,9 @@ public class ChannelState {
         try {
             cleanupLegacyState();
             
-            queue = queueFile.exists() ? FileUtils.readLines(queueFile, "UTF-8") : new ArrayList<>();
-            saved = saveFile.exists() ? FileUtils.readLines(saveFile, "UTF-8") : new ArrayList<>();
-            blocked = blockedFile.exists() ? FileUtils.readLines(blockedFile, "UTF-8") : new ArrayList<>();
+            queue = FileUtils.readLines(queueFile);
+            saved = FileUtils.readLines(saveFile);
+            blocked = FileUtils.readLines(blockedFile);
             
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -190,7 +198,7 @@ public class ChannelState {
     public void cleanupData() throws Exception {
         if (!Configurator.Config.preventChannelFetch) {
             for (File dataFile : getDataFiles()) {
-                FileUtils.deleteQuietly(dataFile);
+                FileUtils.deleteFile(dataFile);
             }
         }
     }
@@ -202,10 +210,10 @@ public class ChannelState {
      */
     private void cleanupLegacyState() throws Exception {
         for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
-            File oldFile = new File(cleanupFile.getAbsolutePath().replace("\\", "/").replace("/channel/", "/"));
+            File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), cleanupFile.getParentFile().getName()), cleanupFile.getName());
             if (oldFile.exists()) {
                 if (cleanupFile.exists()) {
-                    FileUtils.deleteQuietly(oldFile);
+                    FileUtils.deleteFile(oldFile);
                 } else {
                     FileUtils.moveFile(oldFile, cleanupFile);
                 }

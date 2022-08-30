@@ -13,6 +13,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.PathUtils;
 import youtube.util.SponsorBlocker;
 
 /**
@@ -149,7 +150,8 @@ public class Channel {
         this.reversePlaylist = (boolean) channelJson.getOrDefault("reversePlaylist", false);
         this.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
         
-        final String directoryPrefix = (this.ignoreGlobalLocations ? "" : (this.saveAsMp3 ? Channels.musicDir : Channels.videoDir));
+        final String directoryPrefix = this.ignoreGlobalLocations ? "" :
+                                       PathUtils.path(true, (this.saveAsMp3 ? Channels.musicDir : Channels.videoDir));
         this.outputFolder = parseFilePath(directoryPrefix, (String) channelJson.get("outputFolder"));
         this.playlistFile = (channelJson.get("playlistFile") == null) ? null :
                             parseFilePath(directoryPrefix, (String) channelJson.get("playlistFile"));
@@ -224,9 +226,9 @@ public class Channel {
      */
     private static File parseFilePath(String directoryPrefix, String filePath) {
         return new File(directoryPrefix +
-                filePath.replace("${D}", Channels.storageDrive)
-                        .replace("${V}", Channels.videoDir)
-                        .replace("${M}", Channels.musicDir));
+                filePath.replace("${D}", Channels.storageDrive.getAbsolutePath())
+                        .replace("${V}", Channels.videoDir.getAbsolutePath())
+                        .replace("${M}", Channels.musicDir.getAbsolutePath()));
     }
     
 }

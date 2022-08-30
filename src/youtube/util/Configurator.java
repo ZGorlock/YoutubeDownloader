@@ -8,12 +8,10 @@ package youtube.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -38,7 +36,7 @@ public class Configurator {
     /**
      * The file containing the configuration for the Youtube Downloader.
      */
-    public static final File CONF_FILE = new File("conf.json");
+    public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, "conf.json");
     
     
     //Static Fields
@@ -130,7 +128,7 @@ public class Configurator {
             activeProject = project;
             
             try {
-                String jsonString = FileUtils.readFileToString(CONF_FILE, StandardCharsets.UTF_8);
+                String jsonString = FileUtils.readFileToString(CONF_FILE);
                 JSONParser parser = new JSONParser();
                 JSONObject json = (JSONObject) parser.parse(jsonString);
                 
@@ -140,7 +138,7 @@ public class Configurator {
                 loadSettings(json, "log");
                 
             } catch (IOException | ParseException e) {
-                System.out.println(Color.bad("Could not load settings from: ") + Color.file("./" + CONF_FILE.getName()));
+                System.out.println(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE));
                 System.out.println(Utils.INDENT + Color.bad(e));
                 System.exit(0);
             }

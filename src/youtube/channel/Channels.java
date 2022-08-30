@@ -8,15 +8,14 @@ package youtube.channel;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.Color;
 import youtube.util.Configurator;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
@@ -45,7 +46,7 @@ public class Channels {
     /**
      * The file containing the Channel configuration for the Youtube Downloader.
      */
-    public static final File CHANNELS_FILE = new File("channels.json");
+    public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, "channels.json");
     
     
     //Static Fields
@@ -68,17 +69,23 @@ public class Channels {
     /**
      * The drive to use for storage of downloaded files.
      */
-    public static final String storageDrive = (String) Configurator.getSetting("location.storageDrive", "C:/");
+    public static final File storageDrive = Optional.ofNullable((String) Configurator.getSetting("location.storageDrive"))
+            .map(File::new)
+            .orElseGet(PathUtils::getUserDrive);
     
     /**
      * The Music directory in the storage drive.
      */
-    public static final String musicDir = storageDrive + Configurator.getSetting("location.musicDir", "Music/");
+    public static final File musicDir = Optional.ofNullable((String) Configurator.getSetting("location.musicDir"))
+            .map(e -> new File(storageDrive, e))
+            .orElseGet(() -> new File(PathUtils.getUserHome(), "Music"));
     
     /**
      * The Videos directory in the storage drive.
      */
-    public static final String videoDir = storageDrive + Configurator.getSetting("location.videoDir", "Videos/");
+    public static final File videoDir = Optional.ofNullable((String) Configurator.getSetting("location.videoDir"))
+            .map(e -> new File(storageDrive, e))
+            .orElseGet(() -> new File(PathUtils.getUserHome(), "Videos"));
     
     
     //Functions
@@ -141,14 +148,14 @@ public class Channels {
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
-                String jsonString = FileUtils.readFileToString(CHANNELS_FILE, StandardCharsets.UTF_8);
+                String jsonString = FileUtils.readFileToString(CHANNELS_FILE);
                 JSONParser parser = new JSONParser();
                 JSONArray channelList = (JSONArray) parser.parse(jsonString);
                 
                 loadChannelList(channelList, channelTree);
                 
             } catch (IOException | ParseException e) {
-                System.out.println(Color.bad("Could not load channels from: ") + Color.file("./" + CHANNELS_FILE.getName()));
+                System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
                 System.out.println(Utils.INDENT + Color.bad(e));
                 System.exit(0);
             }

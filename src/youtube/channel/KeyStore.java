@@ -13,11 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.Charsets;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.util.Utils;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 
 /**
  * Manages the key store.
@@ -37,12 +36,12 @@ public class KeyStore {
     /**
      * The store of video keys and their current saved file name.
      */
-    private static final File KEY_STORE_FILE = new File(Utils.DATA_DIR, "keyStore.txt");
+    public static final File KEY_STORE_FILE = new File(PathUtils.DATA_DIR, "keyStore.txt");
     
     /**
      * The backup file of the keystore.
      */
-    private static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getAbsolutePath() + ".bak");
+    public static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getAbsolutePath() + ".bak");
     
     
     //Static Fields
@@ -71,18 +70,15 @@ public class KeyStore {
     public static void load() {
         if ((!KEY_STORE_FILE.exists() || (KEY_STORE_FILE.length() == 0)) && KEY_STORE_BACKUP.exists()) {
             try {
-                FileUtils.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE, true);
+                FileUtils.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        if (!KEY_STORE_FILE.exists()) {
-            return;
-        }
         
         List<String> lines;
         try {
-            lines = FileUtils.readLines(KEY_STORE_FILE, Charsets.UTF_8);
+            lines = FileUtils.readLines(KEY_STORE_FILE);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +96,7 @@ public class KeyStore {
             String[] lineParts = line.split("\\|+");
             if (lineParts.length == 3) {
                 keyStore.putIfAbsent(lineParts[0], new LinkedHashMap<>());
-                keyStore.get(lineParts[0]).put(lineParts[1], lineParts[2]);
+                keyStore.get(lineParts[0]).put(lineParts[1], PathUtils.localPath(lineParts[2]));
             }
         }
     }
@@ -112,12 +108,12 @@ public class KeyStore {
         List<String> lines = new ArrayList<>();
         for (Map.Entry<String, Map<String, String>> keyStoreEntry : keyStore.entrySet()) {
             for (Map.Entry<String, String> keyStoreChannelEntry : keyStoreEntry.getValue().entrySet()) {
-                lines.add(keyStoreEntry.getKey() + "|" + keyStoreChannelEntry.getKey() + "|" + keyStoreChannelEntry.getValue());
+                lines.add(keyStoreEntry.getKey() + "|" + keyStoreChannelEntry.getKey() + "|" + PathUtils.localPath(keyStoreChannelEntry.getValue()));
             }
         }
         
         try {
-            FileUtils.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP, true);
+            FileUtils.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP);
             FileUtils.writeLines(KEY_STORE_FILE, lines);
         } catch (IOException e) {
             throw new RuntimeException(e);

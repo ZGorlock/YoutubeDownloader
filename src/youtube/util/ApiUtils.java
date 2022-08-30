@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -49,6 +48,11 @@ public final class ApiUtils {
     //Constants
     
     /**
+     * The file containing the Youtube API key.
+     */
+    public static final File API_KEY_FILE = new File(PathUtils.WORKING_DIR, "apiKey");
+    
+    /**
      * The Youtube API key.
      */
     private static String API_KEY = "";
@@ -70,12 +74,12 @@ public final class ApiUtils {
     //Populates API_KEY
     static {
         try {
-            API_KEY = FileUtils.readFileToString(new File("apiKey"), "UTF-8");
+            API_KEY = FileUtils.readFileToString(API_KEY_FILE);
             if (API_KEY.isEmpty()) {
                 throw new Exception();
             }
         } catch (Exception e) {
-            System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.file("./apiKey"));
+            System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
             System.exit(0);
         }
     }
@@ -162,8 +166,7 @@ public final class ApiUtils {
                     if (((++chunk % MAX_PAGES_PER_FILE) == 0) || !more) {
                         FileUtils.writeStringToFile(
                                 channel.state.getDataFile(chunk / MAX_PAGES_PER_FILE),
-                                data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")),
-                                "UTF-8", false);
+                                data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")));
                         data.clear();
                     }
                 }
@@ -209,7 +212,7 @@ public final class ApiUtils {
     private static List<Video> parseApiChannelData(Channel channel, File chunk) throws Exception {
         List<Video> videos = new ArrayList<>();
         
-        String data = FileUtils.readFileToString(chunk, "UTF-8");
+        String data = FileUtils.readFileToString(chunk);
         
         if (data.contains("\"code\": 404")) {
             System.out.println(Color.bad("The Channel ") + Color.channel(channel.name) + Color.bad(" does not exist"));

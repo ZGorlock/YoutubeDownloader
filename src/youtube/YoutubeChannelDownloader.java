@@ -13,10 +13,10 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
@@ -28,6 +28,8 @@ import youtube.util.ApiUtils;
 import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.DownloadUtils;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 import youtube.util.Stats;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
@@ -231,11 +233,13 @@ public class YoutubeChannelDownloader {
             if (video.output.exists()) {
                 channel.state.saved.add(videoId);
                 channel.state.blocked.remove(videoId);
-                channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                channel.state.keyStore.put(videoId, PathUtils.localPath(video.output));
                 
             } else if (!channel.state.blocked.contains(videoId)) {
-                File oldOutput = (channel.state.keyStore.containsKey(videoId) && new File(channel.state.keyStore.get(videoId)).exists()) ?
-                                 new File(channel.state.keyStore.get(videoId)) : Utils.findVideoFile(video.output);
+                File oldOutput = Optional.ofNullable(channel.state.keyStore.get(videoId))
+                        .map(File::new)
+                        .filter(File::exists)
+                        .orElseGet(() -> Utils.findVideoFile(video.output));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
                     channel.state.queue.add(videoId);
@@ -251,7 +255,7 @@ public class YoutubeChannelDownloader {
                             
                             video.updateOutput(newOutput);
                             channel.state.saved.add(videoId);
-                            channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                            channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
                             
                             if (channel.saveAsMp3) {
                                 Stats.totalAudioRenames++;
@@ -267,7 +271,7 @@ public class YoutubeChannelDownloader {
                     } else {
                         video.output = newOutput;
                         channel.state.saved.add(videoId);
-                        channel.state.keyStore.replace(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                        channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
                     }
                 }
             }
@@ -311,7 +315,7 @@ public class YoutubeChannelDownloader {
             switch (response.status) {
                 case SUCCESS:
                     channel.state.saved.add(videoId);
-                    channel.state.keyStore.put(videoId, video.output.getAbsolutePath().replace("/", "\\"));
+                    channel.state.keyStore.put(videoId, PathUtils.localPath(video.output));
                     
                     if (channel.saveAsMp3) {
                         Stats.totalAudioDownloads++;
@@ -355,13 +359,13 @@ public class YoutubeChannelDownloader {
         if (channel.playlistFile == null) {
             return false;
         }
-        List<String> existingPlaylist = channel.playlistFile.exists() ? FileUtils.readLines(channel.playlistFile, "UTF-8") : new ArrayList<>();
-        String playlistPath = channel.playlistFile.getParentFile().getAbsolutePath() + '\\';
+        List<String> existingPlaylist = FileUtils.readLines(channel.playlistFile);
+        String playlistPath = PathUtils.localPath(true, channel.playlistFile.getParentFile());
         
         List<String> playlist = new ArrayList<>();
         for (Map.Entry<String, Video> video : videoMap.entrySet()) {
             if (channel.state.saved.contains(video.getKey())) {
-                playlist.add(video.getValue().output.getAbsolutePath().replace(playlistPath, ""));
+                playlist.add(PathUtils.localPath(video.getValue().output).replace(playlistPath, ""));
             }
         }
         
@@ -374,10 +378,10 @@ public class YoutubeChannelDownloader {
         
         if (!channel.error && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
-                System.out.println(Color.base("Updating playlist: ") + Color.fileName(channel.playlistFile.getName()));
+                System.out.println(Color.base("Updating playlist: ") + Color.filePath(channel.playlistFile));
                 FileUtils.writeLines(channel.playlistFile, playlist);
             } else {
-                System.out.println(Color.bad("Would have updated playlist: ") + Color.fileName(channel.playlistFile.getName()) + Color.base(" but playlist modification is disabled"));
+                System.out.println(Color.bad("Would have updated playlist: ") + Color.filePath(channel.playlistFile) + Color.base(" but playlist modification is disabled"));
             }
         }
         return true;
@@ -398,6 +402,7 @@ public class YoutubeChannelDownloader {
         List<String> saved = Channels.getChannels().stream()
                 .filter(e -> e.key.matches(channel.key + "(?:_P\\d+)?"))
                 .flatMap(e -> e.state.saved.stream().map(save -> e.state.keyStore.get(save)))
+                .map(PathUtils::localPath)
                 .distinct().collect(Collectors.toList());
         
         if (!channel.error && channel.keepClean) {
@@ -405,13 +410,13 @@ public class YoutubeChannelDownloader {
             File[] videos = channel.outputFolder.listFiles();
             if (videos != null) {
                 for (File video : videos) {
-                    if (video.isFile() && !saved.contains(video.getAbsolutePath())) {
+                    if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
                         boolean isPartFile = video.getName().endsWith(".part");
                         String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
                         
                         if (!Configurator.Config.preventDeletion) {
                             System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
-                            FileUtils.forceDelete(video);
+                            FileUtils.deleteFile(video);
                             
                             if (!isPartFile) {
                                 if (channel.saveAsMp3) {
