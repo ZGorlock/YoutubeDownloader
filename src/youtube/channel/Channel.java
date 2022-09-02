@@ -10,9 +10,11 @@ import java.io.File;
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 
+import commons.object.collection.MapUtility;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.Color;
 import youtube.util.PathUtils;
 import youtube.util.SponsorBlocker;
 
@@ -132,8 +134,9 @@ public class Channel {
     public Channel(JSONObject channelJson) throws Exception {
         for (String requiredField : requiredFields) {
             if ((channelJson == null) || !channelJson.containsKey(requiredField)) {
-                throw new InvalidPropertiesFormatException("Channel configuration missing required field: " + requiredField +
-                        (((channelJson != null) && channelJson.containsKey("key")) ? (" (" + channelJson.get("key") + ')') : ""));
+                System.out.println(Color.bad("Channel: ") + MapUtility.getOrNull(channelJson, "key") +
+                        Color.bad(" configuration missing required field: ") + requiredField);
+                throw new RuntimeException();
             }
         }
         

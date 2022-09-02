@@ -157,7 +157,7 @@ public class Channels {
             } catch (IOException | ParseException e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
                 System.out.println(Utils.INDENT + Color.bad(e));
-                System.exit(0);
+                throw new RuntimeException(e);
             }
         }
         

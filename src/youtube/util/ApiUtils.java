@@ -9,6 +9,7 @@ package youtube.util;
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -76,11 +77,11 @@ public final class ApiUtils {
         try {
             API_KEY = FileUtils.readFileToString(API_KEY_FILE);
             if (API_KEY.isEmpty()) {
-                throw new Exception();
+                throw new KeyException();
             }
         } catch (Exception e) {
             System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
-            System.exit(0);
+            throw new RuntimeException(e);
         }
     }
     

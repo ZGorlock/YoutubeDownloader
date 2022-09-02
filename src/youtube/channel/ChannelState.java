@@ -140,7 +140,7 @@ public class ChannelState {
             saved = FileUtils.readLines(saveFile);
             blocked = FileUtils.readLines(blockedFile);
             
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -164,6 +164,7 @@ public class ChannelState {
             FileUtils.writeLines(queueFile, queue);
             FileUtils.writeLines(saveFile, saved);
             FileUtils.writeLines(blockedFile, blocked);
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -206,9 +207,9 @@ public class ChannelState {
     /**
      * Cleans up any legacy state files.
      *
-     * @throws Exception When there is an error cleaning up legacy state files.
+     * @throws IOException When there is an error cleaning up legacy state files.
      */
-    private void cleanupLegacyState() throws Exception {
+    private void cleanupLegacyState() throws IOException {
         for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
             File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), cleanupFile.getParentFile().getName()), cleanupFile.getName());
             if (oldFile.exists()) {
