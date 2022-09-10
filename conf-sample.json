@@ -76,7 +76,12 @@
         "number": "WHITE",
         "file": "GREY",
         "exe": "ORANGE",
-        "link": "LIGHT_BLUE"
+        "link": "LIGHT_BLUE",
+        "progressBar": {
+            "base": "GREEN",
+            "good": "CYAN",
+            "bad": "RED"
+        }
     },
     
     "log": {

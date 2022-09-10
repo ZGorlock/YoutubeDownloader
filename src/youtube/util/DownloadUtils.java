@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -185,6 +186,13 @@ public final class DownloadUtils {
         DownloadResponse response = new DownloadResponse();
         ProgressBar progressBar = null;
         
+        final Function<Long, ProgressBar> downloadProgressBarInitializer = (Long total) -> {
+            ProgressBar downloadProgressBar = new ProgressBar("", total, 32, "KB", true);
+            downloadProgressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+            downloadProgressBar.setColors(Color.PROGRESS_BAR_BASE, Color.PROGRESS_BAR_GOOD, Color.PROGRESS_BAR_BAD);
+            return downloadProgressBar;
+        };
+        
         logger.debug("");
         logger.debug(StringUtility.repeatString("-", 200));
         logger.debug("");
@@ -243,8 +251,7 @@ public final class DownloadUtils {
                         
                         if (newPart) {
                             if (progressBar == null) {
-                                progressBar = new ProgressBar("", total, 32, "KB", true);
-                                progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+                                progressBar = downloadProgressBarInitializer.apply(total);
                                 initialProgress = Math.max(initialProgress, 0);
                                 progressBar.defineInitialProgress(initialProgress);
                             } else {
@@ -271,8 +278,7 @@ public final class DownloadUtils {
                     response.message = "Already downloaded";
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
-                            progressBar = new ProgressBar("", size, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+                            progressBar = downloadProgressBarInitializer.apply(size);
                             progressBar.defineInitialProgress(size);
                         }
                     }
@@ -297,8 +303,7 @@ public final class DownloadUtils {
                     }
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
-                            progressBar = new ProgressBar("", 1, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+                            progressBar = downloadProgressBarInitializer.apply(1L);
                         }
                         progressBar.complete(true, Color.good("Extracting Audio..."));
                     }
@@ -314,8 +319,7 @@ public final class DownloadUtils {
                     }
                     if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                         if (progressBar == null) {
-                            progressBar = new ProgressBar("", 1, 32, "KB", true);
-                            progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+                            progressBar = downloadProgressBarInitializer.apply(1L);
                         }
                         progressBar.complete(true, Color.good("Merging Formats..."));
                     }
@@ -346,8 +350,7 @@ public final class DownloadUtils {
             
             if (Configurator.Config.showProgressBar && !Configurator.Config.logWork) {
                 if (progressBar == null) {
-                    progressBar = new ProgressBar("", 1, 32, "KB", true);
-                    progressBar.setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+                    progressBar = downloadProgressBarInitializer.apply(1L);
                     progressBar.update(-1);
                 }
                 if (!progressBar.isCompleted()) {

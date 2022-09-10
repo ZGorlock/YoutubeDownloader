@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import commons.console.Console;
+import commons.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +93,21 @@ public class Color {
      * The default color to use for "link" text.
      */
     public static final String DEFAULT_COLOR_LINK = "LIGHT_BLUE";
+    
+    /**
+     * The default color to use for Progress Bar "base" text.
+     */
+    public static final String DEFAULT_COLOR_PROGRESS_BAR_BASE = ProgressBar.DEFAULT_COLOR_BASE.name();
+    
+    /**
+     * The default color to use for Progress Bar "good" text.
+     */
+    public static final String DEFAULT_COLOR_PROGRESS_BAR_GOOD = ProgressBar.DEFAULT_COLOR_GOOD.name();
+    
+    /**
+     * The default color to use for Progress Bar "bad" text.
+     */
+    public static final String DEFAULT_COLOR_PROGRESS_BAR_BAD = ProgressBar.DEFAULT_COLOR_BAD.name();
     
     //Ensure config is loaded prior to using colors
     static {
@@ -175,6 +191,21 @@ public class Color {
      * The color to use for "link" text.
      */
     public static final Console.ConsoleEffect LINK = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
+    
+    /**
+     * The color to use for Progress Bar "base" text.
+     */
+    public static final Console.ConsoleEffect PROGRESS_BAR_BASE = colorSettingLoader.apply("progressBar.base", DEFAULT_COLOR_PROGRESS_BAR_BASE);
+    
+    /**
+     * The color to use for Progress Bar "good" text.
+     */
+    public static final Console.ConsoleEffect PROGRESS_BAR_GOOD = colorSettingLoader.apply("progressBar.good", DEFAULT_COLOR_PROGRESS_BAR_GOOD);
+    
+    /**
+     * The color to use for Progress Bar "bad" text.
+     */
+    public static final Console.ConsoleEffect PROGRESS_BAR_BAD = colorSettingLoader.apply("progressBar.bad", DEFAULT_COLOR_PROGRESS_BAR_BAD);
     
     
     //Static Methods
