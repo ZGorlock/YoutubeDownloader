@@ -51,7 +51,7 @@ public class ChannelTree {
     /**
      * A flag indicating whether the Channel Tree entry is enabled or not; true by default.
      */
-    public boolean active = true;
+    public boolean active = Channel.DEFAULT_ACTIVE;
     
     /**
      * The corresponding Channel of the Channel Tree entry.

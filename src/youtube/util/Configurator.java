@@ -191,103 +191,196 @@ public class Configurator {
      */
     public static class Config {
         
+        //Constants
+        
+        /**
+         * The default value of the flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         */
+        public static final boolean DEFAULT_PRE_MERGED = true;
+        
+        /**
+         * The default value of the flag indicating whether to download the videos as mp3 files or not.
+         */
+        public static final boolean DEFAULT_AS_MP3 = false;
+        
+        /**
+         * The default value of the flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_STATS = true;
+        
+        /**
+         * The default value of the flag indicating whether to print the Channel list at the beginning of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_CHANNELS = false;
+        
+        /**
+         * The default value of the flag indicating whether to retry previously failed videos or not.
+         */
+        public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
+        
+        /**
+         * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
+         */
+        public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
+        
+        /**
+         * The default value of the flag indicating whether to globally prevent any media deletion or not.
+         */
+        public static final boolean DEFAULT_PREVENT_DELETION = false;
+        
+        /**
+         * The default value of the flag indicating whether to globally prevent any media renaming or not.
+         */
+        public static final boolean DEFAULT_PREVENT_RENAMING = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable downloading content or not.
+         */
+        public static final boolean DEFAULT_PREVENT_DOWNLOAD = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable playlist modification or not.
+         */
+        public static final boolean DEFAULT_PREVENT_PLAYLIST_EDIT = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable fetching the latest data for Channels or not.
+         */
+        public static final boolean DEFAULT_PREVENT_CHANNEL_FETCH = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable fetching the info for Videos or not.
+         */
+        public static final boolean DEFAULT_PREVENT_VIDEO_FETCH = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean DEFAULT_PREVENT_EXE_AUTO_UPDATE = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean DEFAULT_PREVENT_EXE_VERSION_CHECK = false;
+        
+        /**
+         * The default value of the flag indicating whether to print the executable version at the beginning of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
+        
+        /**
+         * The default value of the flag indicating whether to log the download command or not.
+         */
+        public static final boolean DEFAULT_LOG_COMMAND = true;
+        
+        /**
+         * The default value of the flag indicating whether to log the download work or not.
+         */
+        public static final boolean DEFAULT_LOG_WORK = false;
+        
+        /**
+         * The default value of the flag indicating whether to print a progress bar for downloads or not.
+         */
+        public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
+        
+        
         //Static Fields
         
         /**
          * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
          */
-        public static final boolean preMerged = (boolean) Configurator.getSetting("format.preMerged", true);
+        public static final boolean preMerged = (boolean) Configurator.getSetting("format.preMerged", DEFAULT_PRE_MERGED);
         
         /**
          * A flag indicating whether to download the videos as mp3 files or not.
          */
-        public static final boolean asMp3 = (boolean) Configurator.getSetting("format.asMp3", false) ||
-                (boolean) Configurator.getSetting("asMp3", false);
+        public static final boolean asMp3 = (boolean) Configurator.getSetting("format.asMp3", DEFAULT_AS_MP3) ||
+                (boolean) Configurator.getSetting("asMp3", DEFAULT_AS_MP3);
         
         /**
          * A flag indicating whether to print statistics at the end of the run or not.
          */
-        public static final boolean printStats = (boolean) Configurator.getSetting("output.printStats", true);
+        public static final boolean printStats = (boolean) Configurator.getSetting("output.printStats", DEFAULT_PRINT_STATS);
         
         /**
          * A flag indicating whether to print the Channel list at the beginning of the run or not.
          */
-        public static final boolean printChannels = (boolean) Configurator.getSetting("output.printChannels", false);
+        public static final boolean printChannels = (boolean) Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS);
         
         /**
          * A flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
-                Configurator.getSetting("flag.retryFailed", false));
+                Configurator.getSetting("flag.retryFailed", DEFAULT_RETRY_PREVIOUS_FAILURES));
         
         /**
          * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
          */
-        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", true);
+        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
         
         /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
-        public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", false);
+        public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
         
         /**
          * A flag indicating whether to globally prevent any media renaming or not.
          */
-        public static final boolean preventRenaming = (boolean) Configurator.getSetting("flag.preventRenaming", false);
+        public static final boolean preventRenaming = (boolean) Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
         
         /**
          * A flag indicating whether to disable downloading content or not.
          */
-        public static final boolean preventDownload = (boolean) Configurator.getSetting("flag.preventDownload", false);
+        public static final boolean preventDownload = (boolean) Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
         
         /**
          * A flag indicating whether to disable playlist modification or not.
          */
-        public static final boolean preventPlaylistEdit = (boolean) Configurator.getSetting("flag.preventPlaylistEdit", false);
+        public static final boolean preventPlaylistEdit = (boolean) Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
         
         /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
-        public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", false);
+        public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
         
         /**
          * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean preventVideoFetch = (boolean) Configurator.getSetting("flag.preventVideoFetch", false);
+        public static final boolean preventVideoFetch = (boolean) Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
         
         /**
          * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeAutoUpdate = (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", false);
+        public static final boolean preventExeAutoUpdate = (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
         
         /**
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", false);
+        public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
         
         /**
          * A flag indicating whether to print the executable version at the beginning of the run or not.
          */
         public static final boolean printExeVersion = (boolean) Configurator.getSetting("output.printExeVersion",
-                Configurator.getSetting("log", "printExeVersion", true));
+                Configurator.getSetting("log", "printExeVersion", DEFAULT_PRINT_EXE_VERSION));
         
         /**
          * A flag indicating whether to log the download command or not.
          */
         public static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand",
-                Configurator.getSetting("log", "logCommand", true));
+                Configurator.getSetting("log", "logCommand", DEFAULT_LOG_COMMAND));
         
         /**
          * A flag indicating whether to log the download work or not.
          */
         public static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork",
-                Configurator.getSetting("log", "logWork", false));
+                Configurator.getSetting("log", "logWork", DEFAULT_LOG_WORK));
         
         /**
          * A flag indicating whether to print a progress bar for downloads or not.
          */
         public static final boolean showProgressBar = (boolean) Configurator.getSetting("flag.showProgressBar",
-                Configurator.getSetting("log", "showProgressBar", true));
+                Configurator.getSetting("log", "showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.

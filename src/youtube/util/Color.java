@@ -38,6 +38,61 @@ public class Color {
             "DARK_GREEN", "GREEN", "CYAN", "YELLOW",
             "DARK_BLUE", "BLUE", "LIGHT_BLUE", "PURPLE", "MAGENTA");
     
+    /**
+     * The default value of the flag indicating whether to enable colors or not.
+     */
+    public static final boolean DEFAULT_ENABLE_COLORS = true;
+    
+    /**
+     * The default color to use for "base" text.
+     */
+    public static final String DEFAULT_COLOR_BASE = "GREEN";
+    
+    /**
+     * The default color to use for "good" text.
+     */
+    public static final String DEFAULT_COLOR_GOOD = "CYAN";
+    
+    /**
+     * The default color to use for "bad" text.
+     */
+    public static final String DEFAULT_COLOR_BAD = "RED";
+    
+    /**
+     * The default color to use for "log" text.
+     */
+    public static final String DEFAULT_COLOR_LOG = "DARK_GREY";
+    
+    /**
+     * The default color to use for "channel" text.
+     */
+    public static final String DEFAULT_COLOR_CHANNEL = "YELLOW";
+    
+    /**
+     * The default color to use for "video" text.
+     */
+    public static final String DEFAULT_COLOR_VIDEO = "PURPLE";
+    
+    /**
+     * The default color to use for "number" text.
+     */
+    public static final String DEFAULT_COLOR_NUMBER = "WHITE";
+    
+    /**
+     * The default color to use for "file" text.
+     */
+    public static final String DEFAULT_COLOR_FILE = "GREY";
+    
+    /**
+     * The default color to use for "exe" text.
+     */
+    public static final String DEFAULT_COLOR_EXE = "ORANGE";
+    
+    /**
+     * The default color to use for "link" text.
+     */
+    public static final String DEFAULT_COLOR_LINK = "LIGHT_BLUE";
+    
     //Ensure config is loaded prior to using colors
     static {
         if (Configurator.activeProject == null) {
@@ -69,57 +124,57 @@ public class Color {
     /**
      * A flag indicating whether to enable colors or not.
      */
-    public static final boolean enableColors = (boolean) Configurator.getSetting("color", "enableColors", true);
+    public static final boolean enableColors = (boolean) Configurator.getSetting("color", "enableColors", DEFAULT_ENABLE_COLORS);
     
     /**
-     * The color to use for "base" text".
+     * The color to use for "base" text.
      */
-    public static final Console.ConsoleEffect BASE = colorSettingLoader.apply("base", "GREEN");
+    public static final Console.ConsoleEffect BASE = colorSettingLoader.apply("base", DEFAULT_COLOR_BASE);
     
     /**
-     * The color to use for "good" text".
+     * The color to use for "good" text.
      */
-    public static final Console.ConsoleEffect GOOD = colorSettingLoader.apply("good", "CYAN");
+    public static final Console.ConsoleEffect GOOD = colorSettingLoader.apply("good", DEFAULT_COLOR_GOOD);
     
     /**
-     * The color to use for "bad" text".
+     * The color to use for "bad" text.
      */
-    public static final Console.ConsoleEffect BAD = colorSettingLoader.apply("bad", "RED");
+    public static final Console.ConsoleEffect BAD = colorSettingLoader.apply("bad", DEFAULT_COLOR_BAD);
     
     /**
-     * The color to use for "log" text".
+     * The color to use for "log" text.
      */
-    public static final Console.ConsoleEffect LOG = colorSettingLoader.apply("log", "DARK_GREY");
+    public static final Console.ConsoleEffect LOG = colorSettingLoader.apply("log", DEFAULT_COLOR_LOG);
     
     /**
-     * The color to use for "channel" text".
+     * The color to use for "channel" text.
      */
-    public static final Console.ConsoleEffect CHANNEL = colorSettingLoader.apply("channel", "YELLOW");
+    public static final Console.ConsoleEffect CHANNEL = colorSettingLoader.apply("channel", DEFAULT_COLOR_CHANNEL);
     
     /**
-     * The color to use for "video" text".
+     * The color to use for "video" text.
      */
-    public static final Console.ConsoleEffect VIDEO = colorSettingLoader.apply("video", "PURPLE");
+    public static final Console.ConsoleEffect VIDEO = colorSettingLoader.apply("video", DEFAULT_COLOR_VIDEO);
     
     /**
-     * The color to use for "number" text".
+     * The color to use for "number" text.
      */
-    public static final Console.ConsoleEffect NUMBER = colorSettingLoader.apply("number", "WHITE");
+    public static final Console.ConsoleEffect NUMBER = colorSettingLoader.apply("number", DEFAULT_COLOR_NUMBER);
     
     /**
-     * The color to use for "file" text".
+     * The color to use for "file" text.
      */
-    public static final Console.ConsoleEffect FILE = colorSettingLoader.apply("file", "GREY");
+    public static final Console.ConsoleEffect FILE = colorSettingLoader.apply("file", DEFAULT_COLOR_FILE);
     
     /**
-     * The color to use for "exe" text".
+     * The color to use for "exe" text.
      */
-    public static final Console.ConsoleEffect EXE = colorSettingLoader.apply("exe", "ORANGE");
+    public static final Console.ConsoleEffect EXE = colorSettingLoader.apply("exe", DEFAULT_COLOR_EXE);
     
     /**
-     * The color to use for "link" text".
+     * The color to use for "link" text.
      */
-    public static final Console.ConsoleEffect LINK = colorSettingLoader.apply("link", "LIGHT_BLUE");
+    public static final Console.ConsoleEffect LINK = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
     
     
     //Static Methods

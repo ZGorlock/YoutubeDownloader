@@ -48,6 +48,21 @@ public class Channels {
      */
     public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, "channels.json");
     
+    /**
+     * The default drive to use for storage of downloaded files.
+     */
+    public static final File DEFAULT_STORAGE_DRIVE = PathUtils.getUserDrive();
+    
+    /**
+     * The default Music directory in the storage drive.
+     */
+    public static final File DEFAULT_MUSIC_DIR = new File(PathUtils.getUserHome(), "Music");
+    
+    /**
+     * The default Videos directory in the storage drive.
+     */
+    public static final File DEFAULT_VIDEOS_DIR = new File(PathUtils.getUserHome(), "Videos");
+    
     
     //Static Fields
     
@@ -71,21 +86,21 @@ public class Channels {
      */
     public static final File storageDrive = Optional.ofNullable((String) Configurator.getSetting("location.storageDrive"))
             .map(File::new)
-            .orElseGet(PathUtils::getUserDrive);
+            .orElse(DEFAULT_STORAGE_DRIVE);
     
     /**
      * The Music directory in the storage drive.
      */
     public static final File musicDir = Optional.ofNullable((String) Configurator.getSetting("location.musicDir"))
             .map(e -> new File(storageDrive, e))
-            .orElseGet(() -> new File(PathUtils.getUserHome(), "Music"));
+            .orElse(DEFAULT_MUSIC_DIR);
     
     /**
      * The Videos directory in the storage drive.
      */
     public static final File videoDir = Optional.ofNullable((String) Configurator.getSetting("location.videoDir"))
             .map(e -> new File(storageDrive, e))
-            .orElseGet(() -> new File(PathUtils.getUserHome(), "Videos"));
+            .orElse(DEFAULT_VIDEOS_DIR);
     
     
     //Functions
@@ -177,7 +192,7 @@ public class Channels {
             
             ChannelTree currentChannel = new ChannelTree();
             currentChannel.key = ((String) channelJson.getOrDefault("key", "")).replace(".", "");
-            currentChannel.active = (boolean) channelJson.getOrDefault("active", true);
+            currentChannel.active = (boolean) channelJson.getOrDefault("active", Channel.DEFAULT_ACTIVE);
             currentChannel.parent = currentGroup;
             currentGroup.children.add(currentChannel);
             

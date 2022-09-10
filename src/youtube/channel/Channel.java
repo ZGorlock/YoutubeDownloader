@@ -38,6 +38,31 @@ public class Channel {
      */
     public static final List<String> requiredFields = List.of("key", "name", "playlistId", "outputFolder");
     
+    /**
+     * The default value of the flag indicating whether a Channel is enabled or not.
+     */
+    public static final boolean DEFAULT_ACTIVE = true;
+    
+    /**
+     * The default value of the flag indicating whether to save the videos from the Channel as a mp3 file or not; mp4 otherwise.
+     */
+    public static final boolean DEFAULT_SAVE_AS_MP3 = false;
+    
+    /**
+     * The default value of the flag indicating whether to reverse the order of the playlist or not, putting newer videos first.
+     */
+    public static final boolean DEFAULT_REVERSE_PLAYLIST = false;
+    
+    /**
+     * The default value of the flag indicating whether to disregard the globally configured storage drive and the video directory, if saveAsMp3 is false, or music directory, if saveAsMp3 is true.
+     */
+    public static final boolean DEFAULT_IGNORE_GLOBAL_LOCATIONS = false;
+    
+    /**
+     * The default value of the flag indicating whether to delete files from the output directory that are not in the playlist anymore.
+     */
+    public static final boolean DEFAULT_KEEP_CLEAN = false;
+    
     
     //Fields
     
@@ -141,17 +166,17 @@ public class Channel {
         }
         
         this.key = ((String) channelJson.get("key")).replace(".", "");
-        this.active = (boolean) channelJson.getOrDefault("active", true);
+        this.active = (boolean) channelJson.getOrDefault("active", DEFAULT_ACTIVE);
         this.name = ((String) channelJson.get("name")).replaceAll("[.|]", "");
         this.group = ((String) channelJson.getOrDefault("group", "")).replaceAll(".+\\.", "");
         
         this.url = (String) channelJson.getOrDefault("url", "");
         this.playlistId = (String) channelJson.get("playlistId");
         
-        this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", false);
-        this.ignoreGlobalLocations = (boolean) channelJson.getOrDefault("ignoreGlobalLocations", false);
-        this.reversePlaylist = (boolean) channelJson.getOrDefault("reversePlaylist", false);
-        this.keepClean = (boolean) channelJson.getOrDefault("keepClean", false);
+        this.saveAsMp3 = (boolean) channelJson.getOrDefault("saveAsMp3", DEFAULT_SAVE_AS_MP3);
+        this.ignoreGlobalLocations = (boolean) channelJson.getOrDefault("ignoreGlobalLocations", DEFAULT_IGNORE_GLOBAL_LOCATIONS);
+        this.reversePlaylist = (boolean) channelJson.getOrDefault("reversePlaylist", DEFAULT_REVERSE_PLAYLIST);
+        this.keepClean = (boolean) channelJson.getOrDefault("keepClean", DEFAULT_KEEP_CLEAN);
         
         final String directoryPrefix = this.ignoreGlobalLocations ? "" :
                                        PathUtils.path(true, (this.saveAsMp3 ? Channels.musicDir : Channels.videoDir));
