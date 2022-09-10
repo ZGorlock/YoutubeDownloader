@@ -18,8 +18,7 @@
         },
         "output": {
             "printStats": true,
-            "printChannels": false,
-            "printExeVersion": true
+            "printChannels": false
         },
         "flag": {
             "retryPreviousFailures": false,
@@ -81,6 +80,7 @@
     },
     
     "log": {
+        "printExeVersion": true,
         "logCommand": true,
         "logWork": false,
         "showProgressBar": true

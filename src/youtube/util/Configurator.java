@@ -66,7 +66,8 @@ public class Configurator {
      * @return The list of configuration settings.
      */
     public static Map<String, Object> getSettings(Utils.Project section) {
-        return new HashMap<>(settings.get(section));
+        return (section == null) ? new HashMap<>() :
+               new HashMap<>(settings.get(section));
     }
     
     /**
@@ -214,11 +215,6 @@ public class Configurator {
         public static final boolean printChannels = (boolean) Configurator.getSetting("output.printChannels", false);
         
         /**
-         * A flag indicating whether to print the executable version at the beginning of the run or not.
-         */
-        public static final boolean printExeVersion = (boolean) Configurator.getSetting("output.printExeVersion", true);
-        
-        /**
          * A flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
@@ -270,22 +266,28 @@ public class Configurator {
         public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", false);
         
         /**
+         * A flag indicating whether to print the executable version at the beginning of the run or not.
+         */
+        public static final boolean printExeVersion = (boolean) Configurator.getSetting("output.printExeVersion",
+                Configurator.getSetting("log", "printExeVersion", true));
+        
+        /**
          * A flag indicating whether to log the download command or not.
          */
-        public static final boolean logCommand = (boolean) Configurator.getSetting("log", "logCommand",
-                Configurator.getSetting("flag.logCommand", true));
+        public static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand",
+                Configurator.getSetting("log", "logCommand", true));
         
         /**
          * A flag indicating whether to log the download work or not.
          */
-        public static final boolean logWork = (boolean) Configurator.getSetting("log", "logWork",
-                Configurator.getSetting("flag.logWork", false));
+        public static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork",
+                Configurator.getSetting("log", "logWork", false));
         
         /**
          * A flag indicating whether to print a progress bar for downloads or not.
          */
-        public static final boolean showProgressBar = (boolean) Configurator.getSetting("log", "showProgressBar",
-                Configurator.getSetting("flag.showProgressBar", true));
+        public static final boolean showProgressBar = (boolean) Configurator.getSetting("flag.showProgressBar",
+                Configurator.getSetting("log", "showProgressBar", true));
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
