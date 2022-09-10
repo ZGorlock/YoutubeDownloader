@@ -56,31 +56,18 @@ public final class ApiUtils {
     /**
      * The Youtube API key.
      */
-    private static String API_KEY = "";
-    
-    // ----------------------------------------------------------------
-    //
-    // To run this project you need a Google API Key:
-    //   1. Go to: https://console.cloud.google.com/projectselector2/apis/dashboard
-    //   2. Click 'Create new Project' and name it 'Youtube Downloader'
-    //   3. Click on 'Enable APIs and Services'
-    //   4. Search 'Youtube' and select 'YouTube Data API v3'
-    //   5. Click 'Enable'
-    //   6. Click 'Create Credentials'
-    //   7. Select 'YouTube Data API v3', click 'Public Data', then click 'Next'
-    //   8. Copy your API key to the file ./apiKey in the project
-    //
-    // ----------------------------------------------------------------
+    private static final String API_KEY;
     
     //Populates API_KEY
     static {
         try {
-            API_KEY = FileUtils.readFileToString(API_KEY_FILE);
+            API_KEY = FileUtils.readFileToString(API_KEY_FILE).strip();
             if (API_KEY.isEmpty()) {
                 throw new KeyException();
             }
         } catch (Exception e) {
             System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
+            System.out.println(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
             throw new RuntimeException(e);
         }
     }
