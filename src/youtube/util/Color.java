@@ -35,10 +35,10 @@ public class Color {
      */
     public static final List<String> AVAILABLE_COLORS = List.of(
             "DEFAULT", "DEFAULT_COLOR",
-            "WHITE", "BLACK", "DARK_GREY", "GREY",
-            "DARK_RED", "RED", "ORANGE",
-            "DARK_GREEN", "GREEN", "CYAN", "YELLOW",
-            "DARK_BLUE", "BLUE", "LIGHT_BLUE", "PURPLE", "MAGENTA");
+            "WHITE", "GREY", "DARK_GREY", "BLACK",
+            "DARK_RED", "RED", "ORANGE", "YELLOW",
+            "DARK_GREEN", "GREEN", "TEAL", "CYAN",
+            "DARK_BLUE", "BLUE", "PURPLE", "MAGENTA");
     
     /**
      * The default value of the flag indicating whether to enable colors or not.
@@ -93,7 +93,7 @@ public class Color {
     /**
      * The default color to use for "link" text.
      */
-    public static final String DEFAULT_COLOR_LINK = "LIGHT_BLUE";
+    public static final String DEFAULT_COLOR_LINK = "TEAL";
     
     /**
      * The default color to use for Progress Bar "base" text.

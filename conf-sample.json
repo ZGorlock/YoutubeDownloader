@@ -78,7 +78,7 @@
         "number": "WHITE",
         "file": "GREY",
         "exe": "ORANGE",
-        "link": "LIGHT_BLUE",
+        "link": "TEAL",
         "progressBar": {
             "base": "GREEN",
             "good": "CYAN",
