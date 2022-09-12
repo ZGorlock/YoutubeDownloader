@@ -224,6 +224,16 @@ public class Configurator {
         public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
         
         /**
+         * The default value of the flag indicating whether to run in safe mode or not.
+         */
+        public static final boolean DEFAULT_SAFE_MODE = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable downloading content or not.
+         */
+        public static final boolean DEFAULT_PREVENT_DOWNLOAD = false;
+        
+        /**
          * The default value of the flag indicating whether to globally prevent any media deletion or not.
          */
         public static final boolean DEFAULT_PREVENT_DELETION = false;
@@ -232,11 +242,6 @@ public class Configurator {
          * The default value of the flag indicating whether to globally prevent any media renaming or not.
          */
         public static final boolean DEFAULT_PREVENT_RENAMING = false;
-        
-        /**
-         * The default value of the flag indicating whether to disable downloading content or not.
-         */
-        public static final boolean DEFAULT_PREVENT_DOWNLOAD = false;
         
         /**
          * The default value of the flag indicating whether to disable playlist modification or not.
@@ -319,44 +324,49 @@ public class Configurator {
         public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
         
         /**
-         * A flag indicating whether to globally prevent any media deletion or not.
+         * A flag indicating whether to run in safe mode or not.
          */
-        public static final boolean preventDeletion = (boolean) Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
-        
-        /**
-         * A flag indicating whether to globally prevent any media renaming or not.
-         */
-        public static final boolean preventRenaming = (boolean) Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
+        public static final boolean safeMode = (boolean) Configurator.getSetting("flag.safeMode", DEFAULT_SAFE_MODE);
         
         /**
          * A flag indicating whether to disable downloading content or not.
          */
-        public static final boolean preventDownload = (boolean) Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
+        public static final boolean preventDownload = safeMode || (boolean) Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
+        
+        /**
+         * A flag indicating whether to globally prevent any media deletion or not.
+         */
+        public static final boolean preventDeletion = safeMode || (boolean) Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
+        
+        /**
+         * A flag indicating whether to globally prevent any media renaming or not.
+         */
+        public static final boolean preventRenaming = safeMode || (boolean) Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
         
         /**
          * A flag indicating whether to disable playlist modification or not.
          */
-        public static final boolean preventPlaylistEdit = (boolean) Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
+        public static final boolean preventPlaylistEdit = safeMode || (boolean) Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
         
         /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
-        public static final boolean preventChannelFetch = (boolean) Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
+        public static final boolean preventChannelFetch = safeMode || (boolean) Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
         
         /**
          * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean preventVideoFetch = (boolean) Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
+        public static final boolean preventVideoFetch = safeMode || (boolean) Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
         
         /**
          * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeAutoUpdate = (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+        public static final boolean preventExeAutoUpdate = safeMode || (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
         
         /**
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeVersionCheck = (boolean) Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        public static final boolean preventExeVersionCheck = safeMode || (boolean) Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
         
         /**
          * A flag indicating whether to print the executable version at the beginning of the run or not.

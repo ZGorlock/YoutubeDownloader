@@ -23,9 +23,10 @@
         "flag": {
             "retryPreviousFailures": false,
             "neverUseBrowserCookies": false,
+            "safeMode": false,
+            "preventDownload": false,
             "preventDeletion": false,
             "preventRenaming": false,
-            "preventDownload": false,
             "preventPlaylistEdit": false,
             "preventChannelFetch": false,
             "preventExeAutoUpdate": false,
@@ -45,6 +46,7 @@
         },
         "flag": {
             "neverUseBrowserCookies": false,
+            "safeMode": false,
             "preventDownload": false,
             "preventVideoFetch": false,
             "preventExeAutoUpdate": false,
