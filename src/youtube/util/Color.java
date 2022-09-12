@@ -33,7 +33,8 @@ public class Color {
     /**
      * A list of available colors.
      */
-    public static final List<String> AVAILABLE_COLORS = List.of("DEFAULT_COLOR",
+    public static final List<String> AVAILABLE_COLORS = List.of(
+            "DEFAULT", "DEFAULT_COLOR",
             "WHITE", "BLACK", "DARK_GREY", "GREY",
             "DARK_RED", "RED", "ORANGE",
             "DARK_GREEN", "GREEN", "CYAN", "YELLOW",
@@ -125,8 +126,10 @@ public class Color {
      * A function that loads a color setting configuration.
      */
     private static final BiFunction<String, String, Console.ConsoleEffect> colorSettingLoader = (String conf, String def) -> {
-        String confColor = (String) Configurator.getSetting("color", conf, def);
-        String color = confColor.toUpperCase().replace(" ", "_");
+        final String confColor = (String) Configurator.getSetting("color", conf, def);
+        String color = confColor.matches("(?i)DEFAULT(?:.COLOR)?") ? def :
+                       confColor.toUpperCase().replace(" ", "_");
+        
         if (!AVAILABLE_COLORS.contains(color)) {
             System.out.println(Color.apply(Console.ConsoleEffect.RED, (confColor + " is not a valid color")));
             color = def;
