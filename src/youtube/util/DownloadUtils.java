@@ -165,7 +165,7 @@ public final class DownloadUtils {
                         (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
                 Color.log(asMp3 ? "--extract-audio --audio-format mp3 " :
                           ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
-                Color.log(SponsorBlocker.getCommand(sponsorBlockConfig)) +
+                Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
                 Color.link(video.url);
         
         if (Configurator.Config.logCommand) {

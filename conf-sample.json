@@ -62,8 +62,8 @@
         "skipIntro": false,
         "skipOutro": false,
         "skipSelfPromo": false,
-        "skipInteraction": false,
         "skipPreview": false,
+        "skipInteraction": false,
         "skipMusicOffTopic": false
     },
     
