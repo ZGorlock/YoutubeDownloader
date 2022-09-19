@@ -305,12 +305,14 @@ public class Configurator {
         /**
          * A flag indicating whether to print statistics at the end of the run or not.
          */
-        public static final boolean printStats = (boolean) Configurator.getSetting("output.printStats", DEFAULT_PRINT_STATS);
+        public static final boolean printStats = (boolean) Configurator.getSetting("log.printStats",
+                Configurator.getSetting("output.printStats", DEFAULT_PRINT_STATS));
         
         /**
          * A flag indicating whether to print the Channel list at the beginning of the run or not.
          */
-        public static final boolean printChannels = (boolean) Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS);
+        public static final boolean printChannels = (boolean) Configurator.getSetting("log.printChannels",
+                Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS));
         
         /**
          * A flag indicating whether to retry previously failed videos or not.

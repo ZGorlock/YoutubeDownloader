@@ -16,7 +16,7 @@
             "startAt": null,
             "stopAt": null
         },
-        "output": {
+        "log": {
             "printStats": true,
             "printChannels": false
         },
