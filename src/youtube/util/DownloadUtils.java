@@ -22,7 +22,7 @@ import commons.console.ProgressBar;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Video;
+import youtube.channel.entity.Video;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
 import youtube.conf.SponsorBlocker;

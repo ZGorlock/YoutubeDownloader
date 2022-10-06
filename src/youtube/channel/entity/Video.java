@@ -1,11 +1,11 @@
 /*
  * File:    Video.java
- * Package: youtube.channel
+ * Package: youtube.channel.entity
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel;
+package youtube.channel.entity;
 
 import java.io.File;
 import java.text.ParseException;
@@ -14,6 +14,7 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channel;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 

@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Video;
+import youtube.channel.entity.Video;
 
 /**
  * Provides Channel Process macros to help with filtering.

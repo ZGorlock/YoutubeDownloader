@@ -12,6 +12,7 @@ import java.util.Map;
 
 import youtube.YoutubeChannelDownloader;
 import youtube.channel.Channel;
+import youtube.channel.entity.Video;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
