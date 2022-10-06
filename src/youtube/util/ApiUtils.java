@@ -12,12 +12,21 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import commons.object.collection.MapUtility;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -86,6 +95,11 @@ public final class ApiUtils {
     private static final int MAX_RETRIES = 10;
     
     /**
+     * The maximum number of results to request per page.
+     */
+    private static final int MAX_RESULTS_PER_PAGE = 50;
+    
+    /**
      * The maximum number of API playlist pages to save to a single file.
      */
     private static final int MAX_PAGES_PER_FILE = 100;
@@ -102,35 +116,78 @@ public final class ApiUtils {
     //Functions
     
     /**
-     * Calls the Youtube Data API and fetches data for a Channel.
+     * Calls the Youtube Data API and fetches videos for a Channel.
      *
      * @param channel The Channel.
      * @return The number of Channel data chunks read.
      * @throws Exception When there is an error.
      */
-    public static int fetchApiChannelData(Channel channel) throws Exception {
+    @SuppressWarnings("unchecked")
+    public static int fetchChannelVideoData(Channel channel) throws Exception {
+        return callApi(channel, "playlistItems", null, MapUtility.mapOf(
+                new ImmutablePair<>("playlistId", channel.playlistId)));
+    }
+    
+    /**
+     * Parses the Youtube Data API video response data for a Channel.
+     *
+     * @param channel The Channel.
+     * @return The list of Videos parsed from the Channel data.
+     * @throws Exception When there is an error.
+     */
+    public static List<Video> parseChannelVideoData(Channel channel) throws Exception {
+        return parseData(channel, null, dataItem -> {
+            final JSONObject snippet = (JSONObject) dataItem.get("snippet");
+            final JSONObject resourceId = (JSONObject) snippet.get("resourceId");
+            final JSONObject thumbnails = (JSONObject) snippet.get("thumbnails");
+            
+            final String videoId = (String) resourceId.get("videoId");
+            final String title = (String) snippet.get("title");
+            final String date = (String) snippet.get("publishedAt");
+            
+            //filter private videos
+            if (title.equals("Private video")) {
+                return null;
+            }
+            
+            //filter live videos
+            if (Optional.ofNullable((JSONObject) thumbnails.get("default"))
+                    .map(defaultThumbnail -> Optional.ofNullable((String) defaultThumbnail.get("url"))
+                            .map(url -> url.substring(url.length() - 9, url.length() - 4).equalsIgnoreCase("_live")).orElse(true))
+                    .orElse(true)) {
+                return null;
+            }
+            
+            return new Video(videoId, title, date, channel);
+        });
+    }
+    
+    /**
+     * Calls the Youtube Data API.
+     *
+     * @param channel    The Channel.
+     * @param endpoint   The API endpoint name.
+     * @param type       The data type.
+     * @param parameters A map of parameters.
+     * @return The number of data chunks read.
+     * @throws Exception When there is an error.
+     */
+    private static int callApi(Channel channel, String endpoint, String type, Map<String, String> parameters) throws Exception {
         WebUtils.checkPlaylistId(channel);
         
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("part", "snippet");
-        parameters.put("maxResults", "50");
-        parameters.put("playlistId", channel.playlistId);
-        parameters.put("key", API_KEY);
+        final AtomicInteger chunk = new AtomicInteger(0);
+        final List<String> data = new ArrayList<>();
+        final List<String> calls = new ArrayList<>();
+        final AtomicBoolean more = new AtomicBoolean(false);
         
-        int chunk = 0;
-        List<String> data = new ArrayList<>();
-        List<String> calls = new ArrayList<>();
-        boolean more = false;
         do {
-            HttpGet request = new HttpGet(REQUEST_BASE + "/playlistItems" + buildParameterString(parameters));
-            request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
-            
             for (int retry = 0; retry < MAX_RETRIES; retry++) {
+                final HttpGet request = buildApiRequest(endpoint, parameters);
                 
                 try (CloseableHttpResponse response = httpClient.execute(request)) {
-                    HttpEntity entity = response.getEntity();
-                    Header headers = entity.getContentType();
-                    String result = EntityUtils.toString(entity);
+                    final HttpEntity entity = response.getEntity();
+                    final Header headers = entity.getContentType();
+                    final String result = EntityUtils.toString(entity);
                     
                     Stats.totalApiCalls++;
                     calls.add(request.getURI() + " ===== " + result.replaceAll("[\\s\\r\\n]+", " "));
@@ -146,67 +203,119 @@ public final class ApiUtils {
                     }
                     data.add(result);
                     
-                    more = false;
-                    JSONParser parser = new JSONParser();
-                    JSONObject resultJson = (JSONObject) parser.parse(result);
-                    if (resultJson.containsKey("nextPageToken")) {
-                        parameters.put("pageToken", (String) resultJson.get("nextPageToken"));
-                        more = true;
-                    }
+                    parameters.put("pageToken", (String) ((JSONObject) new JSONParser().parse(result)).get("nextPageToken"));
+                    more.set(parameters.get("pageToken") != null);
                     
-                    if (((++chunk % MAX_PAGES_PER_FILE) == 0) || !more) {
+                    if (((chunk.incrementAndGet() % MAX_PAGES_PER_FILE) == 0) || !more.get()) {
                         FileUtils.writeStringToFile(
-                                channel.state.getDataFile(chunk / MAX_PAGES_PER_FILE),
+                                channel.state.getDataFile((chunk.get() / MAX_PAGES_PER_FILE), type),
                                 data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")));
                         data.clear();
                     }
                 }
             }
-        } while (more);
+        } while (more.get());
         
         FileUtils.writeLines(channel.state.callLogFile, calls);
-        return chunk;
+        return chunk.get();
     }
     
     /**
-     * Parses the Youtube Data API response data for a Channel.
+     * Builds an API HTTP GET request.
      *
-     * @param channel The Channel.
-     * @return The list of Videos parsed from the Channel data.
-     * @throws Exception When there is an error.
+     * @param endpoint             The API endpoint name.
+     * @param additionalParameters A map of additional parameters.
+     * @return The API HTTP GET request.
+     * @throws Exception When there is an error building the request.
      */
-    public static List<Video> parseApiChannelData(Channel channel) throws Exception {
-        List<Video> videos = new ArrayList<>();
+    private static HttpGet buildApiRequest(String endpoint, Map<String, String> additionalParameters) throws Exception {
+        final Map<String, String> parameters = new HashMap<>();
+        parameters.put("part", "snippet");
+        parameters.put("maxResults", String.valueOf(MAX_RESULTS_PER_PAGE));
+        parameters.put("key", API_KEY);
+        parameters.putAll(additionalParameters);
         
-        List<File> dataChunks = channel.state.getDataFiles();
-        dataChunks.sort(Comparator.comparing(File::getName));
-        
-        for (File dataChunk : dataChunks) {
-            try {
-                videos.addAll(parseApiChannelData(channel, dataChunk));
-            } catch (Exception e) {
-                System.out.println(Color.bad("Error while parsing Channel data"));
-                throw new RuntimeException(e);
-            }
-        }
-        return videos;
+        final HttpGet request = new HttpGet(buildApiUrl(endpoint, parameters));
+        request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
+        return request;
     }
     
     /**
-     * Parses a file chunk of the Youtube Data API response data for a Channel.
+     * Builds an API url string.
+     *
+     * @param endpoint   The API endpoint name.
+     * @param parameters A map of parameters.
+     * @return The API url string.
+     * @throws Exception When there is an error encoding the url.
+     */
+    private static String buildApiUrl(String endpoint, Map<String, String> parameters) throws Exception {
+        return String.join("/", REQUEST_BASE, endpoint) +
+                buildApiParameterString(parameters);
+    }
+    
+    /**
+     * Builds an API parameter string for an API endpoint.
+     *
+     * @param parameters A map of parameters.
+     * @return The API parameter string.
+     * @throws Exception When there is an error encoding the parameters.
+     */
+    private static String buildApiParameterString(Map<String, String> parameters) throws Exception {
+        return parameters.entrySet().stream()
+                .map(parameter -> String.join("=",
+                        URLEncoder.encode(parameter.getKey(), StandardCharsets.UTF_8),
+                        URLEncoder.encode(parameter.getValue(), StandardCharsets.UTF_8)))
+                .collect(Collectors.joining("&", "?", ""));
+    }
+    
+    /**
+     * Parses the Youtube Data API response data.
      *
      * @param channel The Channel.
-     * @param chunk   The Channel data chunk.
-     * @return The list of Videos parsed from the Channel data chunk.
+     * @param type    The data type.
+     * @param parser  The function to parse the response data items.
+     * @param <T>     The type of the response data items.
+     * @return The parsed response data items.
      * @throws Exception When there is an error.
      */
-    private static List<Video> parseApiChannelData(Channel channel, File chunk) throws Exception {
-        List<Video> videos = new ArrayList<>();
-        
-        String data = FileUtils.readFileToString(chunk);
+    @SuppressWarnings("unchecked")
+    private static <T> List<T> parseData(Channel channel, String type, Function<JSONObject, T> parser) throws Exception {
+        return channel.state.getDataFiles(type).stream()
+                .sorted(Comparator.comparing(File::getName))
+                .map(chunkFile -> {
+                    try {
+                        return ((Stream<JSONObject>) ((JSONArray) new JSONParser().parse(readChunkFile(channel, chunkFile))).stream())
+                                .flatMap((Function<JSONObject, Stream<JSONObject>>) dataChunk -> ((JSONArray) dataChunk.get("items")).stream())
+                                .filter(dataItem -> {
+                                    if (channel.error &= (dataItem == null)) {
+                                        System.out.println(Color.bad("Error reading the data for Channel: ") + Color.channel(channel.name) + Color.bad("; Skipping this run"));
+                                    }
+                                    return !channel.error;
+                                })
+                                .map(parser)
+                                .collect(Collectors.toList());
+                    } catch (Exception e) {
+                        System.out.println(Color.bad("Error while parsing Channel data"));
+                        throw new RuntimeException(e);
+                    }
+                }).flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Reads a Channel data chunk file.
+     *
+     * @param channel   The Channel.
+     * @param chunkFile The Channel data chunk file.
+     * @return The content of the data chunk file.
+     * @throws Exception When there is an error reading the file, or the data indicated a failure.
+     */
+    private static String readChunkFile(Channel channel, File chunkFile) throws Exception {
+        final String data = FileUtils.readFileToString(chunkFile);
         
         if (data.contains("\"code\": 404")) {
-            System.out.println(Color.bad("The Channel ") + Color.channel(channel.name) + Color.bad(" does not exist"));
+            System.out.println(Color.bad("The Channel: ") + Color.channel(channel.name) + Color.bad(" does not exist"));
             throw new RuntimeException();
         }
         if (data.contains("\"code\": 403")) {
@@ -214,65 +323,7 @@ public final class ApiUtils {
             throw new RuntimeException();
         }
         
-        JSONParser parser = new JSONParser();
-        JSONArray dataJson = (JSONArray) parser.parse(data);
-        for (Object dataChunk : dataJson) {
-            JSONObject dataChunkJson = (JSONObject) dataChunk;
-            JSONArray dataItems = (JSONArray) dataChunkJson.get("items");
-            if (dataItems == null) {
-                System.out.println(Color.bad("Error reading the Channel ") + Color.channel(channel.name) + Color.bad("; Skipping this run"));
-                continue;
-            }
-            for (Object dataItem : dataItems) {
-                JSONObject dataItemJson = (JSONObject) dataItem;
-                JSONObject snippet = (JSONObject) dataItemJson.get("snippet");
-                JSONObject resourceId = (JSONObject) snippet.get("resourceId");
-                JSONObject thumbnails = (JSONObject) snippet.get("thumbnails");
-                
-                String videoId = (String) resourceId.get("videoId");
-                String title = (String) snippet.get("title");
-                String date = (String) snippet.get("publishedAt");
-                
-                //filter private videos
-                if (title.equals("Private video")) {
-                    continue;
-                }
-                
-                //filter live videos
-                JSONObject defaultThumbnail = (JSONObject) thumbnails.get("default");
-                if (defaultThumbnail != null) {
-                    String defaultThumbnailUrl = (String) defaultThumbnail.get("url");
-                    if ((defaultThumbnailUrl == null) || defaultThumbnailUrl.substring(defaultThumbnailUrl.length() - 9, defaultThumbnailUrl.length() - 4).equalsIgnoreCase("_live")) {
-                        continue;
-                    }
-                } else {
-                    continue;
-                }
-                
-                videos.add(new Video(videoId, title, date, channel));
-            }
-        }
-        return videos;
-    }
-    
-    /**
-     * Builds a parameter string to be appended to a url.
-     *
-     * @param parameters A map of parameters.
-     * @return The parameter string.
-     * @throws Exception When there is an error encoding the string.
-     */
-    private static String buildParameterString(Map<String, String> parameters) throws Exception {
-        StringBuilder parameterString = new StringBuilder("?");
-        for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
-            if (parameterString.length() > 1) {
-                parameterString.append("&");
-            }
-            parameterString.append(URLEncoder.encode(parameterEntry.getKey(), StandardCharsets.UTF_8))
-                    .append("=")
-                    .append(URLEncoder.encode(parameterEntry.getValue(), StandardCharsets.UTF_8));
-        }
-        return parameterString.toString();
+        return data;
     }
     
 }

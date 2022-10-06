@@ -176,7 +176,7 @@ public class YoutubeChannelDownloader {
         channel.state.cleanupData();
         
         try {
-            ApiUtils.fetchApiChannelData(channel);
+            ApiUtils.fetchChannelVideoData(channel);
         } catch (Exception e) {
             return false;
         }
@@ -194,7 +194,7 @@ public class YoutubeChannelDownloader {
         
         try {
             final Set<String> videoTitles = new HashSet<>();
-            ApiUtils.parseApiChannelData(channel).stream()
+            ApiUtils.parseChannelVideoData(channel).stream()
                     .filter(video -> videoTitles.add(video.title))
                     .forEach(video -> videoMap.put(video.videoId, video));
         } catch (Exception e) {

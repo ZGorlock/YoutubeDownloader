@@ -14,8 +14,10 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.conf.Color;
@@ -177,22 +179,45 @@ public class ChannelState {
     /**
      * Returns the list of data files.
      *
+     * @param type The type of the data files.
+     * @return The list of data files.
+     */
+    public List<File> getDataFiles(String type) {
+        return Optional.ofNullable(stateLocation.listFiles(f -> f.getName().startsWith(dataFile.getName()
+                        .replace(".txt", (StringUtility.isNullOrBlank(type) ? "" : ("-" + type))))))
+                .map(Arrays::asList).orElse(new ArrayList<>());
+    }
+    
+    /**
+     * Returns the list of data files.
+     *
      * @return The list of data files.
      */
     public List<File> getDataFiles() {
-        File[] dataFiles = stateLocation.listFiles(e -> e.getName().startsWith(dataFile.getName()));
-        return (dataFiles == null) ? new ArrayList<>() :
-               Arrays.asList(dataFiles);
+        return getDataFiles(null);
+    }
+    
+    /**
+     * Returns a data file of a specific type of a specific chunk index.
+     *
+     * @param chunk The chunk index.
+     * @param type  The type of the data file.
+     * @return The data file.
+     */
+    public File getDataFile(int chunk, String type) {
+        return new File(stateLocation, (dataFile.getName()
+                .replaceFirst("(?=\\.)", (StringUtility.isNullOrBlank(type) ? "" : ("-" + type))) +
+                '.' + chunk));
     }
     
     /**
      * Returns a data file of a specific chunk index.
      *
      * @param chunk The chunk index.
-     * @return The data file of the specified chunk index.
+     * @return The data file.
      */
     public File getDataFile(int chunk) {
-        return new File(stateLocation, (dataFile.getName() + '.' + chunk));
+        return getDataFile(chunk, null);
     }
     
     /**
