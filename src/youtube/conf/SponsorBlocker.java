@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.util;
+package youtube.conf;
 
 import java.util.List;
 import java.util.Map;
@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.ExecutableUtils;
 
 /**
  * Handles configurations and commands for using SponsorBlock with yt-dlp.

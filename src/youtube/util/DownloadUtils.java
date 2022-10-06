@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
+import youtube.conf.SponsorBlocker;
 
 /**
  * Provides download utility methods for the Youtube Downloader.
