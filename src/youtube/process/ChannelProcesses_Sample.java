@@ -23,6 +23,7 @@ import youtube.process.macro.RenameProcess;
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicateBranchesInSwitch", "StatementWithEmptyBody", "RedundantSuppression"})
 public class ChannelProcesses_Sample {
     
     //Logger
@@ -197,7 +198,6 @@ public class ChannelProcesses_Sample {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("DuplicateBranchesInSwitch")
     public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
         switch (channel.key) {
             

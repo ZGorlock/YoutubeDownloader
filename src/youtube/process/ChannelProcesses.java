@@ -7,17 +7,26 @@
 
 package youtube.process;
 
-import java.util.List;
 import java.util.Map;
 
-import youtube.YoutubeChannelDownloader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.entity.Video;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
  */
+@SuppressWarnings({"SpellCheckingInspection", "DuplicateBranchesInSwitch", "StatementWithEmptyBody", "RedundantSuppression"})
 public class ChannelProcesses {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ChannelProcesses.class);
+    
     
     //Functions
     
@@ -27,13 +36,9 @@ public class ChannelProcesses {
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
-     * @param queue    The list of queued videos.
-     * @param save     The list of saved videos.
-     * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public static void performSpecialPreConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
         switch (channel.key) {
             
         }
@@ -45,13 +50,9 @@ public class ChannelProcesses {
      *
      * @param channel  The Channel.
      * @param videoMap The video map.
-     * @param queue    The list of queued videos.
-     * @param save     The list of saved videos.
-     * @param blocked  The list of blocked videos.
      * @throws Exception When there is an error.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
-    public static void performSpecialPostConditions(Channel channel, Map<String, YoutubeChannelDownloader.Video> videoMap, List<String> queue, List<String> save, List<String> blocked) throws Exception {
+    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
         switch (channel.key) {
             
         }
