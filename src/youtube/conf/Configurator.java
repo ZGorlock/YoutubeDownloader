@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.util;
+package youtube.conf;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.Color;
+import youtube.util.FileUtils;
+import youtube.util.PathUtils;
+import youtube.util.SponsorBlocker;
+import youtube.util.Utils;
 
 /**
  * Handles configuration of the Youtube Downloader.

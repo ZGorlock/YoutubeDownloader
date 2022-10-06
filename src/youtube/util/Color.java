@@ -15,6 +15,7 @@ import commons.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.conf.Configurator;
 
 /**
  * Handles coloring of console output.

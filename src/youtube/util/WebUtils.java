@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.Channels;
 import youtube.channel.Video;
+import youtube.conf.Configurator;
 
 /**
  * Provides web utility methods for the Youtube Downloader.

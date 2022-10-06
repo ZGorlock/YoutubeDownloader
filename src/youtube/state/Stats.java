@@ -15,8 +15,8 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
+import youtube.conf.Configurator;
 import youtube.util.Color;
-import youtube.util.Configurator;
 import youtube.util.Utils;
 
 /**

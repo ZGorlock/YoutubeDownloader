@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.conf.Configurator;
 
 /**
  * Provides utility methods for the Youtube Downloader.

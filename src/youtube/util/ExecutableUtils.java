@@ -17,6 +17,7 @@ import commons.object.string.StringUtility;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.conf.Configurator;
 
 /**
  * Provides executable utility methods for the Youtube Downloader.
@@ -171,7 +172,7 @@ public final class ExecutableUtils {
                 System.out.println(Utils.NEWLINE);
             }
             
-        } else if (!exists || (!currentVersion.equals(latestVersion))) {
+        } else if (!exists || !currentVersion.equals(latestVersion)) {
             if (exists) {
                 if (Configurator.Config.printExeVersion) {
                     System.out.println(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);

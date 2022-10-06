@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.conf.Configurator;
 import youtube.util.Color;
-import youtube.util.Configurator;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 
