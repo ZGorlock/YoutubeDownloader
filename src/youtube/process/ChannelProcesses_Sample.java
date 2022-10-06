@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.channel;
+package youtube.process;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channel;
+import youtube.channel.Video;
 import youtube.channel.process.FilterProcess;
 import youtube.channel.process.RenameProcess;
 

@@ -4,12 +4,13 @@
  * Author:  Zachary Gill
  */
 
-package youtube.channel;
+package youtube.process;
 
 import java.util.List;
 import java.util.Map;
 
 import youtube.YoutubeChannelDownloader;
+import youtube.channel.Channel;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
