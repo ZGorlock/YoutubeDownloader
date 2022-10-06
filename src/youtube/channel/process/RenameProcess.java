@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Video;
-import youtube.util.Color;
+import youtube.conf.Color;
 
 /**
  * Provides Channel Process macros to help with renaming.

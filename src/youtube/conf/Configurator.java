@@ -17,7 +17,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.util.Color;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 import youtube.util.SponsorBlocker;

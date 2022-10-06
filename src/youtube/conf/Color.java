@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.util;
+package youtube.conf;
 
 import java.io.File;
 import java.util.List;
@@ -15,7 +15,8 @@ import commons.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.conf.Configurator;
+import youtube.util.PathUtils;
+import youtube.util.Utils;
 
 /**
  * Handles coloring of console output.

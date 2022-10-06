@@ -14,7 +14,7 @@ import commons.object.collection.MapUtility;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.util.Color;
+import youtube.conf.Color;
 import youtube.util.PathUtils;
 import youtube.util.SponsorBlocker;
 

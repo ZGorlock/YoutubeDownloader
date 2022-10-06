@@ -17,7 +17,7 @@ import commons.console.Console;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.util.Color;
+import youtube.conf.Color;
 import youtube.util.Utils;
 
 /**
