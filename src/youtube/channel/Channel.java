@@ -242,6 +242,16 @@ public class Channel {
         return treeEntry.isMemberOfGroup(group);
     }
     
+    /**
+     * Returns the string representation of the Channel.
+     * 
+     * @return the string representation of the Channel.
+     */
+    @Override
+    public String toString() {
+        return name;
+    }
+    
     
     //Functions
     

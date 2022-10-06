@@ -261,6 +261,16 @@ public class ChannelTree {
         print((parent == null) ? -1 : 0);
     }
     
+    /**
+     * Returns the string representation of the Channel Tree entry.
+     *
+     * @return the string representation of the Channel Tree entry.
+     */
+    @Override
+    public String toString() {
+        return key;
+    }
+    
     
     //Static Methods
     

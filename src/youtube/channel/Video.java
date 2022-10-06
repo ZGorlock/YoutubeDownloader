@@ -152,4 +152,14 @@ public class Video {
         updateOutputDir(output.getParentFile());
     }
     
+    /**
+     * Returns the string representation of the Video.
+     *
+     * @return the string representation of the Video.
+     */
+    @Override
+    public String toString() {
+        return title;
+    }
+    
 }
