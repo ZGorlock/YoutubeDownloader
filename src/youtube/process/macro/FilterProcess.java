@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.channel.process;
+package youtube.process.macro;
 
 import java.util.Date;
 import java.util.List;

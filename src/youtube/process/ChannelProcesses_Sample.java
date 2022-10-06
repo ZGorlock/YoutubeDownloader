@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.Video;
-import youtube.channel.process.FilterProcess;
-import youtube.channel.process.RenameProcess;
+import youtube.process.macro.FilterProcess;
+import youtube.process.macro.RenameProcess;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
