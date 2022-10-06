@@ -180,7 +180,7 @@ public class Channels {
     }
     
     /**
-     * Loads the Channel configuration from a channel json list.
+     * Loads the Channel configuration from a json channel list.
      *
      * @param channelList  The json channel list.
      * @param currentGroup The current group being loaded.

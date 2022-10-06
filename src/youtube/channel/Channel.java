@@ -244,7 +244,7 @@ public class Channel {
     
     /**
      * Returns the string representation of the Channel.
-     * 
+     *
      * @return the string representation of the Channel.
      */
     @Override

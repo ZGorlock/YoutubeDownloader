@@ -35,7 +35,7 @@ public class ChannelProcesses_Sample {
     //Functions
     
     /**
-     * Performs special checks specific to a Channel before producing the download queue.
+     * Performs special checks specific to a Channel before producing the download queue.<br/>
      * Typically used for renaming videos in the video map.
      *
      * @param channel  The Channel.
@@ -189,7 +189,7 @@ public class ChannelProcesses_Sample {
     }
     
     /**
-     * Performs special checks specific to a Channel after producing the queue.
+     * Performs special checks specific to a Channel after producing the queue.<br/>
      * Typically used for filtering; Do not use this to rename videos in the video map.
      *
      * @param channel  The Channel.

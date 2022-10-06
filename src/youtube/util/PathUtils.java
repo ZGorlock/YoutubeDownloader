@@ -249,7 +249,7 @@ public final class PathUtils {
     public static String localPath(File file) {
         return localPath(false, file);
     }
-	
+    
     /**
      * Determines whether or not a path contains any path separators.
      *
