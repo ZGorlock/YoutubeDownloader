@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.channel;
+package youtube.state;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channel;
+import youtube.channel.Channels;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 
