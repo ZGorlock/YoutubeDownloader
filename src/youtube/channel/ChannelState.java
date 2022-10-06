@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
@@ -141,6 +142,7 @@ public class ChannelState {
             blocked = FileUtils.readLines(blockedFile);
             
         } catch (IOException e) {
+            System.out.println(Color.bad("Failed to load the state of channel: ") + Color.channel(channel));
             throw new RuntimeException(e);
         }
     }
@@ -166,6 +168,7 @@ public class ChannelState {
             FileUtils.writeLines(blockedFile, blocked);
             
         } catch (IOException e) {
+            System.out.println(Color.bad("Failed to save the state of channel: ") + Color.channel(channel));
             throw new RuntimeException(e);
         }
     }

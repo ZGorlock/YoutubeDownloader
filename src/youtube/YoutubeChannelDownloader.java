@@ -109,7 +109,6 @@ public class YoutubeChannelDownloader {
             processChannel();
         }
         
-        System.out.println(Utils.NEWLINE);
         KeyStore.save();
         Stats.print();
     }

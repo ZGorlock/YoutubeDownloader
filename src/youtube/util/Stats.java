@@ -172,6 +172,7 @@ public final class Stats {
         calculateData();
         
         System.out.println(Utils.NEWLINE);
+        System.out.println(Utils.NEWLINE);
         System.out.println(Color.number("--- Stats ---"));
         
         printer.accept("CHANNEL:", null);
