@@ -51,6 +51,11 @@ public final class WebUtils {
     public static final String VIDEO_BASE = YOUTUBE_BASE + "/watch?v=";
     
     /**
+     * The base url for Youtube playlists.
+     */
+    public static final String PLAYLIST_BASE = YOUTUBE_BASE + "/playlist?list=";
+    
+    /**
      * The regex pattern for a Youtube video url.
      */
     public static final Pattern VIDEO_URL_PATTERN = Pattern.compile("^.*[?&]v=(?<video>[^=?&]+).*$");

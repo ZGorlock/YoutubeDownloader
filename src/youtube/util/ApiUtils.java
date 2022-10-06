@@ -41,6 +41,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.entity.Playlist;
 import youtube.channel.entity.Video;
 import youtube.conf.Color;
 import youtube.state.Stats;
@@ -159,6 +160,39 @@ public final class ApiUtils {
             }
             
             return new Video(videoId, title, date, channel);
+        });
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches playlists for a Channel.
+     *
+     * @param channel The Channel.
+     * @return The API response.
+     * @throws Exception When there is an error.
+     */
+    @SuppressWarnings("unchecked")
+    public static int fetchChannelPlaylistData(Channel channel) throws Exception {
+        return (!channel.isChannel()) ? -1 :
+               callApi(channel, "playlists", "playlist", MapUtility.mapOf(
+                       new ImmutablePair<>("channelId", channel.playlistId.replaceAll("^UU", "UC"))));
+    }
+    
+    /**
+     * Parses the Youtube Data API playlist response data for a Channel.
+     *
+     * @param channel The Channel.
+     * @return The map of playlist names and ids parsed from the Channel data.
+     * @throws Exception When there is an error.
+     */
+    public static List<Playlist> parseChannelPlaylistData(Channel channel) throws Exception {
+        return parseData(channel, "playlist", dataItem -> {
+            final JSONObject snippet = (JSONObject) dataItem.get("snippet");
+            
+            final String playlistId = (String) dataItem.get("id");
+            final String title = (String) snippet.get("title");
+            final String date = (String) snippet.get("publishedAt");
+            
+            return new Playlist(playlistId, title, date, channel);
         });
     }
     
