@@ -4,7 +4,7 @@
  * Author:  Zachary Gill
  */
 
-package youtube.util;
+package youtube.state;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -15,6 +15,9 @@ import java.util.function.BiConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
+import youtube.util.Color;
+import youtube.util.Configurator;
+import youtube.util.Utils;
 
 /**
  * Keeps track of statistics for the Youtube Channel Downloader.

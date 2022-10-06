@@ -24,13 +24,13 @@ import youtube.channel.ChannelProcesses;
 import youtube.channel.Channels;
 import youtube.channel.Video;
 import youtube.state.KeyStore;
+import youtube.state.Stats;
 import youtube.util.ApiUtils;
 import youtube.util.Color;
 import youtube.util.Configurator;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
-import youtube.util.Stats;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 

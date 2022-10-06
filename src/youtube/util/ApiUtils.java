@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.Video;
+import youtube.state.Stats;
 
 /**
  * Provides API utility methods for the Youtube Downloader.
