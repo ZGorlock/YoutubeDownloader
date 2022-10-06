@@ -1,6 +1,6 @@
 /*
  * File:    Stats.java
- * Package: youtube.util
+ * Package: youtube.state
  * Author:  Zachary Gill
  */
 

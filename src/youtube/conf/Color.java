@@ -1,6 +1,6 @@
 /*
  * File:    Color.java
- * Package: youtube.util
+ * Package: youtube.conf
  * Author:  Zachary Gill
  */
 

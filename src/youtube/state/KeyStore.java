@@ -1,6 +1,6 @@
 /*
  * File:    KeyStore.java
- * Package: youtube.channel
+ * Package: youtube.state
  * Author:  Zachary Gill
  */
 

@@ -1,6 +1,6 @@
 /*
  * File:    ChannelProcesses.java
- * Package: youtube.channel
+ * Package: youtube.process
  * Author:  Zachary Gill
  */
 

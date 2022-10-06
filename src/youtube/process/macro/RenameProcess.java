@@ -1,6 +1,6 @@
 /*
  * File:    RenameProcess.java
- * Package: youtube.channel.process
+ * Package: youtube.process.macro
  * Author:  Zachary Gill
  */
 
