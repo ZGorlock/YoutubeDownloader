@@ -17,6 +17,7 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.ChannelJsonFormatter;
 import youtube.channel.Channels;
 import youtube.channel.entity.Playlist;
 import youtube.conf.Configurator;
@@ -62,7 +63,7 @@ public class ChannelPlaylistParser {
         Channels.loadChannels();
         
         final Channel baseChannel = Channels.getChannel(baseChannelKey);
-        if ((baseChannel == null) || !baseChannel.isChannel()) {
+        if ((baseChannel == null) || !baseChannel.isYoutubeChannel()) {
             return;
         }
         
@@ -126,7 +127,7 @@ public class ChannelPlaylistParser {
      */
     private static String formatPlaylistChannels(List<Channel> playlistChannels) throws Exception {
         return playlistChannels.stream().sequential()
-                .map(e -> StringUtility.splitLines(Channel.ChannelJsonFormatter.toJsonString(e)).stream()
+                .map(e -> StringUtility.splitLines(ChannelJsonFormatter.toBaseJsonString(e)).stream()
                         .map(e2 -> (StringUtility.spaces(2) + e2)).collect(Collectors.joining(System.lineSeparator())))
                 .collect(Collectors.joining(("," + System.lineSeparator()), ("[" + System.lineSeparator()), (System.lineSeparator() + "]")));
     }

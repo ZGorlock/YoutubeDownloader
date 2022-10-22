@@ -8,29 +8,19 @@
 package youtube.channel;
 
 import java.io.File;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import commons.lambda.stream.mapper.Mappers;
-import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.conf.Color;
-import youtube.conf.SponsorBlocker;
-import youtube.util.PathUtils;
 
 /**
  * Defines a Channel of the Youtube Channel Downloader.
  */
-public class Channel {
+public class Channel extends ChannelEntry {
     
     //Logger
     
@@ -50,47 +40,12 @@ public class Channel {
     /**
      * A list of base fields in a Channel configuration.
      */
-    public static final List<String> BASE_FIELDS = List.of("key", "active", "name", "url", "playlistId", "outputFolder", "saveAsMp3", "keepClean");
+    public static final List<String> BASE_FIELDS = List.of("key", "active", "name", "url", "playlistId", "outputFolder");
     
     /**
      * A list of all fields in a Channel configuration.
      */
-    public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "saveAsMp3", "playlistFile", "reversePlaylist", "ignoreGlobalLocations", "keepClean");
-    
-    /**
-     * The default value of the flag indicating whether a Channel is enabled or not.
-     */
-    public static final boolean DEFAULT_ACTIVE = true;
-    
-    /**
-     * The default value of the flag indicating whether to save the videos from the Channel as a mp3 file or not; mp4 otherwise.
-     */
-    public static final boolean DEFAULT_SAVE_AS_MP3 = false;
-    
-    /**
-     * The default value of the flag indicating whether to reverse the order of the playlist or not, putting newer videos first.
-     */
-    public static final boolean DEFAULT_REVERSE_PLAYLIST = false;
-    
-    /**
-     * The default value of the flag indicating whether to disregard the globally configured storage drive and the video directory, if saveAsMp3 is false, or music directory, if saveAsMp3 is true.
-     */
-    public static final boolean DEFAULT_IGNORE_GLOBAL_LOCATIONS = false;
-    
-    /**
-     * The default value of the flag indicating whether to delete files from the output directory that are not in the playlist anymore.
-     */
-    public static final boolean DEFAULT_KEEP_CLEAN = false;
-    
-    /**
-     * The map of default field values in a Channel configuration; the default value of fields that are not included is null.
-     */
-    private static final Map<String, Object> DEFAULT_FIELD_VALUES = Map.of(
-            "active", DEFAULT_ACTIVE,
-            "saveAsMp3", DEFAULT_SAVE_AS_MP3,
-            "reversePlaylist", DEFAULT_REVERSE_PLAYLIST,
-            "ignoreGlobalLocations", DEFAULT_IGNORE_GLOBAL_LOCATIONS,
-            "keepClean", DEFAULT_KEEP_CLEAN);
+    public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "playlistFile", "saveAsMp3", "reversePlaylist", "ignoreGlobalLocations", "keepClean");
     
     
     //Enums
@@ -126,57 +81,12 @@ public class Channel {
     //Fields
     
     /**
-     * The key of the Channel; required.
-     */
-    public String key;
-    
-    /**
-     * A flag indicating whether a Channel is enabled or not; true by default.
-     */
-    public boolean active;
-    
-    /**
      * The name of the Channel.
      */
     public String name;
     
     /**
-     * The group of the Channel; empty by default.
-     */
-    public String group;
-    
-    /**
-     * The url of the Channel; empty by default.
-     */
-    public String url;
-    
-    /**
-     * The Playlist ID of the Channel; required.
-     */
-    public String playlistId;
-    
-    /**
-     * The type of the Channel.
-     */
-    public ChannelType type;
-    
-    /**
-     * The output folder to store the videos that are downloaded from the Channel; required.
-     */
-    public File outputFolder;
-    
-    /**
-     * The path representing the output folder.
-     */
-    public String outputFolderPath;
-    
-    /**
-     * A flag indicating whether to save the videos from the Channel as a mp3 file or not; mp4 otherwise; false by default.
-     */
-    public boolean saveAsMp3;
-    
-    /**
-     * The playlist file to add files downloaded from the Channel to; null by default.
+     * The playlist file to add files downloaded by the Channel to.
      */
     public File playlistFile;
     
@@ -186,34 +96,9 @@ public class Channel {
     public String playlistFilePath;
     
     /**
-     * A flag indicating whether to reverse the order of the playlist or not, putting newer videos first; false by default.
+     * The type of the Channel.
      */
-    public boolean reversePlaylist;
-    
-    /**
-     * A flag indicating whether to disregard the globally configured storage drive and the video directory, if saveAsMp3 is false, or music directory, if saveAsMp3 is true; false by default.
-     */
-    public boolean ignoreGlobalLocations;
-    
-    /**
-     * The location prefix of the Channel.
-     */
-    public String locationPrefix;
-    
-    /**
-     * A flag indicating whether to delete files from the output directory that are not in the playlist anymore; false by default.
-     */
-    public boolean keepClean;
-    
-    /**
-     * The json data containing the Channel configuration.
-     */
-    public JSONObject channelJson;
-    
-    /**
-     * The SponsorBlock configuration for the Channel; null by default.
-     */
-    public SponsorBlocker.SponsorBlockConfig sponsorBlockConfig;
+    public ChannelType type;
     
     /**
      * The state of the Channel.
@@ -221,14 +106,9 @@ public class Channel {
     public ChannelState state;
     
     /**
-     * The Channel Tree entry of the Channel.
+     * A flag indicating whether there was an error processing the Channel this run or not.
      */
-    public ChannelTree treeEntry;
-    
-    /**
-     * A flag indicating whether there was an error retrieving the Channel this run or not.
-     */
-    public boolean error;
+    public AtomicBoolean error;
     
     
     //Constructors
@@ -237,114 +117,88 @@ public class Channel {
      * Creates a Channel.
      *
      * @param fields The fields from the Channel configuration.
+     * @param parent The parent of the Channel configuration.
      * @throws Exception When the Channel configuration does not contain all of the required fields.
      */
-    public Channel(Map<String, Object> fields) throws Exception {
-        validateRequiredFields(fields);
+    public Channel(Map<String, Object> fields, ChannelGroup parent) throws Exception {
+        super(fields, parent);
         
-        final Function<String, Optional<String>> stringFieldGetter = (String name) ->
-                Optional.ofNullable((String) fields.get(name));
-        final Function<String, Optional<Boolean>> booleanFieldGetter = (String name) ->
-                Optional.ofNullable((Boolean) fields.get(name));
-        
-        this.channelJson = new JSONObject(fields);
-        
-        this.key = stringFieldGetter.apply("key").map(e -> e.replaceAll("[.|]", "")).orElseThrow(RuntimeException::new);
         this.name = stringFieldGetter.apply("name").map(e -> e.replaceAll("[.|]", "")).orElseGet(() -> StringUtility.toPascalCase(key));
-        this.group = stringFieldGetter.apply("group").map(e -> e.replaceAll(".+\\.", "")).orElse("");
-        
-        this.playlistId = stringFieldGetter.apply("playlistId").map(e -> e.replaceAll("^UC", "UU")).orElseThrow(RuntimeException::new);
-        this.url = stringFieldGetter.apply("url").orElseGet(() -> determineUrl(playlistId));
-        this.type = ChannelType.determineType(playlistId);
-        
-        this.active = booleanFieldGetter.apply("active").orElse(DEFAULT_ACTIVE);
-        this.saveAsMp3 = booleanFieldGetter.apply("saveAsMp3").orElse(DEFAULT_SAVE_AS_MP3);
-        this.keepClean = booleanFieldGetter.apply("keepClean").orElse(DEFAULT_KEEP_CLEAN);
-        this.reversePlaylist = booleanFieldGetter.apply("reversePlaylist").orElse(DEFAULT_REVERSE_PLAYLIST);
-        
-        this.ignoreGlobalLocations = booleanFieldGetter.apply("ignoreGlobalLocations").orElse(DEFAULT_IGNORE_GLOBAL_LOCATIONS);
-        this.locationPrefix = !ignoreGlobalLocations ? PathUtils.path(true, (saveAsMp3 ? Channels.musicDir : Channels.videoDir)) : "";
-        
-        this.outputFolderPath = stringFieldGetter.apply("outputFolder").map(Channel::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("outputFolderPath").orElse(null));
-        this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, outputFolderPath)).orElse(null);
         
         this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(Channel::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
         this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, playlistFilePath)).orElse(null);
         
-        this.state = new ChannelState(this);
-        this.error = false;
+        this.type = ChannelType.determineType(playlistId);
         
-        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) fields.get("sponsorBlock"))
-                .map(SponsorBlocker::loadConfig)
-                .map(Mappers.forEach(e -> e.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL))
-                .orElse(null);
+        this.state = new ChannelState(this);
+        this.error = new AtomicBoolean(false);
+    }
+    
+    /**
+     * Creates a Channel.
+     *
+     * @param fields The fields from the Channel configuration.
+     * @throws Exception When the Channel configuration does not contain all of the required fields.
+     */
+    public Channel(Map<String, Object> fields) throws Exception {
+        this(fields, null);
     }
     
     /**
      * The default no-argument constructor for a Channel.
      */
     public Channel() {
+        super();
     }
     
     
     //Methods
     
     /**
-     * Returns whether the Channel is a Channel or not.
+     * Returns whether the Channel references a Youtube channel or not.
      *
-     * @return Whether the Channel is a Channel or not.
+     * @return Whether the Channel references a Youtube channel or not.
      */
-    public boolean isChannel() {
+    public boolean isYoutubeChannel() {
         return (type == ChannelType.CHANNEL);
     }
     
     /**
-     * Returns whether the Channel is a Playlist or not.
+     * Returns whether the Channel references a Youtube playlist or not.
      *
-     * @return Whether the Channel is a Playlist or not.
+     * @return Whether the Channel references a Youtube playlist or not.
      */
-    public boolean isPlaylist() {
+    public boolean isYoutubePlaylist() {
         return (type == ChannelType.PLAYLIST);
-    }
-    
-    /**
-     * Returns whether the Channel is active or not.
-     *
-     * @return Whether the Channel is active or not.
-     */
-    public boolean isActive() {
-        return treeEntry.isActive();
-    }
-    
-    /**
-     * Returns whether the Channel is a member of a specific group or not.
-     *
-     * @param group The group.
-     * @return Whether the Channel is a member of the specified group or not.
-     */
-    public boolean isMemberOfGroup(String group) {
-        return treeEntry.isMemberOfGroup(group);
     }
     
     /**
      * Returns the map of the field values of the Channel.
      *
-     * @return The map of field values of the Channel.
+     * @return The map of the field values of the Channel.
      */
+    @Override
     public Map<String, Object> getFields() {
-        final Map<String, Object> fields = new LinkedHashMap<>();
-        fields.put("key", Optional.ofNullable(key).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(null));
-        fields.put("active", active);
-        fields.put("name", Optional.ofNullable(name).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(null));
-        fields.put("group", Optional.ofNullable(group).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(null));
-        fields.put("url", Optional.ofNullable(url).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(null));
-        fields.put("playlistId", Optional.ofNullable(playlistId).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(null));
-        fields.put("outputFolder", Optional.ofNullable(outputFolderPath).orElse(Optional.ofNullable(outputFolder).map(File::getAbsolutePath).orElse(null)));
-        fields.put("saveAsMp3", saveAsMp3);
+        final Map<String, Object> fields = super.getFields();
+        fields.put("name", Optional.ofNullable(name).map(String::strip).orElse(null));
         fields.put("playlistFile", Optional.ofNullable(playlistFilePath).orElse(Optional.ofNullable(playlistFile).map(File::getAbsolutePath).orElse(null)));
-        fields.put("reversePlaylist", reversePlaylist);
-        fields.put("ignoreGlobalLocations", ignoreGlobalLocations);
-        fields.put("keepClean", keepClean);
+        
+        if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
+            throw new UnsupportedOperationException();
+        }
+        return fields;
+    }
+    
+    /**
+     * Returns the map of the effective field values of the Channel.
+     *
+     * @return The map of the effective field values of the Channel.
+     */
+    @Override
+    public Map<String, Object> getEffectiveFields() {
+        final Map<String, Object> fields = super.getEffectiveFields();
+        fields.put("name", getName());
+        fields.put("playlistFile", getPlaylistFile());
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
             throw new UnsupportedOperationException();
@@ -363,138 +217,24 @@ public class Channel {
     }
     
     
-    //Functions
+    //Getters
     
     /**
-     * Parses a Channel file path.
+     * Returns the name of the Channel.
      *
-     * @param directoryPrefix The directory prefix.
-     * @param filePath        The file path.
-     * @return A file representing the parsed file path.
+     * @return The name of the Channel.
      */
-    public static File parseFilePath(String directoryPrefix, String filePath) {
-        return new File((directoryPrefix + cleanFilePath(filePath))
-                .replace("${D}", Channels.storageDrive.getAbsolutePath())
-                .replace("${V}", Channels.videoDir.getAbsolutePath())
-                .replace("${M}", Channels.musicDir.getAbsolutePath()));
+    public String getName() {
+        return name;
     }
     
     /**
-     * Clean a Channel file path.
+     * Returns the playlist file to add files downloaded by the Channel to.
      *
-     * @param filePath The file path.
-     * @return The cleaned Channel file path.
+     * @return The playlist file to add files downloaded by the Channel to.
      */
-    public static String cleanFilePath(String filePath) {
-        return filePath
-                .replaceAll("[:*?\"<>|]", " - ")
-                .replaceAll("\\s+", " ").strip();
-    }
-    
-    /**
-     * Determines the url corresponding to a playlist id.
-     *
-     * @param playlistId The playlist id.
-     * @return The url corresponding to the playlist id.
-     */
-    public static String determineUrl(String playlistId) {
-        final ChannelType type = ChannelType.determineType(playlistId);
-        if (type == null) {
-            return null;
-        }
-        
-        switch (type) {
-            case CHANNEL:
-                return "https://www.youtube.com/channel/" + playlistId.replaceAll("^UU", "UC");
-            case PLAYLIST:
-                return "https://www.youtube.com/playlist?list=" + playlistId;
-            default:
-                return null;
-        }
-    }
-    
-    /**
-     * Validates that a map of fields being used to construct a new Channel contains all the required fields.
-     *
-     * @param fields The map of fields being used to construct a new Channel.
-     * @throws Exception When the map of fields does not contain all the required fields.
-     */
-    private static void validateRequiredFields(Map<String, Object> fields) throws Exception {
-        Optional.of(REQUIRED_FIELDS.stream()
-                        .filter(e -> !MapUtility.contains(fields, e))
-                        .collect(Collectors.toList()))
-                .filter(e -> !e.isEmpty())
-                .ifPresent(missingFields -> {
-                    System.out.println(Color.bad("Channel: ") + Color.channel(MapUtility.getOrNull(fields, "key")) +
-                            Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
-                            missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
-                    throw new RuntimeException();
-                });
-    }
-    
-    
-    //Inner Classes
-    
-    /**
-     * Handles the formatting of Channel json strings.
-     */
-    public static class ChannelJsonFormatter {
-        
-        //Functions
-        
-        /**
-         * A function that formats a Channel json string.
-         */
-        private static final BiFunction<Map<String, Object>, List<String>, String> formatter = (Map<String, Object> fields, List<String> toInclude) ->
-                fields.entrySet().stream()
-                        .filter(e -> toInclude.contains(e.getKey()))
-                        .map(e -> StringUtility.spaces(2) +
-                                StringUtility.quote(e.getKey()) + ": " + ((e.getValue() instanceof String) ? StringUtility.quote(String.valueOf(e.getValue())) : String.valueOf(e.getValue())))
-                        .collect(Collectors.joining(("," + System.lineSeparator()), ("{" + System.lineSeparator()), (System.lineSeparator() + "}")));
-        
-        
-        //Static Methods
-        
-        /**
-         * Produces a full json string representing a Channel.
-         *
-         * @param channel The Channel.
-         * @return The full json string representing the Channel.
-         */
-        public static String toFullJsonString(Channel channel) {
-            return formatter.apply(channel.getFields(), ALL_FIELDS);
-        }
-        
-        /**
-         * Produces a json string representing a Channel.
-         *
-         * @param channel The Channel.
-         * @return The json string representing the Channel.
-         */
-        public static String toJsonString(Channel channel) {
-            final Map<String, Object> fields = channel.getFields();
-            final List<String> toInclude = ALL_FIELDS.stream()
-                    .filter(field -> BASE_FIELDS.contains(field) || !Objects.equals(fields.get(field), DEFAULT_FIELD_VALUES.get(field)))
-                    .collect(Collectors.toList());
-            
-            return formatter.apply(fields, toInclude);
-        }
-        
-        /**
-         * Produces a minimal json string representing a Channel.
-         *
-         * @param channel The Channel.
-         * @return The minimal json string representing the Channel.
-         */
-        public static String toMinJsonString(Channel channel) {
-            final Map<String, Object> fields = channel.getFields();
-            final List<String> toInclude = ALL_FIELDS.stream()
-                    .filter(field -> REQUIRED_FIELDS.contains(field) || !Objects.equals(fields.get(field), DEFAULT_FIELD_VALUES.get(field)))
-                    .collect(Collectors.toList());
-            
-            return formatter.apply(fields, toInclude);
-        }
-        
+    public File getPlaylistFile() {
+        return playlistFile;
     }
     
 }

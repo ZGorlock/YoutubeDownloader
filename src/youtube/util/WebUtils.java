@@ -214,14 +214,14 @@ public final class WebUtils {
      * @param channel The Channel.
      */
     public static void checkPlaylistId(Channel channel) {
-        if ((channel.playlistId == null) || channel.playlistId.isEmpty()) {
-            channel.playlistId = WebUtils.fetchPlaylistId(channel.url);
+        if ((channel.getPlaylistId() == null) || channel.getPlaylistId().isEmpty()) {
+            channel.playlistId = WebUtils.fetchPlaylistId(channel.getUrl());
             
             System.out.println(Color.bad("Channel does not have a playlistId defined, please add this to the Channel configuration"));
-            if (channel.playlistId.isEmpty()) {
+            if (channel.getPlaylistId().isEmpty()) {
                 throw new RuntimeException();
             }
-            System.out.println(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.EXE.apply(channel.playlistId));
+            System.out.println(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.EXE.apply(channel.getPlaylistId()));
             System.out.println(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.filePath(Channels.CHANNELS_FILE));
         }
     }

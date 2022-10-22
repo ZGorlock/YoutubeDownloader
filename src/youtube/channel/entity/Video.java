@@ -110,7 +110,7 @@ public class Video {
      * @param channel The Channel containing the Video.
      */
     public Video(String videoId, String title, String date, Channel channel) {
-        this(videoId, title, date, channel.outputFolder, channel.saveAsMp3);
+        this(videoId, title, date, channel.getOutputFolder(), channel.isSaveAsMp3());
         this.channel = channel;
     }
     

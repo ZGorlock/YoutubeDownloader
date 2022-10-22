@@ -120,12 +120,12 @@ public class ChannelState {
         
         this.keyStore = new LinkedHashMap<>();
         
-        this.stateLocation = new File(CHANNEL_DATA_DIR, channel.name);
-        this.dataFile = new File(this.stateLocation, (channel.name + "-data.txt"));
-        this.callLogFile = new File(this.stateLocation, (channel.name + "-callLog.txt"));
-        this.saveFile = new File(this.stateLocation, (channel.name + "-save.txt"));
-        this.queueFile = new File(this.stateLocation, (channel.name + "-queue.txt"));
-        this.blockedFile = new File(this.stateLocation, (channel.name + "-blocked.txt"));
+        this.stateLocation = new File(CHANNEL_DATA_DIR, channel.getName());
+        this.dataFile = new File(this.stateLocation, (channel.getName() + "-data.txt"));
+        this.callLogFile = new File(this.stateLocation, (channel.getName() + "-callLog.txt"));
+        this.saveFile = new File(this.stateLocation, (channel.getName() + "-save.txt"));
+        this.queueFile = new File(this.stateLocation, (channel.getName() + "-queue.txt"));
+        this.blockedFile = new File(this.stateLocation, (channel.getName() + "-blocked.txt"));
     }
     
     

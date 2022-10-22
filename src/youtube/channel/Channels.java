@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -73,9 +72,14 @@ public class Channels {
     private static final Map<String, Channel> channels = new LinkedHashMap<>();
     
     /**
-     * The Channel Tree root entry.
+     * The list of Channel Groups.
      */
-    private static final ChannelTree channelTree = ChannelTree.getChannelTreeRoot();
+    private static final Map<String, ChannelGroup> groups = new LinkedHashMap<>();
+    
+    /**
+     * The Channel configuration root.
+     */
+    private static final ChannelGroup root = new ChannelGroup();
     
     /**
      * A flag indicating whether the Channel configuration has been loaded yet or not.
@@ -116,26 +120,21 @@ public class Channels {
     }
     
     /**
-     * Returns the list of Channel groups.
+     * Returns the list of Channel Groups.
      *
-     * @return The list of Channel groups.
+     * @return The list of Channel Groups.
      */
-    public static List<String> getGroups() {
-        return channelTree.getAllChildGroups().stream().map(group -> group.key).collect(Collectors.toList());
+    public static List<ChannelGroup> getGroups() {
+        return new ArrayList<>(groups.values());
     }
     
     /**
-     * Returns the Channel map.
+     * Returns the Channel Entry root.
      *
-     * @return The Channel map.
+     * @return The Channel Entry root.
      */
-    public static Map<String, List<Channel>> getChannelMap() {
-        Map<String, List<Channel>> channelMap = new LinkedHashMap<>();
-        channels.values().forEach(channel -> {
-            channelMap.putIfAbsent(channel.group, new ArrayList<>());
-            channelMap.get(channel.group).add(channel);
-        });
-        return channelMap;
+    public static ChannelGroup getRoot() {
+        return root;
     }
     
     /**
@@ -149,13 +148,33 @@ public class Channels {
     }
     
     /**
+     * Returns a Channel Group of a specified key.
+     *
+     * @param key The key of the Channel Group.
+     * @return The Channel Group of the specified key, or null if it does not exist.
+     */
+    public static ChannelGroup getGroup(String key) {
+        return groups.get(key);
+    }
+    
+    /**
      * Returns index of a Channel of a specified key.
      *
      * @param key The key of the Channel.
      * @return The index of the Channel of the specified key, or -1 if it does not exist.
      */
-    public static int indexOf(String key) {
+    public static int channelIndex(String key) {
         return new ArrayList<>(channels.keySet()).indexOf(key);
+    }
+    
+    /**
+     * Returns index of a Channel Group of a specified key.
+     *
+     * @param key The key of the Channel Group.
+     * @return The index of the Channel Group of the specified key, or -1 if it does not exist.
+     */
+    public static int groupIndex(String key) {
+        return new ArrayList<>(groups.keySet()).indexOf(key);
     }
     
     /**
@@ -164,11 +183,10 @@ public class Channels {
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
-                String jsonString = FileUtils.readFileToString(CHANNELS_FILE);
-                JSONParser parser = new JSONParser();
-                JSONArray channelList = (JSONArray) parser.parse(jsonString);
+                final JSONArray channelList = (JSONArray) new JSONParser().parse(
+                        FileUtils.readFileToString(CHANNELS_FILE));
                 
-                loadChannelList(channelList, channelTree);
+                loadChannelList(channelList, root);
                 
             } catch (IOException | ParseException e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
@@ -177,41 +195,34 @@ public class Channels {
             }
         }
         
-        Channels.print();
+        print();
     }
     
     /**
      * Loads the Channel configuration from a json channel list.
      *
-     * @param channelList  The json channel list.
-     * @param currentGroup The current group being loaded.
+     * @param channelList The json channel list.
+     * @param parent      The parent of the Channel configuration.
      */
     @SuppressWarnings("unchecked")
-    private static void loadChannelList(JSONArray channelList, ChannelTree currentGroup) {
-        for (Object channelEntry : channelList) {
-            JSONObject channelJson = (JSONObject) channelEntry;
-            
-            ChannelTree currentChannel = new ChannelTree();
-            currentChannel.key = ((String) channelJson.getOrDefault("key", "")).replace(".", "");
-            currentChannel.active = (boolean) channelJson.getOrDefault("active", Channel.DEFAULT_ACTIVE);
-            currentChannel.parent = currentGroup;
-            currentGroup.children.add(currentChannel);
+    private static void loadChannelList(JSONArray channelList, ChannelGroup parent) {
+        for (Object channelListEntry : channelList) {
+            final JSONObject channelJson = (JSONObject) channelListEntry;
             
             try {
-                if (channelJson.containsKey("channels")) {
-                    loadChannelList((JSONArray) channelJson.get("channels"), currentChannel);
-                    
+                final ChannelEntry channelEntry = ChannelEntry.load(channelJson, parent);
+                
+                if (channelEntry.isGroup()) {
+                    loadChannelList((JSONArray) channelJson.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
+                    groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
                 } else {
-                    Channel channel = new Channel(channelJson);
-                    channel.treeEntry = currentChannel;
-                    channel.state.load();
-                    
-                    channels.put(channel.key, channel);
-                    currentChannel.channel = channel;
+                    ((Channel) channelEntry).state.load();
+                    channels.put(channelEntry.getKey(), (Channel) channelEntry);
                 }
                 
             } catch (Exception e) {
-                System.out.println(Color.bad("Could not load channel: ") + Color.channel(channelJson.getOrDefault("key", "null")));
+                System.out.println(Color.bad("Could not load channel" + (ChannelEntry.isGroupConfiguration(channelJson) ? " group" : "") + ": ") +
+                        Color.channel(channelJson.getOrDefault("key", "null")));
                 if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
                     System.out.println(Utils.INDENT + Color.bad(e.getMessage()));
                 }
@@ -230,7 +241,7 @@ public class Channels {
         System.out.println(Utils.NEWLINE);
         System.out.println(Color.number("--- Channels ---"));
         
-        channelTree.print();
+        root.print();
         
         System.out.println(Utils.NEWLINE);
     }

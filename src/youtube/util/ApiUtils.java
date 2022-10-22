@@ -126,7 +126,7 @@ public final class ApiUtils {
     @SuppressWarnings("unchecked")
     public static int fetchChannelVideoData(Channel channel) throws Exception {
         return callApi(channel, "playlistItems", null, MapUtility.mapOf(
-                new ImmutablePair<>("playlistId", channel.playlistId)));
+                new ImmutablePair<>("playlistId", channel.getPlaylistId())));
     }
     
     /**
@@ -172,9 +172,9 @@ public final class ApiUtils {
      */
     @SuppressWarnings("unchecked")
     public static int fetchChannelPlaylistData(Channel channel) throws Exception {
-        return (!channel.isChannel()) ? -1 :
+        return (!channel.isYoutubeChannel()) ? -1 :
                callApi(channel, "playlists", "playlist", MapUtility.mapOf(
-                       new ImmutablePair<>("channelId", channel.playlistId.replaceAll("^UU", "UC"))));
+                       new ImmutablePair<>("channelId", channel.getPlaylistId().replaceAll("^UU", "UC"))));
     }
     
     /**
@@ -231,7 +231,7 @@ public final class ApiUtils {
                         if (retry < (MAX_RETRIES - 1)) {
                             continue;
                         }
-                        channel.error = true;
+                        channel.error.set(true);
                     } else {
                         retry = MAX_RETRIES;
                     }
@@ -321,10 +321,10 @@ public final class ApiUtils {
                         return ((Stream<JSONObject>) ((JSONArray) new JSONParser().parse(readChunkFile(channel, chunkFile))).stream())
                                 .flatMap((Function<JSONObject, Stream<JSONObject>>) dataChunk -> ((JSONArray) dataChunk.get("items")).stream())
                                 .filter(dataItem -> {
-                                    if (channel.error &= (dataItem == null)) {
-                                        System.out.println(Color.bad("Error reading the data for Channel: ") + Color.channel(channel.name) + Color.bad("; Skipping this run"));
+                                    if ((dataItem == null) && channel.error.compareAndSet(false, true)) {
+                                        System.out.println(Color.bad("Error reading the data for Channel: ") + Color.channel(channel.getName()) + Color.bad("; Skipping this run"));
                                     }
-                                    return !channel.error;
+                                    return !channel.error.get();
                                 })
                                 .map(parser)
                                 .collect(Collectors.toList());
@@ -349,7 +349,7 @@ public final class ApiUtils {
         final String data = FileUtils.readFileToString(chunkFile);
         
         if (data.contains("\"code\": 404")) {
-            System.out.println(Color.bad("The Channel: ") + Color.channel(channel.name) + Color.bad(" does not exist"));
+            System.out.println(Color.bad("The Channel: ") + Color.channel(channel.getName()) + Color.bad(" does not exist"));
             throw new RuntimeException();
         }
         if (data.contains("\"code\": 403")) {

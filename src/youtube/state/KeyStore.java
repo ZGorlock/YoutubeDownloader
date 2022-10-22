@@ -64,7 +64,7 @@ public class KeyStore {
      * @return The key store for the Channel.
      */
     public static Map<String, String> get(Channel channel) {
-        return keyStore.get(channel.name);
+        return keyStore.get(channel.getName());
     }
     
     /**
@@ -88,8 +88,8 @@ public class KeyStore {
         
         keyStore.clear();
         for (Channel channel : Channels.getChannels()) {
-            keyStore.putIfAbsent(channel.name, new LinkedHashMap<>());
-            channel.state.keyStore = keyStore.get(channel.name);
+            keyStore.putIfAbsent(channel.getName(), new LinkedHashMap<>());
+            channel.state.keyStore = keyStore.get(channel.getName());
         }
         
         for (String line : lines) {

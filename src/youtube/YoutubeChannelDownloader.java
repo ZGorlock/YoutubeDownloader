@@ -93,12 +93,12 @@ public class YoutubeChannelDownloader {
             boolean skip = (Configurator.Config.startAt != null);
             boolean stop = (Configurator.Config.stopAt != null);
             
-            if (!((skip && stop) && (Channels.indexOf(Configurator.Config.stopAt) < Channels.indexOf(Configurator.Config.startAt)))) {
+            if (!((skip && stop) && (Channels.channelIndex(Configurator.Config.stopAt) < Channels.channelIndex(Configurator.Config.startAt)))) {
                 for (Channel currentChannel : Channels.getChannels()) {
-                    if (!(skip &= !currentChannel.key.equals(Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
+                    if (!(skip &= !currentChannel.getKey().equals(Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
                         setChannel(currentChannel);
                         processChannel();
-                        if (stop && currentChannel.key.equals(Configurator.Config.stopAt)) {
+                        if (stop && currentChannel.getKey().equals(Configurator.Config.stopAt)) {
                             break;
                         }
                     }
@@ -149,7 +149,7 @@ public class YoutubeChannelDownloader {
         }
         
         System.out.println(Utils.NEWLINE);
-        System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.name));
+        System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.getName()));
         
         boolean success = WebUtils.isOnline() &&
                 fetchChannelData() &&
@@ -245,7 +245,7 @@ public class YoutubeChannelDownloader {
                     channel.state.queue.add(videoId);
                     
                 } else {
-                    File newOutput = new File(video.channel.outputFolder, video.output.getName()
+                    File newOutput = new File(video.channel.getOutputFolder(), video.output.getName()
                             .replace(("." + Utils.getFileFormat(video.output.getName())), ("." + Utils.getFileFormat(oldOutput.getName()))));
                     
                     if (!oldOutput.getName().equals(newOutput.getName())) {
@@ -257,7 +257,7 @@ public class YoutubeChannelDownloader {
                             channel.state.saved.add(videoId);
                             channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
                             
-                            if (channel.saveAsMp3) {
+                            if (channel.isSaveAsMp3()) {
                                 Stats.totalAudioRenames++;
                             } else {
                                 Stats.totalVideoRenames++;
@@ -317,7 +317,7 @@ public class YoutubeChannelDownloader {
                     channel.state.saved.add(videoId);
                     channel.state.keyStore.put(videoId, PathUtils.localPath(video.output));
                     
-                    if (channel.saveAsMp3) {
+                    if (channel.isSaveAsMp3()) {
                         Stats.totalAudioDownloads++;
                         Stats.totalAudioDataDownloaded += video.output.length();
                     } else {
@@ -329,7 +329,7 @@ public class YoutubeChannelDownloader {
                 case ERROR:
                     channel.state.blocked.add(videoId);
                 case FAILURE:
-                    if (channel.saveAsMp3) {
+                    if (channel.isSaveAsMp3()) {
                         Stats.totalAudioDownloadFailures++;
                     } else {
                         Stats.totalVideoDownloadFailures++;
@@ -356,11 +356,11 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        if (channel.playlistFile == null) {
+        if (channel.getPlaylistFile() == null) {
             return false;
         }
-        List<String> existingPlaylist = FileUtils.readLines(channel.playlistFile);
-        String playlistPath = PathUtils.localPath(true, channel.playlistFile.getParentFile());
+        List<String> existingPlaylist = FileUtils.readLines(channel.getPlaylistFile());
+        String playlistPath = PathUtils.localPath(true, channel.getPlaylistFile().getParentFile());
         
         List<String> playlist = new ArrayList<>();
         for (Map.Entry<String, Video> video : videoMap.entrySet()) {
@@ -369,16 +369,16 @@ public class YoutubeChannelDownloader {
             }
         }
         
-        if (channel.isChannel() ^ channel.reversePlaylist) {
+        if (channel.isYoutubeChannel() ^ channel.isReversePlaylist()) {
             Collections.reverse(playlist);
         }
         
-        if (!channel.error && !playlist.equals(existingPlaylist)) {
+        if (!channel.error.get() && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
-                System.out.println(Color.base("Updating playlist: ") + Color.filePath(channel.playlistFile));
-                FileUtils.writeLines(channel.playlistFile, playlist);
+                System.out.println(Color.base("Updating playlist: ") + Color.filePath(channel.getPlaylistFile()));
+                FileUtils.writeLines(channel.getPlaylistFile(), playlist);
             } else {
-                System.out.println(Color.bad("Would have updated playlist: ") + Color.filePath(channel.playlistFile) + Color.base(" but playlist modification is disabled"));
+                System.out.println(Color.bad("Would have updated playlist: ") + Color.filePath(channel.getPlaylistFile()) + Color.bad(" but playlist modification is disabled"));
             }
         }
         return true;
@@ -397,14 +397,14 @@ public class YoutubeChannelDownloader {
         }
         
         List<String> saved = Channels.getChannels().stream()
-                .filter(e -> e.key.matches(channel.key + "(?:_P\\d+)?"))
+                .filter(e -> e.getKey().matches(channel.getKey() + "(?:_P\\d+)?"))
                 .flatMap(e -> e.state.saved.stream().map(save -> e.state.keyStore.get(save)))
                 .map(PathUtils::localPath)
                 .distinct().collect(Collectors.toList());
         
-        if (!channel.error && channel.keepClean) {
+        if (!channel.error.get() && channel.isKeepClean()) {
             
-            File[] videos = channel.outputFolder.listFiles();
+            File[] videos = channel.getOutputFolder().listFiles();
             if (videos != null) {
                 for (File video : videos) {
                     if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
@@ -416,7 +416,7 @@ public class YoutubeChannelDownloader {
                             FileUtils.deleteFile(video);
                             
                             if (!isPartFile) {
-                                if (channel.saveAsMp3) {
+                                if (channel.isSaveAsMp3()) {
                                     Stats.totalAudioDeletions++;
                                 } else {
                                     Stats.totalVideoDeletions++;

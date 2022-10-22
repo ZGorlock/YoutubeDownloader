@@ -22,6 +22,7 @@ import commons.console.ProgressBar;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.ChannelEntry;
 import youtube.channel.entity.Video;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
@@ -155,8 +156,8 @@ public final class DownloadUtils {
      */
     private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) throws Exception {
         boolean ytDlp = ExecutableUtils.EXECUTABLE.equals(ExecutableUtils.Executable.YT_DLP);
-        boolean asMp3 = Optional.ofNullable(video.channel).map(e -> e.saveAsMp3).orElse(Configurator.Config.asMp3);
-        SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(e -> e.sponsorBlockConfig).orElse(null);
+        boolean asMp3 = Optional.ofNullable(video.channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
+        SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
         if (isRetry && (Configurator.Config.neverUseBrowserCookies ||
                 (Configurator.Config.browser == null) || Configurator.Config.browser.isEmpty())) {

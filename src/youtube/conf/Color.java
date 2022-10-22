@@ -478,7 +478,7 @@ public class Color {
      * @return The colored output.
      */
     public static String channelRange(Channel startChannel, Channel endChannel) {
-        return channelRange(startChannel.key, endChannel.key);
+        return channelRange(startChannel.getKey(), endChannel.getKey());
     }
     
 }
