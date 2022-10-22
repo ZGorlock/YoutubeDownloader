@@ -39,7 +39,7 @@ public class ChannelProcesses {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.key) {
+        switch (channel.getKey()) {
             
         }
     }
@@ -53,7 +53,7 @@ public class ChannelProcesses {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.key) {
+        switch (channel.getKey()) {
             
         }
     }

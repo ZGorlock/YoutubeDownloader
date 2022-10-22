@@ -45,7 +45,7 @@ public class ChannelProcesses_Sample {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.key) {
+        switch (channel.getKey()) {
             
             case "JIMTV_PROGRAMMING":
                 RenameProcess.replace(videoMap, List.of(
@@ -199,28 +199,7 @@ public class ChannelProcesses_Sample {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.key) {
-            
-            case "MUSIC_LAB_HACKER":
-            case "MUSIC_LAB_WORK":
-            case "MUSIC_LAB_CHILLSTEP":
-            case "MUSIC_LAB_CHILLOUT":
-            case "MUSIC_LAB_AMBIENT":
-            case "MUSIC_LAB_LOFI":
-            case "MUSIC_LAB_CONTEMPORARY":
-            case "MUSIC_LAB_STUDY":
-            case "MUSIC_LAB_CHILLHOP":
-                FilterProcess.containsIgnoreCase(videoMap, "live 24-7");
-                break;
-            
-            case "SPEEDSOUND":
-                channel.state.blocked.add("FhOSu5fq5eE");
-                break;
-            
-            case "MR_MOM_MUSIC_NEW":
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-24"));
-                break;
+        switch (channel.getKey()) {
             
             case "OSRS_BEATZ":
                 FilterProcess.notContainsIgnoreCase(videoMap, "runescape");
