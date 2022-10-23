@@ -164,6 +164,7 @@ public final class Utils {
                 .strip()
                 
                 .replaceAll("(?i)&amp;", "&")
+                .replaceAll("(?i)&quot;", "\"")
                 .replaceAll("(?i)&(?:nbsp|#(?:32|160));", " ")
                 .strip()
                 
