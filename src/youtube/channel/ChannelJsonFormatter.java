@@ -27,6 +27,7 @@ public final class ChannelJsonFormatter {
     private static final Map<String, Object> DEFAULT_FIELD_VALUES = Map.of(
             "active", ChannelEntry.DEFAULT_ACTIVE,
             "saveAsMp3", ChannelEntry.DEFAULT_SAVE_AS_MP3,
+            "savePlaylist", ChannelEntry.DEFAULT_SAVE_PLAYLIST,
             "reversePlaylist", ChannelEntry.DEFAULT_REVERSE_PLAYLIST,
             "ignoreGlobalLocations", ChannelEntry.DEFAULT_IGNORE_GLOBAL_LOCATIONS,
             "keepClean", ChannelEntry.DEFAULT_KEEP_CLEAN);

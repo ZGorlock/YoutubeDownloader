@@ -234,7 +234,19 @@ public class Channel extends ChannelEntry {
      * @return The playlist file to add files downloaded by the Channel to.
      */
     public File getPlaylistFile() {
-        return playlistFile;
+        return Optional.ofNullable(playlistFile).orElseGet(() ->
+                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + ".m3u") : null));
+    }
+    
+    /**
+     * Returns whether to save the content that is downloaded by the Chanel to a playlist or not.
+     *
+     * @return Whether to save the content that is downloaded by the Chanel to a playlist or not.
+     */
+    @Override
+    public boolean isSavePlaylist() {
+        return Optional.ofNullable(savePlaylist).orElseGet(() ->
+                Optional.ofNullable(parent).map(ChannelEntry::isSavePlaylist).orElseGet(() -> (playlistFile != null)));
     }
     
 }

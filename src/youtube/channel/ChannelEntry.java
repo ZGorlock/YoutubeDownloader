@@ -57,6 +57,11 @@ public class ChannelEntry {
     public static final boolean DEFAULT_SAVE_AS_MP3 = false;
     
     /**
+     * The default value of the flag indicating whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
+     */
+    public static final boolean DEFAULT_SAVE_PLAYLIST = false;
+    
+    /**
      * The default value of the flag indicating whether to reverse the order of the playlist or not, putting newer videos first.
      */
     public static final boolean DEFAULT_REVERSE_PLAYLIST = false;
@@ -113,6 +118,11 @@ public class ChannelEntry {
      * A flag indicating whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
      */
     public Boolean saveAsMp3;
+    
+    /**
+     * A flag indicating whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
+     */
+    public Boolean savePlaylist;
     
     /**
      * A flag indicating whether to reverse the order of the playlist or not, putting newer videos first.
@@ -201,6 +211,7 @@ public class ChannelEntry {
         
         this.active = booleanFieldGetter.apply("active").orElse(null);
         this.saveAsMp3 = booleanFieldGetter.apply("saveAsMp3").orElse(null);
+        this.savePlaylist = booleanFieldGetter.apply("savePlaylist").orElse(null);
         this.reversePlaylist = booleanFieldGetter.apply("reversePlaylist").orElse(null);
         this.keepClean = booleanFieldGetter.apply("keepClean").orElse(null);
         
@@ -473,6 +484,16 @@ public class ChannelEntry {
     public boolean isSaveAsMp3() {
         return Optional.ofNullable(saveAsMp3).orElseGet(() ->
                 Optional.ofNullable(parent).map(ChannelEntry::isSaveAsMp3).orElse(DEFAULT_SAVE_AS_MP3));
+    }
+    
+    /**
+     * Returns whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
+     *
+     * @return Whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
+     */
+    public boolean isSavePlaylist() {
+        return Optional.ofNullable(savePlaylist).orElseGet(() ->
+                Optional.ofNullable(parent).map(ChannelEntry::isSavePlaylist).orElse(DEFAULT_SAVE_PLAYLIST));
     }
     
     /**
