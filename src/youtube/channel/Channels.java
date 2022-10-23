@@ -8,18 +8,17 @@
 package youtube.channel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.conf.Color;
@@ -183,12 +182,11 @@ public class Channels {
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
-                final JSONArray channelList = (JSONArray) new JSONParser().parse(
-                        FileUtils.readFileToString(CHANNELS_FILE));
+                final JSONArray channelList = (JSONArray) new JSONParser().parse(readChannelConfiguration());
                 
                 loadChannelList(channelList, root);
                 
-            } catch (IOException | ParseException e) {
+            } catch (Exception e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
                 System.out.println(Utils.INDENT + Color.bad(e));
                 throw new RuntimeException(e);
@@ -228,6 +226,18 @@ public class Channels {
                 }
             }
         }
+    }
+    
+    /**
+     * Reads the Channel configuration file.
+     *
+     * @return The content of the Channel configuration file.
+     * @throws Exception When there is an issue reading the configuration file.
+     */
+    private static String readChannelConfiguration() throws Exception {
+        return FileUtils.readLines(CHANNELS_FILE).stream()
+                .filter(e -> !e.strip().startsWith("//"))
+                .collect(Collectors.joining());
     }
     
     /**
