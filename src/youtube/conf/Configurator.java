@@ -8,14 +8,13 @@
 package youtube.conf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
@@ -133,16 +132,14 @@ public class Configurator {
             activeProject = project;
             
             try {
-                String jsonString = FileUtils.readFileToString(CONF_FILE);
-                JSONParser parser = new JSONParser();
-                JSONObject json = (JSONObject) parser.parse(jsonString);
+                final JSONObject conf = (JSONObject) new JSONParser().parse(readConfiguration());
                 
-                loadSettings(json, activeProject.getTitle());
-                loadSettings(json, "sponsorBlock");
-                loadSettings(json, "color");
-                loadSettings(json, "log");
+                loadSettings(conf, activeProject.getTitle());
+                loadSettings(conf, "sponsorBlock");
+                loadSettings(conf, "color");
+                loadSettings(conf, "log");
                 
-            } catch (IOException | ParseException e) {
+            } catch (Exception e) {
                 System.out.println(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE));
                 System.out.println(Utils.INDENT + Color.bad(e));
                 throw new RuntimeException(e);
@@ -188,6 +185,18 @@ public class Configurator {
                 settings.get(section).put((prefix + settingEntry.getKey()), settingEntry.getValue());
             }
         }
+    }
+    
+    /**
+     * Reads the configuration file.
+     *
+     * @return The content of the configuration file.
+     * @throws Exception When there is an issue reading the configuration file.
+     */
+    private static String readConfiguration() throws Exception {
+        return FileUtils.readLines(CONF_FILE).stream()
+                .filter(e -> !e.strip().startsWith("//"))
+                .collect(Collectors.joining());
     }
     
     /**
