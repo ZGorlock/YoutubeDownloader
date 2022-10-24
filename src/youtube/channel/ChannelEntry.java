@@ -219,7 +219,7 @@ public class ChannelEntry {
         this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsMp3() ? Channels.musicDir : Channels.videoDir)) : null;
         
         this.outputFolderPath = stringFieldGetter.apply("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("outputFolderPath").orElse(null));
-        this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, outputFolderPath)).orElse(null);
+        this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
         
         this.sponsorBlockConfig = Optional.ofNullable((JSONObject) fields.get("sponsorBlock"))
                 .map(SponsorBlocker::loadConfig)
@@ -477,6 +477,16 @@ public class ChannelEntry {
     }
     
     /**
+     * Returns the path representing the output folder.
+     *
+     * @return The path representing the output folder.
+     */
+    protected String getOutputFolderPath() {
+        return Optional.ofNullable(outputFolderPath).orElse("~")
+                .replaceAll("^~", Optional.ofNullable(parent).map(ChannelEntry::getOutputFolderPath).orElse(""));
+    }
+    
+    /**
      * Returns whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
      *
      * @return Whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
@@ -590,10 +600,11 @@ public class ChannelEntry {
      * @return A file representing the parsed file path.
      */
     protected static File parseFilePath(String directoryPrefix, String filePath) {
-        return new File((Optional.ofNullable(directoryPrefix).orElse("") + cleanFilePath(filePath))
-                .replace("${D}", Channels.storageDrive.getAbsolutePath())
-                .replace("${V}", Channels.videoDir.getAbsolutePath())
-                .replace("${M}", Channels.musicDir.getAbsolutePath()));
+        return new File(Optional.ofNullable(directoryPrefix).orElse("") +
+                cleanFilePath(filePath)
+                        .replace("${D}", Channels.storageDrive.getAbsolutePath())
+                        .replace("${V}", Channels.videoDir.getAbsolutePath())
+                        .replace("${M}", Channels.musicDir.getAbsolutePath()));
     }
     
     /**

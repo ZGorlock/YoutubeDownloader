@@ -126,7 +126,7 @@ public class Channel extends ChannelEntry {
         this.name = stringFieldGetter.apply("name").map(e -> e.replaceAll("[.|]", "")).orElseGet(() -> StringUtility.toPascalCase(key));
         
         this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(Channel::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
-        this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, playlistFilePath)).orElse(null);
+        this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
         
         this.type = ChannelType.determineType(playlistId);
         
@@ -236,6 +236,17 @@ public class Channel extends ChannelEntry {
     public File getPlaylistFile() {
         return Optional.ofNullable(playlistFile).orElseGet(() ->
                 (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + ".m3u") : null));
+    }
+    
+    /**
+     * Returns the path representing the playlist file.
+     *
+     * @return The path representing the playlist file.
+     */
+    protected String getPlaylistFilePath() {
+        return Optional.ofNullable(playlistFilePath).orElse("~")
+                .replaceAll("^~", getOutputFolderPath())
+                .replaceAll("(?<!^)(?:\\.m3u)+?$", ".m3u");
     }
     
     /**
