@@ -108,8 +108,8 @@ public class ChannelPlaylistParser {
             playlistFields.put("outputFolder", (baseChannel.outputFolderPath + (separateFolders ? (" - " + playlist.title) : "")));
             playlistFields.put("playlistFile", (((baseChannel.playlistFilePath == null) && separateFolders) ? null :
                                                 Optional.ofNullable(baseChannel.playlistFilePath)
-                                                        .orElse(baseChannel.outputFolderPath + ".m3u")
-                                                        .replace(".m3u", (" - " + playlist.title + ".m3u"))));
+                                                        .orElse(baseChannel.outputFolderPath + "." + Utils.PLAYLIST_FORMAT)
+                                                        .replace(("." + Utils.PLAYLIST_FORMAT), (" - " + playlist.title + "." + Utils.PLAYLIST_FORMAT))));
             try {
                 return new Channel(playlistFields);
             } catch (Exception e) {

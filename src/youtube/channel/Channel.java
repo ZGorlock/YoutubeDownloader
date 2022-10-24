@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.Utils;
 
 /**
  * Defines a Channel of the Youtube Channel Downloader.
@@ -235,7 +236,7 @@ public class Channel extends ChannelEntry {
      */
     public File getPlaylistFile() {
         return Optional.ofNullable(playlistFile).orElseGet(() ->
-                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + ".m3u") : null));
+                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + '.' + Utils.PLAYLIST_FORMAT) : null));
     }
     
     /**
@@ -246,7 +247,7 @@ public class Channel extends ChannelEntry {
     protected String getPlaylistFilePath() {
         return Optional.ofNullable(playlistFilePath).orElse("~")
                 .replaceAll("^~", getOutputFolderPath())
-                .replaceAll("(?<!^)(?:\\.m3u)+?$", ".m3u");
+                .replaceAll("(?<!^)(?:\\." + Utils.PLAYLIST_FORMAT + ")+?$", ("." + Utils.PLAYLIST_FORMAT));
     }
     
     /**

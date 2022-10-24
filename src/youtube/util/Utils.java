@@ -78,6 +78,11 @@ public final class Utils {
     public static final List<String> AUDIO_FORMATS = List.of("aac", "m4a", "mp3", "ogg", "wav");
     
     /**
+     * The playlist file format.
+     */
+    public static final String PLAYLIST_FORMAT = "m3u";
+    
+    /**
      * The newline string.
      */
     public static final String NEWLINE = "";
