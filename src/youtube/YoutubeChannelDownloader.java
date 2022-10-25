@@ -248,31 +248,28 @@ public class YoutubeChannelDownloader {
                     File newOutput = new File(video.channel.getOutputFolder(), video.output.getName()
                             .replace(("." + Utils.getFileFormat(video.output.getName())), ("." + Utils.getFileFormat(oldOutput.getName()))));
                     
-                    if (!oldOutput.getName().equals(newOutput.getName())) {
-                        if (!Configurator.Config.preventRenaming) {
-                            System.out.println(Color.base("Renaming: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()));
-                            oldOutput.renameTo(newOutput);
-                            
-                            video.updateOutput(newOutput);
-                            channel.state.saved.add(videoId);
-                            channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
-                            
-                            if (channel.isSaveAsMp3()) {
-                                Stats.totalAudioRenames++;
-                            } else {
-                                Stats.totalVideoRenames++;
-                            }
-                            
+                    if (oldOutput.getName().equals(newOutput.getName())) {
+                        video.output = newOutput;
+                        
+                    } else if (!Configurator.Config.preventRenaming) {
+                        System.out.println(Color.base("Renaming: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()));
+                        
+                        oldOutput.renameTo(newOutput);
+                        video.updateOutput(newOutput);
+                        
+                        if (channel.isSaveAsMp3()) {
+                            Stats.totalAudioRenames++;
                         } else {
-                            System.out.println(Color.bad("Would have renamed: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()) + Color.bad(" but renaming is disabled"));
-                            channel.state.queue.add(videoId);
+                            Stats.totalVideoRenames++;
                         }
                         
                     } else {
-                        video.output = newOutput;
-                        channel.state.saved.add(videoId);
-                        channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
+                        System.out.println(Color.bad("Would have renamed: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()) + Color.bad(" but renaming is disabled"));
+                        video.updateOutput(oldOutput);
                     }
+                    
+                    channel.state.saved.add(videoId);
+                    channel.state.keyStore.replace(videoId, PathUtils.localPath(video.output));
                 }
             }
         });
