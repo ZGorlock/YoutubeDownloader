@@ -45,31 +45,71 @@ public class ChannelProcesses_Sample {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.getKey()) {
+        switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
             
-            case "JIMTV_PROGRAMMING":
-                RenameProcess.replace(videoMap, List.of(
-                        Map.entry("Programming - Coding - Hacking music vol.", "Volume "),
-                        Map.entry(" (", " - "),
-                        Map.entry(")", "")));
+            //GENERAL
+            
+            case "MIND_FIELD":
+                RenameProcess.pattern(videoMap,
+                        "^(?<title>.+?)(?:\\s*-\\s*(?:Mind\\sField\\s(?:S\\d+\\s)?)\\(Ep\\.?\\s*(?<episode>\\d+)\\))?$",
+                        "Mind Field - S0" + channel.getName().charAt(channel.getName().length() - 1) + "E0$i - $title");
                 break;
             
-            case "LITTLE_SOUL":
-            case "KURUMI":
-            case "ASUNA":
-            case "ARIA":
-            case "ARIA_NIGHTCORE":
-                RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
+            
+            //PHYSICS
+            
+            case "STEVE_MOULD":
+                RenameProcess.pattern(videoMap,
+                        "(?i)^.*(?:fewer|more)\\sthan\\stom.*$", false,
+                        "This Video Has...");
                 break;
             
-            case "AIM_TO_HEAD":
-                RenameProcess.regexRemove(videoMap, "(?i)\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*");
+            
+            //MEDICINE
+            
+            case "NHAT_BANG_SPA":
+                RenameProcess.replace(videoMap, "010", "10");
                 break;
             
-            case "SOUND_LIBRARY":
-                RenameProcess.regexRemove(videoMap,
-                        "(?i)\\s*-\\s*(?:Sound Effects?|Music) for Editing");
+            
+            //CRIME
+            
+            case "FORENSIC_FILES":
+                if (channel.getKey().endsWith("_S01")) {
+                    final Video video = new Video("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
+                    final HashMap<String, Video> tmp = new LinkedHashMap<>(videoMap);
+                    videoMap.clear();
+                    videoMap.put(video.videoId, video);
+                    videoMap.putAll(tmp);
+                }
+                RenameProcess.replace(videoMap, "Series Premiere", "S01E01");
+                RenameProcess.regexReplace(videoMap, List.of(
+                        Map.entry("^(?:Medical\\sDetectives\\s)?\\(?Forensic\\sFiles\\s?\\)?(?:\\s?in\\sHD)?", "Forensic Files"),
+                        Map.entry("Season\\s(\\d+)\\s?,\\sEp(?:isode)?\\s(\\d+)\\s*-", "S$1E$2 -"),
+                        Map.entry("S(\\d)E", "S0$1E"),
+                        Map.entry("E(\\d)\\s", "E0$1 ")));
                 break;
+            case "LOCK_PICKING_LAWYER":
+                RenameProcess.regexReplace(videoMap, List.of(
+                        Map.entry("\\[(\\d+)]\\s", "000$1 - "),
+                        Map.entry("^\\d+(?=\\d{4})", "")));
+                break;
+            
+            
+            //DOCUMENTARY
+            
+            case "DW_DOCUMENTARY":
+                RenameProcess.regexRemove(videoMap, "\\s*-\\s*DW\\s(?:[^\\-]+\\s)?Documenta(?:ry|l)");
+                break;
+            case "FRONTLINE_PBS":
+                RenameProcess.remove(videoMap, List.of(" - FRONTLINE", "@Associated Press"));
+                break;
+            case "SPARK_DOCUMENTARY":
+                RenameProcess.remove(videoMap, List.of("[4K]", "[4k]", " - Spark"));
+                break;
+            
+            
+            //RUNESCAPE
             
             case "BY_RELEASE":
                 RenameProcess.pattern(videoMap,
@@ -87,7 +127,7 @@ public class ChannelProcesses_Sample {
                         Map.entry("(?:\\s*-\\s*)?\\((?:Tanzoo|Virtoso)\\)", ""),
                         Map.entry("\\s*-*\\s*(?:Episode|EP\\.|Ep\\.)\\s*(?<episode>\\d+)\\s*$", ""),
                         Map.entry("^\\s*", "OSRS Challenges - "),
-                        Map.entry("\\s*$", (" (" + channel.name.replace("OsrsChallenges", "") + ")"))));
+                        Map.entry("\\s*$", (" (" + channel.getName().replace("OsrsChallenges", "") + ")"))));
                 break;
             case "MUDKIP_HCIM":
                 RenameProcess.pattern(videoMap,
@@ -137,55 +177,43 @@ public class ChannelProcesses_Sample {
                         "One Kick Rick - $episode - $title");
                 break;
             
-            case "STEVE_MOULD":
-                RenameProcess.pattern(videoMap,
-                        "(?i)^.*(?:fewer|more)\\sthan\\stom.*$", false,
-                        "This Video Has...");
-                break;
-            case "MIND_FIELD_S1":
-            case "MIND_FIELD_S2":
-            case "MIND_FIELD_S3":
-                RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)(?:\\s*-\\s*(?:Mind\\sField\\s(?:S\\d+\\s)?)\\(Ep\\.?\\s*(?<episode>\\d+)\\))?$",
-                        "Mind Field - S0" + channel.name.charAt(channel.name.length() - 1) + "E0$i - $title");
+            
+            //LOFI
+            
+            case "LITTLE_SOUL":
+                RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
                 break;
             
-            case "LOCK_PICKING_LAWYER":
-                RenameProcess.regexReplace(videoMap, List.of(
-                        Map.entry("\\[(\\d+)]\\s", "000$1 - "),
-                        Map.entry("^\\d+(?=\\d{4})", "")));
+            
+            //NIGHTCORE
+            
+            case "KURUMI":
+            case "ASUNA":
+            case "ARIA":
+            case "ARIA_NIGHTCORE":
+                RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
                 break;
             
-            case "NHAT_BANG_SPA":
-                RenameProcess.replace(videoMap, "010", "10");
+            
+            //DARKSYNTH
+            
+            case "JIMTV_PROGRAMMING":
+                RenameProcess.replace(videoMap, List.of(
+                        Map.entry("Programming - Coding - Hacking music vol.", "Volume "),
+                        Map.entry(" (", " - "),
+                        Map.entry(")", "")));
                 break;
             
-            case "FORENSIC_FILES_S01":
-                Video video = new Video("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
-                HashMap<String, Video> tmp = new LinkedHashMap<>(videoMap);
-                videoMap.clear();
-                videoMap.put(video.videoId, video);
-                videoMap.putAll(tmp);
-            case "FORENSIC_FILES_S02":
-            case "FORENSIC_FILES_S03":
-            case "FORENSIC_FILES_S04":
-            case "FORENSIC_FILES_S05":
-            case "FORENSIC_FILES_S06":
-            case "FORENSIC_FILES_S07":
-            case "FORENSIC_FILES_S08":
-            case "FORENSIC_FILES_S09":
-            case "FORENSIC_FILES_S10":
-            case "FORENSIC_FILES_S11":
-            case "FORENSIC_FILES_S12":
-            case "FORENSIC_FILES_S13":
-            case "FORENSIC_FILES_S14":
-            case "FORENSIC_FILES":
-                RenameProcess.replace(videoMap, "Series Premiere", "S01E01");
-                RenameProcess.regexReplace(videoMap, List.of(
-                        Map.entry("^(?:Medical\\sDetectives\\s)?\\(?Forensic\\sFiles\\s?\\)?(?:\\s?in\\sHD)?", "Forensic Files"),
-                        Map.entry("Season\\s(\\d+)\\s?,\\sEp(?:isode)?\\s(\\d+)\\s*-", "S$1E$2 -"),
-                        Map.entry("S(\\d)E", "S0$1E"),
-                        Map.entry("E(\\d)\\s", "E0$1 ")));
+            case "AIM_TO_HEAD":
+                RenameProcess.regexRemove(videoMap, "(?i)\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*");
+                break;
+            
+            
+            //SOUNDBYTE
+            
+            case "SOUND_LIBRARY":
+                RenameProcess.regexRemove(videoMap,
+                        "(?i)\\s*-\\s*(?:Sound Effects?|Music) for Editing");
                 break;
         }
     }
@@ -199,7 +227,90 @@ public class ChannelProcesses_Sample {
      * @throws Exception When there is an error.
      */
     public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
-        switch (channel.getKey()) {
+        switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
+            
+            //GENERAL
+            
+            case "ANSWERS_WITH_JOE":
+                FilterProcess.containsIgnoreCase(videoMap, "live stream");
+                break;
+            case "THOUGHTY2_NEW_INTRO_ONLY":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
+                break;
+            case "VSAUCE":
+                FilterProcess.contains(videoMap, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15"));
+                break;
+            case "DOMAIN_OF_SCIENCE":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2016-11-27"));
+                break;
+            
+            
+            //SPACE
+            
+            case "ISAAC_ARTHUR":
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
+                        "livestream", "live stream", "collab", "colab", "patreon", " diy ", "hades", "in the beginning"));
+                break;
+            case "PBS_SPACE_TIME_MATT_ONLY":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2015-09-01"));
+                break;
+            
+            
+            //PHYSICS
+            
+            case "UP_AND_ATOM":
+                FilterProcess.containsIgnoreCase(videoMap, List.of("Merchandise", "Livestream", "Live Stream"));
+                break;
+            
+            
+            //ENGINEERING
+            
+            case "ADAM_SAVAGE_ONE_DAY_BUILDS":
+                FilterProcess.notContainsIgnoreCase(videoMap, "one day build");
+                FilterProcess.containsIgnoreCase(videoMap, "last call");
+                break;
+            
+            
+            //COMPUTING
+            
+            case "NEAT_AI":
+                FilterProcess.contains(videoMap, "#short");
+                break;
+            
+            
+            //CHEMISTRY
+            
+            case "NILE_BLUE":
+                FilterProcess.containsIgnoreCase(videoMap, "announcement");
+                break;
+            
+            
+            //MEDICINE
+            
+            case "CHUBBYEMU":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07"));
+                break;
+            case "LIKE_YOU":
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
+                        "photographer", "phone", "friend", "my son", "dogs"));
+                break;
+            
+            
+            //DOCUMENTARY
+            
+            case "PHILON":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2022-04-06"));
+                break;
+            
+            
+            //RUNESCAPE
             
             case "OSRS_BEATZ":
                 FilterProcess.notContainsIgnoreCase(videoMap, "runescape");
@@ -211,85 +322,15 @@ public class ChannelProcesses_Sample {
                 FilterProcess.notContainsIgnoreCase(videoMap, List.of("market", "economy"));
                 break;
             
-            case "ISAAC_ARTHUR":
-            case "ISAAC_ARTHUR_P01":
-            case "ISAAC_ARTHUR_P02":
-            case "ISAAC_ARTHUR_P03":
-            case "ISAAC_ARTHUR_P04":
-            case "ISAAC_ARTHUR_P05":
-            case "ISAAC_ARTHUR_P06":
-            case "ISAAC_ARTHUR_P07":
-            case "ISAAC_ARTHUR_P08":
-            case "ISAAC_ARTHUR_P09":
-            case "ISAAC_ARTHUR_P10":
-            case "ISAAC_ARTHUR_P11":
-            case "ISAAC_ARTHUR_P12":
-            case "ISAAC_ARTHUR_P13":
-            case "ISAAC_ARTHUR_P14":
-            case "ISAAC_ARTHUR_P15":
-            case "ISAAC_ARTHUR_P16":
-            case "ISAAC_ARTHUR_P17":
-            case "ISAAC_ARTHUR_P18":
-            case "ISAAC_ARTHUR_P19":
-            case "ISAAC_ARTHUR_P20":
-            case "ISAAC_ARTHUR_P21":
-            case "ISAAC_ARTHUR_P22":
-            case "ISAAC_ARTHUR_P23":
-            case "ISAAC_ARTHUR_P24":
-            case "ISAAC_ARTHUR_P25":
-            case "ISAAC_ARTHUR_P27":
-            case "ISAAC_ARTHUR_P28":
-                FilterProcess.containsIgnoreCase(videoMap, List.of(
-                        "livestream", "hades", "in the beginning", "collab", "colab"));
-                break;
-            case "PBS_SPACE_TIME_MATT_ONLY":
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2015-09-01"));
-                break;
             
-            case "ANSWERS_WITH_JOE":
-                FilterProcess.containsIgnoreCase(videoMap, "live stream");
-                break;
-            case "THOUGHTY2_NEW_INTRO_ONLY":
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
-                break;
-            case "UP_AND_ATOM":
-                FilterProcess.containsIgnoreCase(videoMap, List.of("Merchandise", "Livestream", "Live Stream"));
-                break;
-            
-            case "VSAUCE":
-                FilterProcess.contains(videoMap, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15"));
-                break;
-            
-            case "DOMAIN_OF_SCIENCE":
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2016-11-27"));
-                break;
-            
-            case "ADAM_SAVAGE_ONE_DAY_BUILDS":
-                FilterProcess.notContainsIgnoreCase(videoMap, "one day build");
-                FilterProcess.containsIgnoreCase(videoMap, "last call");
-                break;
-            
-            case "NILE_BLUE":
-                FilterProcess.containsIgnoreCase(videoMap, "announcement");
-                break;
-            
-            case "CHUBBYEMU":
-                FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07"));
-                break;
-            case "LIKE_YOU":
-                FilterProcess.containsIgnoreCase(videoMap, List.of(
-                        "photographer", "phone", "friend", "my son", "dogs"));
-                break;
+            //FUNNY
             
             case "KITBOGA_UNCUT":
                 FilterProcess.containsIgnoreCase(videoMap, "live stream");
                 break;
+            
+            
+            //CUBE
             
             case "BEST_CUBE_COUBOY":
             case "BEST_CUBE_SPARTA":
@@ -297,6 +338,36 @@ public class ChannelProcesses_Sample {
                 break;
             case "SEXY_CUBE":
                 FilterProcess.regexNotContainsIgnoreCase(videoMap, "sexy c(?:ube|oub)");
+                break;
+            
+            
+            //LOFI
+            
+            case "MUSIC_LAB_HACKER":
+            case "MUSIC_LAB_WORK":
+            case "MUSIC_LAB_CHILLSTEP":
+            case "MUSIC_LAB_CHILLOUT":
+            case "MUSIC_LAB_AMBIENT":
+            case "MUSIC_LAB_LOFI":
+            case "MUSIC_LAB_CONTEMPORARY":
+            case "MUSIC_LAB_STUDY":
+            case "MUSIC_LAB_CHILLHOP":
+                FilterProcess.containsIgnoreCase(videoMap, "live 24-7");
+                break;
+            
+            
+            //POP
+            
+            case "MR_MOM_MUSIC_NEW":
+                FilterProcess.dateBefore(videoMap,
+                        new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-24"));
+                break;
+            
+            
+            //PSYTRANCE
+            
+            case "SPEEDSOUND":
+                channel.state.blocked.add("FhOSu5fq5eE");
                 break;
         }
     }
