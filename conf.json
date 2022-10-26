@@ -4,7 +4,11 @@
         "location": {
             "storageDrive": "E:/",
             "musicDir": "Music/",
-            "videoDir": "Videos/"
+            "videoDir": "Videos/",
+            "browser": "Chrome"
+        },
+        "format": {
+            "preMerged": true
         },
         "filter": {
             "channel": null,
@@ -12,43 +16,80 @@
             "startAt": null,
             "stopAt": null
         },
-        "sponsorBlock": {
-            "enabled": false,
-            "forceGlobally": false,
-            "skipAll": false,
-            "skipSponsor": false,
-            "skipIntro": false,
-            "skipOutro": false,
-            "skipSelfPromo": false,
-            "skipInteraction": false,
-            "skipPreview": false,
-            "skipMusicOffTopic": false
+        "log": {
+            "printStats": true,
+            "printChannels": false
         },
         "flag": {
+            "retryPreviousFailures": false,
+            "neverUseBrowserCookies": false,
+            "safeMode": false,
+            "preventDownload": false,
             "preventDeletion": false,
-            "retryFailed": false,
-            "logCommand": true,
-            "logWork": false
+            "preventRenaming": false,
+            "preventPlaylistEdit": false,
+            "preventChannelFetch": false,
+            "preventExeAutoUpdate": false,
+            "preventExeVersionCheck": false
         }
     },
     
     "YoutubeDownloader": {
         "executable": "yt-dlp",
-        "asMp3": false,
-        "sponsorBlock": {
-            "enabled": false,
-            "skipAll": false,
-            "skipSponsor": false,
-            "skipIntro": false,
-            "skipOutro": false,
-            "skipSelfPromo": false,
-            "skipInteraction": false,
-            "skipPreview": false,
-            "skipMusicOffTopic": false
+        "location": {
+            "output": "E:/Downloads/",
+            "browser": "Chrome"
+        },
+        "format": {
+            "asMp3": false,
+            "preMerged": true
         },
         "flag": {
-            "logCommand": true,
-            "logWork": false
+            "neverUseBrowserCookies": false,
+            "safeMode": false,
+            "preventDownload": false,
+            "preventVideoFetch": false,
+            "preventExeAutoUpdate": false,
+            "preventExeVersionCheck": false
         }
+    },
+    
+    "sponsorBlock": {
+        "enabled": false,
+        "forceGlobally": false,
+        "skipAll": false,
+        "skipSponsor": false,
+        "skipIntro": false,
+        "skipOutro": false,
+        "skipSelfPromo": false,
+        "skipPreview": false,
+        "skipInteraction": false,
+        "skipMusicOffTopic": false
+    },
+    
+    "color": {
+        "enableColors": true,
+        "base": "GREEN",
+        "good": "CYAN",
+        "bad": "RED",
+        "log": "DARK_GREY",
+        "channel": "YELLOW",
+        "video": "PURPLE",
+        "number": "WHITE",
+        "file": "GREY",
+        "exe": "ORANGE",
+        "link": "TEAL",
+        "progressBar": {
+            "base": "GREEN",
+            "good": "CYAN",
+            "bad": "RED"
+        }
+    },
+    
+    "log": {
+        "printExeVersion": true,
+        "logCommand": true,
+        "logWork": false,
+        "showProgressBar": true
     }
 }
