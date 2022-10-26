@@ -291,7 +291,7 @@ public final class DownloadUtils {
         /**
          * A regex pattern matching a 'download progress' line from the executable output.
          */
-        public static final Pattern PROGRESS_PATTERN = Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*~?(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
+        public static final Pattern PROGRESS_PATTERN = Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*~?\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
         
         /**
          * A regex pattern matching a 'resuming download' line from the executable output.
