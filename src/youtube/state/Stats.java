@@ -11,8 +11,10 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
@@ -150,28 +152,21 @@ public final class Stats {
             return;
         }
         
-        DecimalFormat integerFormat = new DecimalFormat("#,##0");
-        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-        double bytesInMb = 1048576.0;
-        BiConsumer<String, Object> printer = (String title, Object value) -> {
-            switch (Optional.ofNullable(value).map(e -> e.getClass().getSimpleName()).orElse("String")) {
-                case "Integer":
-                case "int":
-                case "Long":
-                case "long":
-                    System.out.println(Utils.INDENT +
-                            Color.base(title) + Color.number(integerFormat.format(value)));
-                    break;
-                case "Double":
-                case "double":
-                    System.out.println(Utils.INDENT +
-                            Color.base(title) + Color.number(decimalFormat.format((double) value / bytesInMb)) + Color.base("MB"));
-                    break;
-                case "String":
-                    System.out.println(Color.link(Utils.formatUnderscoredString(title)));
-                    break;
-            }
-        };
+        final DecimalFormat integerFormat = new DecimalFormat("#,##0");
+        final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
+        final AtomicInteger maxDataLength = new AtomicInteger(0);
+        
+        final BiConsumer<String, Object> statPrinter = (String title, Object value) ->
+                System.out.println(Optional.ofNullable(value)
+                        .map(e -> Optional.of(String.valueOf(e))
+                                .filter(e2 -> e2.matches("^[\\d.E]+$"))
+                                .map(e2 -> e2.contains(".") ? decimalFormat.format((double) e / 1048576) : integerFormat.format(e))
+                                .orElse(String.valueOf(e)))
+                        .map(e -> StringUtility.padLeft(e,
+                                maxDataLength.accumulateAndGet(e.length(), (x, y) -> e.contains(".") ? Math.max(x, y) : 0)))
+                        .map(e -> String.join("",
+                                Utils.INDENT, Color.base(title), Color.number(e), (e.contains(".") ? Color.base(" MB") : "")))
+                        .orElseGet(() -> Color.link(Utils.formatUnderscoredString(title))));
         
         calculateData();
         
@@ -179,38 +174,38 @@ public final class Stats {
         System.out.println(Utils.NEWLINE);
         System.out.println(Color.number("--- Stats ---"));
         
-        printer.accept("CHANNEL:", null);
-        printer.accept("Channels Processed: ... ", totalChannelsProcessed);
-        printer.accept("Total Channels: ....... ", Channels.getChannels().size());
+        statPrinter.accept("CHANNEL:", null);
+        statPrinter.accept("Processed: ............ ", totalChannelsProcessed);
+        statPrinter.accept("Total: ................ ", Channels.getChannels().size());
         
-        printer.accept("RUN:", null);
-        printer.accept("Downloaded: ........... ", (totalVideoDownloads + totalAudioDownloads));
-        printer.accept("    Video: ............ ", totalVideoDownloads);
-        printer.accept("    Audio: ............ ", totalAudioDownloads);
-        printer.accept("Renamed: .............. ", (totalVideoRenames + totalAudioRenames));
-        printer.accept("    Video: ............ ", totalVideoRenames);
-        printer.accept("    Audio: ............ ", totalAudioRenames);
-        printer.accept("Deleted: .............. ", (totalVideoDeletions + totalAudioDeletions));
-        printer.accept("    Video: ............ ", totalVideoDeletions);
-        printer.accept("    Audio: ............ ", totalAudioDeletions);
-        printer.accept("Failed: ............... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
-        printer.accept("    Video: ............ ", totalVideoDownloadFailures);
-        printer.accept("    Audio: ............ ", totalAudioDownloadFailures);
-        printer.accept("Data Downloaded: ...... ", (double) (totalVideoDataDownloaded + totalAudioDataDownloaded));
-        printer.accept("    Video: ............ ", (double) totalVideoDataDownloaded);
-        printer.accept("    Audio: ............ ", (double) totalAudioDataDownloaded);
+        statPrinter.accept("RUN:", null);
+        statPrinter.accept("Downloaded: ........... ", (totalVideoDownloads + totalAudioDownloads));
+        statPrinter.accept("    Video: ............ ", totalVideoDownloads);
+        statPrinter.accept("    Audio: ............ ", totalAudioDownloads);
+        statPrinter.accept("Failed: ............... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
+        statPrinter.accept("    Video: ............ ", totalVideoDownloadFailures);
+        statPrinter.accept("    Audio: ............ ", totalAudioDownloadFailures);
+        statPrinter.accept("Renamed: .............. ", (totalVideoRenames + totalAudioRenames));
+        statPrinter.accept("    Video: ............ ", totalVideoRenames);
+        statPrinter.accept("    Audio: ............ ", totalAudioRenames);
+        statPrinter.accept("Deleted: .............. ", (totalVideoDeletions + totalAudioDeletions));
+        statPrinter.accept("    Video: ............ ", totalVideoDeletions);
+        statPrinter.accept("    Audio: ............ ", totalAudioDeletions);
+        statPrinter.accept("Data: ................. ", (double) (totalVideoDataDownloaded + totalAudioDataDownloaded));
+        statPrinter.accept("    Video: ............ ", (double) totalVideoDataDownloaded);
+        statPrinter.accept("    Audio: ............ ", (double) totalAudioDataDownloaded);
         
-        printer.accept("API:", null);
-        printer.accept("Api Calls: ............ ", totalApiCalls);
-        printer.accept("Api Failures: ......... ", totalApiFailures);
+        statPrinter.accept("API:", null);
+        statPrinter.accept("Calls: ................ ", totalApiCalls);
+        statPrinter.accept("Failures: ............. ", totalApiFailures);
         
-        printer.accept("OVERALL:", null);
-        printer.accept("Total: ................ ", (totalVideo + totalAudio));
-        printer.accept("    Video: ............ ", totalVideo);
-        printer.accept("    Audio: ............ ", totalAudio);
-        printer.accept("Total Data: ........... ", (double) (totalVideoData + totalAudioData));
-        printer.accept("    Video: ............ ", (double) totalVideoData);
-        printer.accept("    Audio: ............ ", (double) totalAudioData);
+        statPrinter.accept("TOTAL:", null);
+        statPrinter.accept("Downloads: ............ ", (totalVideo + totalAudio));
+        statPrinter.accept("    Video: ............ ", totalVideo);
+        statPrinter.accept("    Audio: ............ ", totalAudio);
+        statPrinter.accept("Data: ................. ", (double) (totalVideoData + totalAudioData));
+        statPrinter.accept("    Video: ............ ", (double) totalVideoData);
+        statPrinter.accept("    Audio: ............ ", (double) totalAudioData);
         
         System.out.println(Utils.NEWLINE);
     }
