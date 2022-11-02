@@ -244,7 +244,7 @@ public class Channel extends ChannelEntry {
      *
      * @return The path representing the playlist file.
      */
-    protected String getPlaylistFilePath() {
+    public String getPlaylistFilePath() {
         return Optional.ofNullable(playlistFilePath).orElse("~")
                 .replaceAll("^~", getOutputFolderPath())
                 .replaceAll("(?<!^)(?:\\." + Utils.PLAYLIST_FORMAT + ")+?$", ("." + Utils.PLAYLIST_FORMAT));

@@ -481,7 +481,7 @@ public class ChannelEntry {
      *
      * @return The path representing the output folder.
      */
-    protected String getOutputFolderPath() {
+    public String getOutputFolderPath() {
         return Optional.ofNullable(outputFolderPath).orElse("~")
                 .replaceAll("^~", Optional.ofNullable(parent).map(ChannelEntry::getOutputFolderPath).orElse(""));
     }

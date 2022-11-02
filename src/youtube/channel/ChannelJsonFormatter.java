@@ -7,11 +7,13 @@
 
 package youtube.channel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 
 /**
@@ -31,6 +33,16 @@ public final class ChannelJsonFormatter {
             "reversePlaylist", ChannelEntry.DEFAULT_REVERSE_PLAYLIST,
             "ignoreGlobalLocations", ChannelEntry.DEFAULT_IGNORE_GLOBAL_LOCATIONS,
             "keepClean", ChannelEntry.DEFAULT_KEEP_CLEAN);
+    
+    /**
+     * The number of spaces in an indent in a json string.
+     */
+    public static final int INDENT_WIDTH = 2;
+    
+    /**
+     * The default indent to start with when formatting a json string.
+     */
+    public static final int DEFAULT_INDENT = 1;
     
     
     //Enums
@@ -78,7 +90,7 @@ public final class ChannelJsonFormatter {
      * @return The json string representing the Channel Entry.
      */
     public static String toJsonString(JsonType type, ChannelEntry channelEntry, boolean effective) {
-        return toJsonString(type, channelEntry, effective, 1);
+        return toJsonString(type, channelEntry, effective, DEFAULT_INDENT);
     }
     
     /**
@@ -112,7 +124,7 @@ public final class ChannelJsonFormatter {
      * @return The full json string representing the Channel Entry.
      */
     public static String toFullJsonString(ChannelEntry channelEntry, boolean effective) {
-        return toFullJsonString(channelEntry, effective, 1);
+        return toFullJsonString(channelEntry, effective, DEFAULT_INDENT);
     }
     
     /**
@@ -150,7 +162,7 @@ public final class ChannelJsonFormatter {
      * @return The base json string representing the Channel Entry.
      */
     public static String toBaseJsonString(ChannelEntry channelEntry, boolean effective) {
-        return toBaseJsonString(channelEntry, effective, 1);
+        return toBaseJsonString(channelEntry, effective, DEFAULT_INDENT);
     }
     
     /**
@@ -166,18 +178,64 @@ public final class ChannelJsonFormatter {
     /**
      * Produces a minimal json string representing a Channel Entry.
      *
+     * @param channelEntry       The Channel Entry.
+     * @param effective          Whether to produce the json string from the effective fields of the Channel Entry.
+     * @param forceIncludeFields A list of fields to forcefully include in the json string.
+     * @param forceExcludeFields A list of fields to forcefully exclude from the json string.
+     * @param indent             The indent of the json string.
+     * @return The minimal json string representing the Channel Entry.
+     */
+    public static String toMinJsonString(ChannelEntry channelEntry, boolean effective, List<String> forceIncludeFields, List<String> forceExcludeFields, int indent) {
+        final Map<String, Object> fields = getFields(channelEntry, effective);
+        final List<String> toInclude = getFieldsList(channelEntry).stream()
+                .filter(field -> Objects.nonNull(fields.get(field)))
+                .filter(field -> getRequiredFieldList(channelEntry).contains(field) ||
+                        !Objects.equals(fields.get(field), DEFAULT_FIELD_VALUES.get(field)))
+                .collect(Collectors.collectingAndThen(Collectors.toList(),
+                        fieldList -> {
+                            fieldList.addAll(forceIncludeFields);
+                            fieldList.removeAll(forceExcludeFields);
+                            return ListUtility.removeDuplicates(fieldList);
+                        }));
+        
+        return formatJson(JsonType.MIN, fields, toInclude, effective, indent);
+    }
+    
+    /**
+     * Produces a minimal json string representing a Channel Entry.
+     *
+     * @param channelEntry       The Channel Entry.
+     * @param effective          Whether to produce the json string from the effective fields of the Channel Entry.
+     * @param forceIncludeFields A list of fields to forcefully include in the json string.
+     * @param forceExcludeFields A list of fields to forcefully exclude from the json string.
+     * @return The minimal json string representing the Channel Entry.
+     */
+    public static String toMinJsonString(ChannelEntry channelEntry, boolean effective, List<String> forceIncludeFields, List<String> forceExcludeFields) {
+        return toMinJsonString(channelEntry, false, forceIncludeFields, forceExcludeFields, DEFAULT_INDENT);
+    }
+    
+    /**
+     * Produces a minimal json string representing a Channel Entry.
+     *
+     * @param channelEntry       The Channel Entry.
+     * @param forceIncludeFields A list of fields to forcefully include in the json string.
+     * @param forceExcludeFields A list of fields to forcefully exclude from the json string.
+     * @return The minimal json string representing the Channel Entry.
+     */
+    public static String toMinJsonString(ChannelEntry channelEntry, List<String> forceIncludeFields, List<String> forceExcludeFields) {
+        return toMinJsonString(channelEntry, false, forceIncludeFields, forceExcludeFields);
+    }
+    
+    /**
+     * Produces a minimal json string representing a Channel Entry.
+     *
      * @param channelEntry The Channel Entry.
      * @param effective    Whether to produce the json string from the effective fields of the Channel Entry.
      * @param indent       The indent of the json string.
      * @return The minimal json string representing the Channel Entry.
      */
     public static String toMinJsonString(ChannelEntry channelEntry, boolean effective, int indent) {
-        final Map<String, Object> fields = getFields(channelEntry, effective);
-        final List<String> toInclude = getFieldsList(channelEntry).stream()
-                .filter(field -> getRequiredFieldList(channelEntry).contains(field) || !Objects.equals(fields.get(field), DEFAULT_FIELD_VALUES.get(field)))
-                .collect(Collectors.toList());
-        
-        return formatJson(JsonType.MIN, fields, toInclude, effective, indent);
+        return toMinJsonString(channelEntry, effective, Collections.emptyList(), Collections.emptyList(), indent);
     }
     
     /**
@@ -188,7 +246,7 @@ public final class ChannelJsonFormatter {
      * @return The minimal json string representing the Channel Entry.
      */
     public static String toMinJsonString(ChannelEntry channelEntry, boolean effective) {
-        return toMinJsonString(channelEntry, effective, 1);
+        return toMinJsonString(channelEntry, effective, DEFAULT_INDENT);
     }
     
     /**
@@ -214,11 +272,11 @@ public final class ChannelJsonFormatter {
     private static String formatJson(JsonType type, Map<String, Object> fields, List<String> toInclude, boolean effective, int indent) {
         return fields.entrySet().stream()
                 .filter(e -> toInclude.contains(e.getKey()))
-                .map(e -> StringUtility.spaces(indent * 2) +
+                .map(e -> StringUtility.spaces(indent * INDENT_WIDTH) +
                         StringUtility.quote(e.getKey()) + ": " + formatValue(type, e.getValue(), effective, indent))
                 .collect(Collectors.joining(("," + System.lineSeparator()),
-                        (StringUtility.spaces((indent - 1) * 2) + "{" + System.lineSeparator()),
-                        (System.lineSeparator() + StringUtility.spaces((indent - 1) * 2) + "}")));
+                        (StringUtility.spaces((indent - 1) * INDENT_WIDTH) + "{" + System.lineSeparator()),
+                        (System.lineSeparator() + StringUtility.spaces((indent - 1) * INDENT_WIDTH) + "}")));
     }
     
     /**
@@ -231,7 +289,7 @@ public final class ChannelJsonFormatter {
      * @return The formatted json string.
      */
     private static String formatJson(JsonType type, Map<String, Object> fields, List<String> toInclude, boolean effective) {
-        return formatJson(type, fields, toInclude, effective, 1);
+        return formatJson(type, fields, toInclude, effective, DEFAULT_INDENT);
     }
     
     /**
@@ -261,8 +319,8 @@ public final class ChannelJsonFormatter {
             return ((List<ChannelEntry>) value).stream()
                     .map(child -> toJsonString(type, child, effective, (indent + 1)))
                     .collect(Collectors.joining(("," + System.lineSeparator()),
-                            (StringUtility.spaces(indent * 2) + "[" + System.lineSeparator()),
-                            (System.lineSeparator() + StringUtility.spaces(indent * 2) + "]")));
+                            (StringUtility.spaces(indent * INDENT_WIDTH) + "[" + System.lineSeparator()),
+                            (System.lineSeparator() + StringUtility.spaces(indent * INDENT_WIDTH) + "]")));
         } else if (value instanceof String) {
             return StringUtility.quote(String.valueOf(value));
         } else {
