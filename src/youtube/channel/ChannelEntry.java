@@ -356,6 +356,7 @@ public class ChannelEntry {
         fields.put("playlistId", Optional.ofNullable(playlistId).map(String::strip).orElse(null));
         fields.put("outputFolder", Optional.ofNullable(outputFolderPath).orElse(Optional.ofNullable(outputFolder).map(File::getAbsolutePath).orElse(null)));
         fields.put("saveAsMp3", saveAsMp3);
+        fields.put("savePlaylist", savePlaylist);
         fields.put("reversePlaylist", reversePlaylist);
         fields.put("ignoreGlobalLocations", ignoreGlobalLocations);
         fields.put("keepClean", keepClean);
@@ -376,6 +377,7 @@ public class ChannelEntry {
         fields.put("playlistId", getPlaylistId());
         fields.put("outputFolder", getOutputFolder());
         fields.put("saveAsMp3", isSaveAsMp3());
+        fields.put("savePlaylist", isSavePlaylist());
         fields.put("reversePlaylist", isReversePlaylist());
         fields.put("ignoreGlobalLocations", isIgnoreGlobalLocations());
         fields.put("keepClean", isKeepClean());

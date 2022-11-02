@@ -46,7 +46,7 @@ public class Channel extends ChannelEntry {
     /**
      * A list of all fields in a Channel configuration.
      */
-    public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "playlistFile", "saveAsMp3", "reversePlaylist", "ignoreGlobalLocations", "keepClean");
+    public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "playlistFile", "saveAsMp3", "savePlaylist", "reversePlaylist", "ignoreGlobalLocations", "keepClean");
     
     
     //Enums
