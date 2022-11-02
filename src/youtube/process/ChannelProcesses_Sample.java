@@ -99,13 +99,38 @@ public class ChannelProcesses_Sample {
             //DOCUMENTARY
             
             case "DW_DOCUMENTARY":
-                RenameProcess.regexRemove(videoMap, "\\s*-\\s*DW\\s(?:[^\\-]+\\s)?Documenta(?:ry|l)");
+                RenameProcess.regexRemove(videoMap, List.of(
+                        "(?i)\\[4K]",
+                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "(?i)\\s*-?\\s*(?:(?:FULL|FREE|DW)\\s*)+(?:[^-)\\]]+\\s*)?(?:DOCUMENTARY|DOCUMENTAL|ENGLISH)"));
                 break;
             case "FRONTLINE_PBS":
-                RenameProcess.remove(videoMap, List.of(" - FRONTLINE", "@Associated Press"));
+                RenameProcess.regexRemove(videoMap, List.of(
+                        "(?i)\\[4K]",
+                        "(?i)\\s*-?\\s*@Associated\\s+Press",
+                        "(?i)\\s*-?\\s*#AskFRONTLINE",
+                        "(?i)\\s*-\\s*FRONTLINE(?:\\sPBS)?(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)",
+                        "(?i)\\s+\\(.*CAPTIONS\\sAVAILABLE.*\\)"));
+                RenameProcess.regexReplace(videoMap, List.of(
+                        Map.entry("(?i)\\s+(?:-\\s*|\\()INTERVIEW(?:\\)|$)", " - Interview"),
+                        Map.entry("(?i)\\s+(?:-\\s*|\\()TRAILER(?:\\)|$)", " - Trailer"),
+                        Map.entry("(?i)\\s+(?:-\\s*|\\()PODCAST(?:\\)|$)", " - Podcast")));
                 break;
             case "SPARK_DOCUMENTARY":
-                RenameProcess.remove(videoMap, List.of("[4K]", "[4k]", " - Spark"));
+                RenameProcess.replace(videoMap, " l ", " | ");
+                RenameProcess.regexRemove(videoMap, List.of(
+                        "(?i)\\[4K]",
+                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "(?i)\\s*-\\s*SPARK(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
+                break;
+            case "ENDEVR_DOCUMENTARY":
+                RenameProcess.regexRemove(videoMap, List.of(
+                        "(?i)\\[4K]",
+                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "(?i)\\s*-\\s*ENDE?VR(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
                 break;
             
             
