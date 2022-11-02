@@ -317,9 +317,9 @@ public final class ChannelJsonFormatter {
     private static String formatValue(JsonType type, Object value, boolean effective, int indent) {
         if (value instanceof List) {
             return ((List<ChannelEntry>) value).stream()
-                    .map(child -> toJsonString(type, child, effective, (indent + 1)))
+                    .map(child -> toJsonString(type, child, effective, (indent + 2)))
                     .collect(Collectors.joining(("," + System.lineSeparator()),
-                            (StringUtility.spaces(indent * INDENT_WIDTH) + "[" + System.lineSeparator()),
+                            ("[" + System.lineSeparator()),
                             (System.lineSeparator() + StringUtility.spaces(indent * INDENT_WIDTH) + "]")));
         } else if (value instanceof String) {
             return StringUtility.quote(String.valueOf(value));

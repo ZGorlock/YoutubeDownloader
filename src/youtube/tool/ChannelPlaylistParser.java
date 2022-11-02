@@ -7,16 +7,18 @@
 
 package youtube.tool;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import commons.lambda.function.unchecked.UncheckedFunction;
+import commons.lambda.stream.mapper.Mappers;
+import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.ChannelGroup;
 import youtube.channel.ChannelJsonFormatter;
 import youtube.channel.Channels;
 import youtube.channel.entity.Playlist;
@@ -37,17 +39,46 @@ public class ChannelPlaylistParser {
     private static final Logger logger = LoggerFactory.getLogger(ChannelPlaylistParser.class);
     
     
+    //Constants
+    
+    /**
+     * The list of fields to forcefully include in playlist configurations.
+     */
+    private static final List<String> FORCE_INCLUDE_FIELDS = List.of("active", "url");
+    
+    /**
+     * The list of fields to forcefully exclude from playlist configurations.
+     */
+    private static final List<String> FORCE_EXCLUDE_FIELDS = List.of("name", "url");
+    
+    /**
+     * The number of leading indentations in the final output.
+     */
+    private static final int INDENTATION_COUNT = 0;
+    
+    /**
+     * A flag indicating whether the final output should be formatted as an array or not.
+     */
+    private static final boolean FORMAT_AS_ARRAY = false;
+    
+    /**
+     * A flag indicating whether each playlist should get its own output folder, otherwise the same output folder as the base Channel will be used.
+     */
+    private static boolean SEPARATE_FOLDERS = true;
+    
+    
     //Static Fields
     
     /**
      * The key of the Channel containing the playlists.
      */
-    private static final String baseChannelKey = "SOUND_LIBRARY";
+    private static final String baseChannelKey = "GREATEST_AUDIOBOOKS";
     
     /**
-     * A flag indicating whether each each playlist should get its own output folder, otherwise the same output folder as the Channel will be used.
+     * A list of playlist names to skip while parsing.
      */
-    private static boolean separateFolders = true;
+    private static final List<String> skipPlaylists = List.of(
+    );
     
     
     //Main Method
@@ -55,7 +86,7 @@ public class ChannelPlaylistParser {
     /**
      * Runs the Channel Playlist Parser.
      *
-     * @param args Arguments to the main method
+     * @param args Arguments to the main method.
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {
@@ -98,24 +129,24 @@ public class ChannelPlaylistParser {
      * @throws Exception When there is an error.
      */
     private static List<Channel> makePlaylistChannels(Channel baseChannel, List<Playlist> playlists) throws Exception {
-        return playlists.stream().map(playlist -> {
-            final Map<String, Object> playlistFields = new LinkedHashMap<>();
-            playlistFields.put("key", (baseChannel.key + "_P" + StringUtility.padZero((playlists.indexOf(playlist) + 1), 2)));
-            playlistFields.put("playlistId", playlist.playlistId);
-            playlistFields.put("active", baseChannel.active);
-            playlistFields.put("saveAsMp3", baseChannel.saveAsMp3);
-            playlistFields.put("keepClean", (separateFolders && baseChannel.keepClean));
-            playlistFields.put("outputFolder", (baseChannel.outputFolderPath + (separateFolders ? (" - " + playlist.title) : "")));
-            playlistFields.put("playlistFile", (((baseChannel.playlistFilePath == null) && separateFolders) ? null :
-                                                Optional.ofNullable(baseChannel.playlistFilePath)
-                                                        .orElse(baseChannel.outputFolderPath + "." + Utils.PLAYLIST_FORMAT)
-                                                        .replace(("." + Utils.PLAYLIST_FORMAT), (" - " + playlist.title + "." + Utils.PLAYLIST_FORMAT))));
-            try {
-                return new Channel(playlistFields);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toList());
+        return playlists.stream()
+                .filter(playlist -> !skipPlaylists.contains(playlist.title))
+                .map((UncheckedFunction<Playlist, Channel>) playlist ->
+                        new Channel(MapUtility.mapOf(List.of(
+                                new ImmutablePair<>("key", (baseChannel.key + "_P")),
+                                new ImmutablePair<>("playlistId", playlist.playlistId),
+                                new ImmutablePair<>("active", true),
+                                new ImmutablePair<>("saveAsMp3", baseChannel.isSaveAsMp3()),
+                                new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || baseChannel.isSavePlaylist())),
+                                new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && baseChannel.isKeepClean())),
+                                new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.title) : null),
+                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.title + '.' + Utils.PLAYLIST_FORMAT) : null)
+                        )), (ChannelGroup) baseChannel.getParent()))
+                .collect(Collectors.collectingAndThen(Collectors.toList(),
+                        playlistChannels -> playlistChannels.stream()
+                                .map(Mappers.forEach(playlistChannel ->
+                                        playlistChannel.key += StringUtility.padZero((playlistChannels.indexOf(playlistChannel) + 1), 2)))
+                                .collect(Collectors.toList())));
     }
     
     /**
@@ -125,11 +156,16 @@ public class ChannelPlaylistParser {
      * @return The formatted playlist Channels json string.
      * @throws Exception When there is an error.
      */
+    @SuppressWarnings("PointlessArithmeticExpression")
     private static String formatPlaylistChannels(List<Channel> playlistChannels) throws Exception {
         return playlistChannels.stream().sequential()
-                .map(e -> StringUtility.splitLines(ChannelJsonFormatter.toBaseJsonString(e)).stream()
-                        .map(e2 -> (StringUtility.spaces(2) + e2)).collect(Collectors.joining(System.lineSeparator())))
-                .collect(Collectors.joining(("," + System.lineSeparator()), ("[" + System.lineSeparator()), (System.lineSeparator() + "]")));
+                .map(e -> StringUtility.splitLines(
+                                ChannelJsonFormatter.toMinJsonString(e, FORCE_INCLUDE_FIELDS, FORCE_EXCLUDE_FIELDS)).stream()
+                        .map(e2 -> (StringUtility.spaces(INDENTATION_COUNT + (FORMAT_AS_ARRAY ? 1 : 0) * ChannelJsonFormatter.INDENT_WIDTH) + e2))
+                        .collect(Collectors.joining(System.lineSeparator())))
+                .collect(Collectors.joining(("," + System.lineSeparator()),
+                        FORMAT_AS_ARRAY ? ("[" + System.lineSeparator()) : "",
+                        FORMAT_AS_ARRAY ? (System.lineSeparator() + "]") : ""));
     }
     
 }
