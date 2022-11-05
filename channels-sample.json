@@ -974,13 +974,15 @@
                     "key": "MIKE_MALONEY",
                     "active": true,
                     "outputFolder": "~/Mike Maloney",
+                    "keepClean": false,
                     "channels": [
                       {
                         "key": "MIKE_MALONEY",
                         "active": true,
                         "name": "MikeMaloney",
                         "url": "https://www.youtube.com/c/Goldsilver",
-                        "playlistId": "UUThv5tYUVaG4ZPA3p6EXZbQ"
+                        "playlistId": "UUThv5tYUVaG4ZPA3p6EXZbQ",
+                        "keepClean": true
                       },
                       {
                         "key": "MIKE_MALONEY_P01",

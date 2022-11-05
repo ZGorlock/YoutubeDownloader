@@ -8,11 +8,14 @@
 package youtube.process;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
@@ -234,6 +237,28 @@ public class ChannelProcesses_Sample {
                 break;
             
             
+            //AUDIOBOOK
+            
+            case "GREATEST_AUDIOBOOKS":
+                RenameProcess.regexReplace(videoMap, List.of(
+                        Map.entry("\\+", ""),
+                        Map.entry("(?i)(?:[\\(\\[]\\s*)?(?:GR?EATEST|FULL|CONDENSED|WHISPER)?\\s*([^\\s\\-]+\\sLANGUAGE|)#?\\s*(?:POEM|POETRY|NOVEL|STORY)?\\s*AUDIO\\s*.?\\s*BOOKS?(?:\\.COM?)?(?:\\s*VERSION)?(?:\\s*[\\]\\)])?", " $1 "),
+                        Map.entry("(?i)-?\\s+BY(?:\\s*THE)?\\s*", " - "),
+                        Map.entry("(?i)-?\\s*\\(?V\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - V$1"),
+                        Map.entry("(?i)-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2 of $3) - "),
+                        Map.entry("(?i)-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2) - "),
+                        Map.entry("(?i)-?\\s*\\(?BOOK\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1 of $2) - "),
+                        Map.entry("(?i)-?\\s*\\(?BOOK\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1) - "),
+                        Map.entry("(\\s*\\-)+$", ""),
+                        Map.entry("\\(\\s+", "("),
+                        Map.entry("\\s+\\)", ")")));
+                RenameProcess.forEach(videoMap, (id, video) ->
+                        video.updateTitle(Arrays.stream(video.title.split("\\s+-\\s+", -1))
+                                .map(e -> e.equals(e.toUpperCase()) ? StringUtility.toTitleCase(e.toLowerCase()) : e)
+                                .collect(Collectors.joining(" - "))));
+                break;
+            
+            
             //SOUNDBYTE
             
             case "SOUND_LIBRARY":
@@ -393,6 +418,13 @@ public class ChannelProcesses_Sample {
             
             case "SPEEDSOUND":
                 channel.state.blocked.add("FhOSu5fq5eE");
+                break;
+            
+            
+            //AUDIOBOOK
+            
+            case "GREATEST_AUDIOBOOKS":
+                FilterProcess.containsIgnoreCase(videoMap, List.of("Book Review", "Author Interview", "Preview", "Excerpt"));
                 break;
         }
     }
