@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedConsumer;
-import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.conf.Color;
@@ -46,6 +45,11 @@ public class ChannelState {
      * The Channel data directory.
      */
     public static final File CHANNEL_DATA_DIR = new File(PathUtils.DATA_DIR, "channel");
+    
+    /**
+     * The default Channel data file type.
+     */
+    public static final String DEFAULT_DATA_FILE_TYPE = "playlistItems";
     
     
     //Fields
@@ -186,7 +190,7 @@ public class ChannelState {
      */
     public List<File> getDataFiles(String type) {
         return Optional.ofNullable(stateLocation.listFiles(f -> f.getName().startsWith(dataFile.getName()
-                        .replace(".txt", (StringUtility.isNullOrBlank(type) ? "" : ("-" + type))))))
+                        .replace(".txt", getDataFileTypeSuffix(type)))))
                 .map(Arrays::asList).orElse(new ArrayList<>());
     }
     
@@ -207,8 +211,8 @@ public class ChannelState {
      * @return The data file.
      */
     public File getDataFile(int chunk, String type) {
-        return new File(stateLocation, (dataFile.getName().replaceFirst("(?=\\.)",
-                ((StringUtility.isNullOrBlank(type) ? "" : ("-" + type)) + '.' + chunk))));
+        return new File(stateLocation, (dataFile.getName()
+                .replaceFirst("(?=\\.)", (getDataFileTypeSuffix(type) + '.' + chunk))));
     }
     
     /**
@@ -219,6 +223,19 @@ public class ChannelState {
      */
     public File getDataFile(int chunk) {
         return getDataFile(chunk, null);
+    }
+    
+    /**
+     * Returns the suffix for a data file type.
+     *
+     * @param type The type of the data file.
+     * @return The suffix for the data file type.
+     */
+    private String getDataFileTypeSuffix(String type) {
+        return Optional.ofNullable(type)
+                .map(e -> e.replace(DEFAULT_DATA_FILE_TYPE, ""))
+                .filter(e -> !e.isBlank())
+                .map(e -> '-' + e).orElse("");
     }
     
     /**
