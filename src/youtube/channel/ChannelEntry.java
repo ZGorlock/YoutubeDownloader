@@ -558,7 +558,7 @@ public class ChannelEntry {
     }
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Loads and validates a Channel Entry configuration.

@@ -114,7 +114,7 @@ public final class ApiUtils {
     private static final CloseableHttpClient httpClient = HttpClients.createDefault();
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Calls the Youtube Data API and fetches videos for a Channel.

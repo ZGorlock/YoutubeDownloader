@@ -124,7 +124,7 @@ public class Color {
     }
     
     
-    //Functions
+    //Static Functions
     
     /**
      * A function that loads a color setting configuration.

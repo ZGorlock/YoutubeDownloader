@@ -52,7 +52,7 @@ public class KeyStoreDirectoryUpdater {
     /**
      * Runs the Key Store Directory Updater.
      *
-     * @param args Arguments to the main method
+     * @param args Arguments to the main method.
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {

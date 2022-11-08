@@ -47,7 +47,7 @@ public class SponsorBlocker {
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns the SponsorBlock command for a SponsorBlock configuration.

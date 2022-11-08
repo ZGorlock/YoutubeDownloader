@@ -142,7 +142,7 @@ public final class ExecutableUtils {
     }
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Determines if the exe exists and attempts to update it, or attempts to download it if it does not exist.

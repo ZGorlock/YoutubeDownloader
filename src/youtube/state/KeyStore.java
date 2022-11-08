@@ -55,7 +55,7 @@ public class KeyStore {
     private static final Map<String, Map<String, String>> keyStore = new LinkedHashMap<>();
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns the key store for a Channel.

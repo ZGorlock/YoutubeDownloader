@@ -107,7 +107,7 @@ public class Channels {
             .orElse(DEFAULT_VIDEOS_DIR);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns the list of Channels.

@@ -60,7 +60,7 @@ public class Configurator {
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Returns a list of configuration settings.

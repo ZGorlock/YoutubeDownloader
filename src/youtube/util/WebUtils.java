@@ -71,7 +71,7 @@ public final class WebUtils {
     public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:c(?:hannel)?|u(?:ser)?)/(?<channel>\\w+).*$");
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Determines if the system has access to the internet.

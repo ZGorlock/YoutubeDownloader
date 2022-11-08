@@ -123,7 +123,7 @@ public final class Stats {
     public static long totalAudioData = 0L;
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Calculates the total data saved from Youtube.

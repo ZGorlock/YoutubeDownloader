@@ -93,7 +93,7 @@ public final class Utils {
     public static final String INDENT = StringUtility.spaces(5);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Performs startup operations.

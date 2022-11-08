@@ -37,7 +37,7 @@ public class ChannelProcesses_Sample {
     private static final Logger logger = LoggerFactory.getLogger(ChannelProcesses_Sample.class);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Performs special checks specific to a Channel before producing the download queue.<br/>
