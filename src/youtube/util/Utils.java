@@ -70,12 +70,22 @@ public final class Utils {
     /**
      * A list of possible video formats.
      */
-    public static final List<String> VIDEO_FORMATS = List.of("3gp", "flv", "mp4", "webm");
+    public static final List<String> VIDEO_FORMATS_OPTIONS = List.of("3gp", "flv", "mp4", "webm");
     
     /**
      * A list of possible audio formats.
      */
-    public static final List<String> AUDIO_FORMATS = List.of("aac", "m4a", "mp3", "ogg", "wav");
+    public static final List<String> AUDIO_FORMATS_OPTIONS = List.of("aac", "m4a", "mp3", "ogg", "wav");
+    
+    /**
+     * The video file format.
+     */
+    public static final String VIDEO_FORMAT = "mp4";
+    
+    /**
+     * The audio file format.
+     */
+    public static final String AUDIO_FORMAT = "mp3";
     
     /**
      * The playlist file format.
@@ -142,8 +152,8 @@ public final class Utils {
                 String format = getFileFormat(output.getName());
                 String existingFormat = getFileFormat(existingFile.getName());
                 if (format.equalsIgnoreCase(existingFormat) ||
-                        (VIDEO_FORMATS.contains(format) && VIDEO_FORMATS.contains(existingFormat)) ||
-                        (AUDIO_FORMATS.contains(format) && AUDIO_FORMATS.contains(existingFormat))) {
+                        (VIDEO_FORMATS_OPTIONS.contains(format) && VIDEO_FORMATS_OPTIONS.contains(existingFormat)) ||
+                        (AUDIO_FORMATS_OPTIONS.contains(format) && AUDIO_FORMATS_OPTIONS.contains(existingFormat))) {
                     found.add(existingFile);
                 }
             }

@@ -98,7 +98,7 @@ public class Video {
             this.date = new Date();
         }
         this.download = new File(outputDir, this.title);
-        this.output = new File(outputDir, (this.title + '.' + (saveAsMp3 ? "mp3" : "mp4")));
+        this.output = new File(outputDir, (this.title + '.' + (saveAsMp3 ? Utils.AUDIO_FORMAT : Utils.VIDEO_FORMAT)));
     }
     
     /**

@@ -134,10 +134,10 @@ public final class Stats {
                 .filter(Objects::nonNull).distinct()
                 .map(File::new).filter(File::exists)
                 .forEach(file -> {
-                    if (Utils.VIDEO_FORMATS.contains(Utils.getFileFormat(file.getName()))) {
+                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
                         Stats.totalVideo++;
                         Stats.totalVideoData += file.length();
-                    } else if (Utils.AUDIO_FORMATS.contains(Utils.getFileFormat(file.getName()))) {
+                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
                         Stats.totalAudio++;
                         Stats.totalAudioData += file.length();
                     }
