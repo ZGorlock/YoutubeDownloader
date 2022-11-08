@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import commons.lambda.function.checked.CheckedConsumer;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,9 +207,8 @@ public class ChannelState {
      * @return The data file.
      */
     public File getDataFile(int chunk, String type) {
-        return new File(stateLocation, (dataFile.getName()
-                .replaceFirst("(?=\\.)", (StringUtility.isNullOrBlank(type) ? "" : ("-" + type))) +
-                '.' + chunk));
+        return new File(stateLocation, (dataFile.getName().replaceFirst("(?=\\.)",
+                ((StringUtility.isNullOrBlank(type) ? "" : ("-" + type)) + '.' + chunk))));
     }
     
     /**
@@ -239,16 +240,20 @@ public class ChannelState {
      * @throws IOException When there is an error cleaning up legacy state files.
      */
     private void cleanupLegacyState() throws IOException {
-        for (File cleanupFile : Arrays.asList(dataFile, saveFile, queueFile, blockedFile)) {
-            File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), cleanupFile.getParentFile().getName()), cleanupFile.getName());
-            if (oldFile.exists()) {
-                if (cleanupFile.exists()) {
-                    FileUtils.deleteFile(oldFile);
-                } else {
-                    FileUtils.moveFile(oldFile, cleanupFile);
-                }
-            }
-        }
+        Stream.of(dataFile, saveFile, queueFile, blockedFile)
+                .forEach((CheckedConsumer<File>) stateFile -> {
+                    final File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), stateFile.getParentFile().getName()), stateFile.getName());
+                    if (oldFile.exists()) {
+                        if (stateFile.exists()) {
+                            FileUtils.deleteFile(oldFile);
+                        } else {
+                            FileUtils.moveFile(oldFile, stateFile);
+                        }
+                    }
+                });
+        getDataFiles().stream().filter(dataFile -> !dataFile.getName().endsWith(".txt"))
+                .forEach((CheckedConsumer<File>) dataFile -> FileUtils.moveFile(dataFile,
+                        new File(dataFile.getParentFile(), dataFile.getName().replaceAll("\\.txt\\.(\\d+)", ".$1.txt"))));
     }
     
 }
