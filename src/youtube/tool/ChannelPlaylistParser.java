@@ -8,6 +8,7 @@
 package youtube.tool;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import commons.lambda.function.unchecked.UncheckedFunction;
@@ -130,6 +131,7 @@ public class ChannelPlaylistParser {
      */
     private static List<Channel> makePlaylistChannels(Channel baseChannel, List<Playlist> playlists) throws Exception {
         return playlists.stream()
+                .filter(Objects::nonNull)
                 .filter(playlist -> !skipPlaylists.contains(playlist.title))
                 .map((UncheckedFunction<Playlist, Channel>) playlist ->
                         new Channel(MapUtility.mapOf(List.of(

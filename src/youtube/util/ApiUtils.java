@@ -33,7 +33,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONAware;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -115,66 +114,100 @@ public final class ApiUtils {
     //Static Methods
     
     /**
-     * Calls the Youtube Data API and fetches the info of a channel.
+     * Calls the Youtube Data API and fetches a Channel Entity.
      *
-     * @param channelId The Youtube id of the channel.
-     * @return The channel info.
+     * @param channelId The Youtube id of the Channel Entity.
+     * @return The Channel Entity.
      * @throws Exception When there is an error.
      */
-    public static String fetchChannelInfo(String channelId) throws Exception {
-        return fetchInfo(channelId, "channels");
+    public static youtube.channel.entity.Channel fetchChannel(String channelId) throws Exception {
+        return new youtube.channel.entity.Channel(fetchChannelData(channelId));
     }
     
     /**
-     * Calls the Youtube Data API and fetches the info of a playlist.
+     * Calls the Youtube Data API and fetches a Playlist Entity.
      *
-     * @param playlistId The Youtube id of the playlist.
-     * @return The playlist info.
+     * @param playlistId The Youtube id of the Playlist Entity.
+     * @return The Playlist Entity.
      * @throws Exception When there is an error.
      */
-    public static String fetchPlaylistInfo(String playlistId) throws Exception {
-        return fetchInfo(playlistId, "playlists");
+    public static Playlist fetchPlaylist(String playlistId) throws Exception {
+        return new Playlist(fetchPlaylistData(playlistId));
     }
     
     /**
-     * Calls the Youtube Data API and fetches the info of a video.
+     * Calls the Youtube Data API and fetches a Video Entity.
      *
-     * @param videoId The Youtube id of the video.
-     * @return The video info.
+     * @param videoId The Youtube id of the Video Entity.
+     * @return The Video Entity.
      * @throws Exception When there is an error.
      */
-    public static String fetchVideoInfo(String videoId) throws Exception {
-        return fetchInfo(videoId, "videos");
+    public static Video fetchVideo(String videoId) throws Exception {
+        return new Video(fetchVideoData(videoId));
     }
     
     /**
-     * Calls the Youtube Data API and fetches Entity info.
+     * Calls the Youtube Data API and fetches the data of a Channel Entity.
+     *
+     * @param channelId The Youtube id of the Channel Entity.
+     * @return The json data of the Channel Entity.
+     * @throws Exception When there is an error.
+     */
+    public static Map<String, Object> fetchChannelData(String channelId) throws Exception {
+        return fetchData(channelId, "channels");
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of a Playlist Entity.
+     *
+     * @param playlistId The Youtube id of the Playlist Entity.
+     * @return The json data of the Playlist Entity.
+     * @throws Exception When there is an error.
+     */
+    public static Map<String, Object> fetchPlaylistData(String playlistId) throws Exception {
+        return fetchData(playlistId, "playlists");
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of a Video Entity.
+     *
+     * @param videoId The Youtube id of the Video Entity.
+     * @return The json data of the Video Entity.
+     * @throws Exception When there is an error.
+     */
+    public static Map<String, Object> fetchVideoData(String videoId) throws Exception {
+        return fetchData(videoId, "videos");
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of an Entity.
      *
      * @param id         The id of the Entity.
      * @param endpoint   The API endpoint name.
      * @param parameters A map of parameters.
-     * @return The Entity info.
+     * @return The json data of the Entity.
      * @throws Exception When there is an error.
      */
-    private static String fetchInfo(String id, String endpoint, Map<String, String> parameters) throws Exception {
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> fetchData(String id, String endpoint, Map<String, String> parameters) throws Exception {
         return Optional.ofNullable(callApi(endpoint, parameters))
                 .map((CheckedFunction<String, JSONObject>) e ->
                         (JSONObject) new JSONParser().parse(e))
                 .map(e -> (JSONArray) e.get("items"))
                 .map(e -> (JSONObject) e.get(0))
-                .map(JSONAware::toJSONString).orElse(null);
+                .map(e -> (Map<String, Object>) e).orElse(new HashMap<>());
     }
     
     /**
-     * Calls the Youtube Data API and fetches Entity info.
+     * Calls the Youtube Data API and fetches the data of an Entity.
      *
      * @param id       The id of the Entity.
      * @param endpoint The API endpoint name.
-     * @return The Entity info.
+     * @return The json data of the Entity.
      * @throws Exception When there is an error.
      */
-    private static String fetchInfo(String id, String endpoint) throws Exception {
-        return fetchInfo(id, endpoint, new HashMap<>(Map.ofEntries(
+    private static Map<String, Object> fetchData(String id, String endpoint) throws Exception {
+        return fetchData(id, endpoint, new HashMap<>(Map.ofEntries(
                 Map.entry("id", id))));
     }
     
@@ -182,11 +215,11 @@ public final class ApiUtils {
      * Calls the Youtube Data API and fetches videos for a Channel.
      *
      * @param channel The Channel.
-     * @return The number of Channel data chunks read.
+     * @return The number of data pages fetched.
      * @throws Exception When there is an error.
      */
     public static int fetchChannelVideoData(Channel channel) throws Exception {
-        return fetchData(channel, "playlistItems", new HashMap<>(Map.ofEntries(
+        return fetchChunkedData(channel, "playlistItems", new HashMap<>(Map.ofEntries(
                 Map.entry("playlistId", channel.getPlaylistId()))));
     }
     
@@ -194,25 +227,25 @@ public final class ApiUtils {
      * Calls the Youtube Data API and fetches playlists for a Channel.
      *
      * @param channel The Channel.
-     * @return The API response.
+     * @return The number of data pages fetched.
      * @throws Exception When there is an error.
      */
     public static int fetchChannelPlaylistData(Channel channel) throws Exception {
         return !channel.isYoutubeChannel() ? -1 :
-               fetchData(channel, "playlists", new HashMap<>(Map.ofEntries(
+               fetchChunkedData(channel, "playlists", new HashMap<>(Map.ofEntries(
                        Map.entry("channelId", channel.getPlaylistId().replaceAll("^UU", "UC")))));
     }
     
     /**
-     * Calls the Youtube Data API and fetches Channel data.
+     * Calls the Youtube Data API and fetches chunked Channel data.
      *
      * @param channel    The Channel.
      * @param endpoint   The API endpoint name.
      * @param parameters A map of parameters.
-     * @return The number of data pages read.
+     * @return The number of data pages fetched.
      * @throws Exception When there is an error.
      */
-    private static int fetchData(Channel channel, String endpoint, Map<String, String> parameters) throws Exception {
+    private static int fetchChunkedData(Channel channel, String endpoint, Map<String, String> parameters) throws Exception {
         WebUtils.checkPlaylistId(channel);
         
         final AtomicInteger page = new AtomicInteger(0);
@@ -335,57 +368,22 @@ public final class ApiUtils {
      * Parses the Youtube Data API video response data for a Channel.
      *
      * @param channel The Channel.
-     * @return The list of Videos parsed from the Channel data.
+     * @return The list of Video Entities parsed from the Channel data.
      * @throws Exception When there is an error.
      */
     public static List<Video> parseChannelVideoData(Channel channel) throws Exception {
-        return parseData(channel, "playlistItems", dataItem -> {
-//            new Video(dataItem, channel)
-            
-            final JSONObject snippet = (JSONObject) dataItem.get("snippet");
-            final JSONObject resourceId = (JSONObject) snippet.get("resourceId");
-            final JSONObject thumbnails = (JSONObject) snippet.get("thumbnails");
-            
-            final String videoId = (String) resourceId.get("videoId");
-            final String title = (String) snippet.get("title");
-            final String date = (String) snippet.get("publishedAt");
-            
-            //filter private videos
-            if (title.equals("Private video")) {
-                return null;
-            }
-            
-            //filter live videos
-            if (Optional.ofNullable((JSONObject) thumbnails.get("default"))
-                    .map(defaultThumbnail -> Optional.ofNullable((String) defaultThumbnail.get("url"))
-                            .map(url -> url.substring(url.length() - 9, url.length() - 4).equalsIgnoreCase("_live")).orElse(true))
-                    .orElse(true)) {
-                return null;
-            }
-            
-            return new Video(videoId, title, date, channel);
-        });
+        return parseData(channel, "playlistItems", dataItem -> new Video(dataItem, channel));
     }
     
     /**
      * Parses the Youtube Data API playlist response data for a Channel.
      *
      * @param channel The Channel.
-     * @return The map of playlist names and ids parsed from the Channel data.
+     * @return The list of Playlist Entities parsed from the Channel data.
      * @throws Exception When there is an error.
      */
     public static List<Playlist> parseChannelPlaylistData(Channel channel) throws Exception {
-        return parseData(channel, "playlists", dataItem -> {
-//            new Playlist(dataItem, channel)
-            
-            final JSONObject snippet = (JSONObject) dataItem.get("snippet");
-            
-            final String playlistId = (String) dataItem.get("id");
-            final String title = (String) snippet.get("title");
-            final String date = (String) snippet.get("publishedAt");
-            
-            return new Playlist(playlistId, title, date, channel);
-        });
+        return parseData(channel, "playlists", dataItem -> new Playlist(dataItem, channel));
     }
     
     /**

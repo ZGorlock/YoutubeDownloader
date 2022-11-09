@@ -13,9 +13,14 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import commons.object.collection.MapUtility;
+import commons.object.string.StringUtility;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +46,7 @@ public final class WebUtils {
     //Constants
     
     /**
-     * The base url for Youtube videos.
+     * The base url for Youtube.
      */
     public static final String YOUTUBE_BASE = "https://www.youtube.com";
     
@@ -54,6 +59,11 @@ public final class WebUtils {
      * The base url for Youtube playlists.
      */
     public static final String PLAYLIST_BASE = YOUTUBE_BASE + "/playlist?list=";
+    
+    /**
+     * The base url for Youtube channels.
+     */
+    public static final String CHANNEL_BASE = YOUTUBE_BASE + "/c/";
     
     /**
      * The regex pattern for a Youtube video url.
@@ -135,41 +145,51 @@ public final class WebUtils {
     /**
      * Fetches the Video information from a Youtube video url.
      *
+     * @param url    The Youtube video url.
+     * @param useApi Whether to use the Youtube API to get the Video information.
+     * @return The fetched Video.
+     */
+    @SuppressWarnings("unchecked")
+    public static Video fetchVideo(String url, boolean useApi) {
+        final Matcher videoUrlMatcher = VIDEO_URL_PATTERN.matcher(url);
+        
+        Video video = null;
+        final Map<String, String> videoDetails = MapUtility.mapOf(
+                new ImmutablePair<>("videoId", videoUrlMatcher.matches() ? videoUrlMatcher.group("video") : ""),
+                new ImmutablePair<>("name", ""),
+                new ImmutablePair<>("datePublished", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+        
+        if (!Configurator.Config.preventVideoFetch) {
+            
+            if (useApi) {
+                try {
+                    video = ApiUtils.fetchVideo(videoDetails.get("videoId"));
+                } catch (Exception ignored) {
+                }
+                
+            } else {
+                final Pattern metaPattern = Pattern.compile("^\\s*<meta\\s*itemprop=\"(?<prop>[^\"]+)\"\\s*content=\"(?<value>[^\"]+)\"\\s*>\\s*$");
+                StringUtility.splitLines(getHtml(url)).stream()
+                        .map(metaPattern::matcher).filter(Matcher::matches)
+                        .forEach(metaMatcher -> videoDetails.computeIfPresent(
+                                metaMatcher.group("prop"), (k, v) -> metaMatcher.group("value")));
+            }
+        }
+        
+        return Optional.ofNullable(video).orElseGet(() ->
+                new Video(videoDetails.get("videoId"),
+                        Optional.of(videoDetails.get("name")).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(videoDetails.get("videoId")),
+                        (videoDetails.get("datePublished") + " 00:00:00")));
+    }
+    
+    /**
+     * Fetches the Video information from a Youtube video url.
+     *
      * @param url The Youtube video url.
      * @return The fetched Video.
      */
     public static Video fetchVideo(String url) {
-        Matcher videoUrlMatcher = VIDEO_URL_PATTERN.matcher(url);
-        
-        String videoId = videoUrlMatcher.matches() ? videoUrlMatcher.group("video") : "";
-        String title = videoId;
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        
-        if (!Configurator.Config.preventVideoFetch) {
-            Pattern metaPattern = Pattern.compile("^\\s*<meta\\s*itemprop=\"(?<prop>[^\"]+)\"\\s*content=\"(?<value>[^\"]+)\"\\s*>\\s*$");
-            
-            String html = getHtml(url);
-            String[] lines = html.split("\n");
-            
-            for (String line : lines) {
-                Matcher metaMatcher = metaPattern.matcher(line);
-                if (metaMatcher.matches()) {
-                    switch (metaMatcher.group("prop")) {
-                        case "videoId":
-                            videoId = metaMatcher.group("value");
-                            break;
-                        case "name":
-                            title = metaMatcher.group("value");
-                            break;
-                        case "datePublished":
-                            date = metaMatcher.group("value");
-                            break;
-                    }
-                }
-            }
-        }
-        
-        return new Video(videoId, title, (date + " 00:00:00"), PathUtils.TMP_DIR, Configurator.Config.asMp3);
+        return fetchVideo(url, true);
     }
     
     /**

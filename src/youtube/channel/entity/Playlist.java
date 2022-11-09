@@ -7,20 +7,18 @@
 
 package youtube.channel.entity;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.util.Utils;
+import youtube.channel.entity.base.Entity;
 import youtube.util.WebUtils;
 
 /**
- * Defines a Playlist.
+ * Defines a Youtube Playlist.
  */
-public class Playlist {
+public class Playlist extends Entity {
     
     //Logger
     
@@ -33,34 +31,9 @@ public class Playlist {
     //Fields
     
     /**
-     * The Channel containing the Playlist.
-     */
-    public Channel channel;
-    
-    /**
-     * The ID of the Playlist.
+     * The id of the Playlist.
      */
     public String playlistId;
-    
-    /**
-     * The original title of the Playlist.
-     */
-    public String originalTitle;
-    
-    /**
-     * The title of the Playlist.
-     */
-    public String title;
-    
-    /**
-     * The url of the Playlist.
-     */
-    public String url;
-    
-    /**
-     * The date the Playlist was uploaded.
-     */
-    public Date date;
     
     
     //Constructors
@@ -68,41 +41,30 @@ public class Playlist {
     /**
      * Creates a Playlist.
      *
-     * @param playlistId The ID of the Playlist.
-     * @param title      The title of the Playlist.
-     * @param date       The date the Playlist was uploaded.
+     * @param playlistData The json data of the Playlist.
+     * @param channel      The Channel containing the Playlist Entity.
      */
-    public Playlist(String playlistId, String title, String date, Channel channel) {
-        this.channel = channel;
-        this.playlistId = playlistId;
-        this.originalTitle = title;
-        this.title = Utils.cleanVideoTitle(title);
+    public Playlist(Map<String, Object> playlistData, Channel channel) {
+        super(playlistData, channel);
+        
+        this.playlistId = metadata.itemId;
         this.url = WebUtils.PLAYLIST_BASE + playlistId;
-        try {
-            this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date
-                    .replace("T", " ").replace("Z", ""));
-        } catch (ParseException ignored) {
-            this.date = new Date();
-        }
+    }
+    
+    /**
+     * Creates a Playlist.
+     *
+     * @param playlistData The json data of the Playlist.
+     */
+    public Playlist(Map<String, Object> playlistData) {
+        this(playlistData, null);
     }
     
     /**
      * The default no-argument constructor for a Playlist.
      */
     public Playlist() {
-    }
-    
-    
-    //Methods
-    
-    /**
-     * Returns the string representation of the Playlist.
-     *
-     * @return the string representation of the Playlist.
-     */
-    @Override
-    public String toString() {
-        return title;
+        super();
     }
     
 }
