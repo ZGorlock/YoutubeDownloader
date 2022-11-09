@@ -3633,7 +3633,7 @@
           },
           {
             "key": "AUDIOBOOK",
-            "active": true,
+            "active": false,
             "outputFolder": "Audio Books/Youtube",
             "savePlaylist": false,
             "channels": [
@@ -4297,14 +4297,14 @@
           },
           {
             "key": "SOUNDBYTE",
-            "active": true,
+            "active": false,
             "outputFolder": "Sound Bytes",
             "savePlaylist": false,
             "keepClean": false,
             "channels": [
               {
                 "key": "SOUND_LIBRARY",
-                "active": false,
+                "active": true,
                 "channels": [
                   {
                     "key": "SOUND_LIBRARY",

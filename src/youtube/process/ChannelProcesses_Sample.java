@@ -208,6 +208,28 @@ public class ChannelProcesses_Sample {
             
             //LOFI
             
+            case "MUSIC_LAB":
+            case "MUSIC_LAB_HACKER":
+            case "MUSIC_LAB_WORK":
+            case "MUSIC_LAB_CHILLSTEP":
+            case "MUSIC_LAB_CHILLOUT":
+            case "MUSIC_LAB_AMBIENT":
+            case "MUSIC_LAB_LOFI":
+            case "MUSIC_LAB_CONTEMPORARY":
+            case "MUSIC_LAB_STUDY":
+            case "MUSIC_LAB_CHILLHOP":
+            case "MUSIC_LAB_ENERGY":
+            case "MUSIC_LAB_FUTURE_GARAGE":
+            case "AMBIENT_MUSIC_LAB":
+            case "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_MEDITATION_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_DRONE":
+            case "AMBIENT_MUSIC_LAB_SPACE_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_NATURE_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_MOVIES_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_DARK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC":
+            case "DREAMHOP_MUSIC":
             case "LITTLE_SOUL":
                 RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
                 break;
@@ -216,6 +238,7 @@ public class ChannelProcesses_Sample {
             //NIGHTCORE
             
             case "KURUMI":
+            case "NEZUKO":
             case "ASUNA":
             case "ARIA":
             case "ARIA_NIGHTCORE":
@@ -231,7 +254,6 @@ public class ChannelProcesses_Sample {
                         Map.entry(" (", " - "),
                         Map.entry(")", "")));
                 break;
-            
             case "AIM_TO_HEAD":
                 RenameProcess.regexRemove(videoMap, "(?i)\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*");
                 break;
@@ -393,6 +415,7 @@ public class ChannelProcesses_Sample {
             
             //LOFI
             
+            case "MUSIC_LAB":
             case "MUSIC_LAB_HACKER":
             case "MUSIC_LAB_WORK":
             case "MUSIC_LAB_CHILLSTEP":
@@ -402,6 +425,17 @@ public class ChannelProcesses_Sample {
             case "MUSIC_LAB_CONTEMPORARY":
             case "MUSIC_LAB_STUDY":
             case "MUSIC_LAB_CHILLHOP":
+            case "MUSIC_LAB_ENERGY":
+            case "MUSIC_LAB_FUTURE_GARAGE":
+            case "AMBIENT_MUSIC_LAB":
+            case "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_MEDITATION_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_DRONE":
+            case "AMBIENT_MUSIC_LAB_SPACE_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_NATURE_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_MOVIES_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_DARK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC":
                 FilterProcess.containsIgnoreCase(videoMap, "live 24-7");
                 break;
             
