@@ -84,6 +84,8 @@ public class Video extends Entity {
         
         this.videoId = Optional.ofNullable((Map<String, Object>) videoData.get("resourceId"))
                 .map(e -> (String) e.get("videoId")).orElse(metadata.itemId);
+        this.metadata.entityId = videoId;
+        
         this.url = WebUtils.VIDEO_BASE + videoId;
         
         this.playlistPosition = (Long) videoData.get("position");

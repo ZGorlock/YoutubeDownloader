@@ -48,6 +48,8 @@ public class Playlist extends Entity {
         super(playlistData, channel);
         
         this.playlistId = metadata.itemId;
+        this.metadata.entityId = playlistId;
+        
         this.url = WebUtils.PLAYLIST_BASE + playlistId;
     }
     

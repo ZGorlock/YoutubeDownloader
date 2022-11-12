@@ -8,9 +8,13 @@
 package youtube.channel.entity.base;
 
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.entity.Channel;
+import youtube.channel.entity.Playlist;
+import youtube.util.ApiUtils;
 
 /**
  * Defines the Metadata of an Entity.
@@ -38,7 +42,7 @@ public class EntityMetadata {
     public final String eTag;
     
     /**
-     * The Youtube id of the Entity.
+     * The Youtube item id of the Entity.
      */
     public final String itemId;
     
@@ -53,9 +57,24 @@ public class EntityMetadata {
     public final String channelTitle;
     
     /**
+     * The Youtube channel entity of the Entity.
+     */
+    public final Channel channel;
+    
+    /**
      * The Youtube playlist id of the Entity.
      */
     public final String playlistId;
+    
+    /**
+     * The Youtube playlist entity of the Entity.
+     */
+    public final Playlist playlist;
+    
+    /**
+     * The Youtube id of the Entity.
+     */
+    public String entityId;
     
     
     //Constructors
@@ -75,8 +94,10 @@ public class EntityMetadata {
         
         this.channelId = (String) snippet.get("channelId");
         this.channelTitle = (String) snippet.get("channelTitle");
+        this.channel = Optional.ofNullable(channelId).map(ApiUtils::fetchChannel).orElse(null);
         
         this.playlistId = (String) snippet.get("playlistId");
+        this.playlist = Optional.ofNullable(playlistId).map(ApiUtils::fetchPlaylist).orElse(null);
         
         entityData.clear();
         entityData.putAll(snippet);

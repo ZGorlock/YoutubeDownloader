@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.entity.Playlist;
 import youtube.channel.entity.Video;
+import youtube.channel.entity.base.Entity;
 import youtube.conf.Color;
 import youtube.state.Stats;
 
@@ -110,6 +111,11 @@ public final class ApiUtils {
      */
     private static final CloseableHttpClient httpClient = HttpClients.createDefault();
     
+    /**
+     * A cache of previously fetched Entities.
+     */
+    private static final Map<String, Entity> entityCache = new HashMap<>();
+    
     
     //Static Methods
     
@@ -117,33 +123,33 @@ public final class ApiUtils {
      * Calls the Youtube Data API and fetches a Channel Entity.
      *
      * @param channelId The Youtube id of the Channel Entity.
-     * @return The Channel Entity.
-     * @throws Exception When there is an error.
+     * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static youtube.channel.entity.Channel fetchChannel(String channelId) throws Exception {
-        return new youtube.channel.entity.Channel(fetchChannelData(channelId));
+    public static youtube.channel.entity.Channel fetchChannel(String channelId) {
+        return (youtube.channel.entity.Channel) entityCache.computeIfAbsent(channelId,
+                (CheckedFunction<String, Entity>) id -> new youtube.channel.entity.Channel(fetchChannelData(id)));
     }
     
     /**
      * Calls the Youtube Data API and fetches a Playlist Entity.
      *
      * @param playlistId The Youtube id of the Playlist Entity.
-     * @return The Playlist Entity.
-     * @throws Exception When there is an error.
+     * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static Playlist fetchPlaylist(String playlistId) throws Exception {
-        return new Playlist(fetchPlaylistData(playlistId));
+    public static Playlist fetchPlaylist(String playlistId) {
+        return (Playlist) entityCache.computeIfAbsent(playlistId,
+                (CheckedFunction<String, Entity>) id -> new Playlist(fetchPlaylistData(id)));
     }
     
     /**
      * Calls the Youtube Data API and fetches a Video Entity.
      *
      * @param videoId The Youtube id of the Video Entity.
-     * @return The Video Entity.
-     * @throws Exception When there is an error.
+     * @return The Video Entity, or null if the Video Entity cannot be fetched.
      */
-    public static Video fetchVideo(String videoId) throws Exception {
-        return new Video(fetchVideoData(videoId));
+    public static Video fetchVideo(String videoId) {
+        return (Video) entityCache.computeIfAbsent(videoId,
+                (CheckedFunction<String, Entity>) id -> new Video(fetchPlaylistData(id)));
     }
     
     /**
@@ -365,6 +371,18 @@ public final class ApiUtils {
     }
     
     /**
+     * Parses a Youtube Entity.
+     *
+     * @param entity The Entity.
+     * @param <T>    The type of the Entity.
+     * @return The Youtube Entity.
+     */
+    private static <T extends Entity> T parseEntity(T entity) {
+        entityCache.putIfAbsent(entity.metadata.entityId, entity);
+        return entity;
+    }
+    
+    /**
      * Parses the Youtube Data API video response data for a Channel.
      *
      * @param channel The Channel.
@@ -372,7 +390,8 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static List<Video> parseChannelVideoData(Channel channel) throws Exception {
-        return parseData(channel, "playlistItems", dataItem -> new Video(dataItem, channel));
+        return parseData(channel, "playlistItems", dataItem ->
+                parseEntity(new Video(dataItem, channel)));
     }
     
     /**
@@ -383,7 +402,8 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static List<Playlist> parseChannelPlaylistData(Channel channel) throws Exception {
-        return parseData(channel, "playlists", dataItem -> new Playlist(dataItem, channel));
+        return parseData(channel, "playlists", dataItem ->
+                parseEntity(new Playlist(dataItem, channel)));
     }
     
     /**
