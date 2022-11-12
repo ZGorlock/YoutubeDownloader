@@ -34,42 +34,42 @@ public class EntityMetadata {
     /**
      * The kind of the Entity.
      */
-    public final String kind;
+    public String kind;
     
     /**
      * The eTag of the Entity.
      */
-    public final String eTag;
+    public String eTag;
     
     /**
      * The Youtube item id of the Entity.
      */
-    public final String itemId;
+    public String itemId;
     
     /**
      * The Youtube channel id of the Entity.
      */
-    public final String channelId;
+    public String channelId;
     
     /**
      * The Youtube channel title of the Entity.
      */
-    public final String channelTitle;
+    public String channelTitle;
     
     /**
      * The Youtube channel entity of the Entity.
      */
-    public final Channel channel;
+    public Channel channel;
     
     /**
      * The Youtube playlist id of the Entity.
      */
-    public final String playlistId;
+    public String playlistId;
     
     /**
      * The Youtube playlist entity of the Entity.
      */
-    public final Playlist playlist;
+    public Playlist playlist;
     
     /**
      * The Youtube id of the Entity.
@@ -101,6 +101,12 @@ public class EntityMetadata {
         
         entityData.clear();
         entityData.putAll(snippet);
+    }
+    
+    /**
+     * The default no-argument constructor for an EntityMetadata.
+     */
+    protected EntityMetadata() {
     }
     
 }
