@@ -15,10 +15,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedConsumer;
+import commons.object.collection.ListUtility;
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.conf.Color;
@@ -62,7 +63,7 @@ public class ChannelState {
     /**
      * The ids of the videos queued for download for the Channel.
      */
-    public List<String> queue;
+    public List<String> queued;
     
     /**
      * The ids of the saved videos of the Channel.
@@ -107,7 +108,7 @@ public class ChannelState {
     /**
      * The internal file holding the blocked videos for the Channel.
      */
-    public File blockedFile;
+    public File blockFile;
     
     
     //Constructors
@@ -120,7 +121,7 @@ public class ChannelState {
     public ChannelState(Channel channel) {
         this.channel = channel;
         
-        this.queue = new ArrayList<>();
+        this.queued = new ArrayList<>();
         this.saved = new ArrayList<>();
         this.blocked = new ArrayList<>();
         
@@ -131,14 +132,14 @@ public class ChannelState {
         this.callLogFile = new File(this.stateLocation, (channel.getName() + "-callLog.txt"));
         this.saveFile = new File(this.stateLocation, (channel.getName() + "-save.txt"));
         this.queueFile = new File(this.stateLocation, (channel.getName() + "-queue.txt"));
-        this.blockedFile = new File(this.stateLocation, (channel.getName() + "-blocked.txt"));
+        this.blockFile = new File(this.stateLocation, (channel.getName() + "-blocked.txt"));
     }
     
     
     //Methods
     
     /**
-     * Loads the queue, save, and blocked lists.
+     * Loads the queued, saved, and blocked lists.
      *
      * @throws RuntimeException When there is an error loading the state.
      */
@@ -146,9 +147,9 @@ public class ChannelState {
         try {
             cleanupLegacyState();
             
-            queue = FileUtils.readLines(queueFile);
+            queued = FileUtils.readLines(queueFile);
             saved = FileUtils.readLines(saveFile);
-            blocked = FileUtils.readLines(blockedFile);
+            blocked = FileUtils.readLines(blockFile);
             
         } catch (IOException e) {
             System.out.println(Color.bad("Failed to load the state of channel: ") + Color.channel(channel));
@@ -157,24 +158,25 @@ public class ChannelState {
     }
     
     /**
-     * Saves the queue, save, and blocked lists.
+     * Saves the queued, saved, and blocked lists.
      *
      * @throws RuntimeException When there is an error saving the state.
      */
     public void save() {
-        queue.removeAll(blocked);
-        queue.removeAll(saved);
+        Stream.of(queued, saved, blocked).forEach(list -> {
+            list.removeIf(StringUtility::isNullOrBlank);
+            ListUtility.removeDuplicates(list);
+        });
+        
+        queued.removeAll(blocked);
+        queued.removeAll(saved);
         saved.removeAll(blocked);
         blocked.removeAll(saved);
         
-        queue = queue.stream().distinct().collect(Collectors.toList());
-        saved = saved.stream().distinct().collect(Collectors.toList());
-        blocked = blocked.stream().distinct().collect(Collectors.toList());
-        
         try {
-            FileUtils.writeLines(queueFile, queue);
+            FileUtils.writeLines(queueFile, queued);
             FileUtils.writeLines(saveFile, saved);
-            FileUtils.writeLines(blockedFile, blocked);
+            FileUtils.writeLines(blockFile, blocked);
             
         } catch (IOException e) {
             System.out.println(Color.bad("Failed to save the state of channel: ") + Color.channel(channel));
@@ -257,7 +259,7 @@ public class ChannelState {
      * @throws IOException When there is an error cleaning up legacy state files.
      */
     private void cleanupLegacyState() throws IOException {
-        Stream.of(dataFile, saveFile, queueFile, blockedFile)
+        Stream.of(dataFile, saveFile, queueFile, blockFile)
                 .forEach((CheckedConsumer<File>) stateFile -> {
                     final File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), stateFile.getParentFile().getName()), stateFile.getName());
                     if (oldFile.exists()) {

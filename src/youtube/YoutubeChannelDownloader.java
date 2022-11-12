@@ -220,7 +220,7 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        channel.state.queue.clear();
+        channel.state.queued.clear();
         if (Configurator.Config.retryPreviousFailures) {
             channel.state.blocked.clear();
         }
@@ -246,7 +246,7 @@ public class YoutubeChannelDownloader {
                         .orElseGet(() -> Utils.findVideoFile(video.output));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
-                    channel.state.queue.add(videoId);
+                    channel.state.queued.add(videoId);
                     
                 } else {
                     File newOutput = new File(video.channel.getOutputFolder(), video.output.getName()
@@ -296,11 +296,11 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        if (!channel.state.queue.isEmpty()) {
-            System.out.println(Color.number(String.valueOf(channel.state.queue.size())) + Color.base(" in Queue..."));
+        if (!channel.state.queued.isEmpty()) {
+            System.out.println(Color.number(String.valueOf(channel.state.queued.size())) + Color.base(" in Queue..."));
         }
         
-        List<String> working = new ArrayList<>(channel.state.queue);
+        List<String> working = new ArrayList<>(channel.state.queued);
         for (int i = 0; i < working.size(); i++) {
             String videoId = working.get(i);
             Video video = videoMap.get(videoId);
@@ -339,7 +339,7 @@ public class YoutubeChannelDownloader {
             }
             System.out.println(Utils.INDENT + response.printedResponse());
             
-            channel.state.queue.remove(videoId);
+            channel.state.queued.remove(videoId);
             channel.state.save();
         }
         return true;
