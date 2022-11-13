@@ -21,8 +21,6 @@
             "printChannels": false
         },
         "flag": {
-            "retryPreviousFailures": false,
-            "neverUseBrowserCookies": false,
             "safeMode": false,
             "preventDownload": false,
             "preventDeletion": false,
@@ -30,7 +28,9 @@
             "preventPlaylistEdit": false,
             "preventChannelFetch": false,
             "preventExeAutoUpdate": false,
-            "preventExeVersionCheck": false
+            "preventExeVersionCheck": false,
+            "neverUseBrowserCookies": false,
+            "retryPreviousFailures": false
         }
     },
     
@@ -45,12 +45,12 @@
             "preMerged": true
         },
         "flag": {
-            "neverUseBrowserCookies": false,
             "safeMode": false,
             "preventDownload": false,
             "preventVideoFetch": false,
             "preventExeAutoUpdate": false,
-            "preventExeVersionCheck": false
+            "preventExeVersionCheck": false,
+            "neverUseBrowserCookies": false
         }
     },
     
