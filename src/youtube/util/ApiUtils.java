@@ -21,12 +21,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import commons.lambda.function.checked.CheckedFunction;
+import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.object.string.StringUtility;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -337,35 +340,33 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     private static String callApi(Channel channel, Endpoint endpoint, Map<String, String> parameters) throws Exception {
-        for (int retry = 0; retry < MAX_RETRIES; retry++) {
+        final AtomicReference<String> response = new AtomicReference<>(null);
+        final AtomicBoolean error = new AtomicBoolean(false);
+        
+        for (int retry = 0; retry <= MAX_RETRIES; retry++) {
             final HttpGet request = buildApiRequest(endpoint, parameters);
             
-            try (CloseableHttpResponse response = httpClient.execute(request)) {
-                final String result = EntityUtils.toString(response.getEntity());
-                final boolean error = result.contains("\"error\": {");
+            try (CloseableHttpResponse httpResponse = httpClient.execute(request)) {
+                response.set(EntityUtils.toString(httpResponse.getEntity()));
+                error.set(httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
                 
                 Stats.totalApiCalls.incrementAndGet();
                 Stats.totalApiEntityCalls.addAndGet((endpoint.category == EndpointCategory.ENTITY) ? 1 : 0);
                 Stats.totalApiDataCalls.addAndGet((endpoint.category == EndpointCategory.DATA) ? 1 : 0);
-                Stats.totalApiFailures.addAndGet(error ? 1 : 0);
+                Stats.totalApiFailures.addAndGet(error.get() ? 1 : 0);
                 if (channel != null) {
                     FileUtils.writeStringToFile(channel.state.callLogFile,
-                            (StringUtility.padLeft(String.valueOf(result.length()), 8) + " bytes " +
-                                    (error ? "=XXX=" : "=====") + ' ' + request.getURI() + System.lineSeparator()), true);
+                            (StringUtility.padLeft(String.valueOf(response.get().length()), 8) + " bytes " +
+                                    (error.get() ? "=XXX=" : "=====") + ' ' + request.getURI() + System.lineSeparator()), true);
                 }
                 
-                if (!error) {
-                    parameters.put("pageToken", (String) ((JSONObject) new JSONParser().parse(result)).get("nextPageToken"));
-                    return result;
+                if (!error.get()) {
+                    parameters.put("pageToken", (String) ((JSONObject) new JSONParser().parse(response.get())).get("nextPageToken"));
+                    return response.get();
                 }
             }
         }
-        
-        if (channel != null) {
-            channel.error.set(true);
-            System.out.println(Color.bad("Error calling API for Channel: ") + Color.channel(channel.getName()) + Color.bad("; Skipping this run"));
-        }
-        return null;
+        return handleResponse(channel, response.get());
     }
     
     /**
@@ -478,7 +479,11 @@ public final class ApiUtils {
                 .sorted(Comparator.comparing(File::getName))
                 .map(chunkFile -> {
                     try {
-                        return (((List<Map<String, Object>>) new JSONParser().parse(readChunkFile(channel, chunkFile))).stream())
+                        return Optional.ofNullable(FileUtils.readFileToString(chunkFile))
+                                .map(response -> handleResponse(channel, response))
+                                .map((UncheckedFunction<String, List<Map<String, Object>>>) response ->
+                                        (List<Map<String, Object>>) new JSONParser().parse(response))
+                                .stream().flatMap(Collection::stream)
                                 .flatMap(dataChunk -> ((List<Map<String, Object>>) dataChunk.get("items")).stream())
                                 .filter(dataItem -> {
                                     if ((dataItem == null) && channel.error.compareAndSet(false, true)) {
@@ -492,32 +497,51 @@ public final class ApiUtils {
                         System.out.println(Color.bad("Error while parsing Channel data"));
                         throw new RuntimeException(e);
                     }
-                }).flatMap(Collection::stream)
+                })
+                .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
     
     /**
-     * Reads a Channel data chunk file.
+     * Handles a response from the Youtube Data API.
      *
-     * @param channel   The Channel.
-     * @param chunkFile The Channel data chunk file.
-     * @return The content of the data chunk file.
-     * @throws Exception When there is an error reading the file, or the data indicated a failure.
+     * @param channel  The Channel.
+     * @param response The response.
+     * @return The response.
+     * @throws RuntimeException If the response is an error.
      */
-    private static String readChunkFile(Channel channel, File chunkFile) throws Exception {
-        final String data = FileUtils.readFileToString(chunkFile);
-        
-        if (data.contains("\"code\": 404")) {
-            System.out.println(Color.bad("The Channel: ") + Color.channel(channel.getName()) + Color.bad(" does not exist"));
-            throw new RuntimeException();
-        }
-        if (data.contains("\"code\": 403")) {
-            System.out.println(Color.bad("Your API Key is not authorized or has exceeded its quota"));
-            throw new RuntimeException();
-        }
-        
-        return data;
+    private static String handleResponse(Channel channel, String response) {
+        return Optional.ofNullable(response)
+                .filter(e -> e.contains("\"error\": {"))
+                .filter(e -> e.contains("\"code\":"))
+                .map(e -> e.replaceAll("(?s)^.*\"code\":\\s*(\\d+).*$", "$1"))
+                .filter(e -> !StringUtility.isNullOrBlank(e))
+                .filter(errorCode -> {
+                    switch (errorCode) {
+                        case "404":
+                            System.out.println(Color.bad("The Youtube source") +
+                                    ((channel != null) ? (Color.bad(" referenced by Channel: ") + Color.channel(channel.getName())) : "") +
+                                    Color.bad(" does not exist"));
+                            break;
+                        case "403":
+                            System.out.println(Color.bad("Your API Key is not authorized or has exceeded its quota"));
+                            break;
+                        case "400":
+                            System.out.println(Color.bad("The API call that was made does not Your API Key is not authorized or has exceeded its quota"));
+                            break;
+                        default:
+                            System.out.println(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
+                                    ((channel != null) ? (Color.bad(" for Channel: ") + Color.channel(channel.getName()) + Color.bad("; Skipping this run")) : ""));
+                            break;
+                    }
+                    if (channel != null) {
+                        channel.error.set(true);
+                    }
+                    throw new RuntimeException("Youtube Data API responded with error code: " + errorCode +
+                            (response.contains("\"reason\":") ? (" (" + response.replaceAll("(?s)^.*\"reason\": \"([^\"]+)\",.*$", "$1") + ")") : ""));
+                })
+                .orElse(response);
     }
     
 }
