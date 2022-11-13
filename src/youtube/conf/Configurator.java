@@ -227,16 +227,6 @@ public class Configurator {
         public static final boolean DEFAULT_PRINT_CHANNELS = false;
         
         /**
-         * The default value of the flag indicating whether to retry previously failed videos or not.
-         */
-        public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
-        
-        /**
-         * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
-         */
-        public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
-        
-        /**
          * The default value of the flag indicating whether to run in safe mode or not.
          */
         public static final boolean DEFAULT_SAFE_MODE = false;
@@ -280,6 +270,16 @@ public class Configurator {
          * The default value of the flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
         public static final boolean DEFAULT_PREVENT_EXE_VERSION_CHECK = false;
+        
+        /**
+         * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
+         */
+        public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
+        
+        /**
+         * The default value of the flag indicating whether to retry previously failed videos or not.
+         */
+        public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
         
         /**
          * The default value of the flag indicating whether to print the executable version at the beginning of the run or not.
@@ -328,17 +328,6 @@ public class Configurator {
                 Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS));
         
         /**
-         * A flag indicating whether to retry previously failed videos or not.
-         */
-        public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
-                Configurator.getSetting("flag.retryFailed", DEFAULT_RETRY_PREVIOUS_FAILURES));
-        
-        /**
-         * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
-         */
-        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
-        
-        /**
          * A flag indicating whether to run in safe mode or not.
          */
         public static final boolean safeMode = (boolean) Configurator.getSetting("flag.safeMode", DEFAULT_SAFE_MODE);
@@ -382,6 +371,17 @@ public class Configurator {
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
         public static final boolean preventExeVersionCheck = safeMode || (boolean) Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        
+        /**
+         * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
+         */
+        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
+        
+        /**
+         * A flag indicating whether to retry previously failed videos or not.
+         */
+        public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
+                Configurator.getSetting("flag.retryFailed", DEFAULT_RETRY_PREVIOUS_FAILURES));
         
         /**
          * A flag indicating whether to print the executable version at the beginning of the run or not.
