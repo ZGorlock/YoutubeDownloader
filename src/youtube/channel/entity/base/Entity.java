@@ -7,15 +7,14 @@
 
 package youtube.channel.entity.base;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
+import commons.lambda.function.checked.CheckedFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
@@ -45,16 +44,10 @@ public abstract class Entity {
     //Static Functions
     
     /**
-     * Parses a datestamp from Entity data into a date; or returns the current date if there was an error.
+     * Parses a datestamp from Entity data into a date; or null if there was an error.
      */
-    public static final Function<String, Date> dateParser = (String datestamp) -> {
-        try {
-            return new SimpleDateFormat(DATE_FORMAT).parse(
-                    datestamp.replaceAll("[TZ]", " ").strip());
-        } catch (ParseException ignored) {
-            return new Date();
-        }
-    };
+    public static final CheckedFunction<String, LocalDateTime> dateParser = (String datestamp) ->
+            LocalDateTime.parse(datestamp.replaceAll("[TZ]", " ").strip(), DateTimeFormatter.ofPattern(DATE_FORMAT));
     
     
     //Fields
@@ -92,7 +85,7 @@ public abstract class Entity {
     /**
      * The date the Entity was uploaded.
      */
-    public Date date;
+    public LocalDateTime date;
     
     /**
      * The Thumbnail Set of the Entity.
@@ -122,7 +115,9 @@ public abstract class Entity {
         this.originalTitle = (String) entityData.get("title");
         this.title = Utils.cleanVideoTitle(originalTitle);
         this.description = (String) entityData.get("description");
-        this.date = dateParser.apply((String) entityData.get("publishedAt"));
+        
+        this.date = Optional.ofNullable((String) entityData.get("publishedAt"))
+                .map(dateParser).orElseGet(LocalDateTime::now);
         
         this.thumbnails = new ThumbnailSet((Map<String, Object>) entityData.get("thumbnails"));
         this.tags = Optional.ofNullable((List<String>) entityData.get("tags")).orElse(new ArrayList<>());
