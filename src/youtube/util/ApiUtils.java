@@ -104,6 +104,60 @@ public final class ApiUtils {
     private static final int MAX_PAGES_PER_FILE = 100;
     
     
+    //Enums
+    
+    /**
+     * An enumeration of Youtube Data API Endpoint Categories.
+     */
+    public enum EndpointCategory {
+        DATA,
+        ENTITY
+    }
+    
+    /**
+     * An enumeration of Youtube Data API Endpoints.
+     */
+    public enum Endpoint {
+        
+        //Values
+        
+        CHANNEL("channels", EndpointCategory.ENTITY),
+        PLAYLIST("playlists", EndpointCategory.ENTITY),
+        VIDEO("videos", EndpointCategory.ENTITY),
+        
+        PLAYLIST_ITEMS("playlistItems", EndpointCategory.DATA),
+        CHANNEL_PLAYLISTS("playlists", EndpointCategory.DATA);
+        
+        
+        //Fields
+        
+        /**
+         * The name of the Endpoint.
+         */
+        public final String name;
+        
+        /**
+         * The Category of the Endpoint.
+         */
+        public final EndpointCategory category;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs an Endpoint.
+         *
+         * @param name     The name of the Endpoint.
+         * @param category The Category of the Endpoint.
+         */
+        Endpoint(String name, EndpointCategory category) {
+            this.name = name;
+            this.category = category;
+        }
+        
+    }
+    
+    
     //Static Fields
     
     /**
@@ -149,7 +203,7 @@ public final class ApiUtils {
      */
     public static Video fetchVideo(String videoId) {
         return (Video) entityCache.computeIfAbsent(videoId,
-                (CheckedFunction<String, Entity>) id -> new Video(fetchPlaylistData(id)));
+                (CheckedFunction<String, Entity>) id -> new Video(fetchVideoData(id)));
     }
     
     /**
@@ -160,7 +214,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static Map<String, Object> fetchChannelData(String channelId) throws Exception {
-        return fetchData(channelId, "channels");
+        return fetchEntityData(channelId, Endpoint.CHANNEL);
     }
     
     /**
@@ -171,7 +225,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static Map<String, Object> fetchPlaylistData(String playlistId) throws Exception {
-        return fetchData(playlistId, "playlists");
+        return fetchEntityData(playlistId, Endpoint.PLAYLIST);
     }
     
     /**
@@ -182,20 +236,20 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static Map<String, Object> fetchVideoData(String videoId) throws Exception {
-        return fetchData(videoId, "videos");
+        return fetchEntityData(videoId, Endpoint.VIDEO);
     }
     
     /**
      * Calls the Youtube Data API and fetches the data of an Entity.
      *
      * @param id         The id of the Entity.
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The json data of the Entity.
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("unchecked")
-    private static Map<String, Object> fetchData(String id, String endpoint, Map<String, String> parameters) throws Exception {
+    private static Map<String, Object> fetchEntityData(String id, Endpoint endpoint, Map<String, String> parameters) throws Exception {
         return Optional.ofNullable(callApi(endpoint, parameters))
                 .map((CheckedFunction<String, JSONObject>) e ->
                         (JSONObject) new JSONParser().parse(e))
@@ -208,12 +262,12 @@ public final class ApiUtils {
      * Calls the Youtube Data API and fetches the data of an Entity.
      *
      * @param id       The id of the Entity.
-     * @param endpoint The API endpoint name.
+     * @param endpoint The API Endpoint.
      * @return The json data of the Entity.
      * @throws Exception When there is an error.
      */
-    private static Map<String, Object> fetchData(String id, String endpoint) throws Exception {
-        return fetchData(id, endpoint, new HashMap<>(Map.ofEntries(
+    private static Map<String, Object> fetchEntityData(String id, Endpoint endpoint) throws Exception {
+        return fetchEntityData(id, endpoint, new HashMap<>(Map.ofEntries(
                 Map.entry("id", id))));
     }
     
@@ -225,7 +279,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static int fetchChannelVideoData(Channel channel) throws Exception {
-        return fetchChunkedData(channel, "playlistItems", new HashMap<>(Map.ofEntries(
+        return fetchChunkedData(channel, Endpoint.PLAYLIST_ITEMS, new HashMap<>(Map.ofEntries(
                 Map.entry("playlistId", channel.getPlaylistId()))));
     }
     
@@ -238,7 +292,7 @@ public final class ApiUtils {
      */
     public static int fetchChannelPlaylistData(Channel channel) throws Exception {
         return !channel.isYoutubeChannel() ? -1 :
-               fetchChunkedData(channel, "playlists", new HashMap<>(Map.ofEntries(
+               fetchChunkedData(channel, Endpoint.CHANNEL_PLAYLISTS, new HashMap<>(Map.ofEntries(
                        Map.entry("channelId", channel.getPlaylistId().replaceAll("^UU", "UC")))));
     }
     
@@ -246,12 +300,12 @@ public final class ApiUtils {
      * Calls the Youtube Data API and fetches chunked Channel data.
      *
      * @param channel    The Channel.
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The number of data pages fetched.
      * @throws Exception When there is an error.
      */
-    private static int fetchChunkedData(Channel channel, String endpoint, Map<String, String> parameters) throws Exception {
+    private static int fetchChunkedData(Channel channel, Endpoint endpoint, Map<String, String> parameters) throws Exception {
         WebUtils.checkPlaylistId(channel);
         
         final AtomicInteger page = new AtomicInteger(0);
@@ -264,7 +318,7 @@ public final class ApiUtils {
             
             if (((page.incrementAndGet() % MAX_PAGES_PER_FILE) == 0) || !more.get()) {
                 FileUtils.writeStringToFile(
-                        channel.state.getDataFile((page.get() / MAX_PAGES_PER_FILE), endpoint),
+                        channel.state.getDataFile((page.get() / MAX_PAGES_PER_FILE), endpoint.name),
                         data.stream().collect(Collectors.joining(",", ("[" + System.lineSeparator()), "]")));
                 data.clear();
             }
@@ -277,12 +331,12 @@ public final class ApiUtils {
      * Calls the Youtube Data API.
      *
      * @param channel    The Channel.
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The Entity data.
      * @throws Exception When there is an error.
      */
-    private static String callApi(Channel channel, String endpoint, Map<String, String> parameters) throws Exception {
+    private static String callApi(Channel channel, Endpoint endpoint, Map<String, String> parameters) throws Exception {
         for (int retry = 0; retry < MAX_RETRIES; retry++) {
             final HttpGet request = buildApiRequest(endpoint, parameters);
             
@@ -315,24 +369,24 @@ public final class ApiUtils {
     /**
      * Calls the Youtube Data API.
      *
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The Entity data.
      * @throws Exception When there is an error.
      */
-    private static String callApi(String endpoint, Map<String, String> parameters) throws Exception {
+    private static String callApi(Endpoint endpoint, Map<String, String> parameters) throws Exception {
         return callApi(null, endpoint, parameters);
     }
     
     /**
      * Builds an API HTTP GET request.
      *
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The API HTTP GET request.
      * @throws Exception When there is an error building the request.
      */
-    private static HttpGet buildApiRequest(String endpoint, Map<String, String> parameters) throws Exception {
+    private static HttpGet buildApiRequest(Endpoint endpoint, Map<String, String> parameters) throws Exception {
         parameters.putIfAbsent("part", "snippet");
         parameters.putIfAbsent("maxResults", String.valueOf(MAX_RESULTS_PER_PAGE));
         parameters.putIfAbsent("key", API_KEY);
@@ -345,13 +399,13 @@ public final class ApiUtils {
     /**
      * Builds an API url string.
      *
-     * @param endpoint   The API endpoint name.
+     * @param endpoint   The API Endpoint.
      * @param parameters A map of parameters.
      * @return The API url string.
      * @throws Exception When there is an error encoding the url.
      */
-    private static String buildApiUrl(String endpoint, Map<String, String> parameters) throws Exception {
-        return String.join("/", REQUEST_BASE, endpoint) +
+    private static String buildApiUrl(Endpoint endpoint, Map<String, String> parameters) throws Exception {
+        return String.join("/", REQUEST_BASE, endpoint.name) +
                 buildApiParameterString(parameters);
     }
     
@@ -390,7 +444,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static List<Video> parseChannelVideoData(Channel channel) throws Exception {
-        return parseData(channel, "playlistItems", dataItem ->
+        return parseData(channel, Endpoint.PLAYLIST_ITEMS, dataItem ->
                 parseEntity(new Video(dataItem, channel)));
     }
     
@@ -402,7 +456,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     public static List<Playlist> parseChannelPlaylistData(Channel channel) throws Exception {
-        return parseData(channel, "playlists", dataItem ->
+        return parseData(channel, Endpoint.CHANNEL_PLAYLISTS, dataItem ->
                 parseEntity(new Playlist(dataItem, channel)));
     }
     
@@ -410,15 +464,15 @@ public final class ApiUtils {
      * Parses the Youtube Data API response data.
      *
      * @param channel  The Channel.
-     * @param endpoint The API endpoint name.
+     * @param endpoint The API Endpoint.
      * @param parser   The function to parse the response data items.
      * @param <T>      The type of the response data items.
      * @return The parsed response data items.
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("unchecked")
-    private static <T> List<T> parseData(Channel channel, String endpoint, Function<Map<String, Object>, T> parser) throws Exception {
-        return channel.state.getDataFiles(endpoint).stream()
+    private static <T> List<T> parseData(Channel channel, Endpoint endpoint, Function<Map<String, Object>, T> parser) throws Exception {
+        return channel.state.getDataFiles(endpoint.name).stream()
                 .sorted(Comparator.comparing(File::getName))
                 .map(chunkFile -> {
                     try {
