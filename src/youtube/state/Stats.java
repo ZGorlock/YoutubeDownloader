@@ -98,6 +98,16 @@ public final class Stats {
     public static int totalApiCalls = 0;
     
     /**
+     * A counter of the total number of times the Youtube Data API was called to fetch an Entity this run.
+     */
+    public static int totalApiEntityCalls = 0;
+    
+    /**
+     * A counter of the total number of times the Youtube Data API was called to fetch data this run.
+     */
+    public static int totalApiDataCalls = 0;
+    
+    /**
      * A counter of the total number of times calling the Youtube Data API failed this run.
      */
     public static int totalApiFailures = 0;
@@ -197,6 +207,8 @@ public final class Stats {
         
         statPrinter.accept("API:", null);
         statPrinter.accept("Calls: ................ ", totalApiCalls);
+        statPrinter.accept("    Entity: ........... ", totalApiEntityCalls);
+        statPrinter.accept("    Data: ............. ", totalApiDataCalls);
         statPrinter.accept("Failures: ............. ", totalApiFailures);
         
         statPrinter.accept("TOTAL:", null);

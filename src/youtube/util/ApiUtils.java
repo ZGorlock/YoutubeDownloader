@@ -345,6 +345,8 @@ public final class ApiUtils {
                 final boolean error = result.contains("\"error\": {");
                 
                 Stats.totalApiCalls++;
+                Stats.totalApiEntityCalls += ((endpoint.category == EndpointCategory.ENTITY) ? 1 : 0);
+                Stats.totalApiDataCalls += ((endpoint.category == EndpointCategory.DATA) ? 1 : 0);
                 Stats.totalApiFailures += (error ? 1 : 0);
                 if (channel != null) {
                     FileUtils.writeStringToFile(channel.state.callLogFile,
