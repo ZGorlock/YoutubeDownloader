@@ -160,7 +160,7 @@ public class YoutubeChannelDownloader {
                 createPlaylist() &&
                 cleanChannel();
         
-        Stats.totalChannelsProcessed++;
+        Stats.totalChannelsProcessed.incrementAndGet();
         return success;
     }
     
@@ -262,9 +262,9 @@ public class YoutubeChannelDownloader {
                         video.updateOutput(newOutput);
                         
                         if (channel.isSaveAsMp3()) {
-                            Stats.totalAudioRenames++;
+                            Stats.totalAudioRenames.incrementAndGet();
                         } else {
-                            Stats.totalVideoRenames++;
+                            Stats.totalVideoRenames.incrementAndGet();
                         }
                         
                     } else {
@@ -319,11 +319,11 @@ public class YoutubeChannelDownloader {
                     channel.state.keyStore.put(videoId, PathUtils.localPath(video.output));
                     
                     if (channel.isSaveAsMp3()) {
-                        Stats.totalAudioDownloads++;
-                        Stats.totalAudioDataDownloaded += video.output.length();
+                        Stats.totalAudioDownloads.incrementAndGet();
+                        Stats.totalAudioDataDownloaded.addAndGet(video.output.length());
                     } else {
-                        Stats.totalVideoDownloads++;
-                        Stats.totalVideoDataDownloaded += video.output.length();
+                        Stats.totalVideoDownloads.incrementAndGet();
+                        Stats.totalVideoDataDownloaded.addAndGet(video.output.length());
                     }
                     break;
                 
@@ -331,9 +331,9 @@ public class YoutubeChannelDownloader {
                     channel.state.blocked.add(videoId);
                 case FAILURE:
                     if (channel.isSaveAsMp3()) {
-                        Stats.totalAudioDownloadFailures++;
+                        Stats.totalAudioDownloadFailures.incrementAndGet();
                     } else {
-                        Stats.totalVideoDownloadFailures++;
+                        Stats.totalVideoDownloadFailures.incrementAndGet();
                     }
                     break;
             }
@@ -418,9 +418,9 @@ public class YoutubeChannelDownloader {
                             
                             if (!isPartFile) {
                                 if (channel.isSaveAsMp3()) {
-                                    Stats.totalAudioDeletions++;
+                                    Stats.totalAudioDeletions.incrementAndGet();
                                 } else {
-                                    Stats.totalVideoDeletions++;
+                                    Stats.totalVideoDeletions.incrementAndGet();
                                 }
                             }
                             

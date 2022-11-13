@@ -344,10 +344,10 @@ public final class ApiUtils {
                 final String result = EntityUtils.toString(response.getEntity());
                 final boolean error = result.contains("\"error\": {");
                 
-                Stats.totalApiCalls++;
-                Stats.totalApiEntityCalls += ((endpoint.category == EndpointCategory.ENTITY) ? 1 : 0);
-                Stats.totalApiDataCalls += ((endpoint.category == EndpointCategory.DATA) ? 1 : 0);
-                Stats.totalApiFailures += (error ? 1 : 0);
+                Stats.totalApiCalls.incrementAndGet();
+                Stats.totalApiEntityCalls.addAndGet((endpoint.category == EndpointCategory.ENTITY) ? 1 : 0);
+                Stats.totalApiDataCalls.addAndGet((endpoint.category == EndpointCategory.DATA) ? 1 : 0);
+                Stats.totalApiFailures.addAndGet(error ? 1 : 0);
                 if (channel != null) {
                     FileUtils.writeStringToFile(channel.state.callLogFile,
                             (StringUtility.padLeft(String.valueOf(result.length()), 8) + " bytes " +

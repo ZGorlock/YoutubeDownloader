@@ -12,6 +12,7 @@ import java.text.DecimalFormat;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 
 import commons.object.string.StringUtility;
@@ -40,97 +41,97 @@ public final class Stats {
     /**
      * A counter of the total number of Channels that were processed this run.
      */
-    public static int totalChannelsProcessed = 0;
+    public static final AtomicInteger totalChannelsProcessed = new AtomicInteger(0);
     
     /**
      * A counter of the total number of video files that were downloaded this run.
      */
-    public static int totalVideoDownloads = 0;
+    public static final AtomicInteger totalVideoDownloads = new AtomicInteger(0);
     
     /**
      * A counter of the total number of audio files that were downloaded this run.
      */
-    public static int totalAudioDownloads = 0;
+    public static final AtomicInteger totalAudioDownloads = new AtomicInteger(0);
     
     /**
      * A counter of the total number of video files that were renamed this run.
      */
-    public static int totalVideoRenames = 0;
+    public static final AtomicInteger totalVideoRenames = new AtomicInteger(0);
     
     /**
      * A counter of the total number of audio files that were renamed this run.
      */
-    public static int totalAudioRenames = 0;
+    public static final AtomicInteger totalAudioRenames = new AtomicInteger(0);
     
     /**
      * A counter of the total number of video files that were deleted this run.
      */
-    public static int totalVideoDeletions = 0;
+    public static final AtomicInteger totalVideoDeletions = new AtomicInteger(0);
     
     /**
      * A counter of the total number of audio files that were deleted this run.
      */
-    public static int totalAudioDeletions = 0;
+    public static final AtomicInteger totalAudioDeletions = new AtomicInteger(0);
     
     /**
      * A counter of the total number of video files that failed to download this run.
      */
-    public static int totalVideoDownloadFailures = 0;
+    public static final AtomicInteger totalVideoDownloadFailures = new AtomicInteger(0);
     
     /**
      * A counter of the total number of audio files that failed to download this run.
      */
-    public static int totalAudioDownloadFailures = 0;
+    public static final AtomicInteger totalAudioDownloadFailures = new AtomicInteger(0);
     
     /**
      * A counter of the total video data downloaded from Youtube this run, in bytes.
      */
-    public static long totalVideoDataDownloaded = 0L;
+    public static final AtomicLong totalVideoDataDownloaded = new AtomicLong(0L);
     
     /**
      * A counter of the total audio data downloaded from Youtube this run, in bytes.
      */
-    public static long totalAudioDataDownloaded = 0L;
+    public static final AtomicLong totalAudioDataDownloaded = new AtomicLong(0L);
     
     /**
      * A counter of the total number of times the Youtube Data API was called this run.
      */
-    public static int totalApiCalls = 0;
+    public static final AtomicInteger totalApiCalls = new AtomicInteger(0);
     
     /**
      * A counter of the total number of times the Youtube Data API was called to fetch an Entity this run.
      */
-    public static int totalApiEntityCalls = 0;
+    public static final AtomicInteger totalApiEntityCalls = new AtomicInteger(0);
     
     /**
      * A counter of the total number of times the Youtube Data API was called to fetch data this run.
      */
-    public static int totalApiDataCalls = 0;
+    public static final AtomicInteger totalApiDataCalls = new AtomicInteger(0);
     
     /**
      * A counter of the total number of times calling the Youtube Data API failed this run.
      */
-    public static int totalApiFailures = 0;
+    public static final AtomicInteger totalApiFailures = new AtomicInteger(0);
     
     /**
      * A counter of the total number of video files saved from Youtube.
      */
-    public static int totalVideo = 0;
+    public static final AtomicInteger totalVideo = new AtomicInteger(0);
     
     /**
      * A counter of the total number of audio files saved from Youtube.
      */
-    public static int totalAudio = 0;
+    public static final AtomicInteger totalAudio = new AtomicInteger(0);
     
     /**
      * A counter of the total video data saved from Youtube, in bytes.
      */
-    public static long totalVideoData = 0L;
+    public static final AtomicLong totalVideoData = new AtomicLong(0L);
     
     /**
      * A counter of the total audio data saved from Youtube, in bytes.
      */
-    public static long totalAudioData = 0L;
+    public static final AtomicLong totalAudioData = new AtomicLong(0L);
     
     
     //Static Methods
@@ -145,11 +146,11 @@ public final class Stats {
                 .map(File::new).filter(File::exists)
                 .forEach(file -> {
                     if (Utils.VIDEO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
-                        Stats.totalVideo++;
-                        Stats.totalVideoData += file.length();
+                        Stats.totalVideo.incrementAndGet();
+                        Stats.totalVideoData.addAndGet(file.length());
                     } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
-                        Stats.totalAudio++;
-                        Stats.totalAudioData += file.length();
+                        Stats.totalAudio.incrementAndGet();
+                        Stats.totalAudioData.addAndGet(file.length());
                     }
                 });
     }
@@ -185,39 +186,39 @@ public final class Stats {
         System.out.println(Color.number("--- Stats ---"));
         
         statPrinter.accept("CHANNEL:", null);
-        statPrinter.accept("Processed: ............ ", totalChannelsProcessed);
+        statPrinter.accept("Processed: ............ ", totalChannelsProcessed.get());
         statPrinter.accept("Total: ................ ", Channels.getChannels().size());
         
         statPrinter.accept("RUN:", null);
-        statPrinter.accept("Downloaded: ........... ", (totalVideoDownloads + totalAudioDownloads));
-        statPrinter.accept("    Video: ............ ", totalVideoDownloads);
-        statPrinter.accept("    Audio: ............ ", totalAudioDownloads);
-        statPrinter.accept("Failed: ............... ", (totalVideoDownloadFailures + totalAudioDownloadFailures));
-        statPrinter.accept("    Video: ............ ", totalVideoDownloadFailures);
-        statPrinter.accept("    Audio: ............ ", totalAudioDownloadFailures);
-        statPrinter.accept("Renamed: .............. ", (totalVideoRenames + totalAudioRenames));
-        statPrinter.accept("    Video: ............ ", totalVideoRenames);
-        statPrinter.accept("    Audio: ............ ", totalAudioRenames);
-        statPrinter.accept("Deleted: .............. ", (totalVideoDeletions + totalAudioDeletions));
-        statPrinter.accept("    Video: ............ ", totalVideoDeletions);
-        statPrinter.accept("    Audio: ............ ", totalAudioDeletions);
-        statPrinter.accept("Data: ................. ", (double) (totalVideoDataDownloaded + totalAudioDataDownloaded));
-        statPrinter.accept("    Video: ............ ", (double) totalVideoDataDownloaded);
-        statPrinter.accept("    Audio: ............ ", (double) totalAudioDataDownloaded);
+        statPrinter.accept("Downloaded: ........... ", (totalVideoDownloads.get() + totalAudioDownloads.get()));
+        statPrinter.accept("    Video: ............ ", totalVideoDownloads.get());
+        statPrinter.accept("    Audio: ............ ", totalAudioDownloads.get());
+        statPrinter.accept("Failed: ............... ", (totalVideoDownloadFailures.get() + totalAudioDownloadFailures.get()));
+        statPrinter.accept("    Video: ............ ", totalVideoDownloadFailures.get());
+        statPrinter.accept("    Audio: ............ ", totalAudioDownloadFailures.get());
+        statPrinter.accept("Renamed: .............. ", (totalVideoRenames.get() + totalAudioRenames.get()));
+        statPrinter.accept("    Video: ............ ", totalVideoRenames.get());
+        statPrinter.accept("    Audio: ............ ", totalAudioRenames.get());
+        statPrinter.accept("Deleted: .............. ", (totalVideoDeletions.get() + totalAudioDeletions.get()));
+        statPrinter.accept("    Video: ............ ", totalVideoDeletions.get());
+        statPrinter.accept("    Audio: ............ ", totalAudioDeletions.get());
+        statPrinter.accept("Data: ................. ", (double) (totalVideoDataDownloaded.get() + totalAudioDataDownloaded.get()));
+        statPrinter.accept("    Video: ............ ", (double) totalVideoDataDownloaded.get());
+        statPrinter.accept("    Audio: ............ ", (double) totalAudioDataDownloaded.get());
         
         statPrinter.accept("API:", null);
-        statPrinter.accept("Calls: ................ ", totalApiCalls);
-        statPrinter.accept("    Entity: ........... ", totalApiEntityCalls);
-        statPrinter.accept("    Data: ............. ", totalApiDataCalls);
-        statPrinter.accept("Failures: ............. ", totalApiFailures);
+        statPrinter.accept("Calls: ................ ", totalApiCalls.get());
+        statPrinter.accept("    Entity: ........... ", totalApiEntityCalls.get());
+        statPrinter.accept("    Data: ............. ", totalApiDataCalls.get());
+        statPrinter.accept("Failures: ............. ", totalApiFailures.get());
         
         statPrinter.accept("TOTAL:", null);
-        statPrinter.accept("Downloads: ............ ", (totalVideo + totalAudio));
-        statPrinter.accept("    Video: ............ ", totalVideo);
-        statPrinter.accept("    Audio: ............ ", totalAudio);
-        statPrinter.accept("Data: ................. ", (double) (totalVideoData + totalAudioData));
-        statPrinter.accept("    Video: ............ ", (double) totalVideoData);
-        statPrinter.accept("    Audio: ............ ", (double) totalAudioData);
+        statPrinter.accept("Downloads: ............ ", (totalVideo.get() + totalAudio.get()));
+        statPrinter.accept("    Video: ............ ", totalVideo.get());
+        statPrinter.accept("    Audio: ............ ", totalAudio.get());
+        statPrinter.accept("Data: ................. ", (double) (totalVideoData.get() + totalAudioData.get()));
+        statPrinter.accept("    Video: ............ ", (double) totalVideoData.get());
+        statPrinter.accept("    Audio: ............ ", (double) totalAudioData.get());
         
         System.out.println(Utils.NEWLINE);
     }
