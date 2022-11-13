@@ -7,7 +7,8 @@
 
 package youtube.process;
 
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.entity.Video;
+import youtube.process.macro.BaseProcess;
 import youtube.process.macro.FilterProcess;
 import youtube.process.macro.RenameProcess;
 
@@ -53,7 +55,7 @@ public class ChannelProcesses_Sample {
             //GENERAL
             
             case "MIND_FIELD":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)(?:\\s*-\\s*(?:Mind\\sField\\s(?:S\\d+\\s)?)\\(Ep\\.?\\s*(?<episode>\\d+)\\))?$",
                         "Mind Field - S0" + channel.getName().charAt(channel.getName().length() - 1) + "E0$i - $title");
                 break;
@@ -62,8 +64,8 @@ public class ChannelProcesses_Sample {
             //PHYSICS
             
             case "STEVE_MOULD":
-                RenameProcess.pattern(videoMap,
-                        "(?i)^.*(?:fewer|more)\\sthan\\stom.*$", false,
+                RenameProcess.format(videoMap, false,
+                        "(?i)^.*(?:fewer|more)\\sthan\\stom.*$",
                         "This Video Has...");
                 break;
             
@@ -71,7 +73,8 @@ public class ChannelProcesses_Sample {
             //MEDICINE
             
             case "NHAT_BANG_SPA":
-                RenameProcess.replace(videoMap, "010", "10");
+                RenameProcess.replace(videoMap,
+                        "010", "10");
                 break;
             
             
@@ -85,13 +88,15 @@ public class ChannelProcesses_Sample {
                     videoMap.put(video.videoId, video);
                     videoMap.putAll(tmp);
                 }
-                RenameProcess.replace(videoMap, "Series Premiere", "S01E01");
+                RenameProcess.replace(videoMap,
+                        "Series Premiere", "S01E01");
                 RenameProcess.regexReplace(videoMap, List.of(
                         Map.entry("^(?:Medical\\sDetectives\\s)?\\(?Forensic\\sFiles\\s?\\)?(?:\\s?in\\sHD)?", "Forensic Files"),
                         Map.entry("Season\\s(\\d+)\\s?,\\sEp(?:isode)?\\s(\\d+)\\s*-", "S$1E$2 -"),
                         Map.entry("S(\\d)E", "S0$1E"),
                         Map.entry("E(\\d)\\s", "E0$1 ")));
                 break;
+            
             case "LOCK_PICKING_LAWYER":
                 RenameProcess.regexReplace(videoMap, List.of(
                         Map.entry("\\[(\\d+)]\\s", "000$1 - "),
@@ -102,48 +107,53 @@ public class ChannelProcesses_Sample {
             //DOCUMENTARY
             
             case "DW_DOCUMENTARY":
-                RenameProcess.regexRemove(videoMap, List.of(
-                        "(?i)\\[4K]",
-                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
-                        "(?i)\\s*-?\\s*(?:(?:FULL|FREE|DW)\\s*)+(?:[^-)\\]]+\\s*)?(?:DOCUMENTARY|DOCUMENTAL|ENGLISH)"));
+                RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
+                        "\\[4K]",
+                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*-?\\s*(?:(?:FULL|FREE|DW)\\s*)+(?:[^-)\\]]+\\s*)?(?:DOCUMENTARY|DOCUMENTAL|ENGLISH)"));
                 break;
+            
             case "FRONTLINE_PBS":
-                RenameProcess.regexRemove(videoMap, List.of(
-                        "(?i)\\[4K]",
-                        "(?i)\\s*-?\\s*@Associated\\s+Press",
-                        "(?i)\\s*-?\\s*#AskFRONTLINE",
-                        "(?i)\\s*-\\s*FRONTLINE(?:\\sPBS)?(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
-                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)",
-                        "(?i)\\s+\\(.*CAPTIONS\\sAVAILABLE.*\\)"));
-                RenameProcess.regexReplace(videoMap, List.of(
-                        Map.entry("(?i)\\s+(?:-\\s*|\\()INTERVIEW(?:\\)|$)", " - Interview"),
-                        Map.entry("(?i)\\s+(?:-\\s*|\\()TRAILER(?:\\)|$)", " - Trailer"),
-                        Map.entry("(?i)\\s+(?:-\\s*|\\()PODCAST(?:\\)|$)", " - Podcast")));
+                RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
+                        "\\[4K]",
+                        "\\s*-?\\s*@Associated\\s+Press",
+                        "\\s*-?\\s*#AskFRONTLINE",
+                        "\\s*-\\s*FRONTLINE(?:\\sPBS)?(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)",
+                        "\\s+\\(.*CAPTIONS\\sAVAILABLE.*\\)"));
+                RenameProcess.regexReplaceIgnoreCase(videoMap, List.of(
+                        Map.entry("\\s+(?:-\\s*|\\()INTERVIEW(?:\\)|$)", " - Interview"),
+                        Map.entry("\\s+(?:-\\s*|\\()TRAILER(?:\\)|$)", " - Trailer"),
+                        Map.entry("\\s+(?:-\\s*|\\()PODCAST(?:\\)|$)", " - Podcast")));
                 break;
+            
             case "SPARK_DOCUMENTARY":
-                RenameProcess.replace(videoMap, " l ", " | ");
-                RenameProcess.regexRemove(videoMap, List.of(
-                        "(?i)\\[4K]",
-                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
-                        "(?i)\\s*-\\s*SPARK(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
-                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
+                RenameProcess.replace(videoMap,
+                        " l ", " | ");
+                RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
+                        "\\[4K]",
+                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*-\\s*SPARK(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
                 break;
+            
             case "ENDEVR_DOCUMENTARY":
-                RenameProcess.regexRemove(videoMap, List.of(
-                        "(?i)\\[4K]",
-                        "(?i)\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
-                        "(?i)\\s*-\\s*ENDE?VR(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
-                        "(?i)\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
+                RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
+                        "\\[4K]",
+                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*-\\s*ENDE?VR(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
+                        "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
                 break;
             
             
             //RUNESCAPE
             
             case "BY_RELEASE":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)(?:\\s*-\\s*By\\sRelease\\s*-?\\s#?(?<episode>\\d*))?$",
                         "By Release - $i - $title");
                 break;
+            
             case "OSRS_CHALLENGES_TANZOO":
             case "OSRS_CHALLENGES_VIRTOSO":
                 RenameProcess.regexReplace(videoMap, List.of(
@@ -157,50 +167,59 @@ public class ChannelProcesses_Sample {
                         Map.entry("^\\s*", "OSRS Challenges - "),
                         Map.entry("\\s*$", (" (" + channel.getName().replace("OsrsChallenges", "") + ")"))));
                 break;
+            
             case "MUDKIP_HCIM":
-                RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?:Maxed HCIM\\s)?(?<title>.+?)\\s(?:Maxed HCIM\\s)?(?:-\\s|\\(|)[#\\-]\\s?(?<episode>\\d*\\.?\\d+)\\)?$", false,
+                RenameProcess.format(videoMap, false,
+                        "^(?:\\[OSRS]\\s*)?(?:Maxed HCIM\\s)?(?<title>.+?)\\s(?:Maxed HCIM\\s)?(?:-\\s|\\(|)[#\\-]\\s?(?<episode>\\d*\\.?\\d+)\\)?$",
                         "Maxed HCIM - $episode - $title");
-                RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?:HCIM\\s)?#?(?<episode>\\d+)\\s*-\\s*(?<title>.+?)$", false,
+                RenameProcess.format(videoMap, false,
+                        "^(?:\\[OSRS]\\s*)?(?:HCIM\\s)?#?(?<episode>\\d+)\\s*-\\s*(?<title>.+?)$",
                         "HCIM - $episode - $title");
-                RenameProcess.pattern(videoMap,
-                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:[Ee]p(?:isode|\\.)\\s*)?#?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$", false,
+                RenameProcess.format(videoMap, false,
+                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:[Ee]p(?:isode|\\.)\\s*)?#?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$",
                         "HCIM - $episode - $title $level");
                 break;
+            
             case "MUDKIP_UIM":
-                RenameProcess.pattern(videoMap,
-                        "^(?<title>.+?)\\s\\((?:UIM\\s)?[#\\-]\\s*(?<episode>\\d+)\\)$", false,
+                RenameProcess.format(videoMap, false,
+                        "^(?<title>.+?)\\s\\((?:UIM\\s)?[#\\-]\\s*(?<episode>\\d+)\\)$",
                         "UIM - $episode - $title");
                 break;
+            
             case "SWAMPLETICS":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)\\s\\((?:Swampletics\\s?)?(?:#|-\\s)(?<episode>\\d+)\\)$",
                         "Swampletics - $i - $title");
                 break;
+            
             case "TILEMAN":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)\\s(?:[|\\-]\\s)?(?:tileman\\s?)?[#\\-]\\s*(?<episode>\\d+)$",
                         "Tileman - $i - $title");
                 break;
+            
             case "LOWER_THE_BETTER":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)(?:\\s?[:\\-]\\s?Lower\\s[Tt]he\\sBetter\\s?(?:Ep\\.\\s)?(?:[#\\-]\\s?)(?<episode>\\d+))?$",
                         "Lower the Better - $i - $title");
                 break;
+            
             case "OSRS_WEEKLY_RECAP":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)!*\\s*(?:[#\\-]\\s*(?:\\d+\\s*\\-\\s*)?)?(?:(?:OSRS\\s)?Weekly\\sRecap[\\s\\d\\-#!]*)?(?:\\[OSRS])?$",
                         "Weekly Recap - $d - $title");
                 break;
+            
             case "IRON_MAIN":
-                RenameProcess.pattern(videoMap,
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)(\\s*[|\\-]\\s*(?:IronMain\\s*)?[(\\[][#\\-]\\s*(?<episode>\\d+)[)\\]])?$",
                         "IronMain - $i - $title");
                 break;
+            
             case "ONE_KICK_RICK":
-                RenameProcess.replace(videoMap, "Series Trailer", "ep.0");
-                RenameProcess.pattern(videoMap,
+                RenameProcess.replace(videoMap,
+                        "Series Trailer", "ep.0");
+                RenameProcess.format(videoMap,
                         "^(?<title>.+?)\\s*-\\s*(?:Lumbridge\\s*-\\s*Draynor\\s(?:Only\\s)?HCIM\\s-\\s)?(?:One\\sKick\\sRick\\s-\\s)?ep\\.(?<episode>\\d+)$",
                         "One Kick Rick - $episode - $title");
                 break;
@@ -231,7 +250,7 @@ public class ChannelProcesses_Sample {
             case "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC":
             case "DREAMHOP_MUSIC":
             case "LITTLE_SOUL":
-                RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
+                RenameProcess.appendUploadDate(videoMap);
                 break;
             
             
@@ -242,7 +261,7 @@ public class ChannelProcesses_Sample {
             case "ASUNA":
             case "ARIA":
             case "ARIA_NIGHTCORE":
-                RenameProcess.appendUploadDate(videoMap, "yyyy-MM-dd");
+                RenameProcess.appendUploadDate(videoMap);
                 break;
             
             
@@ -254,30 +273,32 @@ public class ChannelProcesses_Sample {
                         Map.entry(" (", " - "),
                         Map.entry(")", "")));
                 break;
+            
             case "AIM_TO_HEAD":
-                RenameProcess.regexRemove(videoMap, "(?i)\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*");
+                RenameProcess.regexRemove(videoMap,
+                        "\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*", true);
                 break;
             
             
             //AUDIOBOOK
             
             case "GREATEST_AUDIOBOOKS":
-                RenameProcess.regexReplace(videoMap, List.of(
+                RenameProcess.regexReplaceIgnoreCase(videoMap, List.of(
                         Map.entry("\\+", ""),
-                        Map.entry("(?i)(?:[\\(\\[]\\s*)?(?:GR?EATEST|FULL|CONDENSED|WHISPER)?\\s*([^\\s\\-]+\\sLANGUAGE|)#?\\s*(?:POEM|POETRY|NOVEL|STORY)?\\s*AUDIO\\s*.?\\s*BOOKS?(?:\\.COM?)?(?:\\s*VERSION)?(?:\\s*[\\]\\)])?", " $1 "),
-                        Map.entry("(?i)-?\\s+BY(?:\\s*THE)?\\s*", " - "),
-                        Map.entry("(?i)-?\\s*\\(?V\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - V$1"),
-                        Map.entry("(?i)-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2 of $3) - "),
-                        Map.entry("(?i)-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2) - "),
-                        Map.entry("(?i)-?\\s*\\(?BOOK\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1 of $2) - "),
-                        Map.entry("(?i)-?\\s*\\(?BOOK\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1) - "),
+                        Map.entry("(?:[\\(\\[]\\s*)?(?:GR?EATEST|FULL|CONDENSED|WHISPER)?\\s*([^\\s\\-]+\\sLANGUAGE|)#?\\s*(?:POEM|POETRY|NOVEL|STORY)?\\s*AUDIO\\s*.?\\s*BOOKS?(?:\\.COM?)?(?:\\s*VERSION)?(?:\\s*[\\]\\)])?", " $1 "),
+                        Map.entry("-?\\s+BY(?:\\s*THE)?\\s*", " - "),
+                        Map.entry("-?\\s*\\(?V\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - V$1"),
+                        Map.entry("-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2 of $3) - "),
+                        Map.entry("-?\\s*\\(?(BOOK\\s*\\d+)?\\s*(?:CHA)?P(?:ART|\\.)?\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - ($1 Part $2) - "),
+                        Map.entry("-?\\s*\\(?BOOK\\s*(\\d+)\\s*\\(?OF\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1 of $2) - "),
+                        Map.entry("-?\\s*\\(?BOOK\\s*(\\d+)\\s*(?:\\)|\\(|-|$)", " - (Book $1) - "),
                         Map.entry("(\\s*\\-)+$", ""),
                         Map.entry("\\(\\s+", "("),
                         Map.entry("\\s+\\)", ")")));
-                RenameProcess.forEach(videoMap, (id, video) ->
-                        video.updateTitle(Arrays.stream(video.title.split("\\s+-\\s+", -1))
+                BaseProcess.rename(videoMap, (id, video) ->
+                        Arrays.stream(video.title.split("\\s+-\\s+", -1))
                                 .map(e -> e.equals(e.toUpperCase()) ? StringUtility.toTitleCase(e.toLowerCase()) : e)
-                                .collect(Collectors.joining(" - "))));
+                                .collect(Collectors.joining(" - ")));
                 break;
             
             
@@ -285,7 +306,7 @@ public class ChannelProcesses_Sample {
             
             case "SOUND_LIBRARY":
                 RenameProcess.regexRemove(videoMap,
-                        "(?i)\\s*-\\s*(?:Sound Effects?|Music) for Editing");
+                        "\\s*-\\s*(?:Sound Effects?|Music) for Editing", true);
                 break;
         }
     }
@@ -304,20 +325,30 @@ public class ChannelProcesses_Sample {
             //GENERAL
             
             case "ANSWERS_WITH_JOE":
-                FilterProcess.containsIgnoreCase(videoMap, "live stream");
+                FilterProcess.containsIgnoreCase(videoMap,
+                        "live stream");
                 break;
+            
             case "THOUGHTY2_NEW_INTRO_ONLY":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2018-06-08"));
+                        LocalDate.of(2018, Month.JUNE, 8));
                 break;
+            
             case "VSAUCE":
-                FilterProcess.contains(videoMap, List.of("#", "- shorts", "LUT -", "IMG! -", "DONG", "Mind Field"));
+                FilterProcess.contains(videoMap, List.of(
+                        "#",
+                        "- shorts",
+                        "LUT -",
+                        "IMG! -",
+                        "DONG",
+                        "Mind Field"));
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2011-10-15"));
+                        LocalDate.of(2011, Month.OCTOBER, 15));
                 break;
+            
             case "DOMAIN_OF_SCIENCE":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2016-11-27"));
+                        LocalDate.of(2016, Month.NOVEMBER, 27));
                 break;
             
             
@@ -325,18 +356,29 @@ public class ChannelProcesses_Sample {
             
             case "ISAAC_ARTHUR":
                 FilterProcess.containsIgnoreCase(videoMap, List.of(
-                        "livestream", "live stream", "collab", "colab", "patreon", " diy ", "hades", "in the beginning"));
+                        "livestream",
+                        "live stream",
+                        "collab",
+                        "colab",
+                        "patreon",
+                        " diy ",
+                        "hades",
+                        "in the beginning"));
                 break;
+            
             case "PBS_SPACE_TIME_MATT_ONLY":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2015-09-01"));
+                        LocalDate.of(2015, Month.SEPTEMBER, 1));
                 break;
             
             
             //PHYSICS
             
             case "UP_AND_ATOM":
-                FilterProcess.containsIgnoreCase(videoMap, List.of("Merchandise", "Livestream", "Live Stream"));
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
+                        "merchandise",
+                        "livestream",
+                        "live stream"));
                 break;
             
             
@@ -366,8 +408,9 @@ public class ChannelProcesses_Sample {
             
             case "CHUBBYEMU":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2017-08-07"));
+                        LocalDate.of(2017, Month.AUGUST, 7));
                 break;
+            
             case "LIKE_YOU":
                 FilterProcess.containsIgnoreCase(videoMap, List.of(
                         "photographer", "phone", "friend", "my son", "dogs"));
@@ -378,27 +421,33 @@ public class ChannelProcesses_Sample {
             
             case "PHILON":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2022-04-06"));
+                        LocalDate.of(2022, Month.APRIL, 6));
                 break;
             
             
             //RUNESCAPE
             
             case "OSRS_BEATZ":
-                FilterProcess.notContainsIgnoreCase(videoMap, "runescape");
+                FilterProcess.notContainsIgnoreCase(videoMap,
+                        "runescape");
                 break;
+            
             case "OSRS_WEEKLY_RECAP":
-                FilterProcess.notContainsIgnoreCase(videoMap, "weekly recap");
+                FilterProcess.notContainsIgnoreCase(videoMap,
+                        "weekly recap");
                 break;
+            
             case "OSRS_MARKET_ANALYSIS":
-                FilterProcess.notContainsIgnoreCase(videoMap, List.of("market", "economy"));
+                FilterProcess.notContainsIgnoreCase(videoMap, List.of(
+                        "market", "economy"));
                 break;
             
             
             //FUNNY
             
             case "KITBOGA_UNCUT":
-                FilterProcess.containsIgnoreCase(videoMap, "live stream");
+                FilterProcess.containsIgnoreCase(videoMap,
+                        "live stream");
                 break;
             
             
@@ -406,10 +455,13 @@ public class ChannelProcesses_Sample {
             
             case "BEST_CUBE_COUBOY":
             case "BEST_CUBE_SPARTA":
-                FilterProcess.regexNotContainsIgnoreCase(videoMap, "best c(?:ube|oub)");
+                FilterProcess.regexNotContainsIgnoreCase(videoMap,
+                        "best c(?:ube|oub)");
                 break;
+            
             case "SEXY_CUBE":
-                FilterProcess.regexNotContainsIgnoreCase(videoMap, "sexy c(?:ube|oub)");
+                FilterProcess.regexNotContainsIgnoreCase(videoMap,
+                        "sexy c(?:ube|oub)");
                 break;
             
             
@@ -436,7 +488,8 @@ public class ChannelProcesses_Sample {
             case "AMBIENT_MUSIC_LAB_MOVIES_AMBIENT":
             case "AMBIENT_MUSIC_LAB_DARK_AMBIENT":
             case "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC":
-                FilterProcess.containsIgnoreCase(videoMap, "live 24-7");
+                FilterProcess.containsIgnoreCase(videoMap,
+                        "live 24-7");
                 break;
             
             
@@ -444,7 +497,7 @@ public class ChannelProcesses_Sample {
             
             case "MR_MOM_MUSIC_NEW":
                 FilterProcess.dateBefore(videoMap,
-                        new SimpleDateFormat("yyyy-MM-dd").parse("2020-01-24"));
+                        LocalDate.of(2020, Month.JANUARY, 24));
                 break;
             
             
@@ -458,7 +511,8 @@ public class ChannelProcesses_Sample {
             //AUDIOBOOK
             
             case "GREATEST_AUDIOBOOKS":
-                FilterProcess.containsIgnoreCase(videoMap, List.of("Book Review", "Author Interview", "Preview", "Excerpt"));
+                FilterProcess.containsIgnoreCase(videoMap, List.of(
+                        "Book Review", "Author Interview", "Preview", "Excerpt"));
                 break;
         }
     }
