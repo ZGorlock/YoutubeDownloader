@@ -9,8 +9,6 @@ package youtube.channel.entity.base;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +16,10 @@ import commons.lambda.function.checked.CheckedFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.entity.detail.Statistics;
+import youtube.channel.entity.detail.TagList;
+import youtube.channel.entity.detail.ThumbnailSet;
+import youtube.channel.entity.detail.TopicList;
 import youtube.util.Utils;
 
 /**
@@ -83,19 +85,44 @@ public abstract class Entity {
     public String description;
     
     /**
+     * The privacy status of the Entity.
+     */
+    public String status;
+    
+    /**
+     * The datestamp the Entity was uploaded.
+     */
+    public String datestamp;
+    
+    /**
      * The date the Entity was uploaded.
      */
     public LocalDateTime date;
     
     /**
-     * The Thumbnail Set of the Entity.
+     * The html to embed the Entity player.
      */
-    public EntityThumbnailSet thumbnails;
+    public String embeddedPlayer;
     
     /**
-     * The tags associated with the Entity.
+     * The Tag List of the Entity.
      */
-    public List<String> tags;
+    public TagList tags;
+    
+    /**
+     * The Topic List of the Entity.
+     */
+    public TopicList topics;
+    
+    /**
+     * The Thumbnail Set of the Entity.
+     */
+    public ThumbnailSet thumbnails;
+    
+    /**
+     * The Statistics of the Entity.
+     */
+    public Statistics stats;
     
     
     //Constructors
@@ -106,21 +133,27 @@ public abstract class Entity {
      * @param entityData The json data of the Entity,
      * @param channel    The Channel containing the Entity.
      */
-    @SuppressWarnings("unchecked")
     protected Entity(Map<String, Object> entityData, Channel channel) {
         this.channel = channel;
         
         this.metadata = new EntityMetadata(entityData);
         
-        this.originalTitle = (String) entityData.get("title");
+        this.originalTitle = getData("title");
         this.title = Utils.cleanVideoTitle(originalTitle);
-        this.description = (String) entityData.get("description");
         
-        this.date = Optional.ofNullable((String) entityData.get("publishedAt"))
-                .map(dateParser).orElseGet(LocalDateTime::now);
+        this.description = getData("description");
+        this.status = getData("status", "privacyStatus");
         
-        this.thumbnails = new EntityThumbnailSet((Map<String, Object>) entityData.get("thumbnails"));
-        this.tags = Optional.ofNullable((List<String>) entityData.get("tags")).orElse(new ArrayList<>());
+        this.datestamp = getData("publishedAt");
+        this.date = Optional.ofNullable(datestamp).map(dateParser).orElseGet(LocalDateTime::now);
+        
+        this.embeddedPlayer = getData("player", "embedHtml");
+        
+        this.tags = new TagList(getData("tags"));
+        this.topics = new TopicList(getData("topicDetails", "topicCategories"));
+        
+        this.thumbnails = new ThumbnailSet(getData("thumbnails"));
+        this.stats = new Statistics(getDataPart("statistics"));
     }
     
     /**
@@ -140,6 +173,49 @@ public abstract class Entity {
     
     
     //Methods
+    
+    /**
+     * Returns a part of the raw data of the Entity.
+     *
+     * @param part The name of the data part.
+     * @return The part of the raw data of the Entity, or null if it does not exist.
+     */
+    protected Map<String, Object> getDataPart(String part) {
+        return metadata.getDataPart(part);
+    }
+    
+    /**
+     * Returns an element from a specific part of the raw data of the Entity.
+     *
+     * @param part  The name of the data part.
+     * @param field The name of the data element.
+     * @param <T>   The type of the element.
+     * @return The element from a specific part of the raw data of the Entity, or null if it does not exist.
+     */
+    protected <T> T getData(String part, String field) {
+        return metadata.getData(part, field);
+    }
+    
+    /**
+     * Returns an element from the default part of the raw data of the Entity.
+     *
+     * @param field The name of the data element.
+     * @param <T>   The type of the element.
+     * @return The element from a default part of the raw data of the Entity, or null if it does not exist.
+     */
+    protected <T> T getData(String field) {
+        return getData("snippet", field);
+    }
+    
+    /**
+     * Returns whether the Entity is private.
+     *
+     * @return Whether the Entity is private.
+     */
+    public boolean isPrivate() {
+        return Optional.ofNullable(title).map(e -> e.equalsIgnoreCase("Private video")).orElse(false) ||
+                Optional.ofNullable(status).map(e -> e.equalsIgnoreCase("private")).orElse(false);
+    }
     
     /**
      * Returns the string representation of the Entity.

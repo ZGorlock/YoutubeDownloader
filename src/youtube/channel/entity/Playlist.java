@@ -35,6 +35,11 @@ public class Playlist extends Entity {
      */
     public String playlistId;
     
+    /**
+     * The number of videos in the Playlist.
+     */
+    public Long videoCount;
+    
     
     //Constructors
     
@@ -51,6 +56,8 @@ public class Playlist extends Entity {
         this.metadata.entityId = playlistId;
         
         this.url = WebUtils.PLAYLIST_BASE + playlistId;
+        
+        this.videoCount = getData("contentDetails", "itemCount");
     }
     
     /**

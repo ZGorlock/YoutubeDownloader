@@ -40,6 +40,11 @@ public class Channel extends Entity {
      */
     public String customUrl;
     
+    /**
+     * The number of videos in the Channel.
+     */
+    public Long videoCount;
+    
     
     //Constructors
     
@@ -57,6 +62,8 @@ public class Channel extends Entity {
         
         this.customUrl = (String) channelData.get("customUrl");
         this.url = WebUtils.CHANNEL_BASE + Optional.ofNullable(customUrl).map(e -> e.replaceAll("^@", "")).orElse(channelId);
+        
+        this.videoCount = Optional.ofNullable(stats).map(e -> e.get("videoCount")).map(e -> e.count).orElse(null);
     }
     
     /**

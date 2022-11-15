@@ -196,9 +196,7 @@ public class YoutubeChannelDownloader {
         try {
             final Set<String> videoTitles = new HashSet<>();
             ApiUtils.parseChannelVideoData(channel).stream()
-                    .filter(Objects::nonNull)
-                    .filter(video -> !video.isPrivate)
-                    .filter(video -> !video.isStream)
+                    .filter(Objects::nonNull).filter(Video::isValid)
                     .filter(video -> videoTitles.add(video.title))
                     .forEach(video -> videoMap.put(video.videoId, video));
         } catch (Exception e) {

@@ -32,6 +32,11 @@ public class EntityMetadata {
     //Fields
     
     /**
+     * The raw json data of the Entity.
+     */
+    public Map<String, Object> rawData;
+    
+    /**
      * The kind of the Entity.
      */
     public String kind;
@@ -84,29 +89,64 @@ public class EntityMetadata {
      *
      * @param entityData The json data of the Entity,
      */
-    @SuppressWarnings("unchecked")
     protected EntityMetadata(Map<String, Object> entityData) {
-        final Map<String, Object> snippet = (Map<String, Object>) entityData.get("snippet");
+        this.rawData = Map.copyOf(entityData);
         
-        this.kind = (String) entityData.get("kind");
-        this.eTag = (String) entityData.get("etag");
-        this.itemId = (String) entityData.get("id");
+        this.kind = getData("kind");
+        this.eTag = getData("etag");
+        this.itemId = getData("id");
         
-        this.channelId = (String) snippet.get("channelId");
-        this.channelTitle = (String) snippet.get("channelTitle");
+        this.channelId = getData("snippet", "channelId");
+        this.channelTitle = getData("snippet", "channelTitle");
         this.channel = Optional.ofNullable(channelId).map(ApiUtils::fetchChannel).orElse(null);
         
-        this.playlistId = (String) snippet.get("playlistId");
+        this.playlistId = getData("snippet", "playlistId");
         this.playlist = Optional.ofNullable(playlistId).map(ApiUtils::fetchPlaylist).orElse(null);
-        
-        entityData.clear();
-        entityData.putAll(snippet);
     }
     
     /**
      * The default no-argument constructor for an EntityMetadata.
      */
     protected EntityMetadata() {
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Returns a part of the raw data of the Entity.
+     *
+     * @param part The name of the data part, or null for the root part.
+     * @return The part of the raw data of the Entity, or null if it does not exist.
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getDataPart(String part) {
+        return Optional.ofNullable(part).map(e -> (Map<String, Object>) rawData.get(e)).orElse(null);
+    }
+    
+    /**
+     * Returns an element from a specific part of the raw data of the Entity.
+     *
+     * @param part  The name of the data part.
+     * @param field The name of the data element.
+     * @param <T>   The type of the element.
+     * @return The element from a specific part of the raw data of the Entity, or null if it does not exist.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getData(String part, String field) {
+        return (T) Optional.ofNullable(getDataPart(part)).map(e -> e.get(field)).orElse(null);
+    }
+    
+    /**
+     * Returns an element from the default part of the raw data of the Entity.
+     *
+     * @param field The name of the data element.
+     * @param <T>   The type of the element.
+     * @return The element from a default part of the raw data of the Entity, or null if it does not exist.
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getData(String field) {
+        return (T) rawData.get(field);
     }
     
 }

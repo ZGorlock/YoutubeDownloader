@@ -8,6 +8,7 @@
 package youtube.channel.entity;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
 import youtube.channel.entity.base.Entity;
-import youtube.channel.entity.base.EntityThumbnailSet;
+import youtube.channel.entity.detail.Location;
 import youtube.conf.Configurator;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -45,19 +46,39 @@ public class Video extends Entity {
     public String videoId;
     
     /**
+     * The duration of the Video.
+     */
+    public String duration;
+    
+    /**
+     * The broadcast type of the Video.
+     */
+    public String broadcastType;
+    
+    /**
      * The index position of the Video in its Youtube playlist.
      */
     public Long playlistPosition;
     
     /**
-     * A flag indicating whether the Video is private.
+     * The definition of the Video.
      */
-    public boolean isPrivate;
+    public String definition;
     
     /**
-     * A flag indicating whether the Video is a live stream.
+     * The language of the Video.
      */
-    public boolean isStream;
+    public String language;
+    
+    /**
+     * The audio language of the Video.
+     */
+    public String audioLanguage;
+    
+    /**
+     * The Location of the Video.
+     */
+    public Location location;
     
     /**
      * The download file for the Video.
@@ -82,18 +103,23 @@ public class Video extends Entity {
     public Video(Map<String, Object> videoData, Channel channel) {
         super(videoData, channel);
         
-        this.videoId = Optional.ofNullable((Map<String, Object>) videoData.get("resourceId"))
+        this.videoId = Optional.ofNullable((Map<String, Object>) getData("resourceId"))
                 .map(e -> (String) e.get("videoId")).orElse(metadata.itemId);
         this.metadata.entityId = videoId;
         
         this.url = WebUtils.VIDEO_BASE + videoId;
         
-        this.playlistPosition = (Long) videoData.get("position");
+        this.duration = getData("contentDetails", "duration");
+        this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
+                .orElseGet(() -> thumbnails.getAll().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
         
-        this.isPrivate = title.equalsIgnoreCase("Private video");
-        this.isStream = Optional.ofNullable(thumbnails.get(EntityThumbnailSet.Quality.DEFAULT))
-                .map(defaultThumbnail -> defaultThumbnail.url)
-                .map(url -> url.contains("_live.")).orElse(true);
+        this.playlistPosition = getData("position");
+        
+        this.definition = getData("contentDetails", "definition");
+        this.language = getData("defaultLanguage");
+        this.audioLanguage = getData("defaultAudioLanguage");
+        
+        this.location = new Location(getDataPart("recordingDetails"));
         
         initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),
                 Optional.ofNullable(channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3));
@@ -157,6 +183,33 @@ public class Video extends Entity {
     public void initFiles(File outputDir, boolean saveAsMp3) {
         this.download = new File(outputDir, this.title);
         this.output = new File(outputDir, (this.title + '.' + (saveAsMp3 ? Utils.AUDIO_FORMAT : Utils.VIDEO_FORMAT)));
+    }
+    
+    /**
+     * Returns whether the Video is a live stream.
+     *
+     * @return Whether the Video is a live stream.
+     */
+    public boolean isLiveStream() {
+        return Optional.ofNullable(broadcastType).map(e -> List.of("live", "upcoming").contains(e)).orElse(false);
+    }
+    
+    /**
+     * Returns whether the Video is deleted.
+     *
+     * @return Whether the Video is deleted.
+     */
+    public boolean isDeleted() {
+        return Optional.ofNullable(title).map(e -> e.equalsIgnoreCase("Deleted video")).orElse(false);
+    }
+    
+    /**
+     * Returns whether the Video is valid for processing.
+     *
+     * @return Whether the Video is valid for processing.
+     */
+    public boolean isValid() {
+        return !isPrivate() && !isDeleted() && !isLiveStream();
     }
     
     /**

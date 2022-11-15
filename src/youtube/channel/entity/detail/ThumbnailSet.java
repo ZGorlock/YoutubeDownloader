@@ -1,34 +1,34 @@
 /*
- * File:    EntityThumbnailSet.java
- * Package: youtube.channel.entity.base
+ * File:    ThumbnailSet.java
+ * Package: youtube.channel.entity.detail
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity.base;
+package youtube.channel.entity.detail;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import commons.lambda.stream.collector.MapCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Defines a Thumbnail Set of an Entity.
+ * Defines the Thumbnail Set of an Entity.
  */
-public class EntityThumbnailSet {
+public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailSet.Thumbnail> {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(EntityThumbnailSet.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThumbnailSet.class);
     
     
     //Enums
@@ -45,26 +45,20 @@ public class EntityThumbnailSet {
     }
     
     
-    //Fields
-    
-    /**
-     * A map of Thumbnails for an Entity.
-     */
-    private final Map<Quality, Thumbnail> thumbnails;
-    
-    
     //Constructors
     
     /**
      * Creates the Thumbnail Set for an Entity.
      *
-     * @param thumbnailSetData The json data from the Thumbnail Set.
+     * @param thumbnailData The Thumbnail Set json data of the Entity.
      */
     @SuppressWarnings("unchecked")
-    protected EntityThumbnailSet(Map<String, Object> thumbnailSetData) {
-        this.thumbnails = Optional.ofNullable(thumbnailSetData).orElse(new HashMap<>()).entrySet().stream()
+    public ThumbnailSet(Map<String, Object> thumbnailData) {
+        Optional.ofNullable(thumbnailData)
+                .map(Map::entrySet).stream().flatMap(Collection::stream)
                 .map(e -> new Thumbnail(e.getKey(), (Map<String, Object>) e.getValue()))
-                .collect(MapCollectors.toLinkedHashMap(e -> e.quality, e -> e));
+                .sorted(Comparator.comparingInt(o -> o.quality.ordinal()))
+                .forEachOrdered(e -> put(e.quality, e));
     }
     
     
@@ -76,17 +70,7 @@ public class EntityThumbnailSet {
      * @return The list of Thumbnails.
      */
     public List<Thumbnail> getAll() {
-        return new ArrayList<>(thumbnails.values());
-    }
-    
-    /**
-     * Returns a Thumbnail of a specific quality.
-     *
-     * @param quality The quality of the Thumbnail.
-     * @return The Thumbnail of the specified quality, or null if it does not exist.
-     */
-    public Thumbnail get(Quality quality) {
-        return thumbnails.get(quality);
+        return new ArrayList<>(values());
     }
     
     /**
@@ -95,7 +79,7 @@ public class EntityThumbnailSet {
      * @return The best Thumbnail.
      */
     public Thumbnail getBest() {
-        return thumbnails.values().stream()
+        return values().stream()
                 .max(Comparator.comparingLong(Thumbnail::getSize))
                 .orElse(null);
     }

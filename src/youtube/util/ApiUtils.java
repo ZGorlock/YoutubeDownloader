@@ -118,18 +118,58 @@ public final class ApiUtils {
     }
     
     /**
+     * An enumeration of Youtube Data API Response Parts.
+     */
+    public enum ResponsePart {
+        
+        //Values
+        
+        SNIPPET,
+        ID,
+        CONTENT_DETAILS,
+        STATUS,
+        STATISTICS,
+        TOPIC_DETAILS,
+        RECORDING_DETAILS,
+        LIVE_STREAMING_DETAILS,
+        CONTENT_OWNER_DETAILS,
+        BRANDING_SETTINGS,
+        LOCALIZATIONS,
+        PLAYER;
+        
+        
+        //Fields
+        
+        /**
+         * The name of the Response Part.
+         */
+        public final String name;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs an ResponsePart.
+         */
+        ResponsePart() {
+            this.name = StringUtility.toCamelCase(name());
+        }
+        
+    }
+    
+    /**
      * An enumeration of Youtube Data API Endpoints.
      */
     public enum Endpoint {
         
         //Values
         
-        CHANNEL("channels", EndpointCategory.ENTITY),
-        PLAYLIST("playlists", EndpointCategory.ENTITY),
-        VIDEO("videos", EndpointCategory.ENTITY),
+        CHANNEL("channels", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS)),
+        PLAYLIST("playlists", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.PLAYER)),
+        VIDEO("videos", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS, ResponsePart.RECORDING_DETAILS, ResponsePart.PLAYER)),
         
-        PLAYLIST_ITEMS("playlistItems", EndpointCategory.DATA),
-        CHANNEL_PLAYLISTS("playlists", EndpointCategory.DATA);
+        PLAYLIST_ITEMS("playlistItems", EndpointCategory.DATA, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS)),
+        CHANNEL_PLAYLISTS("playlists", EndpointCategory.DATA, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS));
         
         
         //Fields
@@ -144,18 +184,25 @@ public final class ApiUtils {
          */
         public final EndpointCategory category;
         
+        /**
+         * The response parts to retrieve from the Endpoint.
+         */
+        public final List<ResponsePart> responseParts;
+        
         
         //Constructors
         
         /**
          * Constructs an Endpoint.
          *
-         * @param name     The name of the Endpoint.
-         * @param category The Category of the Endpoint.
+         * @param name          The name of the Endpoint.
+         * @param category      The Category of the Endpoint.
+         * @param responseParts The response parts to retrieve from the Endpoint.
          */
-        Endpoint(String name, EndpointCategory category) {
+        Endpoint(String name, EndpointCategory category, List<ResponsePart> responseParts) {
             this.name = name;
             this.category = category;
+            this.responseParts = responseParts.stream().distinct().collect(Collectors.toList());
         }
         
     }
@@ -390,7 +437,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error building the request.
      */
     private static HttpGet buildApiRequest(Endpoint endpoint, Map<String, String> parameters) throws Exception {
-        parameters.putIfAbsent("part", "snippet");
+        parameters.putIfAbsent("part", endpoint.responseParts.stream().map(e -> e.name).collect(Collectors.joining(",")));
         parameters.putIfAbsent("maxResults", String.valueOf(MAX_RESULTS_PER_PAGE));
         parameters.putIfAbsent("key", API_KEY);
         
