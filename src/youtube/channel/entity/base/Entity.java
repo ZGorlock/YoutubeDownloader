@@ -90,7 +90,7 @@ public abstract class Entity {
     /**
      * The Thumbnail Set of the Entity.
      */
-    public ThumbnailSet thumbnails;
+    public EntityThumbnailSet thumbnails;
     
     /**
      * The tags associated with the Entity.
@@ -119,7 +119,7 @@ public abstract class Entity {
         this.date = Optional.ofNullable((String) entityData.get("publishedAt"))
                 .map(dateParser).orElseGet(LocalDateTime::now);
         
-        this.thumbnails = new ThumbnailSet((Map<String, Object>) entityData.get("thumbnails"));
+        this.thumbnails = new EntityThumbnailSet((Map<String, Object>) entityData.get("thumbnails"));
         this.tags = Optional.ofNullable((List<String>) entityData.get("tags")).orElse(new ArrayList<>());
     }
     

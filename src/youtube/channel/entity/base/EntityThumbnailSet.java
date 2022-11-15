@@ -1,5 +1,5 @@
 /*
- * File:    ThumbnailSet.java
+ * File:    EntityThumbnailSet.java
  * Package: youtube.channel.entity.base
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
@@ -19,16 +19,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Defines a ThumbnailSet of an Entity.
+ * Defines a Thumbnail Set of an Entity.
  */
-public class ThumbnailSet {
+public class EntityThumbnailSet {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(ThumbnailSet.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityThumbnailSet.class);
     
     
     //Enums
@@ -56,12 +56,12 @@ public class ThumbnailSet {
     //Constructors
     
     /**
-     * Creates the ThumbnailSet for an Entity.
+     * Creates the Thumbnail Set for an Entity.
      *
-     * @param thumbnailSetData The json data from the ThumbnailSet.
+     * @param thumbnailSetData The json data from the Thumbnail Set.
      */
     @SuppressWarnings("unchecked")
-    protected ThumbnailSet(Map<String, Object> thumbnailSetData) {
+    protected EntityThumbnailSet(Map<String, Object> thumbnailSetData) {
         this.thumbnails = Optional.ofNullable(thumbnailSetData).orElse(new HashMap<>()).entrySet().stream()
                 .map(e -> new Thumbnail(e.getKey(), (Map<String, Object>) e.getValue()))
                 .collect(MapCollectors.toLinkedHashMap(e -> e.quality, e -> e));

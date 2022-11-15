@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
 import youtube.channel.entity.base.Entity;
-import youtube.channel.entity.base.ThumbnailSet;
+import youtube.channel.entity.base.EntityThumbnailSet;
 import youtube.conf.Configurator;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -91,7 +91,7 @@ public class Video extends Entity {
         this.playlistPosition = (Long) videoData.get("position");
         
         this.isPrivate = title.equalsIgnoreCase("Private video");
-        this.isStream = Optional.ofNullable(thumbnails.get(ThumbnailSet.Quality.DEFAULT))
+        this.isStream = Optional.ofNullable(thumbnails.get(EntityThumbnailSet.Quality.DEFAULT))
                 .map(defaultThumbnail -> defaultThumbnail.url)
                 .map(url -> url.contains("_live.")).orElse(true);
         
