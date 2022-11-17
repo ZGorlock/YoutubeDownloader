@@ -46,19 +46,19 @@ public class Video extends Entity {
     public String videoId;
     
     /**
-     * The duration of the Video.
-     */
-    public String duration;
-    
-    /**
-     * The broadcast type of the Video.
-     */
-    public String broadcastType;
-    
-    /**
      * The index position of the Video in its Youtube playlist.
      */
     public Long playlistPosition;
+    
+    /**
+     * The string representing the duration of the Video.
+     */
+    public String durationString;
+    
+    /**
+     * The duration of the Video, in seconds.
+     */
+    public Long duration;
     
     /**
      * The definition of the Video.
@@ -79,6 +79,11 @@ public class Video extends Entity {
      * The Location of the Video.
      */
     public Location location;
+    
+    /**
+     * The broadcast type of the Video.
+     */
+    public String broadcastType;
     
     /**
      * The download file for the Video.
@@ -109,17 +114,18 @@ public class Video extends Entity {
         
         this.url = WebUtils.VIDEO_BASE + videoId;
         
-        this.duration = getData("contentDetails", "duration");
-        this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
-                .orElseGet(() -> thumbnails.getAll().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
-        
         this.playlistPosition = getData("position");
+        
+        this.durationString = getData("contentDetails", "duration");
+        this.duration = Optional.ofNullable(durationString).map(durationParser).orElse(-1L);
         
         this.definition = getData("contentDetails", "definition");
         this.language = getData("defaultLanguage");
         this.audioLanguage = getData("defaultAudioLanguage");
         
         this.location = new Location(getDataPart("recordingDetails"));
+        this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
+                .orElseGet(() -> thumbnails.values().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
         
         initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),
                 Optional.ofNullable(channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3));

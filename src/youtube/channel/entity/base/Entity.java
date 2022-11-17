@@ -9,10 +9,13 @@ package youtube.channel.entity.base;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
 import commons.lambda.function.checked.CheckedFunction;
+import commons.lambda.stream.collector.MapCollectors;
+import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
@@ -46,10 +49,31 @@ public abstract class Entity {
     //Static Functions
     
     /**
-     * Parses a datestamp from Entity data into a date; or null if there was an error.
+     * Parses a date string from Entity data into a date; or null if there was an error.
      */
-    public static final CheckedFunction<String, LocalDateTime> dateParser = (String datestamp) ->
-            LocalDateTime.parse(datestamp.replaceAll("[TZ]", " ").strip(), DateTimeFormatter.ofPattern(DATE_FORMAT));
+    public static final CheckedFunction<String, LocalDateTime> dateParser = (String dateString) ->
+            Optional.ofNullable(dateString)
+                    .map(e -> e.replaceAll("(?i)[TZ]", " ")).map(String::strip)
+                    .map(e -> LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                    .orElse(null);
+    
+    /**
+     * Parses a duration string from Entity data into a duration, in seconds; or null if there was an error.
+     */
+    public static final CheckedFunction<String, Long> durationParser = (String durationString) ->
+            Optional.ofNullable(durationString)
+                    .map(e -> e.replaceAll("(?i)[PT\\s]", ""))
+                    .map(e -> Arrays.stream(e.split("(?<=\\D)"))
+                            .map(e2 -> Map.entry(
+                                    StringUtility.rSnip(e2, 1).toUpperCase(),
+                                    Long.parseLong(StringUtility.rShear(e2, 1))))
+                            .collect(MapCollectors.toHashMap()))
+                    .map(e -> (((((
+                            e.getOrDefault("D", 0L) * 24) +
+                            e.getOrDefault("H", 0L)) * 60) +
+                            e.getOrDefault("M", 0L)) * 60) +
+                            e.getOrDefault("S", 0L))
+                    .orElse(null);
     
     
     //Fields
@@ -90,19 +114,14 @@ public abstract class Entity {
     public String status;
     
     /**
-     * The datestamp the Entity was uploaded.
+     * The string representing the date the Entity was uploaded.
      */
-    public String datestamp;
+    public String dateString;
     
     /**
      * The date the Entity was uploaded.
      */
     public LocalDateTime date;
-    
-    /**
-     * The html to embed the Entity player.
-     */
-    public String embeddedPlayer;
     
     /**
      * The Tag List of the Entity.
@@ -115,14 +134,19 @@ public abstract class Entity {
     public TopicList topics;
     
     /**
+     * The Statistics of the Entity.
+     */
+    public Statistics stats;
+    
+    /**
      * The Thumbnail Set of the Entity.
      */
     public ThumbnailSet thumbnails;
     
     /**
-     * The Statistics of the Entity.
+     * The html to embed the Entity player.
      */
-    public Statistics stats;
+    public String embeddedPlayer;
     
     
     //Constructors
@@ -144,16 +168,16 @@ public abstract class Entity {
         this.description = getData("description");
         this.status = getData("status", "privacyStatus");
         
-        this.datestamp = getData("publishedAt");
-        this.date = Optional.ofNullable(datestamp).map(dateParser).orElseGet(LocalDateTime::now);
-        
-        this.embeddedPlayer = getData("player", "embedHtml");
+        this.dateString = getData("publishedAt");
+        this.date = Optional.ofNullable(dateString).map(dateParser).orElseGet(LocalDateTime::now);
         
         this.tags = new TagList(getData("tags"));
         this.topics = new TopicList(getData("topicDetails", "topicCategories"));
         
-        this.thumbnails = new ThumbnailSet(getData("thumbnails"));
         this.stats = new Statistics(getDataPart("statistics"));
+        
+        this.thumbnails = new ThumbnailSet(getData("thumbnails"));
+        this.embeddedPlayer = getData("player", "embedHtml");
     }
     
     /**

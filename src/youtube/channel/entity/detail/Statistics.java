@@ -7,10 +7,8 @@
 
 package youtube.channel.entity.detail;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,18 +44,6 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
     }
     
     
-    //Methods
-    
-    /**
-     * Returns the list of Stats.
-     *
-     * @return The list of Stats.
-     */
-    public List<Stat> getAll() {
-        return new ArrayList<>(values());
-    }
-    
-    
     //Inner Classes
     
     /**
@@ -70,12 +56,12 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
         /**
          * The name of the Stat.
          */
-        public final String name;
+        public String name;
         
         /**
          * The count of the Stat.
          */
-        public final Long count;
+        public Long count;
         
         
         //Constructors

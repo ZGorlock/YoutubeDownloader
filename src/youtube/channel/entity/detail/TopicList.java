@@ -43,18 +43,6 @@ public class TopicList extends ArrayList<TopicList.Topic> {
     }
     
     
-    //Methods
-    
-    /**
-     * Returns the list of Topics.
-     *
-     * @return The list of Topics.
-     */
-    public List<Topic> getAll() {
-        return new ArrayList<>(this);
-    }
-    
-    
     //Inner Classes
     
     /**
@@ -67,7 +55,7 @@ public class TopicList extends ArrayList<TopicList.Topic> {
         /**
          * The url of the Topic.
          */
-        public final String url;
+        public String url;
         
         
         //Constructors

@@ -43,18 +43,6 @@ public class TagList extends ArrayList<TagList.Tag> {
     }
     
     
-    //Methods
-    
-    /**
-     * Returns the list of Tags.
-     *
-     * @return The list of Tags.
-     */
-    public List<Tag> getAll() {
-        return new ArrayList<>(this);
-    }
-    
-    
     //Inner Classes
     
     /**
@@ -67,7 +55,7 @@ public class TagList extends ArrayList<TagList.Tag> {
         /**
          * The name of the Tag.
          */
-        public final String name;
+        public String name;
         
         
         //Constructors

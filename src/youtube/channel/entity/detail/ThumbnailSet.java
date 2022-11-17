@@ -7,11 +7,9 @@
 
 package youtube.channel.entity.detail;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,6 +54,7 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
     public ThumbnailSet(Map<String, Object> thumbnailData) {
         Optional.ofNullable(thumbnailData)
                 .map(Map::entrySet).stream().flatMap(Collection::stream)
+                .filter(e -> (e.getValue() != null))
                 .map(e -> new Thumbnail(e.getKey(), (Map<String, Object>) e.getValue()))
                 .sorted(Comparator.comparingInt(o -> o.quality.ordinal()))
                 .forEachOrdered(e -> put(e.quality, e));
@@ -63,15 +62,6 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
     
     
     //Methods
-    
-    /**
-     * Returns the list of Thumbnails.
-     *
-     * @return The list of Thumbnails.
-     */
-    public List<Thumbnail> getAll() {
-        return new ArrayList<>(values());
-    }
     
     /**
      * Returns the best Thumbnail.
@@ -97,22 +87,22 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
         /**
          * The quality of the Thumbnail.
          */
-        public final Quality quality;
+        public Quality quality;
         
         /**
          * The url of the Thumbnail.
          */
-        public final String url;
+        public String url;
         
         /**
          * The width of the Thumbnail.
          */
-        public final Long width;
+        public Long width;
         
         /**
          * The height of the Thumbnail.
          */
-        public final Long height;
+        public Long height;
         
         
         //Constructors

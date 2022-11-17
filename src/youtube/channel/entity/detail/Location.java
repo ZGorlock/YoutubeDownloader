@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Defines the Location of an Video Entity.
+ * Defines the Location of a Video Entity.
  */
 public class Location {
     
@@ -54,7 +54,7 @@ public class Location {
     /**
      * Creates the Location for a Video Entity.
      *
-     * @param locationData The Location json data of the Video.
+     * @param locationData The Location json data of the Video Entity.
      */
     @SuppressWarnings("unchecked")
     public Location(Map<String, Object> locationData) {
