@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -218,7 +219,7 @@ public final class ApiUtils {
     /**
      * A cache of previously fetched Entities.
      */
-    private static final Map<String, Entity> entityCache = new HashMap<>();
+    private static final Map<String, Entity> entityCache = new ConcurrentHashMap<>();
     
     
     //Static Methods
