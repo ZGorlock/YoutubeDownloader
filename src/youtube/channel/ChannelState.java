@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -128,8 +130,8 @@ public class ChannelState {
         this.keyStore = new LinkedHashMap<>();
         
         this.stateLocation = new File(CHANNEL_DATA_DIR, channel.getName());
-        this.dataFile = new File(this.stateLocation, (channel.getName() + "-data.txt"));
-        this.callLogFile = new File(this.stateLocation, (channel.getName() + "-callLog.txt"));
+        this.dataFile = new File(this.stateLocation, (channel.getName() + "-data.json"));
+        this.callLogFile = new File(this.stateLocation, (channel.getName() + "-callLog.log"));
         this.saveFile = new File(this.stateLocation, (channel.getName() + "-save.txt"));
         this.queueFile = new File(this.stateLocation, (channel.getName() + "-queue.txt"));
         this.blockFile = new File(this.stateLocation, (channel.getName() + "-blocked.txt"));
@@ -187,44 +189,23 @@ public class ChannelState {
     /**
      * Returns the list of data files.
      *
-     * @param type The type of the data files.
      * @return The list of data files.
      */
-    public List<File> getDataFiles(String type) {
-        return Optional.ofNullable(stateLocation.listFiles(f -> f.getName().startsWith(dataFile.getName()
-                        .replace(".txt", getDataFileTypeSuffix(type)))))
+    public List<File> getDataFiles() {
+        return Optional.ofNullable(stateLocation.listFiles(
+                        f -> f.getName().startsWith(dataFile.getName().replace(".json", ""))))
                 .map(Arrays::asList).orElse(new ArrayList<>());
     }
     
     /**
-     * Returns the list of data files.
+     * Returns a data file of a specific type.
      *
-     * @return The list of data files.
-     */
-    public List<File> getDataFiles() {
-        return getDataFiles(null);
-    }
-    
-    /**
-     * Returns a data file of a specific type of a specific chunk index.
-     *
-     * @param chunk The chunk index.
-     * @param type  The type of the data file.
+     * @param type The type of the data file.
      * @return The data file.
      */
-    public File getDataFile(int chunk, String type) {
+    public File getDataFile(String type) {
         return new File(stateLocation, (dataFile.getName()
-                .replaceFirst("(?=\\.)", (getDataFileTypeSuffix(type) + '.' + chunk))));
-    }
-    
-    /**
-     * Returns a data file of a specific chunk index.
-     *
-     * @param chunk The chunk index.
-     * @return The data file.
-     */
-    public File getDataFile(int chunk) {
-        return getDataFile(chunk, null);
+                .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type))));
     }
     
     /**
@@ -247,9 +228,8 @@ public class ChannelState {
      */
     public void cleanupData() throws Exception {
         if (!Configurator.Config.preventChannelFetch) {
-            for (File dataFile : getDataFiles()) {
-                FileUtils.deleteFile(dataFile);
-            }
+            Stream.of(getDataFiles(), List.of(callLogFile)).flatMap(Collection::stream)
+                    .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
         }
     }
     
@@ -270,9 +250,11 @@ public class ChannelState {
                         }
                     }
                 });
-        getDataFiles().stream().filter(dataFile -> !dataFile.getName().endsWith(".txt"))
-                .forEach((CheckedConsumer<File>) dataFile -> FileUtils.moveFile(dataFile,
-                        new File(dataFile.getParentFile(), dataFile.getName().replaceAll("\\.txt\\.(\\d+)", ".$1.txt"))));
+        Stream.of(dataFile, callLogFile)
+                .map(e -> e.getName().replaceAll("\\..+$", ""))
+                .map(e -> stateLocation.listFiles(f -> f.getName().startsWith(e) && f.getName().endsWith(".txt")))
+                .filter(Objects::nonNull).flatMap(Arrays::stream)
+                .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
     }
     
 }

@@ -45,7 +45,7 @@ public class ChannelPlaylistParser {
     /**
      * The list of fields to forcefully include in playlist configurations.
      */
-    private static final List<String> FORCE_INCLUDE_FIELDS = List.of("active", "url");
+    private static final List<String> FORCE_INCLUDE_FIELDS = List.of("active");
     
     /**
      * The list of fields to forcefully exclude from playlist configurations.
@@ -98,6 +98,7 @@ public class ChannelPlaylistParser {
         if ((baseChannel == null) || !baseChannel.isYoutubeChannel()) {
             return;
         }
+        baseChannel.state.cleanupData();
         
         final List<Playlist> playlistData = parsePlaylistData(baseChannel);
         final List<Channel> playlistChannels = makePlaylistChannels(baseChannel, playlistData);
@@ -117,8 +118,7 @@ public class ChannelPlaylistParser {
      * @throws Exception When there is an error.
      */
     private static List<Playlist> parsePlaylistData(Channel channel) throws Exception {
-        ApiUtils.fetchChannelPlaylistData(channel);
-        return ApiUtils.parseChannelPlaylistData(channel);
+        return ApiUtils.fetchChannelPlaylists(channel);
     }
     
     /**

@@ -153,8 +153,7 @@ public class YoutubeChannelDownloader {
         System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.getName()));
         
         boolean success = WebUtils.isOnline() &&
-                fetchChannelData() &&
-                processChannelData() &&
+                loadChannelData() &&
                 produceQueue() &&
                 downloadVideos() &&
                 createPlaylist() &&
@@ -165,37 +164,23 @@ public class YoutubeChannelDownloader {
     }
     
     /**
-     * Retrieves the data for the active Channel.
+     * Loads the data for the active Channel.
      *
-     * @return Whether the Channel data was successfully retrieved or not.
+     * @return Whether the Channel data was successfully loaded or not.
      * @throws Exception When there is an error.
      */
-    private static boolean fetchChannelData() throws Exception {
-        if (Configurator.Config.preventChannelFetch) {
-            return !channel.state.getDataFiles().isEmpty();
-        }
-        channel.state.cleanupData();
-        
-        try {
-            ApiUtils.fetchChannelVideoData(channel);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Processes the data for the active Channel that was retrieved from the Youtube API.
-     *
-     * @return Whether the Channel data was successfully processed or not.
-     * @throws Exception When there is an error.
-     */
-    private static boolean processChannelData() throws Exception {
+    private static boolean loadChannelData() throws Exception {
         videoMap.clear();
+        if (!Configurator.Config.preventChannelFetch) {
+            channel.state.cleanupData();
+        }
+        ApiUtils.clearCache();
         
         try {
+            WebUtils.checkPlaylistId(channel);
+            
             final Set<String> videoTitles = new HashSet<>();
-            ApiUtils.parseChannelVideoData(channel).stream()
+            ApiUtils.fetchPlaylistVideos(channel).stream()
                     .filter(Objects::nonNull).filter(Video::isValid)
                     .filter(video -> videoTitles.add(video.title))
                     .forEach(video -> videoMap.put(video.videoId, video));
