@@ -127,8 +127,7 @@ public class Video extends Entity {
         this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
                 .orElseGet(() -> thumbnails.values().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
         
-        initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),
-                Optional.ofNullable(channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3));
+        init(channel);
     }
     
     /**
@@ -179,6 +178,19 @@ public class Video extends Entity {
     
     
     //Methods
+    
+    /**
+     * Initializes the Channel of the Video.
+     *
+     * @param channel The Channel containing the Video.
+     */
+    @Override
+    public void init(Channel channel) {
+        super.init(channel);
+        
+        initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),
+                Optional.ofNullable(channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3));
+    }
     
     /**
      * Initializes the file locations of the Video.

@@ -199,6 +199,15 @@ public abstract class Entity {
     //Methods
     
     /**
+     * Initializes the Channel of the Entity.
+     *
+     * @param channel The Channel containing the Entity.
+     */
+    public void init(Channel channel) {
+        this.channel = channel;
+    }
+    
+    /**
      * Returns a part of the raw data of the Entity.
      *
      * @param part The name of the data part.
