@@ -16,9 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import commons.object.collection.MapUtility;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.entity.Video;
@@ -358,6 +357,7 @@ public class RenameProcess {
      */
     public static void appendUploadDate(Map<String, Video> videoMap) {
         append(videoMap, " - $d");
+        regexReplace(videoMap, "(\\s-\\s" + DEFAULT_DATE_FORMAT.replaceAll("[^-/_]", "\\\\d") + ")\\1+$", "$1");
     }
     
     /**
@@ -367,6 +367,7 @@ public class RenameProcess {
      */
     public static void prependUploadDate(Map<String, Video> videoMap) {
         prepend(videoMap, "$d - ");
+        regexReplace(videoMap, "^(" + DEFAULT_DATE_FORMAT.replaceAll("[^-/_]", "\\\\d") + "\\s-\\s)\\1+", "$1");
     }
     
     /**
@@ -548,21 +549,23 @@ public class RenameProcess {
      * @return The expanded title.
      */
     private static String expandTitle(String title, Video video, Integer index, String dateFormat) {
-        return MapUtility.mapOf(List.of(
-                new ImmutablePair<>("i", index),
-                new ImmutablePair<>("n", video.playlistPosition),
-                new ImmutablePair<>("p", video.metadata.playlist.title),
-                new ImmutablePair<>("c", video.metadata.channel.title),
-                new ImmutablePair<>("v?Id", video.metadata.entityId),
-                new ImmutablePair<>("pId", video.metadata.playlistId),
-                new ImmutablePair<>("cId", video.metadata.channelId),
-                new ImmutablePair<>("d", video.date.format(DateTimeFormatter.ofPattern(
-                        Optional.ofNullable(dateFormat).orElse(DEFAULT_DATE_FORMAT))))
-        )).entrySet().stream().reduce(Map.entry(title, ""),
-                (s, e) -> Map.entry(s.getKey().replaceAll(
-                                ("(?i)\\$" + e.getKey() + "\\b"),
-                                Matcher.quoteReplacement(String.valueOf(e.getValue()))),
-                        "")).getKey();
+        return Stream.of(
+                        Map.entry("i", Optional.ofNullable(index)),
+                        Map.entry("n", Optional.ofNullable(video.playlistPosition)),
+                        Map.entry("p", Optional.ofNullable(video.metadata).map(e -> e.playlist).map(e -> e.title)),
+                        Map.entry("c", Optional.ofNullable(video.metadata).map(e -> e.channel).map(e -> e.title)),
+                        Map.entry("v?Id", Optional.ofNullable(video.metadata).map(e -> e.entityId)),
+                        Map.entry("pId", Optional.ofNullable(video.metadata).map(e -> e.playlistId)),
+                        Map.entry("cId", Optional.ofNullable(video.metadata).map(e -> e.channelId)),
+                        Map.entry("d", Optional.ofNullable(video.date).map(e -> e.format(
+                                DateTimeFormatter.ofPattern(Optional.ofNullable(dateFormat).orElse(DEFAULT_DATE_FORMAT))))))
+                .reduce(Map.entry(title, Optional.empty()),
+                        (s, e) -> Map.entry(
+                                s.getKey().replaceAll(
+                                        ("(?i)\\$" + e.getKey() + "\\b"),
+                                        Matcher.quoteReplacement(String.valueOf(e.getValue().orElse(null)))),
+                                Optional.empty()
+                        )).getKey();
     }
     
     /**
