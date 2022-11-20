@@ -14,6 +14,7 @@ import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -199,33 +200,18 @@ public final class WebUtils {
      * @return The fetched playlist id, or an empty string if there was an error.
      */
     public static String fetchPlaylistId(String url) {
-        Matcher playlistUrlMatcher = PLAYLIST_URL_PATTERN.matcher(url);
-        if (playlistUrlMatcher.matches()) {
-            String playlistId = playlistUrlMatcher.group("playlist");
-            if (playlistId != null) {
-                return playlistId;
-            }
-        }
-        
-        Matcher channelUrlMatcher = CHANNEL_URL_PATTERN.matcher(url);
-        if (channelUrlMatcher.matches()) {
-            Pattern externalIdPattern = Pattern.compile("^.*\"externalId\":\"(?<externalId>[^\"]+)\".*$");
-            
-            String html = getHtml(url);
-            String[] lines = html.split("\n");
-            
-            for (String line : lines) {
-                Matcher externalIdMatcher = externalIdPattern.matcher(line);
-                if (externalIdMatcher.matches()) {
-                    String externalId = externalIdMatcher.group("externalId");
-                    if (externalId != null) {
-                        return externalId.replaceAll("^UC", "UU");
-                    }
-                }
-            }
-        }
-        
-        return "";
+        return Optional.ofNullable(url)
+                .map(PLAYLIST_URL_PATTERN::matcher).filter(Matcher::matches)
+                .map(playlistUrlMatcher -> playlistUrlMatcher.group("playlist"))
+                .orElseGet(() -> Optional.ofNullable(url)
+                        .map(CHANNEL_URL_PATTERN::matcher).filter(Matcher::matches)
+                        .map(channelUrlMatcher -> Pattern.compile("^.*\"externalId\":\"(?<externalId>[^\"]+)\".*$"))
+                        .map(externalIdPattern -> StringUtility.splitLines(getHtml(url)).stream()
+                                .map(externalIdPattern::matcher).filter(Matcher::matches)
+                                .map(externalIdMatcher -> externalIdMatcher.group("externalId")).filter(Objects::nonNull)
+                                .map(externalId -> externalId.replaceAll("^UC", "UU"))
+                                .findFirst().orElse(""))
+                        .orElse(""));
     }
     
     /**
@@ -234,7 +220,7 @@ public final class WebUtils {
      * @param channel The Channel.
      */
     public static void checkPlaylistId(Channel channel) {
-        if ((channel.getPlaylistId() == null) || channel.getPlaylistId().isEmpty()) {
+        if (StringUtility.isNullOrBlank(channel.getPlaylistId())) {
             channel.playlistId = WebUtils.fetchPlaylistId(channel.getUrl());
             
             System.out.println(Color.bad("Channel does not have a playlistId defined, please add this to the Channel configuration"));
