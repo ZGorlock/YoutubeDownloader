@@ -105,6 +105,11 @@ public class ChannelEntry {
     public String playlistId;
     
     /**
+     * The channel id of the Channel Entry.
+     */
+    public String channelId;
+    
+    /**
      * The output folder to store the content that is downloaded by the Channel Entry.
      */
     public File outputFolder;
@@ -205,6 +210,7 @@ public class ChannelEntry {
                 });
         
         this.playlistId = stringFieldGetter.apply("playlistId").map(e -> e.replaceAll("^UC", "UU")).orElse(null);
+        this.channelId = Optional.ofNullable(playlistId).filter(e -> e.startsWith("UU")).map(e -> e.replaceAll("^UU", "UC")).orElse(null);
         this.url = stringFieldGetter.apply("url").orElseGet(() -> determineUrl(playlistId));
         
         this.group = stringFieldGetter.apply("group").map(e -> e.replaceAll(".+\\.", "")).orElse(null);
@@ -466,6 +472,16 @@ public class ChannelEntry {
     public String getPlaylistId() {
         return Optional.ofNullable(playlistId).orElseGet(() ->
                 Optional.ofNullable(parent).map(ChannelEntry::getPlaylistId).orElse(null));
+    }
+    
+    /**
+     * Returns the channel id of the Channel Entry.
+     *
+     * @return The channel id of the Channel Entry.
+     */
+    public String getChannelId() {
+        return Optional.ofNullable(channelId).orElseGet(() ->
+                Optional.ofNullable(parent).map(ChannelEntry::getChannelId).orElse(null));
     }
     
     /**
