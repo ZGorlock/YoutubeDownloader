@@ -58,6 +58,12 @@ public class EntityFetcher {
         resultEntities = results.computeIfAbsent("Playlist Videos", key -> new ArrayList<>());
         fetchPlaylistVideos("PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw", resultEntities);
         
+        resultEntities = results.computeIfAbsent("Chapter Test", key -> new ArrayList<>());
+        fetchVideo("Bd1yJ1B-stA", resultEntities);
+        fetchVideo("xUhiNZk0niU", resultEntities);
+        fetchVideo("hUumqcL7f2o", resultEntities);
+        fetchVideo("p602LDNvKq4", resultEntities);
+        
         results.clear();
     }
     

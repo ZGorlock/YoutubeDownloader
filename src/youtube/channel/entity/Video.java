@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
 import youtube.channel.entity.base.Entity;
+import youtube.channel.entity.detail.ChapterList;
 import youtube.channel.entity.detail.Location;
 import youtube.conf.Configurator;
 import youtube.util.PathUtils;
@@ -59,6 +60,11 @@ public class Video extends Entity {
      * The duration of the Video, in seconds.
      */
     public Long duration;
+    
+    /**
+     * The Chapter List of the Entity.
+     */
+    public ChapterList chapterList;
     
     /**
      * The definition of the Video.
@@ -118,6 +124,7 @@ public class Video extends Entity {
         
         this.durationString = getData("contentDetails", "duration");
         this.duration = Optional.ofNullable(durationString).map(durationParser).orElse(-1L);
+        this.chapterList = new ChapterList(description, duration);
         
         this.definition = getData("contentDetails", "definition");
         this.language = getData("defaultLanguage");
