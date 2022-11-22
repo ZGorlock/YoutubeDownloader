@@ -1090,7 +1090,7 @@
                         "key": "MIKE_MALONEY_P18",
                         "active": true,
                         "playlistId": "PLE88E9ICdipivbEAqs4aPJ1Duw9ye5bB1",
-                        "playlistFile": "~ - The Everything Bubble Follow-Up.m3u"
+                        "playlistFile": "~ - The Everything Bubble.m3u"
                       },
                       {
                         "key": "MIKE_MALONEY_P19",
@@ -1132,7 +1132,7 @@
                         "key": "MIKE_MALONEY_P25",
                         "active": true,
                         "playlistId": "PLE88E9ICdipg6Xe_OhxcCN0Xp9-TztngK",
-                        "playlistFile": "~ - Stock Markets OVERVALUED.m3u"
+                        "playlistFile": "~ - Stock Markets Overvalued.m3u"
                       },
                       {
                         "key": "MIKE_MALONEY_P26",
@@ -1417,140 +1417,90 @@
                       {
                         "key": "DW_DOCUMENTARY_P01",
                         "active": true,
-                        "playlistId": "PLovlAKbQVz6A0u1yGUdaG7MSh7fG9SR3t",
-                        "playlistFile": "~ - Thirst - When Our Water Disappears.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P02",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6CUAih30DqjUx1HKcxhx4jF",
-                        "playlistFile": "~ - Mediterranean Journey.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P03",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw",
-                        "playlistFile": "~ - Crime and Corruption.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P04",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6CvGNbixlDPE7VARke3nJV7",
-                        "playlistFile": "~ - Opaque Worlds.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P05",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6BZq3KWK_oSoNITmpLOvVoO",
-                        "playlistFile": "~ - Zero Tolerance.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P06",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6BvjmPSVcgGr_ysToFbr5fh",
-                        "playlistFile": "~ - Iraq - Destruction of a Nation.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P07",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6Aon7itnl8OIilO2O16JCuE",
-                        "playlistFile": "~ - Background on the War in Ukraine.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P08",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6CJSrfVbb73tLcz39YErsUp",
-                        "playlistFile": "~ - HER.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P09",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6B24zV7uO_FSZ6obgi9CtCl",
-                        "playlistFile": "~ - Unseen.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P10",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6BX4g4zSCX7nGIa_CKEGlCl",
-                        "playlistFile": "~ - Displaced.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P11",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6D_5zy6XprxesLws36LYJiM",
-                        "playlistFile": "~ - Founders Valley.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P12",
-                        "active": false,
-                        "playlistId": "PLovlAKbQVz6AItxnhpJeQhAUXn3559gSb",
-                        "playlistFile": "~ - Newest Upload.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P13",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6AF5hFvjI7ZbU2-MY0xHKX9",
-                        "playlistFile": "~ - Culture and Arts.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P14",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6BE-32_-Q5ojt-Pgqap-Ye9",
-                        "playlistFile": "~ - Travel.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P15",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6A5GUO5HaeNOeqv16tyEjXL",
-                        "playlistFile": "~ - Health and Sports.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P16",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6D2c8fc_GNgofSbJQsSfHVd",
-                        "playlistFile": "~ - Environment and Nature.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P17",
-                        "active": false,
-                        "playlistId": "PLovlAKbQVz6BaS4Skn9c7HQdVRXrAkWwI",
-                        "playlistFile": "~ - Editors' Choice.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P18",
-                        "active": false,
-                        "playlistId": "PLovlAKbQVz6A6aeBgS_E6WONvnSIG6LAc",
-                        "playlistFile": "~ - Most Watched.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P19",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6Bz-fFeMYBounG_bV3JZf5x",
-                        "playlistFile": "~ - Short Docs and Reports.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P20",
-                        "active": true,
-                        "playlistId": "PLovlAKbQVz6B7ejlCOfz1x7lDgHONJJkh",
-                        "playlistFile": "~ - Politics and Economics.m3u"
-                      },
-                      {
-                        "key": "DW_DOCUMENTARY_P21",
-                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6DhA5EKIe5evDkD1Mxsumci",
                         "playlistId": "PLovlAKbQVz6DhA5EKIe5evDkD1Mxsumci",
                         "playlistFile": "~ - Technology, Science, and Innovation.m3u"
                       },
                       {
-                        "key": "DW_DOCUMENTARY_P22",
+                        "key": "DW_DOCUMENTARY_P02",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw",
+                        "playlistId": "PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw",
+                        "playlistFile": "~ - Crime and Corruption.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P03",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6Bp4ee317J-w05CZa7iYttf",
                         "playlistId": "PLovlAKbQVz6Bp4ee317J-w05CZa7iYttf",
                         "playlistFile": "~ - Human Nature and Society.m3u"
                       },
                       {
-                        "key": "DW_DOCUMENTARY_P23",
+                        "key": "DW_DOCUMENTARY_P04",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6D2c8fc_GNgofSbJQsSfHVd",
+                        "playlistId": "PLovlAKbQVz6D2c8fc_GNgofSbJQsSfHVd",
+                        "playlistFile": "~ - Environment and Nature.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P05",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6B7ejlCOfz1x7lDgHONJJkh",
+                        "playlistId": "PLovlAKbQVz6B7ejlCOfz1x7lDgHONJJkh",
+                        "playlistFile": "~ - Politics and Economics.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P06",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6BE-32_-Q5ojt-Pgqap-Ye9",
+                        "playlistId": "PLovlAKbQVz6BE-32_-Q5ojt-Pgqap-Ye9",
+                        "playlistFile": "~ - Travel.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P07",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6C2PG0uSVQWmzot321mQuMN",
                         "playlistId": "PLovlAKbQVz6C2PG0uSVQWmzot321mQuMN",
                         "playlistFile": "~ - History.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P08",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6AF5hFvjI7ZbU2-MY0xHKX9",
+                        "playlistId": "PLovlAKbQVz6AF5hFvjI7ZbU2-MY0xHKX9",
+                        "playlistFile": "~ - Culture and Arts.m3u"
+                      },
+                      {
+                        "key": "DW_DOCUMENTARY_P09",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6A5GUO5HaeNOeqv16tyEjXL",
+                        "playlistId": "PLovlAKbQVz6A5GUO5HaeNOeqv16tyEjXL",
+                        "playlistFile": "~ - Health and Sports.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "CNBC",
+                    "active": true,
+                    "outputFolder": "~/CNBC",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "CNBC",
+                        "active": false,
+                        "name": "CNBC",
+                        "url": "https://www.youtube.com/c/CNBC",
+                        "playlistId": "UUvJJ_dzjViJCoLf5uKUTwoA",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "CNBC_ORIGINALS",
+                        "active": true,
+                        "name": "CNBCOriginals",
+                        "url": "https://www.youtube.com/playlist?list=PLDt0J62yU45sN1rBmNiSRr12acZBnPAZy",
+                        "playlistId": "PLDt0J62yU45sN1rBmNiSRr12acZBnPAZy",
+                        "outputFolder": "~ Originals",
+                        "keepClean": true
                       }
                     ]
                   },
@@ -1571,410 +1521,107 @@
                       {
                         "key": "FRONTLINE_PBS_P01",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwQBV7TfhcP1wKiojAARXOH",
-                        "playlistFile": "~ - Lies, Politics and Democracy - Interviews.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxLJx01g24Z-CuYKw56qwKd",
+                        "playlistId": "PL_pPc6-qR9ZxLJx01g24Z-CuYKw56qwKd",
+                        "playlistFile": "~ - Business and Economy.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P02",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZxNKJ0U2b0JOn8Pgmb7C0r5",
-                        "playlistFile": "~'s 5 Most-Streamed Documentaries of 2022.m3u"
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zxu3GcHj9o35jpCD4Fs5tgF",
+                        "playlistId": "PL_pPc6-qR9Zxu3GcHj9o35jpCD4Fs5tgF",
+                        "playlistFile": "~ - Climate and Environment.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P03",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZwgEab4ya0MImOVNm1UcKLW",
-                        "playlistFile": "~ - 2022 Emmy Nominations.m3u"
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZwKLVMyfYFUIvN477qYsKmJ",
+                        "playlistId": "PL_pPc6-qR9ZwKLVMyfYFUIvN477qYsKmJ",
+                        "playlistFile": "~ - COVID-19.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P04",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZxA-acIKWqmNUsIZ53lkzN_",
-                        "playlistFile": "~ - Putin's Road to War - Interviews.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZwsPahoXae3q6l7hpkhrQU4",
+                        "playlistId": "PL_pPc6-qR9ZwsPahoXae3q6l7hpkhrQU4",
+                        "playlistFile": "~ - Criminal Justice.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P05",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZxLJx01g24Z-CuYKw56qwKd",
-                        "playlistFile": "~ - Business & Economy.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zx7665ZORzJtIR5560d9Lp6",
+                        "playlistId": "PL_pPc6-qR9Zx7665ZORzJtIR5560d9Lp6",
+                        "playlistFile": "~ - Education.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P06",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZyGWVDabABtBzDWsyZxp_8E",
-                        "playlistFile": "~ - Un(re)solved.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zy80Ttb2ONnGc0A_ijZhNM3",
+                        "playlistId": "PL_pPc6-qR9Zy80Ttb2ONnGc0A_ijZhNM3",
+                        "playlistFile": "~ - Elections.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P07",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9Zy-dBOL7M8U9zxSEOrD8meR",
-                        "playlistFile": "~ - The Rise of Far-Right Extremism in the US.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zw1Z282HjVjHABlFQ9LSLEb",
+                        "playlistId": "PL_pPc6-qR9Zw1Z282HjVjHABlFQ9LSLEb",
+                        "playlistFile": "~ - Health.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P08",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZyIeAnYLeh1CW0-pyoNJXA4",
-                        "playlistFile": "~ - War Crimes Watch Ukraine.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxQXZ6sib4JEIcC10CzQSoC",
+                        "playlistId": "PL_pPc6-qR9ZxQXZ6sib4JEIcC10CzQSoC",
+                        "playlistFile": "~ - Immigration.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P09",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzJp6E0lTR2FhLxKjvyQhpG",
-                        "playlistFile": "~ - The Power of Big Oil.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZyUY226nHV2OTCrFdnqZyzQ",
+                        "playlistId": "PL_pPc6-qR9ZyUY226nHV2OTCrFdnqZyzQ",
+                        "playlistFile": "~ - Religion and Beliefs.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P10",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZxjxioPnmM6EUkJtpXZ86vv",
-                        "playlistFile": "~ - The Fight Over Roe v Wade and Abortion.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZzdqmIxnPuqyB4nP2n1He-d",
+                        "playlistId": "PL_pPc6-qR9ZzdqmIxnPuqyB4nP2n1He-d",
+                        "playlistFile": "~ - Social Issues.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P11",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwcXgqsD419T2d0fUia0rJJ",
-                        "playlistFile": "~ - Pelosi's Power - Interviews.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZzI8HRiccaI9wNSqtj0EVox",
+                        "playlistId": "PL_pPc6-qR9ZzI8HRiccaI9wNSqtj0EVox",
+                        "playlistFile": "~ - Sports.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P12",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZyNGtWHN2RG6z6oGF8QsnPD",
-                        "playlistFile": "~ - Top 10 Most Watched Documentaries of 2021.m3u"
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zzuo7QJB7yM6QUrm22ZE36B",
+                        "playlistId": "PL_pPc6-qR9Zzuo7QJB7yM6QUrm22ZE36B",
+                        "playlistFile": "~ - Terrorism.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P13",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwybfHzwD6J9v_0HgfO7KGi",
-                        "playlistFile": "~ - Steve Bannon - Transparency Interviews.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxJbwR0tb88w5XP8rRqLRn7",
+                        "playlistId": "PL_pPc6-qR9ZxJbwR0tb88w5XP8rRqLRn7",
+                        "playlistFile": "~ - U.S. Politics.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P14",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9ZxMohWwJGkWsFg3KCFp3QBm",
-                        "playlistFile": "~ - Afghanistan.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZyjUSsmGvCSKt65jn2pgmmm",
+                        "playlistId": "PL_pPc6-qR9ZyjUSsmGvCSKt65jn2pgmmm",
+                        "playlistFile": "~ - War and Conflict.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P15",
                         "active": true,
-                        "playlistId": "PL_pPc6-qR9Zy7-5mchUtrxqKTAHwxi1_1",
-                        "playlistFile": "~ - America After 9-11 - Transparency Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P16",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zz5o3dPhKIFCdCOGDbqPE_J",
-                        "playlistFile": "~ - 9-11 Documentaries.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P17",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zx7NfknE9ptwSqeiRRseTSr",
-                        "playlistFile": "~ - Money, Power, and Wall Street.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P18",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzzDcZE8klxgjH8bqat2EWt",
-                        "playlistFile": "~ - Un(re)solved - Podcast Series.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P19",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZxanarfgAd7REHpC2QyVIPo",
-                        "playlistFile": "~ - Trump's American Carnage - Transparency Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P20",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzE64__cGeHx8eh7YVNbv29",
-                        "playlistFile": "~ - The Choice 2020 - Transparency Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P21",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzzxfC6nORjBaNIFJn7yOHw",
-                        "playlistFile": "~ - Supreme Revenge - Transparency Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P22",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZysnWb2h_E8UQmOsWFSy09Y",
-                        "playlistFile": "~ - A Thousand Cuts.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P23",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwXzBQ6uYvY_0QdJnnna8Hm",
-                        "playlistFile": "~ - My Brother's Bomber.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P24",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZyK0R1Ol1iFkbBdLPuUCLOt",
-                        "playlistFile": "~ - Top 10 Most Streamed Documentaries.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P25",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwO2uge34yrJ_1HigqkaDNy",
-                        "playlistFile": "~ - COVID-19 - Podcasts.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P26",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzH_eOWWhn5AAxTw7fMHpWX",
-                        "playlistFile": "~ - Amazon Empire - Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P27",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zy3WCv5nzd5BxWKTGRoNtOP",
-                        "playlistFile": "~ - Amazon.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P28",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zyvhz1HBOiQ4WRm8E4RTDHa",
-                        "playlistFile": "~ - America's Great Divide - Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P29",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9Zzgi7ISG_klwXozDs73bhKI",
-                        "playlistFile": "~ - Most-Streamed Documentaries of 2019.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P30",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zw9Iec7Zfs3XTz5NKf8oNgd",
-                        "playlistFile": "~ - Zero Tolerance - Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P31",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzEepVsKZsT58XiLb38Tttr",
-                        "playlistFile": "~ - Extended Interviews.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P32",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zylb-5Q2rD-QwBR5Sqxa-Tm",
-                        "playlistFile": "~ - Facebook.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P33",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zx3DS274zy_7KjZHxyOGxHU",
-                        "playlistFile": "~ - Russia.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P34",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zzqyps3_JmrNG6h2kMXGfEE",
-                        "playlistFile": "~ - The Putin Files.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P35",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZyyWdfF7NU0X3K3rqLK2DBD",
-                        "playlistFile": "~ - VR Week.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P36",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwlDyyk6o-X_gib47lpqlGP",
-                        "playlistFile": "~ - Full Length Documentaries.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P37",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzZAb_MFeVVSWlt2L3YyqpL",
-                        "playlistFile": "~ - Betting on Trump.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P38",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zzn3dld4JCUB8MM77jO7981",
-                        "playlistFile": "~ - The Trump Administration.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P39",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwpTh1egrsEIW4sqiVNJ_rt",
-                        "playlistFile": "~ - Policing the Police.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P40",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZymurgAdPLhO01eNr-zPPbG",
-                        "playlistFile": "~ - How the Deck Is Stacked.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P41",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zwazeclla-TCpnObdde7b-N",
-                        "playlistFile": "~ - Saudi Arabia.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P42",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zxnx2HHtmsgHfQlvP2wngT0",
-                        "playlistFile": "~ - Fantasy Sports.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P43",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzoqfDEbJui1tlsV61yOtah",
-                        "playlistFile": "~ - Syria.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P44",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZwrJOxCm_JC90Exsx9C3Z5B",
-                        "playlistFile": "~ - My Brother's Bomber - Extras.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P45",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZxN_cLQXJstu8Xcw0F3gcd4",
-                        "playlistFile": "~ - Inside FRONTLINE.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P46",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwaQL9sGekReA9-hxJOTFMk",
-                        "playlistFile": "~ - Torture.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P47",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zyae-tdfQEaIINSeMW4LxOL",
-                        "playlistFile": "~ - Food Safety.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P48",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zxx_WfAHqa3vZIdmzDu3ont",
-                        "playlistFile": "~ - Q&A - A Counterterrorism Expert on the Conflict in Yemen.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P49",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZznDUE9LfrtrtK8_m4RFAsz",
-                        "playlistFile": "~ - Q&A - Reporting On the Ground in Yemen.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P50",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZyNky2XZyq5FE25QeWLOgBb",
-                        "playlistFile": "~ - Yemen.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P51",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwJ2QPbUluawz636AGx3h6A",
-                        "playlistFile": "~ - The Vaccine War.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P52",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwWd2sP00m2sJCWQfzOnZhU",
-                        "playlistFile": "~ FRONTLINE Explains.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P53",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZyCMlyc-BJP7uuP0J2X-vlt",
-                        "playlistFile": "~ - Documentary Shorts.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P54",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZyKfFcaY9M69zwa5Ki5Cn9o",
-                        "playlistFile": "~ - Trailers.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P55",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZyWcMc2CT3ZSGCqLQdgU3IZ",
-                        "playlistFile": "~ - Being Mortal.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P56",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zwan3wUQ-EngGLaaTEsWfTX",
-                        "playlistFile": "~ - Prison.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P57",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwRVd7_JO2k2mP3tPCs9Cxj",
-                        "playlistFile": "~ - NRA.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P58",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwDEjyVEfJVG1tX2dhTYivL",
-                        "playlistFile": "~ - ISIS.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P59",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zw87MGxX7I3A6gSbfZjOd-k",
-                        "playlistFile": "~ - Ask FRONTLINE.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P60",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzQ-zah-tQgM1MxPKIS6eJM",
-                        "playlistFile": "~ - Death by Fire.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P61",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzT0z2OrNm0GvN6n0yyrsiz",
-                        "playlistFile": "~ - League of Denial.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P62",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9Zy81R4BHWHN3FCKrlw-8SEE",
-                        "playlistFile": "~ - About Us.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P63",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZzkTlgOe81jyIK58L8qybTI",
-                        "playlistFile": "~ - Ebola.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P64",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zx7tvEdRKYePEmPBLgbbkbs",
-                        "playlistFile": "~ - Hunting Boko Haram.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P65",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9Zyo8ZgsoUSJyRDadW5rI5QT",
-                        "playlistFile": "~ - Generation Like.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P66",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZwXtrTfTmxmzW_lYzHyhlKg",
-                        "playlistFile": "~ - Latest.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P67",
-                        "active": false,
-                        "playlistId": "PL_pPc6-qR9ZwqzYIONExwiWW0Uf38JAo0",
-                        "playlistFile": "~ - Now Streaming.m3u"
-                      },
-                      {
-                        "key": "FRONTLINE_PBS_P68",
-                        "active": true,
-                        "playlistId": "PL_pPc6-qR9ZwtxgKf7QiecYtp_uNSK5Eg",
-                        "playlistFile": "~ - How The NSA Spies on You.m3u"
+                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxODyY_CAQ9blGcnk1yGn2Q",
+                        "playlistId": "PL_pPc6-qR9ZxODyY_CAQ9blGcnk1yGn2Q",
+                        "playlistFile": "~ - World.m3u"
                       }
                     ]
                   },
@@ -1995,536 +1642,233 @@
                       {
                         "key": "SPARK_DOCUMENTARY_P01",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKE2ngcoLpa3uMrt6XaO2e2",
                         "playlistId": "PLo1_uWd0YBJKE2ngcoLpa3uMrt6XaO2e2",
-                        "playlistFile": "~ - Happy Birthday Professor Jim Al-Khalili.m3u"
+                        "playlistFile": "~ - Professor Jim Al-Khalili.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P02",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIslmo5dln_JhE09mq-G9_q",
                         "playlistId": "PLo1_uWd0YBJIslmo5dln_JhE09mq-G9_q",
                         "playlistFile": "~ - Trajectory.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P03",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJJJ5gfE48XCNyi-2mXvJPH",
                         "playlistId": "PLo1_uWd0YBJJJJ5gfE48XCNyi-2mXvJPH",
                         "playlistFile": "~ - Tech Effect.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P04",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJI70SUdhSdk0-e8bLXdRyHc",
                         "playlistId": "PLo1_uWd0YBJI70SUdhSdk0-e8bLXdRyHc",
                         "playlistFile": "~ - How Do They Do It.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P05",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKqDDFXi6PzVc5Dkfp6mlJX",
                         "playlistId": "PLo1_uWd0YBJKqDDFXi6PzVc5Dkfp6mlJX",
                         "playlistFile": "~ - Zenith.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P06",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKXnsRVeEWzx19p58hAFlop",
                         "playlistId": "PLo1_uWd0YBJKXnsRVeEWzx19p58hAFlop",
                         "playlistFile": "~ - Apollo Mission.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P07",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLyKy44Rir0IcRTgObDXdas",
                         "playlistId": "PLo1_uWd0YBJLyKy44Rir0IcRTgObDXdas",
                         "playlistFile": "~ - Underground Britain.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P08",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIZCISaZlP43S-TN1ZiIZIj",
                         "playlistId": "PLo1_uWd0YBJIZCISaZlP43S-TN1ZiIZIj",
                         "playlistFile": "~ - Combat Machines.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P09",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJK0LPY18Rlq5j1XajSa1rTL",
                         "playlistId": "PLo1_uWd0YBJK0LPY18Rlq5j1XajSa1rTL",
                         "playlistFile": "~ - Extreme Constructions.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P10",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKdaKL0aS0udvBE1jY-zMB_",
                         "playlistId": "PLo1_uWd0YBJKdaKL0aS0udvBE1jY-zMB_",
                         "playlistFile": "~ - Mega Disaster.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P11",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIThFunz8kEMFFRfNtMABzq",
                         "playlistId": "PLo1_uWd0YBJIThFunz8kEMFFRfNtMABzq",
                         "playlistFile": "~ - Size Matters.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P12",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKWZJvj0H57oxnRbEterx-k",
                         "playlistId": "PLo1_uWd0YBJKWZJvj0H57oxnRbEterx-k",
                         "playlistFile": "~ - The UnEarth Series.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P13",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIuBbsOlN2rSiBXM890ura6",
                         "playlistId": "PLo1_uWd0YBJIuBbsOlN2rSiBXM890ura6",
                         "playlistFile": "~ - Age of Robots.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P14",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJqyoRumDZy3Yhw5AM1eZIn",
                         "playlistId": "PLo1_uWd0YBJJqyoRumDZy3Yhw5AM1eZIn",
                         "playlistFile": "~ - Behind The Wings.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P15",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJZ1IxYQMoJ7hqNPDCSG5NI",
                         "playlistId": "PLo1_uWd0YBJJZ1IxYQMoJ7hqNPDCSG5NI",
                         "playlistFile": "~ - The Evolution Of Us.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P16",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLUQPF0c3gG8__8eHC7J6As",
                         "playlistId": "PLo1_uWd0YBJLUQPF0c3gG8__8eHC7J6As",
                         "playlistFile": "~ - Heavy Lift.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P17",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLAsIr1zAhnejmNz88FPgoF",
                         "playlistId": "PLo1_uWd0YBJLAsIr1zAhnejmNz88FPgoF",
                         "playlistFile": "~ - Unexplained Science.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P18",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLKJGDmxu-VxlAlz3tO5Ulu",
                         "playlistId": "PLo1_uWd0YBJLKJGDmxu-VxlAlz3tO5Ulu",
                         "playlistFile": "~ - Science vs God.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P19",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKWQGqM0LJdf1AMevd_Zkbx",
                         "playlistId": "PLo1_uWd0YBJKWQGqM0LJdf1AMevd_Zkbx",
                         "playlistFile": "~ - The Secret Life Of.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P20",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJGhCJrKg1MLeCgSeKxwUP4",
                         "playlistId": "PLo1_uWd0YBJJGhCJrKg1MLeCgSeKxwUP4",
                         "playlistFile": "~ - Documentaries To Fall Asleep To.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P21",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLYvjYKFamaEpv2COj5pzTz",
                         "playlistId": "PLo1_uWd0YBJLYvjYKFamaEpv2COj5pzTz",
-                        "playlistFile": "~ - 4K Science Documentaries.m3u"
+                        "playlistFile": "~ - Science Documentaries.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P22",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJII3o9SgduZ0uAfOvTs--v1",
                         "playlistId": "PLo1_uWd0YBJII3o9SgduZ0uAfOvTs--v1",
                         "playlistFile": "~ - The Greatest Ever.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P23",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKKBShh8h4w7yw-PNOfFQOD",
                         "playlistId": "PLo1_uWd0YBJKKBShh8h4w7yw-PNOfFQOD",
                         "playlistFile": "~ - Warbird Workshop.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P24",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL7OwcXXRHGfFeGe919GD4l",
                         "playlistId": "PLo1_uWd0YBJL7OwcXXRHGfFeGe919GD4l",
                         "playlistFile": "~ - Supersized Structures.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P25",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKkFGISnQBZloyU7od9xxtb",
                         "playlistId": "PLo1_uWd0YBJKkFGISnQBZloyU7od9xxtb",
                         "playlistFile": "~ - Nigel Latta Blows Stuff Up.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P26",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJcB_DeitVw85-yCET0rhXR",
                         "playlistId": "PLo1_uWd0YBJJcB_DeitVw85-yCET0rhXR",
                         "playlistFile": "~ - Warships - Life At Sea.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P27",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLkWPOFZJNF3WL69LGFfaz7",
                         "playlistId": "PLo1_uWd0YBJLkWPOFZJNF3WL69LGFfaz7",
                         "playlistFile": "~ - Meteorite Men.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P28",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJImEwHM5Ui1bgKMXrzBf4SP",
                         "playlistId": "PLo1_uWd0YBJImEwHM5Ui1bgKMXrzBf4SP",
                         "playlistFile": "~ - Predict My Future - The Science Of Us.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P29",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL4Rv2Xf0YQeSQMd2hbRFVG",
                         "playlistId": "PLo1_uWd0YBJL4Rv2Xf0YQeSQMd2hbRFVG",
-                        "playlistFile": "~ - Medical Docs.m3u"
+                        "playlistFile": "~ - Medical Documentaries.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P30",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL7Ep0PTqoDDiaqx98AGDDD",
                         "playlistId": "PLo1_uWd0YBJL7Ep0PTqoDDiaqx98AGDDD",
                         "playlistFile": "~ - The Science Of Ships.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P31",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJ-I06MayZYFTskHf82J-_F",
                         "playlistId": "PLo1_uWd0YBJJ-I06MayZYFTskHf82J-_F",
                         "playlistFile": "~ - The Science Of Planes.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P32",
                         "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL8TYMhvfBGVJYmd3DlmEIr",
                         "playlistId": "PLo1_uWd0YBJL8TYMhvfBGVJYmd3DlmEIr",
                         "playlistFile": "~ - The Science Of Trains.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P33",
                         "active": true,
-                        "playlistId": "PLo1_uWd0YBJJI1_x-RnRHdcLXdqNqWRUG",
-                        "playlistFile": "~ - All Things Aliens.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P34",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKxCQwexD1wILLz7cZVKTwe",
-                        "playlistFile": "~ - The Harbour.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P35",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI9hfQe12miJXb4REBIrG1J",
-                        "playlistFile": "~ - Megastructures.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P36",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIfstj4SouIyoqe3v6fxo1o",
-                        "playlistFile": "~ - Bangkok Airport.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P37",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJkH7Vy7eUbkRwg8NLeP58H",
-                        "playlistFile": "~ - Bigger, Better, Faster, Stronger.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P38",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIxPJMhtLAndg2mCF0HN7-8",
-                        "playlistFile": "~ - Building To The Sky.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P39",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLFEmvVOLn0bfvHZFegUEOl",
-                        "playlistFile": "~ - Future Human AI.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P40",
-                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKKJagCDMeKacx4MFTQtjCD",
                         "playlistId": "PLo1_uWd0YBJKKJagCDMeKacx4MFTQtjCD",
-                        "playlistFile": "~ - The Science Of Nature.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P41",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI8ZLUlKV46NP0x6wqnQvj8",
-                        "playlistFile": "~ - Vehicles and Engineering.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P42",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI_Ph-oEWmQduC-92mO4MQz",
-                        "playlistFile": "~ - Warship UK.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P43",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKwGgiajopApLdvfpwMoona",
-                        "playlistFile": "~ - The Ultimates - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P44",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI-onDpySTChdTXzp5Te8Jp",
-                        "playlistFile": "~ - Cosmic Vistas - Seasons 1-5.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P45",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIM9HgV4-5Xzoj1yQCVOt1b",
-                        "playlistFile": "~ - James May's Man Lab - Season 1, 2, & 3.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P46",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIF2F9M-z1OKdZ42dftDZ6E",
-                        "playlistFile": "~ - Huge Moves.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P47",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIlkEoyhaEZOrkwygvYvUxh",
-                        "playlistFile": "~ - Power.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P48",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIVDj6qJHAN_tlU6TernXYx",
-                        "playlistFile": "~ - The World's Best Airport - Changi.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P49",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI1rQRPRrauMPJpfIsCMN4G",
-                        "playlistFile": "~ - Avoiding Apocalypse.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P50",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJL5cSH_wIQqwRDj3hl5ECV1",
-                        "playlistFile": "~ - Warships.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P51",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLOT03sQFHTdWs2Azr9Vcnj",
-                        "playlistFile": "~ - The Truth About.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P52",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIZhWfahf_dcbKCQYhyMMQc",
-                        "playlistFile": "~ - Mega Mechanics.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P53",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJL1nFR1E7DbPbb3_pFU3_Ml",
-                        "playlistFile": "~ - Backyard Inventors.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P54",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI2PZ1nfZkf-DxNDqAggsIB",
-                        "playlistFile": "~ - Ever Wondered.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P55",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJK8oap1vrXI9I_SUCIbe14r",
-                        "playlistFile": "~ - What's It Like To Work Mining The Earth's Riches.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P56",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKp3u-pIXpOZG8jIaTPB3xK",
-                        "playlistFile": "~ - What's On Your Mind.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P57",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJQGgEWVZVlUGpsnRm7um3N",
-                        "playlistFile": "~ - The Tube.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P58",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKeXSUa-Hg5b4GOOlKrZ2xP",
-                        "playlistFile": "~ - Super Structures.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P59",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJnCw5YeQ3BHaqK-9-S4F6h",
-                        "playlistFile": "~ - Absolute Science.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P60",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJK1BjM-lp2JKLRgYXK_mFFT",
-                        "playlistFile": "~ - Built From Disaster.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P61",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLcWKdXQ300eNIT65nldVTK",
-                        "playlistFile": "~ - Boomtown Asia.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P62",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJISpprw-sIXGCyiymovKeP6",
-                        "playlistFile": "~ - How The Hubble Telescope Opened Our Eyes.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P63",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLCijmfL4bLjj8n5excDoMy",
-                        "playlistFile": "~ - James May's Toy Stories.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P64",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIbL45ewqCSTHXB3xwK_u7V",
-                        "playlistFile": "~ - Getting You Get From A To B.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P65",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJL6_gBRhf12lLyh4MYWaXq",
-                        "playlistFile": "~ - Windfarm Wars - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P66",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIluN0Zs40v6kv_4siG2EMl",
-                        "playlistFile": "~ - The Tube - Season 3.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P67",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIpjyhzLbJe90SXF5_GxM_v",
-                        "playlistFile": "~ - Binge Worthy Series.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P68",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJI6L1j0lQVqaHhyWYqBP57x",
-                        "playlistFile": "~ - Dublin Airport - Life Stories - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P69",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJybU4j21cq6MoqaSza7qsn",
-                        "playlistFile": "~ - Inventions That Shook The World - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P70",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKTi155r4pX833DFS5vNnT_",
-                        "playlistFile": "~ - The Tube - Season 2.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P71",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIg-QC1qYrNQ2POAJF8qC__",
-                        "playlistFile": "~ - Science Bites.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P72",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIOXoEekRvoEdphLjC2bopG",
-                        "playlistFile": "~ - Magnificent Megacities - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P73",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJKJqssfmE85Ma47oCYxMSm",
-                        "playlistFile": "~ - The Tube - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P74",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKuevCCP4ZcwwBOgMxvUOg7",
-                        "playlistFile": "~ - Chasing Sleep - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P75",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJOHMlwKpKhlGfdaL1FoGtR",
-                        "playlistFile": "~ - Engineering Giants.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P76",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJIt9w4umDNyDEQ8oni9jdg",
-                        "playlistFile": "~ - World's Worst Venom.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P77",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIFbsZFSRlN-3h5s5p6IY2n",
-                        "playlistFile": "~ - Britain's Busiest Airport - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P78",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJBPQ8c3yul4Flndj0RCfFj",
-                        "playlistFile": "~ - How Did They Build That - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P79",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJL-vzC5R_HpsO7pJikh8BsX",
-                        "playlistFile": "~ - Demolition Squad - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P80",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJK6A5tz6Uuh_359rL7chkM7",
-                        "playlistFile": "~ - Secrets of the Universe - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P81",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIrq5OKOfwxKu0t6o4zRWiq",
-                        "playlistFile": "~ - Science Fiction - Season 1.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P82",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJgdUvXe4_4uiK0piwoBz69",
-                        "playlistFile": "~ - The Military Tech Show.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P83",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIPKbuQBFoPhKOOsfND1hUM",
-                        "playlistFile": "~ - Building The Ultimate.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P84",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJ_AcfCk1IFTWyhclSM0_zw",
-                        "playlistFile": "~ - The Big Questions.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P85",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJKvR51p7qxb59E4ym5INJ4-",
-                        "playlistFile": "~ - Brainiac.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P86",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJJGzuysfj1Jml9TkyhnOJVs",
-                        "playlistFile": "~ - Gotta Go Faster.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P87",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJIutiFITcYeYhKQ322BhzTi",
-                        "playlistFile": "~ Top Docs.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P88",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLCCbYJmCGL_CRyi6zJIGDp",
-                        "playlistFile": "~ Engineering Playlist.m3u"
-                      },
-                      {
-                        "key": "SPARK_DOCUMENTARY_P89",
-                        "active": true,
-                        "playlistId": "PLo1_uWd0YBJLRrEaa9EUT9m5orqsarHij",
-                        "playlistFile": "~ Space Playlist.m3u"
+                        "playlistFile": "~ - The Science of Nature.m3u"
                       }
                     ]
                   },
@@ -2629,77 +1973,59 @@
                       {
                         "key": "ENDEVR_DOCUMENTARY_P15",
                         "active": true,
-                        "playlistId": "PLaevADMuI9-HdCRx_qPfExLzE57ZVX0s5",
-                        "playlistFile": "~ - Best Investigative Videos and Documentaries.m3u"
-                      },
-                      {
-                        "key": "ENDEVR_DOCUMENTARY_P16",
-                        "active": true,
                         "playlistId": "PLaevADMuI9-Fv5Y-fIorj2S4wDcehW6zV",
                         "playlistFile": "~ - Economics and Business.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P17",
+                        "key": "ENDEVR_DOCUMENTARY_P16",
                         "active": true,
                         "playlistId": "PLaevADMuI9-EikIvGZtd2h43kvD7fVPbK",
                         "playlistFile": "~ - Who Rules America.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P18",
-                        "active": true,
-                        "playlistId": "PLaevADMuI9-E-eHLDCgqDFKpw5kYuYsoK",
-                        "playlistFile": "~ - Special Documentaries.m3u"
-                      },
-                      {
-                        "key": "ENDEVR_DOCUMENTARY_P19",
+                        "key": "ENDEVR_DOCUMENTARY_P17",
                         "active": true,
                         "playlistId": "PLaevADMuI9-Ev81tGxJuWkTGOi4F7Ot-5",
                         "playlistFile": "~ - Futuristic China.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P20",
+                        "key": "ENDEVR_DOCUMENTARY_P18",
                         "active": true,
                         "playlistId": "PLaevADMuI9-FitNb8by6Rbq-iPpyr-Uah",
                         "playlistFile": "~ - ENDEVR Explains.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P21",
+                        "key": "ENDEVR_DOCUMENTARY_P19",
                         "active": true,
                         "playlistId": "PLaevADMuI9-GAo2JVz9WIm2uTD275nA4f",
                         "playlistFile": "~ - C-Suite.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P22",
+                        "key": "ENDEVR_DOCUMENTARY_P20",
                         "active": true,
                         "playlistId": "PLaevADMuI9-E5RBtWSXfAC01qVnOAAuDJ",
                         "playlistFile": "~ - Brink.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P23",
+                        "key": "ENDEVR_DOCUMENTARY_P21",
                         "active": true,
                         "playlistId": "PLaevADMuI9-E6C5in1cqqMQxp0qkGGDQV",
                         "playlistFile": "~ - Investigative Documentaries.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P24",
-                        "active": true,
-                        "playlistId": "PLaevADMuI9-FprE0PZY56B-YWBckdSHfd",
-                        "playlistFile": "~ - Best Investigative and Business Documentaries.m3u"
-                      },
-                      {
-                        "key": "ENDEVR_DOCUMENTARY_P25",
+                        "key": "ENDEVR_DOCUMENTARY_P22",
                         "active": true,
                         "playlistId": "PLaevADMuI9-FmfrGN_SHoU5_Jk4bYcgnO",
                         "playlistFile": "~ - Inside....m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P26",
+                        "key": "ENDEVR_DOCUMENTARY_P23",
                         "active": true,
                         "playlistId": "PLaevADMuI9-FqzYH6ZZpmw2vK0fVjRZYu",
                         "playlistFile": "~ - High Flyers.m3u"
                       },
                       {
-                        "key": "ENDEVR_DOCUMENTARY_P27",
+                        "key": "ENDEVR_DOCUMENTARY_P24",
                         "active": true,
                         "playlistId": "PLaevADMuI9-GiZ5CwbbyN5wiRFnq6Y89y",
                         "playlistFile": "~ - Game Changers.m3u"

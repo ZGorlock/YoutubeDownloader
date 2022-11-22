@@ -109,15 +109,23 @@ public class ChannelProcesses_Sample {
             case "DW_DOCUMENTARY":
                 RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
                         "\\[4K]",
-                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
-                        "\\s*-?\\s*(?:(?:FULL|FREE|DW)\\s*)+(?:[^-)\\]]+\\s*)?(?:DOCUMENTARY|DOCUMENTAL|ENGLISH)"));
+                        "\\s*[\\-|]?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*[\\-|]?\\s*(?:(?:FULL|FREE|DW)\\s*)+(?:[^-)\\]]+\\s*)?(?:DOCUMENTARY|DOCUMENTAL|ENGLISH)"));
+                break;
+            
+            case "CNBC":
+            case "CNBC_ORIGINALS":
+                RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
+                        "\\[4K]",
+                        "\\s*[\\-|]\\s*CNBC\\s*(?:DOCUMENTARY|AFTER\\s?HOURS|MARATHON)?$",
+                        "^CNBC\\s*(?:DOCUMENTARY|AFTER\\s?HOURS|MARATHON)?\\s*[\\-|]\\s*"));
                 break;
             
             case "FRONTLINE_PBS":
                 RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
                         "\\[4K]",
-                        "\\s*-?\\s*@Associated\\s+Press",
-                        "\\s*-?\\s*#AskFRONTLINE",
+                        "\\s*[\\-|]?\\s*@Associated\\s+Press",
+                        "\\s*[\\-|]?\\s*#AskFRONTLINE",
                         "\\s*-\\s*FRONTLINE(?:\\sPBS)?(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
                         "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)",
                         "\\s+\\(.*CAPTIONS\\sAVAILABLE.*\\)"));
@@ -132,7 +140,7 @@ public class ChannelProcesses_Sample {
                         " l ", " | ");
                 RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
                         "\\[4K]",
-                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*[\\-|]?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
                         "\\s*-\\s*SPARK(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
                         "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
                 break;
@@ -140,7 +148,7 @@ public class ChannelProcesses_Sample {
             case "ENDEVR_DOCUMENTARY":
                 RenameProcess.regexRemoveIgnoreCase(videoMap, List.of(
                         "\\[4K]",
-                        "\\s*-?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
+                        "\\s*[\\-|]?\\s*[\\[(][^)\\]]*DOCUMENTARY[)\\]]",
                         "\\s*-\\s*ENDE?VR(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
                         "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)"));
                 break;
@@ -418,6 +426,10 @@ public class ChannelProcesses_Sample {
             
             
             //DOCUMENTARY
+            
+            case "ENDEVR_DOCUMENTARY":
+                FilterProcess.containsIgnoreCase(videoMap, "DW Documentary");
+                break;
             
             case "PHILON":
                 FilterProcess.dateBefore(videoMap,
