@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.entity.base.Entity;
 
 /**
  * Defines the Thumbnail Set of an Entity.
@@ -116,8 +117,8 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
         public Thumbnail(String quality, Map<String, Object> thumbnailData) {
             this.quality = Quality.valueOf(quality.toUpperCase());
             this.url = (String) thumbnailData.get("url");
-            this.width = (Long) thumbnailData.get("width");
-            this.height = (Long) thumbnailData.get("height");
+            this.width = Entity.integerParser.apply(thumbnailData.get("width"));
+            this.height = Entity.integerParser.apply(thumbnailData.get("height"));
         }
         
         
@@ -129,7 +130,8 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
          * @return The size of the Thumbnail.
          */
         public long getSize() {
-            return width * height;
+            return ((width == null) || (height == null)) ? -1 :
+                   (width * height);
         }
         
     }

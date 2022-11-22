@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import commons.lambda.function.checked.CheckedFunction;
+import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -73,6 +74,24 @@ public abstract class Entity {
                             e.getOrDefault("H", 0L)) * 60) +
                             e.getOrDefault("M", 0L)) * 60) +
                             e.getOrDefault("S", 0L))
+                    .orElse(null);
+    
+    /**
+     * Parses an integer from Entity data into a long; or null if there was an error.
+     */
+    public static final CheckedFunction<Object, Long> integerParser = (Object integerObject) ->
+            Optional.ofNullable(integerObject)
+                    .map(String::valueOf)
+                    .map((UncheckedFunction<String, Long>) Long::parseLong)
+                    .orElse(null);
+    
+    /**
+     * Parses a number from Entity data into a double; or null if there was an error.
+     */
+    public static final CheckedFunction<Object, Double> numberParser = (Object numberObject) ->
+            Optional.ofNullable(numberObject)
+                    .map(String::valueOf)
+                    .map((UncheckedFunction<String, Double>) Double::parseDouble)
                     .orElse(null);
     
     
@@ -169,7 +188,7 @@ public abstract class Entity {
         this.status = getData("status", "privacyStatus");
         
         this.dateString = getData("publishedAt");
-        this.date = Optional.ofNullable(dateString).map(dateParser).orElseGet(LocalDateTime::now);
+        this.date = dateParser.apply(dateString);
         
         this.tags = new TagList(getData("tags"));
         this.topics = new TopicList(getData("topicDetails", "topicCategories"));

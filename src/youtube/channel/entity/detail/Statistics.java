@@ -12,9 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import commons.lambda.function.checked.CheckedFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.entity.base.Entity;
 
 /**
  * Defines the Statistics of an Entity.
@@ -74,8 +74,7 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          */
         public Stat(String name, Object count) {
             this.name = name;
-            this.count = Optional.ofNullable(count).map(String::valueOf)
-                    .map((CheckedFunction<String, Long>) Long::parseLong).orElse(null);
+            this.count = Entity.integerParser.apply(count);
         }
         
         

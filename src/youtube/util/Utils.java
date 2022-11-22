@@ -11,6 +11,7 @@ import java.io.File;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 
@@ -173,7 +174,7 @@ public final class Utils {
      * @return The cleaned title.
      */
     public static String cleanVideoTitle(String title) {
-        return Normalizer.normalize(title, Normalizer.Form.NFC)
+        return Normalizer.normalize(Optional.ofNullable(title).orElse(""), Normalizer.Form.NFC)
                 .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS}+", "")
                 .replaceAll("\\p{InCOMBINING_DIACRITICAL_MARKS_SUPPLEMENT}+", "")
                 .strip()

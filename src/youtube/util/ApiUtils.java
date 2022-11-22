@@ -897,7 +897,9 @@ public final class ApiUtils {
          */
         @SuppressWarnings("unchecked")
         private static <T extends Entity> T cacheEntity(EntityType entityType, String entityId, CheckedFunction<String, T> entityLoader) {
-            return (T) entityCache.get(entityType).computeIfAbsent(entityId, entityLoader);
+            return Optional.ofNullable(entityId)
+                    .map(e -> (T) entityCache.get(entityType).computeIfAbsent(entityId, entityLoader))
+                    .orElse(null);
         }
         
         /**

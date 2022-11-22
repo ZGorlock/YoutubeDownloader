@@ -10,6 +10,7 @@ package youtube.process.macro;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -902,7 +903,7 @@ public class FilterProcess {
      */
     public static void date(Map<String, Video> videoMap, Predicate<LocalDate> dateCondition, boolean negate) {
         BaseProcess.filter(videoMap, video ->
-                negate ^ dateCondition.test(video.date.toLocalDate()));
+                Optional.ofNullable(video.date).map(e -> (negate ^ dateCondition.test(e.toLocalDate()))).orElse(false));
     }
     
     /**

@@ -120,10 +120,10 @@ public class Video extends Entity {
         
         this.url = WebUtils.VIDEO_BASE + videoId;
         
-        this.playlistPosition = getData("position");
+        this.playlistPosition = integerParser.apply(getData("position"));
         
         this.durationString = getData("contentDetails", "duration");
-        this.duration = Optional.ofNullable(durationString).map(durationParser).orElse(-1L);
+        this.duration = durationParser.apply(durationString);
         this.chapterList = new ChapterList(description, duration);
         
         this.definition = getData("contentDetails", "definition");

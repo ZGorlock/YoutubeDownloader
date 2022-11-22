@@ -90,7 +90,7 @@ public class EntityMetadata {
      * @param entityData The json data of the Entity,
      */
     protected EntityMetadata(Map<String, Object> entityData) {
-        this.rawData = Map.copyOf(entityData);
+        this.rawData = entityData;
         
         this.kind = getData("kind");
         this.eTag = getData("etag");
@@ -98,10 +98,10 @@ public class EntityMetadata {
         
         this.channelId = getData("snippet", "channelId");
         this.channelTitle = getData("snippet", "channelTitle");
-        this.channel = Optional.ofNullable(channelId).map(ApiUtils::fetchChannel).orElse(null);
+        this.channel = ApiUtils.fetchChannel(channelId);
         
         this.playlistId = getData("snippet", "playlistId");
-        this.playlist = Optional.ofNullable(playlistId).map(ApiUtils::fetchPlaylist).orElse(null);
+        this.playlist = ApiUtils.fetchPlaylist(playlistId);
     }
     
     /**

@@ -60,7 +60,7 @@ public class Channel extends Entity {
         this.channelId = metadata.itemId;
         this.metadata.entityId = channelId;
         
-        this.customUrl = (String) channelData.get("customUrl");
+        this.customUrl = getData("customUrl");
         this.url = WebUtils.CHANNEL_BASE + Optional.ofNullable(customUrl).map(e -> e.replaceAll("^@", "")).orElse(channelId);
         
         this.videoCount = Optional.ofNullable(stats).map(e -> e.get("videoCount")).map(e -> e.count).orElse(null);
