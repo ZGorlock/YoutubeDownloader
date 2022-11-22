@@ -230,6 +230,20 @@ public class Channel extends ChannelEntry {
     }
     
     /**
+     * Returns the display name of the Channel.
+     *
+     * @return The display name of the Channel.
+     */
+    public String getDisplayName() {
+        return getName() + Optional.ofNullable(name)
+                .filter(e -> e.matches(".*P\\d+$"))
+                .map(e -> Optional.ofNullable(outputFolderPath).orElse(playlistFilePath))
+                .map(e -> e.replaceAll("^~\\s*[-/]", "").replace(".m3u", ""))
+                .map(String::strip)
+                .map(e -> (" - (" + e + ")")).orElse("");
+    }
+    
+    /**
      * Returns the playlist file to add files downloaded by the Channel to.
      *
      * @return The playlist file to add files downloaded by the Channel to.

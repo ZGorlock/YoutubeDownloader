@@ -150,7 +150,7 @@ public class YoutubeChannelDownloader {
         }
         
         System.out.println(Utils.NEWLINE);
-        System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.getName()));
+        System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.getDisplayName()));
         
         boolean success = WebUtils.isOnline() &&
                 loadChannelData() &&
