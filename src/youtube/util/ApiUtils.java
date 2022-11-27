@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.conf.Color;
-import youtube.entity.info.Playlist;
+import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.entity.info.base.EntityInfo;
 import youtube.state.Stats;
@@ -177,7 +177,7 @@ public final class ApiUtils {
         //Values
         
         CHANNEL(Endpoint.CHANNEL, (data, channel) -> new youtube.entity.info.Channel(data, channel)),
-        PLAYLIST(Endpoint.PLAYLIST, (data, channel) -> new Playlist(data, channel)),
+        PLAYLIST(Endpoint.PLAYLIST, (data, channel) -> new PlaylistInfo(data, channel)),
         VIDEO(Endpoint.VIDEO, (data, channel) -> new VideoInfo(data, channel));
         
         
@@ -351,7 +351,7 @@ public final class ApiUtils {
      * @param channel    The parent Channel.
      * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static Playlist fetchPlaylist(String playlistId, Channel channel) {
+    public static PlaylistInfo fetchPlaylist(String playlistId, Channel channel) {
         return EntityHandler.loadEntity(EntityType.PLAYLIST, playlistId, ApiUtils::fetchPlaylistData, channel);
     }
     
@@ -361,7 +361,7 @@ public final class ApiUtils {
      * @param playlistId The Youtube id of the Playlist Entity.
      * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static Playlist fetchPlaylist(String playlistId) {
+    public static PlaylistInfo fetchPlaylist(String playlistId) {
         return fetchPlaylist(playlistId, null);
     }
     
@@ -371,7 +371,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static Playlist fetchPlaylist(Channel channel) {
+    public static PlaylistInfo fetchPlaylist(Channel channel) {
         return fetchPlaylist(channel.getPlaylistId(), channel);
     }
     
@@ -534,7 +534,7 @@ public final class ApiUtils {
      * @return The list of Playlist Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Playlist> fetchChannelPlaylists(String channelId, Channel channel) throws Exception {
+    public static List<PlaylistInfo> fetchChannelPlaylists(String channelId, Channel channel) throws Exception {
         return EntityHandler.loadEntities(EntityType.PLAYLIST, channelId, ApiUtils::fetchChannelPlaylistsData, channel);
     }
     
@@ -545,7 +545,7 @@ public final class ApiUtils {
      * @return The list of Playlist Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Playlist> fetchChannelPlaylists(String channelId) throws Exception {
+    public static List<PlaylistInfo> fetchChannelPlaylists(String channelId) throws Exception {
         return fetchChannelPlaylists(channelId, null);
     }
     
@@ -556,7 +556,7 @@ public final class ApiUtils {
      * @return The list of Playlist Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Playlist> fetchChannelPlaylists(Channel channel) throws Exception {
+    public static List<PlaylistInfo> fetchChannelPlaylists(Channel channel) throws Exception {
         return fetchChannelPlaylists(channel.getChannelId(), channel);
     }
     

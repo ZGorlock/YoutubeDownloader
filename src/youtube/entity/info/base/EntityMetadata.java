@@ -13,7 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.entity.info.Channel;
-import youtube.entity.info.Playlist;
+import youtube.entity.info.PlaylistInfo;
 import youtube.util.ApiUtils;
 
 /**
@@ -74,7 +74,7 @@ public class EntityMetadata {
     /**
      * The Youtube playlist entity of the Entity.
      */
-    public Playlist playlist;
+    public PlaylistInfo playlist;
     
     /**
      * The Youtube id of the Entity.

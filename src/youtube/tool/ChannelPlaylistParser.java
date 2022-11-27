@@ -23,7 +23,7 @@ import youtube.channel.ChannelGroup;
 import youtube.channel.ChannelJsonFormatter;
 import youtube.channel.Channels;
 import youtube.conf.Configurator;
-import youtube.entity.info.Playlist;
+import youtube.entity.info.PlaylistInfo;
 import youtube.util.ApiUtils;
 import youtube.util.Utils;
 
@@ -100,7 +100,7 @@ public class ChannelPlaylistParser {
         }
         baseChannel.state.cleanupData();
         
-        final List<Playlist> playlistData = parsePlaylistData(baseChannel);
+        final List<PlaylistInfo> playlistData = parsePlaylistData(baseChannel);
         final List<Channel> playlistChannels = makePlaylistChannels(baseChannel, playlistData);
         
         final String playlistJson = formatPlaylistChannels(playlistChannels);
@@ -117,7 +117,7 @@ public class ChannelPlaylistParser {
      * @return The list of parsed Playlists.
      * @throws Exception When there is an error.
      */
-    private static List<Playlist> parsePlaylistData(Channel channel) throws Exception {
+    private static List<PlaylistInfo> parsePlaylistData(Channel channel) throws Exception {
         return ApiUtils.fetchChannelPlaylists(channel);
     }
     
@@ -129,11 +129,11 @@ public class ChannelPlaylistParser {
      * @return The list of playlist Channels.
      * @throws Exception When there is an error.
      */
-    private static List<Channel> makePlaylistChannels(Channel baseChannel, List<Playlist> playlists) throws Exception {
+    private static List<Channel> makePlaylistChannels(Channel baseChannel, List<PlaylistInfo> playlists) throws Exception {
         return playlists.stream()
                 .filter(Objects::nonNull)
                 .filter(playlist -> !skipPlaylists.contains(playlist.title))
-                .map((UncheckedFunction<Playlist, Channel>) playlist ->
+                .map((UncheckedFunction<PlaylistInfo, Channel>) playlist ->
                         new Channel(MapUtility.mapOf(List.of(
                                 new ImmutablePair<>("key", (baseChannel.key + "_P")),
                                 new ImmutablePair<>("playlistId", playlist.playlistId),

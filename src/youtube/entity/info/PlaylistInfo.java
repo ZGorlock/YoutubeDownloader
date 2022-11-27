@@ -1,5 +1,5 @@
 /*
- * File:    Playlist.java
+ * File:    PlaylistInfo.java
  * Package: youtube.entity.info
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
@@ -16,16 +16,16 @@ import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
 /**
- * Defines a Youtube Playlist.
+ * Defines the Info of a Youtube Playlist Entity.
  */
-public class Playlist extends EntityInfo {
+public class PlaylistInfo extends EntityInfo {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(Playlist.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlaylistInfo.class);
     
     
     //Fields
@@ -44,12 +44,12 @@ public class Playlist extends EntityInfo {
     //Constructors
     
     /**
-     * Creates a Playlist.
+     * Creates a Playlist Entity Info.
      *
      * @param playlistData The json data of the Playlist.
      * @param channel      The Channel containing the Playlist Entity.
      */
-    public Playlist(Map<String, Object> playlistData, Channel channel) {
+    public PlaylistInfo(Map<String, Object> playlistData, Channel channel) {
         super(playlistData, channel);
         
         this.playlistId = metadata.itemId;
@@ -61,18 +61,18 @@ public class Playlist extends EntityInfo {
     }
     
     /**
-     * Creates a Playlist.
+     * Creates a Playlist Entity Info.
      *
      * @param playlistData The json data of the Playlist.
      */
-    public Playlist(Map<String, Object> playlistData) {
+    public PlaylistInfo(Map<String, Object> playlistData) {
         this(playlistData, null);
     }
     
     /**
-     * The default no-argument constructor for a Playlist.
+     * The default no-argument constructor for a Playlist Entity Info.
      */
-    public Playlist() {
+    public PlaylistInfo() {
         super();
     }
     
