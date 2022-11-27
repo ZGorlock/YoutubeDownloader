@@ -1,5 +1,5 @@
 /*
- * File:    Video.java
+ * File:    VideoInfo.java
  * Package: youtube.entity.info
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
@@ -27,16 +27,16 @@ import youtube.util.Utils;
 import youtube.util.WebUtils;
 
 /**
- * Defines a Youtube Video.
+ * Defines the Info of a Youtube Video Entity.
  */
-public class Video extends EntityInfo {
+public class VideoInfo extends EntityInfo {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(Video.class);
+    private static final Logger logger = LoggerFactory.getLogger(VideoInfo.class);
     
     
     //Fields
@@ -105,13 +105,13 @@ public class Video extends EntityInfo {
     //Constructors
     
     /**
-     * Creates a Video.
+     * Creates a Video Entity Info.
      *
      * @param videoData The json data of the Video.
      * @param channel   The Channel containing the Video Entity.
      */
     @SuppressWarnings("unchecked")
-    public Video(Map<String, Object> videoData, Channel channel) {
+    public VideoInfo(Map<String, Object> videoData, Channel channel) {
         super(videoData, channel);
         
         this.videoId = Optional.ofNullable((Map<String, Object>) getData("resourceId"))
@@ -138,16 +138,16 @@ public class Video extends EntityInfo {
     }
     
     /**
-     * Creates a Video.
+     * Creates a Video Entity Info.
      *
      * @param videoData The json data of the Video.
      */
-    public Video(Map<String, Object> videoData) {
+    public VideoInfo(Map<String, Object> videoData) {
         this(videoData, null);
     }
     
     /**
-     * Creates a Video.
+     * Creates a Video Entity Info.
      *
      * @param videoId The id of the Video.
      * @param title   The title of the Video.
@@ -155,7 +155,7 @@ public class Video extends EntityInfo {
      * @param channel The Channel containing the Video.
      */
     @SuppressWarnings("unchecked")
-    public Video(String videoId, String title, String date, Channel channel) {
+    public VideoInfo(String videoId, String title, String date, Channel channel) {
         this(MapUtility.mapOf(
                         new ImmutablePair<>("snippet", MapUtility.mapOf(
                                 new ImmutablePair<>("title", title),
@@ -166,20 +166,20 @@ public class Video extends EntityInfo {
     }
     
     /**
-     * Creates a Video.
+     * Creates a Video Entity Info.
      *
      * @param videoId The id of the Video.
      * @param title   The title of the Video.
      * @param date    The date the Video was uploaded.
      */
-    public Video(String videoId, String title, String date) {
+    public VideoInfo(String videoId, String title, String date) {
         this(videoId, title, date, null);
     }
     
     /**
-     * The default no-argument constructor for a Video.
+     * The default no-argument constructor for a Video Entity Info.
      */
-    public Video() {
+    public VideoInfo() {
         super();
     }
     

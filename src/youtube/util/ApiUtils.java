@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.conf.Color;
 import youtube.entity.info.Playlist;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 import youtube.entity.info.base.EntityInfo;
 import youtube.state.Stats;
 
@@ -178,7 +178,7 @@ public final class ApiUtils {
         
         CHANNEL(Endpoint.CHANNEL, (data, channel) -> new youtube.entity.info.Channel(data, channel)),
         PLAYLIST(Endpoint.PLAYLIST, (data, channel) -> new Playlist(data, channel)),
-        VIDEO(Endpoint.VIDEO, (data, channel) -> new Video(data, channel));
+        VIDEO(Endpoint.VIDEO, (data, channel) -> new VideoInfo(data, channel));
         
         
         //Fields
@@ -416,7 +416,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Video Entity, or null if the Video Entity cannot be fetched.
      */
-    public static Video fetchVideo(String videoId, Channel channel) {
+    public static VideoInfo fetchVideo(String videoId, Channel channel) {
         return EntityHandler.loadEntity(EntityType.VIDEO, videoId, ApiUtils::fetchVideoData, channel);
     }
     
@@ -426,7 +426,7 @@ public final class ApiUtils {
      * @param videoId The Youtube id of the Video Entity.
      * @return The Video Entity, or null if the Video Entity cannot be fetched.
      */
-    public static Video fetchVideo(String videoId) {
+    public static VideoInfo fetchVideo(String videoId) {
         return fetchVideo(videoId, null);
     }
     
@@ -461,7 +461,7 @@ public final class ApiUtils {
      * @return The list of Video Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Video> fetchPlaylistVideos(String playlistId, Channel channel) throws Exception {
+    public static List<VideoInfo> fetchPlaylistVideos(String playlistId, Channel channel) throws Exception {
         return EntityHandler.loadEntities(EntityType.VIDEO, playlistId, ApiUtils::fetchPlaylistVideosData, channel);
     }
     
@@ -472,7 +472,7 @@ public final class ApiUtils {
      * @return The list of Video Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Video> fetchPlaylistVideos(String playlistId) throws Exception {
+    public static List<VideoInfo> fetchPlaylistVideos(String playlistId) throws Exception {
         return fetchPlaylistVideos(playlistId, null);
     }
     
@@ -483,7 +483,7 @@ public final class ApiUtils {
      * @return The list of Video Entities.
      * @throws Exception When there is an error.
      */
-    public static List<Video> fetchPlaylistVideos(Channel channel) throws Exception {
+    public static List<VideoInfo> fetchPlaylistVideos(Channel channel) throws Exception {
         return fetchPlaylistVideos(channel.getPlaylistId(), channel);
     }
     

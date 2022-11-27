@@ -25,7 +25,7 @@ import youtube.channel.Channel;
 import youtube.channel.Channels;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 import youtube.process.ChannelProcesses;
 import youtube.state.KeyStore;
 import youtube.state.Stats;
@@ -59,7 +59,7 @@ public class YoutubeChannelDownloader {
     /**
      * The video map for the Channel being processed.
      */
-    private static final Map<String, Video> videoMap = new LinkedHashMap<>();
+    private static final Map<String, VideoInfo> videoMap = new LinkedHashMap<>();
     
     
     //Main Method
@@ -181,7 +181,7 @@ public class YoutubeChannelDownloader {
             
             final Set<String> videoTitles = new HashSet<>();
             ApiUtils.fetchPlaylistVideos(channel).stream()
-                    .filter(Objects::nonNull).filter(Video::isValid)
+                    .filter(Objects::nonNull).filter(VideoInfo::isValid)
                     .filter(video -> videoTitles.add(video.title))
                     .forEach(video -> videoMap.put(video.videoId, video));
         } catch (Exception e) {
@@ -286,7 +286,7 @@ public class YoutubeChannelDownloader {
         List<String> working = new ArrayList<>(channel.state.queued);
         for (int i = 0; i < working.size(); i++) {
             String videoId = working.get(i);
-            Video video = videoMap.get(videoId);
+            VideoInfo video = videoMap.get(videoId);
             
             if (!Configurator.Config.preventDownload) {
                 System.out.println(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.videoName(video.title, false));
@@ -347,7 +347,7 @@ public class YoutubeChannelDownloader {
         String playlistPath = PathUtils.localPath(true, channel.getPlaylistFile().getParentFile());
         
         List<String> playlist = new ArrayList<>();
-        for (Map.Entry<String, Video> video : videoMap.entrySet()) {
+        for (Map.Entry<String, VideoInfo> video : videoMap.entrySet()) {
             if (channel.state.saved.contains(video.getKey())) {
                 playlist.add(PathUtils.localPath(video.getValue().output).replace(playlistPath, ""));
             }

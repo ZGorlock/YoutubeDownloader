@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 
 /**
  * Provides Channel Process macros to help with filtering.
@@ -44,7 +44,7 @@ public class FilterProcess {
      * @param negate     Whether the condition should be negated.
      */
     @SuppressWarnings("RegExpUnexpectedAnchor")
-    public static void contains(Map<String, Video> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
+    public static void contains(Map<String, VideoInfo> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
         BaseProcess.filter(videoMap, video ->
                 negate ^ search.stream().anyMatch(e ->
                         regex ? video.title.matches((ignoreCase ? "(?i)" : "") + "^.*" + e + ".*$") :
@@ -60,7 +60,7 @@ public class FilterProcess {
      * @param ignoreCase Whether to ignore the case of the search strings.
      * @param negate     Whether the condition should be negated.
      */
-    public static void contains(Map<String, Video> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
+    public static void contains(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
         contains(videoMap, search, !BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -71,7 +71,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void contains(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void contains(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         contains(videoMap, search, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -81,7 +81,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void contains(Map<String, Video> videoMap, List<String> search) {
+    public static void contains(Map<String, VideoInfo> videoMap, List<String> search) {
         contains(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -92,7 +92,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void contains(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void contains(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         contains(videoMap, List.of(search), ignoreCase);
     }
     
@@ -102,7 +102,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void contains(Map<String, Video> videoMap, String search) {
+    public static void contains(Map<String, VideoInfo> videoMap, String search) {
         contains(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -112,7 +112,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void containsIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void containsIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         contains(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -122,7 +122,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void containsIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void containsIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         contains(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -133,7 +133,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void notContains(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void notContains(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         contains(videoMap, search, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -143,7 +143,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notContains(Map<String, Video> videoMap, List<String> search) {
+    public static void notContains(Map<String, VideoInfo> videoMap, List<String> search) {
         notContains(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -154,7 +154,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void notContains(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void notContains(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         notContains(videoMap, List.of(search), ignoreCase);
     }
     
@@ -164,7 +164,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notContains(Map<String, Video> videoMap, String search) {
+    public static void notContains(Map<String, VideoInfo> videoMap, String search) {
         notContains(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -174,7 +174,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notContainsIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void notContainsIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         notContains(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -184,7 +184,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notContainsIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void notContainsIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         notContains(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -196,7 +196,7 @@ public class FilterProcess {
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      * @param negate      Whether the condition should be negated.
      */
-    public static void regexContains(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
+    public static void regexContains(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
         contains(videoMap, regexSearch, BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -207,7 +207,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexContains(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexContains(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexContains(videoMap, regexSearch, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -217,7 +217,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexContains(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexContains(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexContains(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -228,7 +228,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexContains(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexContains(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexContains(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -238,7 +238,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexContains(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexContains(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexContains(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -248,7 +248,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexContainsIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexContainsIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexContains(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -258,7 +258,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexContainsIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexContainsIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexContains(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -269,7 +269,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexNotContains(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexNotContains(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexContains(videoMap, regexSearch, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -279,7 +279,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotContains(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotContains(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotContains(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -290,7 +290,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexNotContains(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexNotContains(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexNotContains(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -300,7 +300,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotContains(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotContains(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotContains(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -310,7 +310,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotContainsIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotContainsIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotContains(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -320,7 +320,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotContainsIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotContainsIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotContains(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -333,7 +333,7 @@ public class FilterProcess {
      * @param ignoreCase Whether to ignore the case of the search strings.
      * @param negate     Whether the condition should be negated.
      */
-    public static void startsWith(Map<String, Video> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
         regexContains(videoMap, search.stream().map(e -> "^" + (regex ? e : Pattern.quote(e))).collect(Collectors.toList()), ignoreCase, negate);
     }
     
@@ -345,7 +345,7 @@ public class FilterProcess {
      * @param ignoreCase Whether to ignore the case of the search strings.
      * @param negate     Whether the condition should be negated.
      */
-    public static void startsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
         startsWith(videoMap, search, !BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -356,7 +356,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void startsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         startsWith(videoMap, search, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -366,7 +366,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void startsWith(Map<String, Video> videoMap, List<String> search) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, List<String> search) {
         startsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -377,7 +377,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void startsWith(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         startsWith(videoMap, List.of(search), ignoreCase);
     }
     
@@ -387,7 +387,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void startsWith(Map<String, Video> videoMap, String search) {
+    public static void startsWith(Map<String, VideoInfo> videoMap, String search) {
         startsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -397,7 +397,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void startsWithIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void startsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         startsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -407,7 +407,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void startsWithIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void startsWithIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         startsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -418,7 +418,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void notStartsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void notStartsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         startsWith(videoMap, search, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -428,7 +428,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notStartsWith(Map<String, Video> videoMap, List<String> search) {
+    public static void notStartsWith(Map<String, VideoInfo> videoMap, List<String> search) {
         notStartsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -439,7 +439,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void notStartsWith(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void notStartsWith(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         notStartsWith(videoMap, List.of(search), ignoreCase);
     }
     
@@ -449,7 +449,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notStartsWith(Map<String, Video> videoMap, String search) {
+    public static void notStartsWith(Map<String, VideoInfo> videoMap, String search) {
         notStartsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -459,7 +459,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notStartsWithIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void notStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         notStartsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -469,7 +469,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notStartsWithIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void notStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         notStartsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -481,7 +481,7 @@ public class FilterProcess {
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      * @param negate      Whether the condition should be negated.
      */
-    public static void regexStartsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
+    public static void regexStartsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
         startsWith(videoMap, regexSearch, BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -492,7 +492,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexStartsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexStartsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexStartsWith(videoMap, regexSearch, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -502,7 +502,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexStartsWith(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexStartsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexStartsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -513,7 +513,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexStartsWith(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexStartsWith(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexStartsWith(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -523,7 +523,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexStartsWith(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexStartsWith(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexStartsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -533,7 +533,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexStartsWithIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexStartsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -543,7 +543,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexStartsWithIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexStartsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -554,7 +554,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexNotStartsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexNotStartsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexStartsWith(videoMap, regexSearch, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -564,7 +564,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotStartsWith(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotStartsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotStartsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -575,7 +575,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexNotStartsWith(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexNotStartsWith(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexNotStartsWith(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -585,7 +585,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotStartsWith(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotStartsWith(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotStartsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -595,7 +595,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotStartsWithIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotStartsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -605,7 +605,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotStartsWithIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotStartsWithIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotStartsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -618,7 +618,7 @@ public class FilterProcess {
      * @param ignoreCase Whether to ignore the case of the search strings.
      * @param negate     Whether the condition should be negated.
      */
-    public static void endsWith(Map<String, Video> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean regex, boolean ignoreCase, boolean negate) {
         regexContains(videoMap, search.stream().map(e -> (regex ? e : Pattern.quote(e)) + "$").collect(Collectors.toList()), ignoreCase, negate);
     }
     
@@ -630,7 +630,7 @@ public class FilterProcess {
      * @param ignoreCase Whether to ignore the case of the search strings.
      * @param negate     Whether the condition should be negated.
      */
-    public static void endsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase, boolean negate) {
         endsWith(videoMap, search, !BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -641,7 +641,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void endsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         endsWith(videoMap, search, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -651,7 +651,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void endsWith(Map<String, Video> videoMap, List<String> search) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, List<String> search) {
         endsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -662,7 +662,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void endsWith(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         endsWith(videoMap, List.of(search), ignoreCase);
     }
     
@@ -672,7 +672,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void endsWith(Map<String, Video> videoMap, String search) {
+    public static void endsWith(Map<String, VideoInfo> videoMap, String search) {
         endsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -682,7 +682,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void endsWithIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void endsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         endsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -692,7 +692,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void endsWithIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void endsWithIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         endsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -703,7 +703,7 @@ public class FilterProcess {
      * @param search     The list of search strings.
      * @param ignoreCase Whether to ignore the case of the search strings.
      */
-    public static void notEndsWith(Map<String, Video> videoMap, List<String> search, boolean ignoreCase) {
+    public static void notEndsWith(Map<String, VideoInfo> videoMap, List<String> search, boolean ignoreCase) {
         endsWith(videoMap, search, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -713,7 +713,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notEndsWith(Map<String, Video> videoMap, List<String> search) {
+    public static void notEndsWith(Map<String, VideoInfo> videoMap, List<String> search) {
         notEndsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -724,7 +724,7 @@ public class FilterProcess {
      * @param search     The search string.
      * @param ignoreCase Whether to ignore the case of the search string.
      */
-    public static void notEndsWith(Map<String, Video> videoMap, String search, boolean ignoreCase) {
+    public static void notEndsWith(Map<String, VideoInfo> videoMap, String search, boolean ignoreCase) {
         notEndsWith(videoMap, List.of(search), ignoreCase);
     }
     
@@ -734,7 +734,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notEndsWith(Map<String, Video> videoMap, String search) {
+    public static void notEndsWith(Map<String, VideoInfo> videoMap, String search) {
         notEndsWith(videoMap, search, !BaseProcess.IGNORE_CASE);
     }
     
@@ -744,7 +744,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The list of search strings.
      */
-    public static void notEndsWithIgnoreCase(Map<String, Video> videoMap, List<String> search) {
+    public static void notEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> search) {
         notEndsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -754,7 +754,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param search   The search string.
      */
-    public static void notEndsWithIgnoreCase(Map<String, Video> videoMap, String search) {
+    public static void notEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, String search) {
         notEndsWith(videoMap, search, BaseProcess.IGNORE_CASE);
     }
     
@@ -766,7 +766,7 @@ public class FilterProcess {
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      * @param negate      Whether the condition should be negated.
      */
-    public static void regexEndsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
+    public static void regexEndsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase, boolean negate) {
         endsWith(videoMap, regexSearch, BaseProcess.REGEX, ignoreCase, negate);
     }
     
@@ -777,7 +777,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexEndsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexEndsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexEndsWith(videoMap, regexSearch, ignoreCase, !BaseProcess.NEGATE);
     }
     
@@ -787,7 +787,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexEndsWith(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexEndsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexEndsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -798,7 +798,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexEndsWith(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexEndsWith(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexEndsWith(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -808,7 +808,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexEndsWith(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexEndsWith(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexEndsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -818,7 +818,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexEndsWithIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexEndsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -828,7 +828,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexEndsWithIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexEndsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -839,7 +839,7 @@ public class FilterProcess {
      * @param regexSearch The list of regex search strings.
      * @param ignoreCase  Whether to ignore the case of the regex search strings.
      */
-    public static void regexNotEndsWith(Map<String, Video> videoMap, List<String> regexSearch, boolean ignoreCase) {
+    public static void regexNotEndsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch, boolean ignoreCase) {
         regexEndsWith(videoMap, regexSearch, ignoreCase, BaseProcess.NEGATE);
     }
     
@@ -849,7 +849,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotEndsWith(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotEndsWith(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotEndsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -860,7 +860,7 @@ public class FilterProcess {
      * @param regexSearch The regex search string.
      * @param ignoreCase  Whether to ignore the case of the regex search string.
      */
-    public static void regexNotEndsWith(Map<String, Video> videoMap, String regexSearch, boolean ignoreCase) {
+    public static void regexNotEndsWith(Map<String, VideoInfo> videoMap, String regexSearch, boolean ignoreCase) {
         regexNotEndsWith(videoMap, List.of(regexSearch), ignoreCase);
     }
     
@@ -870,7 +870,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotEndsWith(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotEndsWith(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotEndsWith(videoMap, regexSearch, !BaseProcess.IGNORE_CASE);
     }
     
@@ -880,7 +880,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The list of regex search strings.
      */
-    public static void regexNotEndsWithIgnoreCase(Map<String, Video> videoMap, List<String> regexSearch) {
+    public static void regexNotEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, List<String> regexSearch) {
         regexNotEndsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -890,7 +890,7 @@ public class FilterProcess {
      * @param videoMap    The video map.
      * @param regexSearch The regex search string.
      */
-    public static void regexNotEndsWithIgnoreCase(Map<String, Video> videoMap, String regexSearch) {
+    public static void regexNotEndsWithIgnoreCase(Map<String, VideoInfo> videoMap, String regexSearch) {
         regexNotEndsWith(videoMap, regexSearch, BaseProcess.IGNORE_CASE);
     }
     
@@ -901,7 +901,7 @@ public class FilterProcess {
      * @param dateCondition The date condition to filter by.
      * @param negate        Whether the condition should be negated.
      */
-    public static void date(Map<String, Video> videoMap, Predicate<LocalDate> dateCondition, boolean negate) {
+    public static void date(Map<String, VideoInfo> videoMap, Predicate<LocalDate> dateCondition, boolean negate) {
         BaseProcess.filter(videoMap, video ->
                 Optional.ofNullable(video.date).map(e -> (negate ^ dateCondition.test(e.toLocalDate()))).orElse(false));
     }
@@ -912,7 +912,7 @@ public class FilterProcess {
      * @param videoMap      The video map.
      * @param dateCondition The date condition to filter by.
      */
-    public static void date(Map<String, Video> videoMap, Predicate<LocalDate> dateCondition) {
+    public static void date(Map<String, VideoInfo> videoMap, Predicate<LocalDate> dateCondition) {
         date(videoMap, dateCondition, !BaseProcess.NEGATE);
     }
     
@@ -923,7 +923,7 @@ public class FilterProcess {
      * @param date     The date.
      * @param negate   Whether the condition should be negated.
      */
-    public static void dateBefore(Map<String, Video> videoMap, LocalDate date, boolean negate) {
+    public static void dateBefore(Map<String, VideoInfo> videoMap, LocalDate date, boolean negate) {
         date(videoMap, videoDate -> videoDate.isBefore(date), negate);
     }
     
@@ -933,7 +933,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateBefore(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateBefore(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateBefore(videoMap, date, !BaseProcess.NEGATE);
     }
     
@@ -943,7 +943,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateNotBefore(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateNotBefore(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateBefore(videoMap, date, BaseProcess.NEGATE);
     }
     
@@ -954,7 +954,7 @@ public class FilterProcess {
      * @param date     The date.
      * @param negate   Whether the condition should be negated.
      */
-    public static void dateAfter(Map<String, Video> videoMap, LocalDate date, boolean negate) {
+    public static void dateAfter(Map<String, VideoInfo> videoMap, LocalDate date, boolean negate) {
         date(videoMap, videoDate -> videoDate.isAfter(date), negate);
     }
     
@@ -964,7 +964,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateAfter(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateAfter(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateAfter(videoMap, date, !BaseProcess.NEGATE);
     }
     
@@ -974,7 +974,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateNotAfter(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateNotAfter(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateAfter(videoMap, date, BaseProcess.NEGATE);
     }
     
@@ -985,7 +985,7 @@ public class FilterProcess {
      * @param date     The date.
      * @param negate   Whether the condition should be negated.
      */
-    public static void dateEquals(Map<String, Video> videoMap, LocalDate date, boolean negate) {
+    public static void dateEquals(Map<String, VideoInfo> videoMap, LocalDate date, boolean negate) {
         date(videoMap, videoDate -> videoDate.isEqual(date), negate);
     }
     
@@ -995,7 +995,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateEquals(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateEquals(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateEquals(videoMap, date, !BaseProcess.NEGATE);
     }
     
@@ -1005,7 +1005,7 @@ public class FilterProcess {
      * @param videoMap The video map.
      * @param date     The date.
      */
-    public static void dateNotEquals(Map<String, Video> videoMap, LocalDate date) {
+    public static void dateNotEquals(Map<String, VideoInfo> videoMap, LocalDate date) {
         dateEquals(videoMap, date, BaseProcess.NEGATE);
     }
     
@@ -1017,7 +1017,7 @@ public class FilterProcess {
      * @param end      The end date.
      * @param negate   Whether the condition should be negated.
      */
-    public static void dateBetween(Map<String, Video> videoMap, LocalDate start, LocalDate end, boolean negate) {
+    public static void dateBetween(Map<String, VideoInfo> videoMap, LocalDate start, LocalDate end, boolean negate) {
         date(videoMap, videoDate -> (!videoDate.isBefore(start) && !videoDate.isAfter(end)));
     }
     
@@ -1028,7 +1028,7 @@ public class FilterProcess {
      * @param start    The start date.
      * @param end      The end date.
      */
-    public static void dateBetween(Map<String, Video> videoMap, LocalDate start, LocalDate end) {
+    public static void dateBetween(Map<String, VideoInfo> videoMap, LocalDate start, LocalDate end) {
         dateBetween(videoMap, start, end, !BaseProcess.NEGATE);
     }
     
@@ -1039,7 +1039,7 @@ public class FilterProcess {
      * @param start    The start date.
      * @param end      The end date.
      */
-    public static void dateNotBetween(Map<String, Video> videoMap, LocalDate start, LocalDate end) {
+    public static void dateNotBetween(Map<String, VideoInfo> videoMap, LocalDate start, LocalDate end) {
         dateBetween(videoMap, start, end, BaseProcess.NEGATE);
     }
     

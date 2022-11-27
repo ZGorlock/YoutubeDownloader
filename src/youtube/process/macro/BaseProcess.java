@@ -15,7 +15,7 @@ import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 
 /**
  * Provides base Channel Process macros.
@@ -61,7 +61,7 @@ public class BaseProcess {
      * @param videoMap The video map.
      * @param action   The action to perform.
      */
-    public static void forEach(Map<String, Video> videoMap, BiConsumer<String, Video> action) {
+    public static void forEach(Map<String, VideoInfo> videoMap, BiConsumer<String, VideoInfo> action) {
         videoMap.forEach(action);
     }
     
@@ -71,7 +71,7 @@ public class BaseProcess {
      * @param videoMap The video map.
      * @param function The function to rename with.
      */
-    public static void rename(Map<String, Video> videoMap, BiFunction<String, Video, String> function) {
+    public static void rename(Map<String, VideoInfo> videoMap, BiFunction<String, VideoInfo, String> function) {
         forEach(videoMap, (id, video) ->
                 video.updateTitle(function.apply(id, video)));
     }
@@ -82,7 +82,7 @@ public class BaseProcess {
      * @param videoMap  The video map.
      * @param condition The condition to filter by.
      */
-    public static void filter(Map<String, Video> videoMap, Predicate<Video> condition) {
+    public static void filter(Map<String, VideoInfo> videoMap, Predicate<VideoInfo> condition) {
         forEach(videoMap, (id, video) ->
                 Optional.ofNullable(video.channel.state.blocked)
                         .filter(e -> condition.test(video))

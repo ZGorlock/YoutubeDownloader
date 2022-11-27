@@ -20,7 +20,7 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 import youtube.process.macro.BaseProcess;
 import youtube.process.macro.FilterProcess;
 import youtube.process.macro.RenameProcess;
@@ -49,7 +49,7 @@ public class ChannelProcesses_Sample {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
             
             //GENERAL
@@ -82,8 +82,8 @@ public class ChannelProcesses_Sample {
             
             case "FORENSIC_FILES":
                 if (channel.getKey().endsWith("_S01")) {
-                    final Video video = new Video("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
-                    final HashMap<String, Video> tmp = new LinkedHashMap<>(videoMap);
+                    final VideoInfo video = new VideoInfo("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00", channel);
+                    final HashMap<String, VideoInfo> tmp = new LinkedHashMap<>(videoMap);
                     videoMap.clear();
                     videoMap.put(video.videoId, video);
                     videoMap.putAll(tmp);
@@ -327,7 +327,7 @@ public class ChannelProcesses_Sample {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPostConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
             
             //GENERAL

@@ -24,7 +24,7 @@ import youtube.channel.ChannelEntry;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
 import youtube.conf.SponsorBlocker;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 
 /**
  * Provides download utility methods for the Youtube Downloader.
@@ -115,7 +115,7 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
+    public static DownloadResponse downloadYoutubeVideo(VideoInfo video) throws Exception {
         return downloadYoutubeVideo(video, false);
     }
     
@@ -127,7 +127,7 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) throws Exception {
+    private static DownloadResponse downloadYoutubeVideo(VideoInfo video, boolean isRetry) throws Exception {
         final boolean ytDlp = (ExecutableUtils.EXECUTABLE == ExecutableUtils.Executable.YT_DLP);
         final boolean asMp3 = Optional.ofNullable(video.channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
@@ -159,7 +159,7 @@ public final class DownloadUtils {
      * @param video The Video data object.
      * @return A download response indicating the result of the download attempt.
      */
-    private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
+    private static DownloadResponse performDownload(String cmd, VideoInfo video, boolean isRetry) {
         logger.debug(System.lineSeparator() + StringUtility.repeatString("-", 200) + System.lineSeparator());
         logger.info(cmd + System.lineSeparator());
         
@@ -324,7 +324,7 @@ public final class DownloadUtils {
         /**
          * The Video being downloaded.
          */
-        private final Video video;
+        private final VideoInfo video;
         
         /**
          * The Download Response.
@@ -350,7 +350,7 @@ public final class DownloadUtils {
          * @param video    The Video being downloaded.
          * @param response the Download Response.
          */
-        public DownloadProgressBar(Video video, DownloadResponse response) {
+        public DownloadProgressBar(VideoInfo video, DownloadResponse response) {
             super("", 0L, 32, "KB", DISPLAY_PROGRESS_BAR);
             this.video = video;
             this.response = response;

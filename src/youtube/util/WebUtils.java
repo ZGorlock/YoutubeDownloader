@@ -29,7 +29,7 @@ import youtube.channel.Channel;
 import youtube.channel.Channels;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 
 /**
  * Provides web utility methods for the Youtube Downloader.
@@ -151,10 +151,10 @@ public final class WebUtils {
      * @return The fetched Video.
      */
     @SuppressWarnings("unchecked")
-    public static Video fetchVideo(String url, boolean useApi) {
+    public static VideoInfo fetchVideo(String url, boolean useApi) {
         final Matcher videoUrlMatcher = VIDEO_URL_PATTERN.matcher(url);
         
-        Video video = null;
+        VideoInfo video = null;
         final Map<String, String> videoDetails = MapUtility.mapOf(
                 new ImmutablePair<>("videoId", videoUrlMatcher.matches() ? videoUrlMatcher.group("video") : ""),
                 new ImmutablePair<>("name", ""),
@@ -178,7 +178,7 @@ public final class WebUtils {
         }
         
         return Optional.ofNullable(video).orElseGet(() ->
-                new Video(videoDetails.get("videoId"),
+                new VideoInfo(videoDetails.get("videoId"),
                         Optional.of(videoDetails.get("name")).filter(e -> !StringUtility.isNullOrBlank(e)).orElse(videoDetails.get("videoId")),
                         (videoDetails.get("datePublished") + " 00:00:00")));
     }
@@ -189,7 +189,7 @@ public final class WebUtils {
      * @param url The Youtube video url.
      * @return The fetched Video.
      */
-    public static Video fetchVideo(String url) {
+    public static VideoInfo fetchVideo(String url) {
         return fetchVideo(url, true);
     }
     

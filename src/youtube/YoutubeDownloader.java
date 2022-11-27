@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
@@ -116,7 +116,7 @@ public class YoutubeDownloader {
         return Optional.ofNullable(url)
                 .map(YoutubeDownloader::getVideoDetails)
                 .filter(YoutubeDownloader::allowDownload)
-                .map((UncheckedFunction<Video, DownloadUtils.DownloadResponse>) DownloadUtils::downloadYoutubeVideo)
+                .map((UncheckedFunction<VideoInfo, DownloadUtils.DownloadResponse>) DownloadUtils::downloadYoutubeVideo)
                 .map(Mappers.forEach(e -> System.out.println(Utils.INDENT + e.printedResponse())))
                 .orElse(null);
     }
@@ -127,7 +127,7 @@ public class YoutubeDownloader {
      * @param video The video.
      * @return Whether or not downloading is allowed.
      */
-    private static boolean allowDownload(Video video) {
+    private static boolean allowDownload(VideoInfo video) {
         return Optional.of(!Configurator.Config.preventDownload)
                 .filter(e -> e).map(Mappers.forEach(e ->
                         System.out.println(Color.base("Downloading: ") + Color.video(video.title))))
@@ -143,7 +143,7 @@ public class YoutubeDownloader {
      * @param url The url of the video.
      * @return The Video Entity, or null if it could the details could not be fetched.
      */
-    private static Video getVideoDetails(String url) {
+    private static VideoInfo getVideoDetails(String url) {
         return Optional.ofNullable(url)
                 .map(YoutubeDownloader::parseUrl)
                 .map(WebUtils::fetchVideo)

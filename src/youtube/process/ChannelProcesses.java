@@ -12,7 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.entity.info.Video;
+import youtube.entity.info.VideoInfo;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.
@@ -38,7 +38,7 @@ public class ChannelProcesses {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey()) {
             
         }
@@ -52,7 +52,7 @@ public class ChannelProcesses {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPostConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey()) {
             
         }
