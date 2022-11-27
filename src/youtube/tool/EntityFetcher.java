@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.Channel;
+import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.entity.info.base.EntityInfo;
@@ -112,7 +112,7 @@ public class EntityFetcher {
      */
     private static Map.Entry<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> channelData = ApiUtils.fetchChannelData(channelId);
-        final Channel channel = ApiUtils.fetchChannel(channelId);
+        final ChannelInfo channel = ApiUtils.fetchChannel(channelId);
         
         result.add(channel);
         return Map.entry(channel, channelData);

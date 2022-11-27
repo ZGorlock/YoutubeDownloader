@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.conf.Color;
+import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.entity.info.base.EntityInfo;
@@ -176,7 +177,7 @@ public final class ApiUtils {
         
         //Values
         
-        CHANNEL(Endpoint.CHANNEL, (data, channel) -> new youtube.entity.info.Channel(data, channel)),
+        CHANNEL(Endpoint.CHANNEL, (data, channel) -> new ChannelInfo(data, channel)),
         PLAYLIST(Endpoint.PLAYLIST, (data, channel) -> new PlaylistInfo(data, channel)),
         VIDEO(Endpoint.VIDEO, (data, channel) -> new VideoInfo(data, channel));
         
@@ -286,7 +287,7 @@ public final class ApiUtils {
      * @param channel   The parent Channel.
      * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static youtube.entity.info.Channel fetchChannel(String channelId, Channel channel) {
+    public static ChannelInfo fetchChannel(String channelId, Channel channel) {
         return EntityHandler.loadEntity(EntityType.CHANNEL, channelId, ApiUtils::fetchChannelData, channel);
     }
     
@@ -296,7 +297,7 @@ public final class ApiUtils {
      * @param channelId The Youtube id of the Channel Entity.
      * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static youtube.entity.info.Channel fetchChannel(String channelId) {
+    public static ChannelInfo fetchChannel(String channelId) {
         return fetchChannel(channelId, null);
     }
     
@@ -306,7 +307,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static youtube.entity.info.Channel fetchChannel(Channel channel) {
+    public static ChannelInfo fetchChannel(Channel channel) {
         return fetchChannel(channel.getChannelId(), channel);
     }
     
