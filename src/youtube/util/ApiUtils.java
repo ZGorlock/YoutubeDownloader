@@ -46,7 +46,7 @@ import youtube.channel.Channel;
 import youtube.conf.Color;
 import youtube.entity.info.Playlist;
 import youtube.entity.info.Video;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 import youtube.state.Stats;
 
 /**
@@ -191,7 +191,7 @@ public final class ApiUtils {
         /**
          * The function that parses an Entity of the Entity Type.
          */
-        public final BiFunction<Map<String, Object>, Channel, Entity> entityParser;
+        public final BiFunction<Map<String, Object>, Channel, EntityInfo> entityParser;
         
         
         //Constructors
@@ -202,7 +202,7 @@ public final class ApiUtils {
          * @param endpoint     The Endpoint used to fetch an Entity of the Entity Type.
          * @param entityParser The function that parses an Entity of the Entity Type.
          */
-        EntityType(Endpoint endpoint, BiFunction<Map<String, Object>, Channel, Entity> entityParser) {
+        EntityType(Endpoint endpoint, BiFunction<Map<String, Object>, Channel, EntityInfo> entityParser) {
             this.endpoint = endpoint;
             this.entityParser = entityParser;
         }
@@ -219,7 +219,7 @@ public final class ApiUtils {
          * @return The parsed Entity, or null if it could not be parsed.
          */
         @SuppressWarnings("unchecked")
-        public <T extends Entity> T parse(Map<String, Object> entityData, Channel channel) {
+        public <T extends EntityInfo> T parse(Map<String, Object> entityData, Channel channel) {
             return (T) entityParser.apply(entityData, channel);
         }
         
@@ -230,7 +230,7 @@ public final class ApiUtils {
          * @param <T>        The type of the Entity.
          * @return The parsed Entity, or null if it could not be parsed.
          */
-        public <T extends Entity> T parse(Map<String, Object> entityData) {
+        public <T extends EntityInfo> T parse(Map<String, Object> entityData) {
             return parse(entityData, null);
         }
         
@@ -881,7 +881,7 @@ public final class ApiUtils {
         /**
          * A cache of previously fetched Entities.
          */
-        public static final Map<EntityType, Map<String, Entity>> entityCache = Arrays.stream(EntityType.values())
+        public static final Map<EntityType, Map<String, EntityInfo>> entityCache = Arrays.stream(EntityType.values())
                 .collect(MapCollectors.mapEachTo(() -> new HashMap<>()));
         
         
@@ -896,7 +896,7 @@ public final class ApiUtils {
          * @return The Youtube Entity.
          */
         @SuppressWarnings("unchecked")
-        private static <T extends Entity> T cacheEntity(EntityType entityType, String entityId, CheckedFunction<String, T> entityLoader) {
+        private static <T extends EntityInfo> T cacheEntity(EntityType entityType, String entityId, CheckedFunction<String, T> entityLoader) {
             return Optional.ofNullable(entityId)
                     .map(e -> (T) entityCache.get(entityType).computeIfAbsent(entityId, entityLoader))
                     .orElse(null);
@@ -912,7 +912,7 @@ public final class ApiUtils {
          * @param <T>              The type of the Entity.
          * @return The Youtube Entity.
          */
-        private static <T extends Entity> T loadEntity(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, Map<String, Object>> entityDataLoader, Channel channel) {
+        private static <T extends EntityInfo> T loadEntity(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, Map<String, Object>> entityDataLoader, Channel channel) {
             return cacheEntity(entityType, entityId, id -> entityType.parse(entityDataLoader.apply(id, channel), channel));
         }
         
@@ -925,7 +925,7 @@ public final class ApiUtils {
          * @param <T>        The type of the Entity.
          * @return The Youtube Entity.
          */
-        private static <T extends Entity> T loadEntity(EntityType entityType, Map<String, Object> entityData, Channel channel) {
+        private static <T extends EntityInfo> T loadEntity(EntityType entityType, Map<String, Object> entityData, Channel channel) {
             return loadEntity(entityType, (String) entityData.get("id"), (e, e2) -> entityData, channel);
         }
         
@@ -940,7 +940,7 @@ public final class ApiUtils {
          * @return The list of Youtube Entities.
          */
         @SuppressWarnings("unchecked")
-        private static <T extends Entity> List<T> loadEntities(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, List<Map<String, Object>>> entityDataLoader, Channel channel) {
+        private static <T extends EntityInfo> List<T> loadEntities(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, List<Map<String, Object>>> entityDataLoader, Channel channel) {
             return entityDataLoader.apply(entityId, channel).stream()
                     .map(e -> (T) loadEntity(entityType, e, channel))
                     .filter(Objects::nonNull)

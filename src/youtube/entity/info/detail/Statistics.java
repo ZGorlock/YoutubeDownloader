@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 
 /**
  * Defines the Statistics of an Entity.
@@ -74,7 +74,7 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          */
         public Stat(String name, Object count) {
             this.name = name;
-            this.count = Entity.integerParser.apply(count);
+            this.count = EntityInfo.integerParser.apply(count);
         }
         
         

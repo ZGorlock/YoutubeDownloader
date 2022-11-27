@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import youtube.entity.info.Channel;
 import youtube.entity.info.Playlist;
 import youtube.entity.info.Video;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 import youtube.util.ApiUtils;
 
 /**
@@ -44,8 +44,8 @@ public class EntityFetcher {
      * @throws Exception When there is an error.
      */
     public static void main(String[] args) throws Exception {
-        final Map<String, List<Entity>> results = new LinkedHashMap<>();
-        List<Entity> resultEntities;
+        final Map<String, List<EntityInfo>> results = new LinkedHashMap<>();
+        List<EntityInfo> resultEntities;
         
         resultEntities = results.computeIfAbsent("Entities", key -> new ArrayList<>());
         fetchVideo("0YiNACjWW-4", resultEntities);
@@ -78,7 +78,7 @@ public class EntityFetcher {
      * @return The Video Entity data and the Video Entity.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<Entity, Map<String, Object>> fetchVideo(String videoId, List<Entity> result) throws Exception {
+    private static Map.Entry<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> videoData = ApiUtils.fetchVideoData(videoId);
         final Video video = ApiUtils.fetchVideo(videoId);
         
@@ -94,7 +94,7 @@ public class EntityFetcher {
      * @return The Playlist Entity data and the Playlist Entity.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<Entity, Map<String, Object>> fetchPlaylist(String playlistId, List<Entity> result) throws Exception {
+    private static Map.Entry<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> playlistData = ApiUtils.fetchPlaylistData(playlistId);
         final Playlist playlist = ApiUtils.fetchPlaylist(playlistId);
         
@@ -110,7 +110,7 @@ public class EntityFetcher {
      * @return The Channel Entity data and the Channel Entity.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<Entity, Map<String, Object>> fetchChannel(String channelId, List<Entity> result) throws Exception {
+    private static Map.Entry<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> channelData = ApiUtils.fetchChannelData(channelId);
         final Channel channel = ApiUtils.fetchChannel(channelId);
         
@@ -126,13 +126,13 @@ public class EntityFetcher {
      * @return The Playlist Entities data and the Playlist Entities.
      * @throws Exception When there is an error.
      */
-    private static List<Map.Entry<Entity, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<Entity> result) throws Exception {
+    private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) throws Exception {
         final List<Map<String, Object>> channelPlaylistsData = ApiUtils.fetchChannelPlaylistsData(channelId);
         final List<Playlist> channelPlaylists = ApiUtils.fetchChannelPlaylists(channelId);
         
         result.addAll(channelPlaylists);
         return IntStream.range(0, channelPlaylists.size())
-                .mapToObj(i -> Map.entry((Entity) channelPlaylists.get(i), channelPlaylistsData.get(i)))
+                .mapToObj(i -> Map.entry((EntityInfo) channelPlaylists.get(i), channelPlaylistsData.get(i)))
                 .collect(Collectors.toList());
     }
     
@@ -144,13 +144,13 @@ public class EntityFetcher {
      * @return The Video Entities data and the Video Entities.
      * @throws Exception When there is an error.
      */
-    private static List<Map.Entry<Entity, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<Entity> result) throws Exception {
+    private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) throws Exception {
         final List<Map<String, Object>> playlistVideosData = ApiUtils.fetchPlaylistVideosData(playlistId);
         final List<Video> playlistVideos = ApiUtils.fetchPlaylistVideos(playlistId);
         
         result.addAll(playlistVideos);
         return IntStream.range(0, playlistVideos.size())
-                .mapToObj(i -> Map.entry((Entity) playlistVideos.get(i), playlistVideosData.get(i)))
+                .mapToObj(i -> Map.entry((EntityInfo) playlistVideos.get(i), playlistVideosData.get(i)))
                 .collect(Collectors.toList());
     }
     

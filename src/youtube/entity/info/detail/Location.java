@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 
 /**
  * Defines the Location of a Video Entity.
@@ -64,9 +64,9 @@ public class Location {
                     this.description = (String) location.get("locationDescription");
                     return (Map<String, Object>) location.get("location");
                 }).ifPresent(coordinates -> {
-                    this.latitude = Entity.numberParser.apply(coordinates.get("latitude"));
-                    this.longitude = Entity.numberParser.apply(coordinates.get("longitude"));
-                    this.altitude = Entity.numberParser.apply(coordinates.get("altitude"));
+                    this.latitude = EntityInfo.numberParser.apply(coordinates.get("latitude"));
+                    this.longitude = EntityInfo.numberParser.apply(coordinates.get("longitude"));
+                    this.altitude = EntityInfo.numberParser.apply(coordinates.get("altitude"));
                 });
     }
     

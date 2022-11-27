@@ -17,7 +17,7 @@ import youtube.entity.info.Playlist;
 import youtube.util.ApiUtils;
 
 /**
- * Defines the Metadata of an Entity.
+ * Defines the Metadata of a Youtube Entity.
  */
 public class EntityMetadata {
     

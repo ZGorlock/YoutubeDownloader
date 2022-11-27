@@ -1,5 +1,5 @@
 /*
- * File:    Entity.java
+ * File:    EntityInfo.java
  * Package: youtube.entity.info.base
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
@@ -27,16 +27,16 @@ import youtube.entity.info.detail.TopicList;
 import youtube.util.Utils;
 
 /**
- * Defines the base properties of an Entity.
+ * Defines the base Info of a Youtube Entity.
  */
-public abstract class Entity {
+public abstract class EntityInfo {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(Entity.class);
+    private static final Logger logger = LoggerFactory.getLogger(EntityInfo.class);
     
     
     //Constants
@@ -171,12 +171,12 @@ public abstract class Entity {
     //Constructors
     
     /**
-     * Creates an Entity.
+     * Creates an Entity Info.
      *
      * @param entityData The json data of the Entity,
      * @param channel    The Channel containing the Entity.
      */
-    protected Entity(Map<String, Object> entityData, Channel channel) {
+    protected EntityInfo(Map<String, Object> entityData, Channel channel) {
         this.channel = channel;
         
         this.metadata = new EntityMetadata(entityData);
@@ -200,18 +200,18 @@ public abstract class Entity {
     }
     
     /**
-     * Creates an Entity.
+     * Creates an Entity Info.
      *
      * @param entityData The json data of the Entity,
      */
-    protected Entity(Map<String, Object> entityData) {
+    protected EntityInfo(Map<String, Object> entityData) {
         this(entityData, null);
     }
     
     /**
-     * The default no-argument constructor for an Entity.
+     * The default no-argument constructor for an Entity Info.
      */
-    protected Entity() {
+    protected EntityInfo() {
     }
     
     

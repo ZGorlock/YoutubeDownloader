@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
 import youtube.conf.Configurator;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 import youtube.entity.info.detail.ChapterList;
 import youtube.entity.info.detail.Location;
 import youtube.util.PathUtils;
@@ -29,7 +29,7 @@ import youtube.util.WebUtils;
 /**
  * Defines a Youtube Video.
  */
-public class Video extends Entity {
+public class Video extends EntityInfo {
     
     //Logger
     

@@ -12,13 +12,13 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
 /**
  * Defines a Youtube Channel.
  */
-public class Channel extends Entity {
+public class Channel extends EntityInfo {
     
     //Logger
     

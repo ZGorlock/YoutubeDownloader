@@ -12,13 +12,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.entity.info.base.Entity;
+import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
 /**
  * Defines a Youtube Playlist.
  */
-public class Playlist extends Entity {
+public class Playlist extends EntityInfo {
     
     //Logger
     
