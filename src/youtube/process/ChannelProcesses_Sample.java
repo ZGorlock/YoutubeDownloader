@@ -20,7 +20,7 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.channel.entity.Video;
+import youtube.entity.info.Video;
 import youtube.process.macro.BaseProcess;
 import youtube.process.macro.FilterProcess;
 import youtube.process.macro.RenameProcess;

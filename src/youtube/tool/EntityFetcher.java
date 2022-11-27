@@ -16,10 +16,10 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.entity.Channel;
-import youtube.channel.entity.Playlist;
-import youtube.channel.entity.Video;
-import youtube.channel.entity.base.Entity;
+import youtube.entity.info.Channel;
+import youtube.entity.info.Playlist;
+import youtube.entity.info.Video;
+import youtube.entity.info.base.Entity;
 import youtube.util.ApiUtils;
 
 /**

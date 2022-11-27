@@ -1,11 +1,11 @@
 /*
  * File:    Entity.java
- * Package: youtube.channel.entity.base
+ * Package: youtube.entity.info.base
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity.base;
+package youtube.entity.info.base;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,10 +20,10 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.channel.entity.detail.Statistics;
-import youtube.channel.entity.detail.TagList;
-import youtube.channel.entity.detail.ThumbnailSet;
-import youtube.channel.entity.detail.TopicList;
+import youtube.entity.info.detail.Statistics;
+import youtube.entity.info.detail.TagList;
+import youtube.entity.info.detail.ThumbnailSet;
+import youtube.entity.info.detail.TopicList;
 import youtube.util.Utils;
 
 /**

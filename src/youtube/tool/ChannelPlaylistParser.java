@@ -22,8 +22,8 @@ import youtube.channel.Channel;
 import youtube.channel.ChannelGroup;
 import youtube.channel.ChannelJsonFormatter;
 import youtube.channel.Channels;
-import youtube.channel.entity.Playlist;
 import youtube.conf.Configurator;
+import youtube.entity.info.Playlist;
 import youtube.util.ApiUtils;
 import youtube.util.Utils;
 

@@ -21,10 +21,10 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.ChannelEntry;
-import youtube.channel.entity.Video;
 import youtube.conf.Color;
 import youtube.conf.Configurator;
 import youtube.conf.SponsorBlocker;
+import youtube.entity.info.Video;
 
 /**
  * Provides download utility methods for the Youtube Downloader.

@@ -1,11 +1,11 @@
 /*
  * File:    ChapterList.java
- * Package: youtube.channel.entity.detail
+ * Package: youtube.entity.info.detail
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity.detail;
+package youtube.entity.info.detail;
 
 import java.util.ArrayList;
 import java.util.Collection;

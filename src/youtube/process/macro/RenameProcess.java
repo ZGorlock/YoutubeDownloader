@@ -20,8 +20,8 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.entity.Video;
 import youtube.conf.Color;
+import youtube.entity.info.Video;
 
 /**
  * Provides Channel Process macros to help with renaming.

@@ -1,11 +1,11 @@
 /*
  * File:    Statistics.java
- * Package: youtube.channel.entity.detail
+ * Package: youtube.entity.info.detail
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity.detail;
+package youtube.entity.info.detail;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.entity.base.Entity;
+import youtube.entity.info.base.Entity;
 
 /**
  * Defines the Statistics of an Entity.

@@ -12,7 +12,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.channel.entity.Video;
+import youtube.entity.info.Video;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.

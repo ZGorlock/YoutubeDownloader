@@ -1,11 +1,11 @@
 /*
  * File:    Video.java
- * Package: youtube.channel.entity
+ * Package: youtube.entity.info
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity;
+package youtube.entity.info;
 
 import java.io.File;
 import java.util.List;
@@ -18,10 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
-import youtube.channel.entity.base.Entity;
-import youtube.channel.entity.detail.ChapterList;
-import youtube.channel.entity.detail.Location;
 import youtube.conf.Configurator;
+import youtube.entity.info.base.Entity;
+import youtube.entity.info.detail.ChapterList;
+import youtube.entity.info.detail.Location;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;

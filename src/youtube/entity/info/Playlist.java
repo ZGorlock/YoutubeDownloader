@@ -1,18 +1,18 @@
 /*
  * File:    Playlist.java
- * Package: youtube.channel.entity
+ * Package: youtube.entity.info
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity;
+package youtube.entity.info;
 
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.channel.entity.base.Entity;
+import youtube.entity.info.base.Entity;
 import youtube.util.WebUtils;
 
 /**

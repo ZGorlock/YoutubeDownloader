@@ -1,19 +1,19 @@
 /*
  * File:    EntityMetadata.java
- * Package: youtube.channel.entity.base
+ * Package: youtube.entity.info.base
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel.entity.base;
+package youtube.entity.info.base;
 
 import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.entity.Channel;
-import youtube.channel.entity.Playlist;
+import youtube.entity.info.Channel;
+import youtube.entity.info.Playlist;
 import youtube.util.ApiUtils;
 
 /**
