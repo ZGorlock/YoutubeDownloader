@@ -43,7 +43,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
-import youtube.conf.Color;
+import youtube.config.Color;
 import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;

@@ -26,8 +26,8 @@ import commons.object.string.StringUtility;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.conf.Color;
-import youtube.conf.SponsorBlocker;
+import youtube.config.Color;
+import youtube.config.SponsorBlocker;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 

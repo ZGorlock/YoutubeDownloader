@@ -1,11 +1,11 @@
 /*
  * File:    Color.java
- * Package: youtube.conf
+ * Package: youtube.config
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.conf;
+package youtube.config;
 
 import java.io.File;
 import java.util.List;

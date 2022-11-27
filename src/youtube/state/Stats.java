@@ -19,8 +19,8 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
-import youtube.conf.Color;
-import youtube.conf.Configurator;
+import youtube.config.Color;
+import youtube.config.Configurator;
 import youtube.util.Utils;
 
 /**

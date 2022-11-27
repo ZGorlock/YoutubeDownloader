@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
 import youtube.channel.ChannelEntry;
-import youtube.conf.Configurator;
+import youtube.config.Configurator;
 import youtube.entity.info.base.EntityInfo;
 import youtube.entity.info.detail.ChapterList;
 import youtube.entity.info.detail.Location;
