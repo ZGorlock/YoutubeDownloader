@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.Channels;
 import youtube.channel.process.ChannelProcesses;
 import youtube.config.Color;
@@ -54,7 +54,7 @@ public class YoutubeChannelDownloader {
     /**
      * The current Channel being processed.
      */
-    public static Channel channel = null;
+    public static ChannelConfig channel = null;
     
     /**
      * The video map for the Channel being processed.
@@ -95,7 +95,7 @@ public class YoutubeChannelDownloader {
             boolean stop = (Configurator.Config.stopAt != null);
             
             if (!((skip && stop) && (Channels.channelIndex(Configurator.Config.stopAt) < Channels.channelIndex(Configurator.Config.startAt)))) {
-                for (Channel currentChannel : Channels.getChannels()) {
+                for (ChannelConfig currentChannel : Channels.getChannels()) {
                     if (!(skip &= !currentChannel.getKey().equals(Configurator.Config.startAt)) && currentChannel.isMemberOfGroup(Configurator.Config.group)) {
                         setChannel(currentChannel);
                         processChannel();
@@ -121,7 +121,7 @@ public class YoutubeChannelDownloader {
      * @param newChannel The Channel to be processed.
      * @throws Exception When there is an error.
      */
-    private static void setChannel(Channel newChannel) throws Exception {
+    private static void setChannel(ChannelConfig newChannel) throws Exception {
         channel = newChannel;
         if (channel != null) {
             channel.state.load();

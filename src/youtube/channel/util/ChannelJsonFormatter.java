@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.ChannelEntry;
 import youtube.channel.ChannelGroup;
 
@@ -338,7 +338,7 @@ public final class ChannelJsonFormatter {
      * @return The required fields of a Channel Entry.
      */
     private static List<String> getRequiredFieldList(ChannelEntry channelEntry) {
-        return channelEntry.isGroup() ? ChannelGroup.REQUIRED_FIELDS : Channel.REQUIRED_FIELDS;
+        return channelEntry.isGroup() ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS;
     }
     
     /**
@@ -348,7 +348,7 @@ public final class ChannelJsonFormatter {
      * @return The base fields of a Channel Entry.
      */
     private static List<String> getBaseFieldList(ChannelEntry channelEntry) {
-        return channelEntry.isGroup() ? ChannelGroup.BASE_FIELDS : Channel.BASE_FIELDS;
+        return channelEntry.isGroup() ? ChannelGroup.BASE_FIELDS : ChannelConfig.BASE_FIELDS;
     }
     
     /**
@@ -358,7 +358,7 @@ public final class ChannelJsonFormatter {
      * @return All fields of a Channel Entry.
      */
     private static List<String> getFieldsList(ChannelEntry channelEntry) {
-        return channelEntry.isGroup() ? ChannelGroup.ALL_FIELDS : Channel.ALL_FIELDS;
+        return channelEntry.isGroup() ? ChannelGroup.ALL_FIELDS : ChannelConfig.ALL_FIELDS;
     }
     
     /**

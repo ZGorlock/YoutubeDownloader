@@ -16,7 +16,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.Channels;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
@@ -63,7 +63,7 @@ public class KeyStore {
      * @param channel The Channel.
      * @return The key store for the Channel.
      */
-    public static Map<String, String> get(Channel channel) {
+    public static Map<String, String> get(ChannelConfig channel) {
         return keyStore.get(channel.getName());
     }
     
@@ -87,7 +87,7 @@ public class KeyStore {
         }
         
         keyStore.clear();
-        for (Channel channel : Channels.getChannels()) {
+        for (ChannelConfig channel : Channels.getChannels()) {
             keyStore.putIfAbsent(channel.getName(), new LinkedHashMap<>());
             channel.state.keyStore = keyStore.get(channel.getName());
         }

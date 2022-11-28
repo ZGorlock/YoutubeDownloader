@@ -585,7 +585,7 @@ public class ChannelEntry {
      */
     @SuppressWarnings("unchecked")
     protected static <T extends ChannelEntry> T load(Map<String, Object> fields, ChannelGroup parent) throws Exception {
-        T channelEntry = isGroupConfiguration(fields) ? (T) new ChannelGroup(fields, parent) : (T) new Channel(fields, parent);
+        T channelEntry = isGroupConfiguration(fields) ? (T) new ChannelGroup(fields, parent) : (T) new ChannelConfig(fields, parent);
         validateRequiredFields(channelEntry.getEffectiveFields());
         return channelEntry;
     }
@@ -644,7 +644,7 @@ public class ChannelEntry {
      * @return The url corresponding to the playlist id.
      */
     protected static String determineUrl(String playlistId) {
-        return Optional.ofNullable(Channel.ChannelType.determineType(playlistId))
+        return Optional.ofNullable(ChannelConfig.ChannelType.determineType(playlistId))
                 .map(type -> {
                     switch (type) {
                         case CHANNEL:
@@ -664,7 +664,7 @@ public class ChannelEntry {
      * @throws RuntimeException When the map of fields does not contain all the required fields.
      */
     protected static void validateRequiredFields(Map<String, Object> fields) {
-        Optional.of((isGroupConfiguration(fields) ? ChannelGroup.REQUIRED_FIELDS : Channel.REQUIRED_FIELDS).stream()
+        Optional.of((isGroupConfiguration(fields) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
                         .filter(e -> !MapUtility.contains(fields, e))
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())

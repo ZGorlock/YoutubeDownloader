@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
@@ -49,7 +49,7 @@ public class PlaylistInfo extends EntityInfo {
      * @param playlistData The json data of the Playlist.
      * @param channel      The Channel containing the Playlist Entity.
      */
-    public PlaylistInfo(Map<String, Object> playlistData, Channel channel) {
+    public PlaylistInfo(Map<String, Object> playlistData, ChannelConfig channel) {
         super(playlistData, channel);
         
         this.playlistId = metadata.itemId;

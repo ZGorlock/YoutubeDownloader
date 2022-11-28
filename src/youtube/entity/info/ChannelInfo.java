@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.ChannelConfig;
 import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
@@ -54,7 +55,7 @@ public class ChannelInfo extends EntityInfo {
      * @param channelData The json data of the Channel.
      * @param channel     The Channel containing the Channel Entity.
      */
-    public ChannelInfo(Map<String, Object> channelData, youtube.channel.Channel channel) {
+    public ChannelInfo(Map<String, Object> channelData, ChannelConfig channel) {
         super(channelData, channel);
         
         this.channelId = metadata.itemId;

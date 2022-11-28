@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.process.macro.BaseProcess;
 import youtube.channel.process.macro.FilterProcess;
 import youtube.channel.process.macro.RenameProcess;
@@ -49,7 +49,7 @@ public class ChannelProcesses_Sample {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
+    public static void performSpecialPreConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
             
             //GENERAL
@@ -327,7 +327,7 @@ public class ChannelProcesses_Sample {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
+    public static void performSpecialPostConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey().replaceAll("_[PS]\\d+$", "")) {
             
             //GENERAL

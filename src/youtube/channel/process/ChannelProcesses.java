@@ -11,7 +11,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.entity.info.VideoInfo;
 
 /**
@@ -38,7 +38,7 @@ public class ChannelProcesses {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
+    public static void performSpecialPreConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey()) {
             
         }
@@ -52,7 +52,7 @@ public class ChannelProcesses {
      * @param videoMap The video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(Channel channel, Map<String, VideoInfo> videoMap) throws Exception {
+    public static void performSpecialPostConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
         switch (channel.getKey()) {
             
         }

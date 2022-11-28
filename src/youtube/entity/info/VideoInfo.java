@@ -16,7 +16,7 @@ import commons.object.collection.MapUtility;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.ChannelEntry;
 import youtube.config.Configurator;
 import youtube.entity.info.base.EntityInfo;
@@ -111,7 +111,7 @@ public class VideoInfo extends EntityInfo {
      * @param channel   The Channel containing the Video Entity.
      */
     @SuppressWarnings("unchecked")
-    public VideoInfo(Map<String, Object> videoData, Channel channel) {
+    public VideoInfo(Map<String, Object> videoData, ChannelConfig channel) {
         super(videoData, channel);
         
         this.videoId = Optional.ofNullable((Map<String, Object>) getData("resourceId"))
@@ -155,7 +155,7 @@ public class VideoInfo extends EntityInfo {
      * @param channel The Channel containing the Video.
      */
     @SuppressWarnings("unchecked")
-    public VideoInfo(String videoId, String title, String date, Channel channel) {
+    public VideoInfo(String videoId, String title, String date, ChannelConfig channel) {
         this(MapUtility.mapOf(
                         new ImmutablePair<>("snippet", MapUtility.mapOf(
                                 new ImmutablePair<>("title", title),
@@ -192,7 +192,7 @@ public class VideoInfo extends EntityInfo {
      * @param channel The Channel containing the Video.
      */
     @Override
-    public void init(Channel channel) {
+    public void init(ChannelConfig channel) {
         super.init(channel);
         
         initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),

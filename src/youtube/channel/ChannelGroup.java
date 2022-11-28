@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Defines a Channel of the Youtube Channel Downloader.
+ * Defines a Channel Group configuration of the Youtube Channel Downloader.
  */
 public class ChannelGroup extends ChannelEntry {
     

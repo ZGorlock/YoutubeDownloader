@@ -15,7 +15,7 @@ import commons.console.Console;
 import commons.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -477,7 +477,7 @@ public class Color {
      * @param endChannel   The ending Channel.
      * @return The colored output.
      */
-    public static String channelRange(Channel startChannel, Channel endChannel) {
+    public static String channelRange(ChannelConfig startChannel, ChannelConfig endChannel) {
         return channelRange(startChannel.getKey(), endChannel.getKey());
     }
     

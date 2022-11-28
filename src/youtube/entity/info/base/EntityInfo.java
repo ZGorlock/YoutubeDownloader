@@ -19,7 +19,7 @@ import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.entity.info.detail.Statistics;
 import youtube.entity.info.detail.TagList;
 import youtube.entity.info.detail.ThumbnailSet;
@@ -100,7 +100,7 @@ public abstract class EntityInfo {
     /**
      * The Channel containing the Entity.
      */
-    public Channel channel;
+    public ChannelConfig channel;
     
     /**
      * The Metadata of the Entity.
@@ -176,7 +176,7 @@ public abstract class EntityInfo {
      * @param entityData The json data of the Entity,
      * @param channel    The Channel containing the Entity.
      */
-    protected EntityInfo(Map<String, Object> entityData, Channel channel) {
+    protected EntityInfo(Map<String, Object> entityData, ChannelConfig channel) {
         this.channel = channel;
         
         this.metadata = new EntityMetadata(entityData);
@@ -222,7 +222,7 @@ public abstract class EntityInfo {
      *
      * @param channel The Channel containing the Entity.
      */
-    public void init(Channel channel) {
+    public void init(ChannelConfig channel) {
         this.channel = channel;
     }
     

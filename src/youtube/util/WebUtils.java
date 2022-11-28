@@ -25,7 +25,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.Configurator;
@@ -219,7 +219,7 @@ public final class WebUtils {
      *
      * @param channel The Channel.
      */
-    public static void checkPlaylistId(Channel channel) {
+    public static void checkPlaylistId(ChannelConfig channel) {
         if (StringUtility.isNullOrBlank(channel.getPlaylistId())) {
             channel.playlistId = WebUtils.fetchPlaylistId(channel.getUrl());
             

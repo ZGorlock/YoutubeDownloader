@@ -42,7 +42,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.config.Color;
 import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
@@ -192,7 +192,7 @@ public final class ApiUtils {
         /**
          * The function that parses an Entity of the Entity Type.
          */
-        public final BiFunction<Map<String, Object>, Channel, EntityInfo> entityParser;
+        public final BiFunction<Map<String, Object>, ChannelConfig, EntityInfo> entityParser;
         
         
         //Constructors
@@ -203,7 +203,7 @@ public final class ApiUtils {
          * @param endpoint     The Endpoint used to fetch an Entity of the Entity Type.
          * @param entityParser The function that parses an Entity of the Entity Type.
          */
-        EntityType(Endpoint endpoint, BiFunction<Map<String, Object>, Channel, EntityInfo> entityParser) {
+        EntityType(Endpoint endpoint, BiFunction<Map<String, Object>, ChannelConfig, EntityInfo> entityParser) {
             this.endpoint = endpoint;
             this.entityParser = entityParser;
         }
@@ -220,7 +220,7 @@ public final class ApiUtils {
          * @return The parsed Entity, or null if it could not be parsed.
          */
         @SuppressWarnings("unchecked")
-        public <T extends EntityInfo> T parse(Map<String, Object> entityData, Channel channel) {
+        public <T extends EntityInfo> T parse(Map<String, Object> entityData, ChannelConfig channel) {
             return (T) entityParser.apply(entityData, channel);
         }
         
@@ -287,7 +287,7 @@ public final class ApiUtils {
      * @param channel   The parent Channel.
      * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static ChannelInfo fetchChannel(String channelId, Channel channel) {
+    public static ChannelInfo fetchChannel(String channelId, ChannelConfig channel) {
         return EntityHandler.loadEntity(EntityType.CHANNEL, channelId, ApiUtils::fetchChannelData, channel);
     }
     
@@ -307,7 +307,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Channel Entity, or null if the Channel Entity cannot be fetched.
      */
-    public static ChannelInfo fetchChannel(Channel channel) {
+    public static ChannelInfo fetchChannel(ChannelConfig channel) {
         return fetchChannel(channel.getChannelId(), channel);
     }
     
@@ -319,7 +319,7 @@ public final class ApiUtils {
      * @return The json data of the Channel Entity.
      * @throws Exception When there is an error.
      */
-    public static Map<String, Object> fetchChannelData(String channelId, Channel channel) throws Exception {
+    public static Map<String, Object> fetchChannelData(String channelId, ChannelConfig channel) throws Exception {
         return ApiHandler.fetchEntityData(EntityType.CHANNEL, channelId, channel);
     }
     
@@ -341,7 +341,7 @@ public final class ApiUtils {
      * @return The json data of the Channel Entity.
      * @throws Exception When there is an error.
      */
-    public static Map<String, Object> fetchChannelData(Channel channel) throws Exception {
+    public static Map<String, Object> fetchChannelData(ChannelConfig channel) throws Exception {
         return fetchChannelData(channel.getChannelId(), channel);
     }
     
@@ -352,7 +352,7 @@ public final class ApiUtils {
      * @param channel    The parent Channel.
      * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static PlaylistInfo fetchPlaylist(String playlistId, Channel channel) {
+    public static PlaylistInfo fetchPlaylist(String playlistId, ChannelConfig channel) {
         return EntityHandler.loadEntity(EntityType.PLAYLIST, playlistId, ApiUtils::fetchPlaylistData, channel);
     }
     
@@ -372,7 +372,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Playlist Entity, or null if the Playlist Entity cannot be fetched.
      */
-    public static PlaylistInfo fetchPlaylist(Channel channel) {
+    public static PlaylistInfo fetchPlaylist(ChannelConfig channel) {
         return fetchPlaylist(channel.getPlaylistId(), channel);
     }
     
@@ -384,7 +384,7 @@ public final class ApiUtils {
      * @return The json data of the Playlist Entity.
      * @throws Exception When there is an error.
      */
-    public static Map<String, Object> fetchPlaylistData(String playlistId, Channel channel) throws Exception {
+    public static Map<String, Object> fetchPlaylistData(String playlistId, ChannelConfig channel) throws Exception {
         return ApiHandler.fetchEntityData(EntityType.PLAYLIST, playlistId, channel);
     }
     
@@ -406,7 +406,7 @@ public final class ApiUtils {
      * @return The json data of the Playlist Entity.
      * @throws Exception When there is an error.
      */
-    public static Map<String, Object> fetchPlaylistData(Channel channel) throws Exception {
+    public static Map<String, Object> fetchPlaylistData(ChannelConfig channel) throws Exception {
         return fetchPlaylistData(channel.getPlaylistId(), channel);
     }
     
@@ -417,7 +417,7 @@ public final class ApiUtils {
      * @param channel The parent Channel.
      * @return The Video Entity, or null if the Video Entity cannot be fetched.
      */
-    public static VideoInfo fetchVideo(String videoId, Channel channel) {
+    public static VideoInfo fetchVideo(String videoId, ChannelConfig channel) {
         return EntityHandler.loadEntity(EntityType.VIDEO, videoId, ApiUtils::fetchVideoData, channel);
     }
     
@@ -439,7 +439,7 @@ public final class ApiUtils {
      * @return The json data of the Video Entity.
      * @throws Exception When there is an error.
      */
-    public static Map<String, Object> fetchVideoData(String videoId, Channel channel) throws Exception {
+    public static Map<String, Object> fetchVideoData(String videoId, ChannelConfig channel) throws Exception {
         return ApiHandler.fetchEntityData(EntityType.VIDEO, videoId, channel);
     }
     
@@ -462,7 +462,7 @@ public final class ApiUtils {
      * @return The list of Video Entities.
      * @throws Exception When there is an error.
      */
-    public static List<VideoInfo> fetchPlaylistVideos(String playlistId, Channel channel) throws Exception {
+    public static List<VideoInfo> fetchPlaylistVideos(String playlistId, ChannelConfig channel) throws Exception {
         return EntityHandler.loadEntities(EntityType.VIDEO, playlistId, ApiUtils::fetchPlaylistVideosData, channel);
     }
     
@@ -484,7 +484,7 @@ public final class ApiUtils {
      * @return The list of Video Entities.
      * @throws Exception When there is an error.
      */
-    public static List<VideoInfo> fetchPlaylistVideos(Channel channel) throws Exception {
+    public static List<VideoInfo> fetchPlaylistVideos(ChannelConfig channel) throws Exception {
         return fetchPlaylistVideos(channel.getPlaylistId(), channel);
     }
     
@@ -497,7 +497,7 @@ public final class ApiUtils {
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("unchecked")
-    public static List<Map<String, Object>> fetchPlaylistVideosData(String playlistId, Channel channel) throws Exception {
+    public static List<Map<String, Object>> fetchPlaylistVideosData(String playlistId, ChannelConfig channel) throws Exception {
         return ApiHandler.fetchPagedData(Endpoint.PLAYLIST_ITEMS,
                 new HashMap<>(Map.of("playlistId", playlistId.replaceAll("^UC", "UU"))),
                 e -> Optional.ofNullable((Map<String, Object>) e.get("contentDetails")).map(e2 -> (String) e2.get("videoId")).orElse(null),
@@ -523,7 +523,7 @@ public final class ApiUtils {
      * @return The json data of the list of Video Entries.
      * @throws Exception When there is an error.
      */
-    public static List<Map<String, Object>> fetchPlaylistVideosData(Channel channel) throws Exception {
+    public static List<Map<String, Object>> fetchPlaylistVideosData(ChannelConfig channel) throws Exception {
         return fetchPlaylistVideosData(channel.getPlaylistId(), channel);
     }
     
@@ -535,7 +535,7 @@ public final class ApiUtils {
      * @return The list of Playlist Entities.
      * @throws Exception When there is an error.
      */
-    public static List<PlaylistInfo> fetchChannelPlaylists(String channelId, Channel channel) throws Exception {
+    public static List<PlaylistInfo> fetchChannelPlaylists(String channelId, ChannelConfig channel) throws Exception {
         return EntityHandler.loadEntities(EntityType.PLAYLIST, channelId, ApiUtils::fetchChannelPlaylistsData, channel);
     }
     
@@ -557,7 +557,7 @@ public final class ApiUtils {
      * @return The list of Playlist Entities.
      * @throws Exception When there is an error.
      */
-    public static List<PlaylistInfo> fetchChannelPlaylists(Channel channel) throws Exception {
+    public static List<PlaylistInfo> fetchChannelPlaylists(ChannelConfig channel) throws Exception {
         return fetchChannelPlaylists(channel.getChannelId(), channel);
     }
     
@@ -569,7 +569,7 @@ public final class ApiUtils {
      * @return The json data of the list of Playlist Entries.
      * @throws Exception When there is an error.
      */
-    public static List<Map<String, Object>> fetchChannelPlaylistsData(String channelId, Channel channel) throws Exception {
+    public static List<Map<String, Object>> fetchChannelPlaylistsData(String channelId, ChannelConfig channel) throws Exception {
         return ApiHandler.fetchPagedData(Endpoint.CHANNEL_PLAYLISTS,
                 new HashMap<>(Map.of("channelId", channelId.replaceAll("^UU", "UC"))),
                 e -> (String) e.get("id"),
@@ -595,7 +595,7 @@ public final class ApiUtils {
      * @return The json data of the list of Playlist Entries.
      * @throws Exception When there is an error.
      */
-    public static List<Map<String, Object>> fetchChannelPlaylistsData(Channel channel) throws Exception {
+    public static List<Map<String, Object>> fetchChannelPlaylistsData(ChannelConfig channel) throws Exception {
         return fetchChannelPlaylistsData(channel.getChannelId(), channel);
     }
     
@@ -636,7 +636,7 @@ public final class ApiUtils {
          * @return The json data of the Entity.
          * @throws Exception When there is an error.
          */
-        private static Map<String, Object> fetchEntityData(EntityType entityType, String id, Map<String, String> parameters, Channel channel) throws Exception {
+        private static Map<String, Object> fetchEntityData(EntityType entityType, String id, Map<String, String> parameters, ChannelConfig channel) throws Exception {
             return Optional.ofNullable(callApi(entityType.endpoint, parameters, channel))
                     .map(e -> parseResponse(e, channel))
                     .map(e -> ListUtility.getOrNull(e, 0))
@@ -652,7 +652,7 @@ public final class ApiUtils {
          * @return The json data of the Entity.
          * @throws Exception When there is an error.
          */
-        private static Map<String, Object> fetchEntityData(EntityType entityType, String id, Channel channel) throws Exception {
+        private static Map<String, Object> fetchEntityData(EntityType entityType, String id, ChannelConfig channel) throws Exception {
             return fetchEntityData(entityType, id, new HashMap<>(Map.of("id", id)), channel);
         }
         
@@ -667,7 +667,7 @@ public final class ApiUtils {
          * @return The json data of the pages fetched.
          * @throws Exception When there is an error.
          */
-        private static List<Map<String, Object>> fetchPagedData(Endpoint endpoint, Map<String, String> parameters, UncheckedFunction<Map<String, Object>, String> idExtractor, UncheckedFunction<String, String> entityDataFetcher, Channel channel) throws Exception {
+        private static List<Map<String, Object>> fetchPagedData(Endpoint endpoint, Map<String, String> parameters, UncheckedFunction<Map<String, Object>, String> idExtractor, UncheckedFunction<String, String> entityDataFetcher, ChannelConfig channel) throws Exception {
             return Optional.ofNullable(loadPagedDataCache(endpoint, channel))
                     .orElseGet((UncheckedSupplier<List<String>>) () -> {
                         final List<String> pages = new ArrayList<>();
@@ -696,7 +696,7 @@ public final class ApiUtils {
          * @param channel  The parent Channel.
          * @return The list of cached pages, or null if not loaded.
          */
-        private static List<String> loadPagedDataCache(Endpoint endpoint, Channel channel) {
+        private static List<String> loadPagedDataCache(Endpoint endpoint, ChannelConfig channel) {
             return Optional.ofNullable(channel).map(e -> e.state.getDataFile(endpoint.name))
                     .filter(File::exists).map((CheckedFunction<File, String>) FileUtils::readFileToString)
                     .filter(e -> !StringUtility.isNullOrBlank(e))
@@ -715,7 +715,7 @@ public final class ApiUtils {
          * @param endpoint The API Endpoint.
          * @param channel  The parent Channel.
          */
-        private static void savePagedDataCache(List<String> pages, Endpoint endpoint, Channel channel) {
+        private static void savePagedDataCache(List<String> pages, Endpoint endpoint, ChannelConfig channel) {
             Optional.ofNullable(channel).map(e -> e.state.getDataFile(endpoint.name))
                     .ifPresent((CheckedConsumer<File>) dataFile -> FileUtils.writeStringToFile(dataFile,
                             pages.stream().collect(Collectors.joining(
@@ -732,7 +732,7 @@ public final class ApiUtils {
          * @return The Entity data.
          * @throws Exception When there is an error.
          */
-        private static String callApi(Endpoint endpoint, Map<String, String> parameters, Channel channel) throws Exception {
+        private static String callApi(Endpoint endpoint, Map<String, String> parameters, ChannelConfig channel) throws Exception {
             final AtomicReference<String> response = new AtomicReference<>(null);
             final AtomicBoolean error = new AtomicBoolean(false);
             
@@ -816,7 +816,7 @@ public final class ApiUtils {
          * @return The response.
          * @throws RuntimeException If the response has an error.
          */
-        private static String handleResponse(String response, Channel channel) {
+        private static String handleResponse(String response, ChannelConfig channel) {
             return Optional.ofNullable(response)
                     .filter(e -> e.contains("\"error\": {"))
                     .filter(e -> e.contains("\"code\":"))
@@ -857,7 +857,7 @@ public final class ApiUtils {
          * @return The parsed data from the response.
          */
         @SuppressWarnings("unchecked")
-        private static List<Map<String, Object>> parseResponse(String response, Channel channel) {
+        private static List<Map<String, Object>> parseResponse(String response, ChannelConfig channel) {
             return Optional.ofNullable(response)
                     .map((CheckedFunction<String, Map<String, Object>>) e ->
                             (Map<String, Object>) new JSONParser().parse(e))
@@ -913,7 +913,7 @@ public final class ApiUtils {
          * @param <T>              The type of the Entity.
          * @return The Youtube Entity.
          */
-        private static <T extends EntityInfo> T loadEntity(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, Map<String, Object>> entityDataLoader, Channel channel) {
+        private static <T extends EntityInfo> T loadEntity(EntityType entityType, String entityId, CheckedBiFunction<String, ChannelConfig, Map<String, Object>> entityDataLoader, ChannelConfig channel) {
             return cacheEntity(entityType, entityId, id -> entityType.parse(entityDataLoader.apply(id, channel), channel));
         }
         
@@ -926,7 +926,7 @@ public final class ApiUtils {
          * @param <T>        The type of the Entity.
          * @return The Youtube Entity.
          */
-        private static <T extends EntityInfo> T loadEntity(EntityType entityType, Map<String, Object> entityData, Channel channel) {
+        private static <T extends EntityInfo> T loadEntity(EntityType entityType, Map<String, Object> entityData, ChannelConfig channel) {
             return loadEntity(entityType, (String) entityData.get("id"), (e, e2) -> entityData, channel);
         }
         
@@ -941,7 +941,7 @@ public final class ApiUtils {
          * @return The list of Youtube Entities.
          */
         @SuppressWarnings("unchecked")
-        private static <T extends EntityInfo> List<T> loadEntities(EntityType entityType, String entityId, CheckedBiFunction<String, Channel, List<Map<String, Object>>> entityDataLoader, Channel channel) {
+        private static <T extends EntityInfo> List<T> loadEntities(EntityType entityType, String entityId, CheckedBiFunction<String, ChannelConfig, List<Map<String, Object>>> entityDataLoader, ChannelConfig channel) {
             return entityDataLoader.apply(entityId, channel).stream()
                     .map(e -> (T) loadEntity(entityType, e, channel))
                     .filter(Objects::nonNull)

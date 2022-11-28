@@ -18,7 +18,7 @@ import commons.object.string.StringUtility;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.channel.ChannelGroup;
 import youtube.channel.Channels;
 import youtube.channel.util.ChannelJsonFormatter;
@@ -94,14 +94,14 @@ public class ChannelPlaylistParser {
         Configurator.loadSettings(Utils.Project.YOUTUBE_CHANNEL_DOWNLOADER);
         Channels.loadChannels();
         
-        final Channel baseChannel = Channels.getChannel(baseChannelKey);
+        final ChannelConfig baseChannel = Channels.getChannel(baseChannelKey);
         if ((baseChannel == null) || !baseChannel.isYoutubeChannel()) {
             return;
         }
         baseChannel.state.cleanupData();
         
         final List<PlaylistInfo> playlistData = parsePlaylistData(baseChannel);
-        final List<Channel> playlistChannels = makePlaylistChannels(baseChannel, playlistData);
+        final List<ChannelConfig> playlistChannels = makePlaylistChannels(baseChannel, playlistData);
         
         final String playlistJson = formatPlaylistChannels(playlistChannels);
         System.out.println(playlistJson);
@@ -117,7 +117,7 @@ public class ChannelPlaylistParser {
      * @return The list of parsed Playlists.
      * @throws Exception When there is an error.
      */
-    private static List<PlaylistInfo> parsePlaylistData(Channel channel) throws Exception {
+    private static List<PlaylistInfo> parsePlaylistData(ChannelConfig channel) throws Exception {
         return ApiUtils.fetchChannelPlaylists(channel);
     }
     
@@ -129,12 +129,12 @@ public class ChannelPlaylistParser {
      * @return The list of playlist Channels.
      * @throws Exception When there is an error.
      */
-    private static List<Channel> makePlaylistChannels(Channel baseChannel, List<PlaylistInfo> playlists) throws Exception {
+    private static List<ChannelConfig> makePlaylistChannels(ChannelConfig baseChannel, List<PlaylistInfo> playlists) throws Exception {
         return playlists.stream()
                 .filter(Objects::nonNull)
                 .filter(playlist -> !skipPlaylists.contains(playlist.title))
-                .map((UncheckedFunction<PlaylistInfo, Channel>) playlist ->
-                        new Channel(MapUtility.mapOf(List.of(
+                .map((UncheckedFunction<PlaylistInfo, ChannelConfig>) playlist ->
+                        new ChannelConfig(MapUtility.mapOf(List.of(
                                 new ImmutablePair<>("key", (baseChannel.key + "_P")),
                                 new ImmutablePair<>("playlistId", playlist.playlistId),
                                 new ImmutablePair<>("active", true),
@@ -159,7 +159,7 @@ public class ChannelPlaylistParser {
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("PointlessArithmeticExpression")
-    private static String formatPlaylistChannels(List<Channel> playlistChannels) throws Exception {
+    private static String formatPlaylistChannels(List<ChannelConfig> playlistChannels) throws Exception {
         return playlistChannels.stream().sequential()
                 .map(e -> StringUtility.splitLines(
                                 ChannelJsonFormatter.toMinJsonString(e, FORCE_INCLUDE_FIELDS, FORCE_EXCLUDE_FIELDS)).stream()

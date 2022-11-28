@@ -24,7 +24,7 @@ import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channel;
+import youtube.channel.ChannelConfig;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.util.FileUtils;
@@ -61,7 +61,7 @@ public class ChannelState {
     /**
      * The Channel.
      */
-    public Channel channel;
+    public ChannelConfig channel;
     
     /**
      * The ids of the videos queued for download for the Channel.
@@ -121,7 +121,7 @@ public class ChannelState {
      *
      * @param channel The Channel.
      */
-    public ChannelState(Channel channel) {
+    public ChannelState(ChannelConfig channel) {
         this.channel = channel;
         
         this.queued = new ArrayList<>();

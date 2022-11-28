@@ -1,5 +1,5 @@
 /*
- * File:    Channel.java
+ * File:    ChannelConfig.java
  * Package: youtube.channel
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
@@ -20,16 +20,16 @@ import youtube.channel.state.ChannelState;
 import youtube.util.Utils;
 
 /**
- * Defines a Channel of the Youtube Channel Downloader.
+ * Defines a Channel configuration of the Youtube Channel Downloader.
  */
-public class Channel extends ChannelEntry {
+public class ChannelConfig extends ChannelEntry {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(Channel.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChannelConfig.class);
     
     
     //Constants
@@ -116,18 +116,18 @@ public class Channel extends ChannelEntry {
     //Constructors
     
     /**
-     * Creates a Channel.
+     * Creates a Channel Config.
      *
      * @param fields The fields from the Channel configuration.
      * @param parent The parent of the Channel configuration.
      * @throws Exception When the Channel configuration does not contain all of the required fields.
      */
-    public Channel(Map<String, Object> fields, ChannelGroup parent) throws Exception {
+    public ChannelConfig(Map<String, Object> fields, ChannelGroup parent) throws Exception {
         super(fields, parent);
         
         this.name = stringFieldGetter.apply("name").map(e -> e.replaceAll("[.|]", "")).orElseGet(() -> StringUtility.toPascalCase(key));
         
-        this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(Channel::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
+        this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
         this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
         
         this.type = ChannelType.determineType(playlistId);
@@ -137,19 +137,19 @@ public class Channel extends ChannelEntry {
     }
     
     /**
-     * Creates a Channel.
+     * Creates a Channel Config.
      *
      * @param fields The fields from the Channel configuration.
      * @throws Exception When the Channel configuration does not contain all of the required fields.
      */
-    public Channel(Map<String, Object> fields) throws Exception {
+    public ChannelConfig(Map<String, Object> fields) throws Exception {
         this(fields, null);
     }
     
     /**
-     * The default no-argument constructor for a Channel.
+     * The default no-argument constructor for a Channel Config.
      */
-    public Channel() {
+    public ChannelConfig() {
         super();
     }
     
@@ -175,9 +175,9 @@ public class Channel extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the field values of the Channel.
+     * Returns the map of the field values of the Channel Config.
      *
-     * @return The map of the field values of the Channel.
+     * @return The map of the field values of the Channel Config.
      */
     @Override
     public Map<String, Object> getFields() {
@@ -192,9 +192,9 @@ public class Channel extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the effective field values of the Channel.
+     * Returns the map of the effective field values of the Channel Config.
      *
-     * @return The map of the effective field values of the Channel.
+     * @return The map of the effective field values of the Channel Config.
      */
     @Override
     public Map<String, Object> getEffectiveFields() {

@@ -28,7 +28,7 @@ import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
- * Holds Channels and Playlists for the Youtube Channel Downloader.
+ * Holds Channel configurations and Channel Group configurations for the Youtube Channel Downloader.
  */
 public class Channels {
     
@@ -68,7 +68,7 @@ public class Channels {
     /**
      * The list of Channels.
      */
-    private static final Map<String, Channel> channels = new LinkedHashMap<>();
+    private static final Map<String, ChannelConfig> channels = new LinkedHashMap<>();
     
     /**
      * The list of Channel Groups.
@@ -114,7 +114,7 @@ public class Channels {
      *
      * @return The list of Channels.
      */
-    public static List<Channel> getChannels() {
+    public static List<ChannelConfig> getChannels() {
         return new ArrayList<>(channels.values());
     }
     
@@ -142,7 +142,7 @@ public class Channels {
      * @param key The key of the Channel.
      * @return The Channel of the specified key, or null if it does not exist.
      */
-    public static Channel getChannel(String key) {
+    public static ChannelConfig getChannel(String key) {
         return channels.get(key);
     }
     
@@ -214,8 +214,8 @@ public class Channels {
                     loadChannelList((JSONArray) channelJson.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
                     groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
                 } else {
-                    ((Channel) channelEntry).state.load();
-                    channels.put(channelEntry.getKey(), (Channel) channelEntry);
+                    ((ChannelConfig) channelEntry).state.load();
+                    channels.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
                 }
                 
             } catch (Exception e) {
