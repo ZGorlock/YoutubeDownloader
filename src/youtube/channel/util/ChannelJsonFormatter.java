@@ -1,11 +1,11 @@
 /*
  * File:    ChannelJsonFormatter.java
- * Package: youtube.channel
+ * Package: youtube.channel.util
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel;
+package youtube.channel.util;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
+import youtube.channel.Channel;
+import youtube.channel.ChannelEntry;
+import youtube.channel.ChannelGroup;
 
 /**
  * Handles the formatting of Channel json strings.
