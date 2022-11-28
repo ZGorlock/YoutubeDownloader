@@ -1,11 +1,11 @@
 /*
  * File:    ChannelProcesses_Sample.java
- * Package: youtube.process
+ * Package: youtube.channel.process
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.process;
+package youtube.channel.process;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -20,10 +20,10 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channel;
+import youtube.channel.process.macro.BaseProcess;
+import youtube.channel.process.macro.FilterProcess;
+import youtube.channel.process.macro.RenameProcess;
 import youtube.entity.info.VideoInfo;
-import youtube.process.macro.BaseProcess;
-import youtube.process.macro.FilterProcess;
-import youtube.process.macro.RenameProcess;
 
 /**
  * Holds pre and post processes to operate on Channels before or after generating the download queue.

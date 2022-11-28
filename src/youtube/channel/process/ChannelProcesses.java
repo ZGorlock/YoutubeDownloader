@@ -1,11 +1,11 @@
 /*
  * File:    ChannelProcesses.java
- * Package: youtube.process
+ * Package: youtube.channel.process
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.process;
+package youtube.channel.process;
 
 import java.util.Map;
 

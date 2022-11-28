@@ -1,11 +1,11 @@
 /*
  * File:    RenameProcess.java
- * Package: youtube.process.macro
+ * Package: youtube.channel.process.macro
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.process.macro;
+package youtube.channel.process.macro;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
