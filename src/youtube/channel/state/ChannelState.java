@@ -128,7 +128,7 @@ public class ChannelState {
         this.saved = new ArrayList<>();
         this.blocked = new ArrayList<>();
         
-        this.keyStore = new LinkedHashMap<>();
+        this.keyStore = KeyStore.get(channelName);
         
         this.stateLocation = new File(CHANNEL_DATA_DIR, channel.getName());
         this.dataFile = new File(this.stateLocation, (channel.getName() + "-data.json"));

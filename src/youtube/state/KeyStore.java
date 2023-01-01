@@ -9,15 +9,16 @@ package youtube.state;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import commons.lambda.stream.collector.MapCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
-import youtube.channel.Channels;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 
@@ -44,7 +45,12 @@ public class KeyStore {
     /**
      * The backup file of the keystore.
      */
-    public static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getAbsolutePath() + ".bak");
+    public static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getParentFile(), (KEY_STORE_FILE.getName() + ".bak"));
+    
+    /**
+     * The separator used in the keystore file.
+     */
+    public static final String KEYSTORE_SEPARATOR = "|";
     
     
     //Static Fields
@@ -58,66 +64,37 @@ public class KeyStore {
     //Static Methods
     
     /**
-     * Returns the key store for a Channel.
-     *
-     * @param channel The Channel.
-     * @return The key store for the Channel.
-     */
-    public static Map<String, String> get(ChannelConfig channel) {
-        return keyStore.get(channel.getName());
-    }
-    
-    /**
-     * Loads the map of video keys and their current saved file names for each Channel.
+     * Loads the map of video keys and their current saved file names.
      */
     public static void load() {
-        if ((!KEY_STORE_FILE.exists() || (KEY_STORE_FILE.length() == 0)) && KEY_STORE_BACKUP.exists()) {
-            try {
-                FileUtils.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        
-        List<String> lines;
         try {
-            lines = FileUtils.readLines(KEY_STORE_FILE);
+            if ((!KEY_STORE_FILE.exists() || (KEY_STORE_FILE.length() == 0)) && KEY_STORE_BACKUP.exists()) {
+                FileUtils.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE);
+            }
+            FileUtils.readLines(KEY_STORE_FILE).stream()
+                    .filter(line -> !line.isEmpty())
+                    .map(line -> line.split(Pattern.quote(KEYSTORE_SEPARATOR) + "+"))
+                    .filter(lineParts -> (lineParts.length == 3))
+                    .forEachOrdered(lineParts -> {
+                        keyStore.putIfAbsent(lineParts[0], new LinkedHashMap<>());
+                        keyStore.get(lineParts[0]).put(lineParts[1], PathUtils.localPath(lineParts[2]));
+                    });
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        
-        keyStore.clear();
-        for (ChannelConfig channel : Channels.getChannels()) {
-            keyStore.putIfAbsent(channel.getName(), new LinkedHashMap<>());
-            channel.state.keyStore = keyStore.get(channel.getName());
-        }
-        
-        for (String line : lines) {
-            if (line.isEmpty()) {
-                continue;
-            }
-            String[] lineParts = line.split("\\|+");
-            if (lineParts.length == 3) {
-                keyStore.putIfAbsent(lineParts[0], new LinkedHashMap<>());
-                keyStore.get(lineParts[0]).put(lineParts[1], PathUtils.localPath(lineParts[2]));
-            }
-        }
     }
     
     /**
-     * Saves the map of video keys and their current saved file names for each Channel.
+     * Saves the map of video keys and their current saved file names.
      */
     public static void save() {
-        List<String> lines = new ArrayList<>();
-        for (Map.Entry<String, Map<String, String>> keyStoreEntry : keyStore.entrySet()) {
-            for (Map.Entry<String, String> keyStoreChannelEntry : keyStoreEntry.getValue().entrySet()) {
-                lines.add(keyStoreEntry.getKey() + "|" + keyStoreChannelEntry.getKey() + "|" + PathUtils.localPath(keyStoreChannelEntry.getValue()));
-            }
-        }
-        
         try {
             FileUtils.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP);
-            FileUtils.writeLines(KEY_STORE_FILE, lines);
+            FileUtils.writeLines(KEY_STORE_FILE, keyStore.entrySet().stream()
+                    .flatMap(store -> store.getValue().entrySet().stream()
+                            .map(entry -> String.join(KEYSTORE_SEPARATOR,
+                                    store.getKey(), entry.getKey(), PathUtils.localPath(entry.getValue())))
+                    ).collect(Collectors.toList()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
