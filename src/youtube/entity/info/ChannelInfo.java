@@ -12,12 +12,11 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
 import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
 /**
- * Defines the Info of a Youtube Channel Entity.
+ * Defines the Channel Info of a Youtube Channel.
  */
 public class ChannelInfo extends EntityInfo {
     
@@ -37,6 +36,11 @@ public class ChannelInfo extends EntityInfo {
     public String channelId;
     
     /**
+     * The custom url key of the Channel.
+     */
+    public String customUrlKey;
+    
+    /**
      * The custom url of the Channel.
      */
     public String customUrl;
@@ -50,37 +54,67 @@ public class ChannelInfo extends EntityInfo {
     //Constructors
     
     /**
-     * Creates a Channel Entity Info.
+     * Creates a Channel Info.
      *
      * @param channelData The json data of the Channel.
-     * @param channel     The Channel containing the Channel Entity.
      */
-    public ChannelInfo(Map<String, Object> channelData, ChannelConfig channel) {
-        super(channelData, channel);
+    public ChannelInfo(Map<String, Object> channelData) {
+        super(channelData);
         
         this.channelId = metadata.itemId;
         this.metadata.entityId = channelId;
         
-        this.customUrl = getData("customUrl");
-        this.url = WebUtils.CHANNEL_BASE + Optional.ofNullable(customUrl).map(e -> e.replaceAll("^@", "")).orElse(channelId);
+        this.url = WebUtils.CHANNEL_BASE + channelId;
+        this.customUrlKey = getData("customUrl");
+        this.customUrl = Optional.ofNullable(customUrlKey).map(e -> e.replaceAll("^@*", WebUtils.CHANNEL_BASE)).orElse(url);
         
         this.videoCount = Optional.ofNullable(stats).map(e -> e.get("videoCount")).map(e -> e.count).orElse(null);
     }
     
     /**
-     * Creates a Channel Entity Info.
-     *
-     * @param channelData The json data of the Channel.
+     * The default no-argument constructor for a Channel Info.
      */
-    public ChannelInfo(Map<String, Object> channelData) {
-        this(channelData, null);
+    protected ChannelInfo() {
+        super();
+    }
+    
+    
+    //Getters
+    
+    /**
+     * Returns the id of the Channel.
+     *
+     * @return The id of the Channel.
+     */
+    public String getChannelId() {
+        return channelId;
     }
     
     /**
-     * The default no-argument constructor for a Channel Entity Info.
+     * Returns the custom url key of the Channel.
+     *
+     * @return The custom url key of the Channel.
      */
-    public ChannelInfo() {
-        super();
+    public String getCustomUrlKey() {
+        return customUrlKey;
+    }
+    
+    /**
+     * Returns the custom url of the Channel.
+     *
+     * @return The custom url of the Channel.
+     */
+    public String getCustomUrl() {
+        return customUrl;
+    }
+    
+    /**
+     * Returns the number of videos in the Channel.
+     *
+     * @return The number of videos in the Channel.
+     */
+    public Long getVideoCount() {
+        return videoCount;
     }
     
 }

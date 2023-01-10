@@ -79,6 +79,18 @@ public class TopicList extends ArrayList<TopicList.Topic> {
          */
         @Override
         public String toString() {
+            return getUrl();
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the url of the Topic.
+         *
+         * @return The url of the Topic.
+         */
+        public String getUrl() {
             return url;
         }
         

@@ -23,12 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.config.Color;
 import youtube.config.Configurator;
+import youtube.entity.Channel;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
- * Holds Channel configurations and Channel Group configurations for the Youtube Channel Downloader.
+ * Manages Channel Configs and Channel Groups for the Youtube Channel Downloader.
  */
 public class Channels {
     
@@ -66,22 +67,27 @@ public class Channels {
     //Static Fields
     
     /**
-     * The list of Channels.
+     * The map of Channels.
      */
-    private static final Map<String, ChannelConfig> channels = new LinkedHashMap<>();
+    private static final Map<String, Channel> channels = new LinkedHashMap<>();
     
     /**
-     * The list of Channel Groups.
+     * The map of Channel Configs.
+     */
+    private static final Map<String, ChannelConfig> configs = new LinkedHashMap<>();
+    
+    /**
+     * The map of Channel Groups.
      */
     private static final Map<String, ChannelGroup> groups = new LinkedHashMap<>();
     
     /**
-     * The Channel configuration root.
+     * The Channels configuration root.
      */
     private static final ChannelGroup root = new ChannelGroup();
     
     /**
-     * A flag indicating whether the Channel configuration has been loaded yet or not.
+     * A flag indicating whether the Channels configuration has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
@@ -114,8 +120,17 @@ public class Channels {
      *
      * @return The list of Channels.
      */
-    public static List<ChannelConfig> getChannels() {
+    public static List<Channel> getChannels() {
         return new ArrayList<>(channels.values());
+    }
+    
+    /**
+     * Returns the list of Channel Configs.
+     *
+     * @return The list of Channel Configs.
+     */
+    public static List<ChannelConfig> getConfigs() {
+        return new ArrayList<>(configs.values());
     }
     
     /**
@@ -128,9 +143,9 @@ public class Channels {
     }
     
     /**
-     * Returns the Channel Entry root.
+     * Returns the Channels configuration root.
      *
-     * @return The Channel Entry root.
+     * @return The Channels configuration root.
      */
     public static ChannelGroup getRoot() {
         return root;
@@ -142,8 +157,18 @@ public class Channels {
      * @param key The key of the Channel.
      * @return The Channel of the specified key, or null if it does not exist.
      */
-    public static ChannelConfig getChannel(String key) {
+    public static Channel getChannel(String key) {
         return channels.get(key);
+    }
+    
+    /**
+     * Returns a Channel Config of a specified key.
+     *
+     * @param key The key of the Channel Config.
+     * @return The Channel Config of the specified key, or null if it does not exist.
+     */
+    public static ChannelConfig getConfig(String key) {
+        return configs.get(key);
     }
     
     /**
@@ -167,6 +192,16 @@ public class Channels {
     }
     
     /**
+     * Returns index of a Channel Config of a specified key.
+     *
+     * @param key The key of the Channel Config.
+     * @return The index of the Channel Config of the specified key, or -1 if it does not exist.
+     */
+    public static int configIndex(String key) {
+        return new ArrayList<>(configs.keySet()).indexOf(key);
+    }
+    
+    /**
      * Returns index of a Channel Group of a specified key.
      *
      * @param key The key of the Channel Group.
@@ -177,7 +212,7 @@ public class Channels {
     }
     
     /**
-     * Loads the Channel configuration from the channels file.
+     * Loads the Channels configuration from the channels file.
      */
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
@@ -197,10 +232,10 @@ public class Channels {
     }
     
     /**
-     * Loads the Channel configuration from a json channel list.
+     * Loads the Channels configuration from a json channel list.
      *
      * @param channelList The json channel list.
-     * @param parent      The parent of the Channel configuration.
+     * @param parent      The parent of the configurations in the channel list.
      */
     @SuppressWarnings("unchecked")
     private static void loadChannelList(JSONArray channelList, ChannelGroup parent) {
@@ -214,8 +249,8 @@ public class Channels {
                     loadChannelList((JSONArray) channelJson.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
                     groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
                 } else {
-                    ((ChannelConfig) channelEntry).state.load();
-                    channels.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
+                    configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
+                    channels.put(channelEntry.getKey(), new Channel((ChannelConfig) channelEntry));
                 }
                 
             } catch (Exception e) {
@@ -229,9 +264,9 @@ public class Channels {
     }
     
     /**
-     * Reads the Channel configuration file.
+     * Reads the Channels configuration file.
      *
-     * @return The content of the Channel configuration file.
+     * @return The content of the Channels configuration file.
      * @throws Exception When there is an issue reading the configuration file.
      */
     private static String readChannelConfiguration() throws Exception {
@@ -241,7 +276,7 @@ public class Channels {
     }
     
     /**
-     * Prints the Channel map.
+     * Prints the Channels map.
      */
     public static void print() {
         if (!Configurator.Config.printChannels) {

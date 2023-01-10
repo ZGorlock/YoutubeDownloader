@@ -11,12 +11,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
 import youtube.entity.info.base.EntityInfo;
 import youtube.util.WebUtils;
 
 /**
- * Defines the Info of a Youtube Playlist Entity.
+ * Defines the Playlist Info of a Youtube Playlist.
  */
 public class PlaylistInfo extends EntityInfo {
     
@@ -44,13 +43,12 @@ public class PlaylistInfo extends EntityInfo {
     //Constructors
     
     /**
-     * Creates a Playlist Entity Info.
+     * Creates a Playlist Info.
      *
      * @param playlistData The json data of the Playlist.
-     * @param channel      The Channel containing the Playlist Entity.
      */
-    public PlaylistInfo(Map<String, Object> playlistData, ChannelConfig channel) {
-        super(playlistData, channel);
+    public PlaylistInfo(Map<String, Object> playlistData) {
+        super(playlistData);
         
         this.playlistId = metadata.itemId;
         this.metadata.entityId = playlistId;
@@ -61,19 +59,31 @@ public class PlaylistInfo extends EntityInfo {
     }
     
     /**
-     * Creates a Playlist Entity Info.
-     *
-     * @param playlistData The json data of the Playlist.
+     * The default no-argument constructor for a Playlist Info.
      */
-    public PlaylistInfo(Map<String, Object> playlistData) {
-        this(playlistData, null);
+    protected PlaylistInfo() {
+        super();
+    }
+    
+    
+    //Getters
+    
+    /**
+     * Returns the id of the Playlist.
+     *
+     * @return The id of the Playlist.
+     */
+    public String getPlaylistId() {
+        return playlistId;
     }
     
     /**
-     * The default no-argument constructor for a Playlist Entity Info.
+     * Returns the number of videos in the Playlist.
+     *
+     * @return The number of videos in the Playlist.
      */
-    public PlaylistInfo() {
-        super();
+    public Long getVideoCount() {
+        return videoCount;
     }
     
 }

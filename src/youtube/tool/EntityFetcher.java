@@ -48,7 +48,7 @@ public class EntityFetcher {
         List<EntityInfo> resultEntities;
         
         resultEntities = results.computeIfAbsent("Entities", key -> new ArrayList<>());
-        fetchVideo("0YiNACjWW-4", resultEntities);
+        fetchVideo("J_hJB0ZpVjk", resultEntities);
         fetchPlaylist("PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw", resultEntities);
         fetchChannel("UCMV3aTOwUtG5vwfH9_rzb2w", resultEntities);
         
@@ -71,11 +71,11 @@ public class EntityFetcher {
     //Static Methods
     
     /**
-     * Fetches a Video Entity from the Youtube Data API.
+     * Fetches a Video from the Youtube Data API.
      *
-     * @param videoId The id of the Video Entity.
-     * @param result  The list to store the Video Entity in.
-     * @return The Video Entity data and the Video Entity.
+     * @param videoId The id of the Video.
+     * @param result  The list to store the Video in.
+     * @return The json data of the Video and the Video Info.
      * @throws Exception When there is an error.
      */
     private static Map.Entry<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) throws Exception {
@@ -87,11 +87,11 @@ public class EntityFetcher {
     }
     
     /**
-     * Fetches a Playlist Entity from the Youtube Data API.
+     * Fetches a Playlist from the Youtube Data API.
      *
-     * @param playlistId The id of the Playlist Entity.
-     * @param result     The list to store the Playlist Entity in.
-     * @return The Playlist Entity data and the Playlist Entity.
+     * @param playlistId The id of the Playlist.
+     * @param result     The list to store the Playlist in.
+     * @return The json data of the Playlist and the Playlist Info.
      * @throws Exception When there is an error.
      */
     private static Map.Entry<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) throws Exception {
@@ -103,11 +103,11 @@ public class EntityFetcher {
     }
     
     /**
-     * Fetches a Channel Entity from the Youtube Data API.
+     * Fetches a Channel from the Youtube Data API.
      *
-     * @param channelId The id of the Channel Entity.
-     * @param result    The list to store the Channel Entity in.
-     * @return The Channel Entity data and the Channel Entity.
+     * @param channelId The id of the channel.
+     * @param result    The list to store the Channel in.
+     * @return The json data of the Channel and the Channel Info.
      * @throws Exception When there is an error.
      */
     private static Map.Entry<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
@@ -119,11 +119,11 @@ public class EntityFetcher {
     }
     
     /**
-     * Fetches a list of Playlist Entities of a Channel Entity from the Youtube Data API.
+     * Fetches the Playlists of a Channel from the Youtube Data API.
      *
-     * @param channelId The id of the Channel Entity.
-     * @param result    The list to store the Playlist Entities in.
-     * @return The Playlist Entities data and the Playlist Entities.
+     * @param channelId The id of the Channel.
+     * @param result    The list to store the Playlists in.
+     * @return The json data of the Playlists and the list of Playlist Info.
      * @throws Exception When there is an error.
      */
     private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) throws Exception {
@@ -137,11 +137,11 @@ public class EntityFetcher {
     }
     
     /**
-     * Fetches a list of Video Entities of a Playlist Entity from the Youtube Data API.
+     * Fetches the Videos of a Playlist from the Youtube Data API.
      *
-     * @param playlistId The id of the Playlist Entity.
-     * @param result     The list to store the Video Entities in.
-     * @return The Video Entities data and the Video Entities.
+     * @param playlistId The id of the Playlist.
+     * @param result     The list to store the Videos in.
+     * @return The json data of the Videos and the list of Video Info.
      * @throws Exception When there is an error.
      */
     private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) throws Exception {

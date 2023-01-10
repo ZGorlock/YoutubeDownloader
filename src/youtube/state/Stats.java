@@ -141,14 +141,15 @@ public final class Stats {
      */
     private static void calculateData() {
         Channels.getChannels().stream()
-                .flatMap(channel -> channel.state.saved.stream().map(saved -> channel.state.keyStore.get(saved)))
+                .flatMap(channel -> channel.getState().saved.stream()
+                        .map(saved -> channel.getState().keyStore.get(saved)))
                 .filter(Objects::nonNull).distinct()
                 .map(File::new).filter(File::exists)
                 .forEach(file -> {
-                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
+                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()).toLowerCase())) {
                         Stats.totalVideo.incrementAndGet();
                         Stats.totalVideoData.addAndGet(file.length());
-                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()))) {
+                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()).toLowerCase())) {
                         Stats.totalAudio.incrementAndGet();
                         Stats.totalAudioData.addAndGet(file.length());
                     }

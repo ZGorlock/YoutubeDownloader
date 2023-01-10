@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -238,13 +239,23 @@ public final class Utils {
     }
     
     /**
-     * Returns the file format of a file name.
+     * Returns the file format from a file name.
      *
      * @param fileName The file name.
-     * @return The file format of the file name.
+     * @return The file format from the file name.
      */
     public static String getFileFormat(String fileName) {
-        return fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+        return fileName.replaceAll("^.*?\\.((?:f\\d+\\.)*[^.]+)$", "$1").toLowerCase();
+    }
+    
+    /**
+     * Returns the title from a file name.
+     *
+     * @param fileName The file name.
+     * @return The title from the file name.
+     */
+    public static String getFileTitle(String fileName) {
+        return fileName.replaceAll(("\\." + Pattern.quote(getFileFormat(fileName)) + "$"), "");
     }
     
     /**

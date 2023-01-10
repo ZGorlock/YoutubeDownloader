@@ -24,7 +24,7 @@ import youtube.channel.ChannelEntry;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.config.SponsorBlocker;
-import youtube.entity.info.VideoInfo;
+import youtube.entity.Video;
 
 /**
  * Provides download utility methods for the Youtube Downloader.
@@ -91,7 +91,7 @@ public final class DownloadUtils {
     /**
      * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
      */
-    public static final String[] NON_CRITICAL_ERRORS = new String[] {
+    private static final String[] NON_CRITICAL_ERRORS = new String[] {
             "giving up after 10",
             "urlopen error",
             "sign in to",
@@ -101,7 +101,7 @@ public final class DownloadUtils {
     /**
      * A list of error responses that will trigger a retry attempt using browser cookies, if configured.
      */
-    public static final String[] RETRY_WITH_COOKIES_ERRORS = new String[] {
+    private static final String[] RETRY_WITH_COOKIES_ERRORS = new String[] {
             "sign in to"
     };
     
@@ -109,41 +109,41 @@ public final class DownloadUtils {
     //Static Methods
     
     /**
-     * Downloads a Youtube video.
+     * Downloads a Youtube Video.
      *
-     * @param video The Video data object.
+     * @param video The Video.
      * @return A download response indicating the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    public static DownloadResponse downloadYoutubeVideo(VideoInfo video) throws Exception {
+    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
         return downloadYoutubeVideo(video, false);
     }
     
     /**
-     * Downloads a Youtube video.
+     * Downloads a Youtube Video.
      *
-     * @param video   The Video data object.
+     * @param video   The Video.
      * @param isRetry Whether this download attempt is a retry or not.
      * @return A download response indicating the result of the download attempt.
      * @throws Exception When there is an error downloading the video.
      */
-    private static DownloadResponse downloadYoutubeVideo(VideoInfo video, boolean isRetry) throws Exception {
+    private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) throws Exception {
         final boolean ytDlp = (ExecutableUtils.EXECUTABLE == ExecutableUtils.Executable.YT_DLP);
-        final boolean asMp3 = Optional.ofNullable(video.channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
-        final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.channel).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
+        final boolean asMp3 = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
+        final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
         if (isRetry && (Configurator.Config.neverUseBrowserCookies || StringUtility.isNullOrBlank(Configurator.Config.browser))) {
             return null;
         }
         
         final String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getCall()) + Color.log(" ") +
-                Color.log("--output \"") + Color.filePath((video.download.getAbsolutePath() + ".%(ext)s"), false) + Color.log("\" ") +
+                Color.log("--output \"") + Color.filePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), false) + Color.log("\" ") +
                 Color.log("--geo-bypass --rm-cache-dir " +
                         (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
                 Color.log(asMp3 ? "--extract-audio --audio-format " + Utils.AUDIO_FORMAT + " " :
                           ((ytDlp && !Configurator.Config.preMerged) ? "" : ("--format best " + (ytDlp ? "-f b " : "")))) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
-                Color.link(video.url);
+                Color.link(video.getInfo().getUrl());
         
         if (Configurator.Config.logCommand) {
             System.out.println(Utils.INDENT + Color.base(cmd));
@@ -153,13 +153,13 @@ public final class DownloadUtils {
     }
     
     /**
-     * Executes a command line process.
+     * Performs a Youtube Video download.
      *
      * @param cmd   The command.
-     * @param video The Video data object.
+     * @param video The Video.
      * @return A download response indicating the result of the download attempt.
      */
-    private static DownloadResponse performDownload(String cmd, VideoInfo video, boolean isRetry) {
+    private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
         logger.debug(System.lineSeparator() + StringUtility.repeatString("-", 200) + System.lineSeparator());
         logger.info(cmd + System.lineSeparator());
         
@@ -291,32 +291,32 @@ public final class DownloadUtils {
         /**
          * A regex pattern matching a 'download progress' line from the executable output.
          */
-        public static final Pattern PROGRESS_PATTERN = Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*~?\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
+        private static final Pattern PROGRESS_PATTERN = Pattern.compile("^\\[download]\\s*(?<percentage>\\d+\\.\\d+)%\\s*of\\s*~?\\s*(?<total>\\d+\\.\\d+)(?<units>.iB).*$");
         
         /**
          * A regex pattern matching a 'resuming download' line from the executable output.
          */
-        public static final Pattern RESUME_PATTERN = Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
+        private static final Pattern RESUME_PATTERN = Pattern.compile("^\\[download]\\s*Resuming\\s*download\\s*at\\s*byte\\s*(?<initialProgress>\\d+).*$");
         
         /**
          * A regex pattern matching a 'video already exists' line from the executable output.
          */
-        public static final Pattern EXISTS_PATTERN = Pattern.compile("^\\[download]\\s(?<output>.+)\\shas\\salready\\sbeen\\sdownloaded$");
+        private static final Pattern EXISTS_PATTERN = Pattern.compile("^\\[download]\\s(?<output>.+)\\shas\\salready\\sbeen\\sdownloaded$");
         
         /**
          * A regex pattern matching a 'output destination' line from the executable output.
          */
-        public static final Pattern DESTINATION_PATTERN = Pattern.compile("^\\[download]\\s*Destination:\\s*(?<destination>.+)$");
+        private static final Pattern DESTINATION_PATTERN = Pattern.compile("^\\[download]\\s*Destination:\\s*(?<destination>.+)$");
         
         /**
          * A regex pattern matching a 'merging formats' line from the executable output.
          */
-        public static final Pattern MERGE_PATTERN = Pattern.compile("^\\[Merger]\\s*Merging\\s*formats\\s*into\\s*\"(?<merge>.+)\"$");
+        private static final Pattern MERGE_PATTERN = Pattern.compile("^\\[Merger]\\s*Merging\\s*formats\\s*into\\s*\"(?<merge>.+)\"$");
         
         /**
          * A regex pattern matching a 'extracting audio' line from the executable output.
          */
-        public static final Pattern EXTRACT_AUDIO_PATTERN = Pattern.compile("^\\[ExtractAudio]\\s*Destination:\\s*(?<audio>.+)$");
+        private static final Pattern EXTRACT_AUDIO_PATTERN = Pattern.compile("^\\[ExtractAudio]\\s*Destination:\\s*(?<audio>.+)$");
         
         
         //Fields
@@ -324,7 +324,7 @@ public final class DownloadUtils {
         /**
          * The Video being downloaded.
          */
-        private final VideoInfo video;
+        private final Video video;
         
         /**
          * The Download Response.
@@ -345,12 +345,12 @@ public final class DownloadUtils {
         //Constructors
         
         /**
-         * Creates a new DownloadProgressBar object.
+         * Creates a new Download Progress Bar.
          *
          * @param video    The Video being downloaded.
          * @param response the Download Response.
          */
-        public DownloadProgressBar(VideoInfo video, DownloadResponse response) {
+        public DownloadProgressBar(Video video, DownloadResponse response) {
             super("", 0L, 32, "KB", DISPLAY_PROGRESS_BAR);
             this.video = video;
             this.response = response;
@@ -416,9 +416,9 @@ public final class DownloadUtils {
             
             final Matcher existsMatcher = EXISTS_PATTERN.matcher(log);
             if (existsMatcher.matches()) {
-                video.output = new File(existsMatcher.group("output"));
+                video.updateOutput(new File(existsMatcher.group("output")));
                 
-                final long size = video.output.length() / 1024;
+                final long size = video.getOutput().length() / 1024;
                 updateTotal(size);
                 defineInitialProgress(size);
                 
@@ -428,17 +428,17 @@ public final class DownloadUtils {
             
             final Matcher destinationMatcher = DESTINATION_PATTERN.matcher(log);
             if (destinationMatcher.matches()) {
-                video.output = new File(destinationMatcher.group("destination"));
+                video.updateOutput(new File(destinationMatcher.group("destination")));
                 return newPart.compareAndSet(false, true);
             }
             
             final Matcher mergeMatcher = MERGE_PATTERN.matcher(log);
             if (mergeMatcher.matches()) {
-                video.output = new File(mergeMatcher.group("merge"));
+                video.updateOutput(new File(mergeMatcher.group("merge")));
                 
                 if (!isCompleted()) {
                     complete(true, Color.good("Merging Formats" +
-                            (Optional.ofNullable(video.channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "..."));
+                            (Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "..."));
                 }
                 
                 response.message = null;
@@ -447,7 +447,7 @@ public final class DownloadUtils {
             
             final Matcher extractAudioMatcher = EXTRACT_AUDIO_PATTERN.matcher(log);
             if (extractAudioMatcher.matches()) {
-                video.output = new File(extractAudioMatcher.group("audio"));
+                video.updateOutput(new File(extractAudioMatcher.group("audio")));
                 
                 if (!isCompleted()) {
                     complete(true, Color.good("Extracting Audio..."));

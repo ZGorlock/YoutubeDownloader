@@ -15,29 +15,29 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Defines a Channel Group configuration of the Youtube Channel Downloader.
+ * Defines a Channel Group of the Youtube Channel Downloader.
  */
 public class ChannelGroup extends ChannelEntry {
     
     //Constants
     
     /**
-     * A list of required fields in a Channel Group configuration.
+     * A list of required fields in the configuration of a Channel Group.
      */
     public static final List<String> REQUIRED_FIELDS = List.of("key", "channels");
     
     /**
-     * A list of base fields in a Channel Group configuration.
+     * A list of base fields in the configuration of a Channel Group.
      */
     public static final List<String> BASE_FIELDS = List.of("key", "active", "channels");
     
     /**
-     * A list of all fields in a Channel Group configuration.
+     * A list of all fields in the configuration of a Channel Group.
      */
     public static final List<String> ALL_FIELDS = List.of("key", "active", "group", "url", "playlistId", "outputFolder", "saveAsMp3", "reversePlaylist", "ignoreGlobalLocations", "keepClean", "channels");
     
     /**
-     * The key of the field containing the children of a Channel Group.
+     * The key of the field in the configuration of a Channel Group that contains the list of children.
      */
     public static final String CHILD_CONFIGURATION_KEY = "channels";
     
@@ -55,22 +55,22 @@ public class ChannelGroup extends ChannelEntry {
     /**
      * Creates a Channel Group.
      *
-     * @param fields The fields from the Channel Group configuration.
-     * @param parent The parent of the Channel Group configuration.
-     * @throws Exception When the Channel Group configuration does not contain all of the required fields.
+     * @param config The configuration data.
+     * @param parent The parent of the Channel Group.
+     * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelGroup(Map<String, Object> fields, ChannelGroup parent) throws Exception {
-        super(fields, parent);
+    public ChannelGroup(Map<String, Object> config, ChannelGroup parent) throws Exception {
+        super(config, parent);
     }
     
     /**
      * Creates a Channel Group.
      *
-     * @param fields The fields from the Channel Group configuration.
-     * @throws Exception When the Channel Group configuration does not contain all of the required fields.
+     * @param config The configuration data.
+     * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelGroup(Map<String, Object> fields) throws Exception {
-        this(fields, null);
+    public ChannelGroup(Map<String, Object> config) throws Exception {
+        this(config, null);
     }
     
     /**
@@ -99,13 +99,13 @@ public class ChannelGroup extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the field values of the Channel Group.
+     * Returns the configuration data of the Channel Group.
      *
-     * @return The map of the field values of the Channel Group.
+     * @return The configuration data of the Channel Group.
      */
     @Override
-    public Map<String, Object> getFields() {
-        final Map<String, Object> fields = super.getFields();
+    public Map<String, Object> getConfig() {
+        final Map<String, Object> fields = super.getConfig();
         fields.put(CHILD_CONFIGURATION_KEY, children);
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
@@ -115,13 +115,13 @@ public class ChannelGroup extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the effective field values of the Channel Group.
+     * Returns the effective configuration data of the Channel Group.
      *
-     * @return The map of the effective field values of the Channel Group.
+     * @return The effective configuration data of the Channel Group.
      */
     @Override
-    public Map<String, Object> getEffectiveFields() {
-        final Map<String, Object> fields = super.getEffectiveFields();
+    public Map<String, Object> getEffectiveConfig() {
+        final Map<String, Object> fields = super.getEffectiveConfig();
         fields.put(CHILD_CONFIGURATION_KEY, getChildren());
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {

@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.config.Color;
 import youtube.config.SponsorBlocker;
+import youtube.state.KeyStore;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -162,28 +165,38 @@ public class ChannelEntry {
     /**
      * The parent of the Channel Entry.
      */
-    protected ChannelEntry parent = null;
+    protected ChannelGroup parent = null;
     
     
     //Functions
     
     /**
-     * Reads a field from the Channel Entry json configuration.
+     * Reads a field from the configuration of the Channel Entry.
      */
     protected final Function<String, Optional<Object>> fieldGetter = (String name) ->
             Optional.ofNullable(channelEntryJson.get(name));
     
     /**
-     * Reads a string field from the Channel Entry json configuration.
+     * Reads a string field from the configuration of the Channel Entry.
      */
     protected final Function<String, Optional<String>> stringFieldGetter = (String name) ->
             Optional.ofNullable((String) fieldGetter.apply(name).orElse(null));
     
     /**
-     * Reads a boolean field from the Channel Entry json configuration.
+     * Reads a boolean field from the configuration of the Channel Entry.
      */
     protected final Function<String, Optional<Boolean>> booleanFieldGetter = (String name) ->
             Optional.ofNullable((Boolean) fieldGetter.apply(name).orElse(null));
+    
+    /**
+     * Formats an identifier string of the Channel Entry.
+     */
+    protected final UnaryOperator<String> identifierFormatter = (String identifier) ->
+            Optional.ofNullable(identifier)
+                    .map(e -> e.replace(".", ""))
+                    .map(e -> e.replace(KeyStore.KEYSTORE_SEPARATOR, ""))
+                    .map(e -> e.replaceAll("\\s+", "_"))
+                    .orElse(null);
     
     
     //Constructors
@@ -191,19 +204,19 @@ public class ChannelEntry {
     /**
      * Creates a Channel Entry.
      *
-     * @param fields The fields from the Channel Entry configuration.
-     * @param parent The parent of the Channel Entry configuration.
-     * @throws RuntimeException When the Channel Entry configuration does not contain all of the required fields.
+     * @param config The configuration data.
+     * @param parent The parent of the Channel Entry.
+     * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
-    public ChannelEntry(Map<String, Object> fields, ChannelGroup parent) {
+    public ChannelEntry(Map<String, Object> config, ChannelGroup parent) {
         Optional.ofNullable(parent).filter(e -> (e.getKey() != null)).ifPresent(e -> {
             this.parent = e;
             e.children.add(this);
         });
         
-        this.channelEntryJson = new JSONObject(fields);
+        this.channelEntryJson = new JSONObject(config);
         
-        this.key = stringFieldGetter.apply("key").map(e -> e.replaceAll("[.|]", ""))
+        this.key = stringFieldGetter.apply("key").map(identifierFormatter)
                 .orElseThrow(() -> {
                     System.out.println(Color.bad("Configuration missing required field: ") + Color.link("key"));
                     return new RuntimeException();
@@ -227,7 +240,7 @@ public class ChannelEntry {
         this.outputFolderPath = stringFieldGetter.apply("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("outputFolderPath").orElse(null));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
         
-        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) fields.get("sponsorBlock"))
+        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) config.get("sponsorBlock"))
                 .map(SponsorBlocker::loadConfig)
                 .map(Mappers.forEach(e -> e.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL))
                 .orElse(null);
@@ -236,8 +249,8 @@ public class ChannelEntry {
     /**
      * Creates a Channel Entry.
      *
-     * @param fields The fields from the Channel Entry configuration.
-     * @throws RuntimeException When the Channel Entry configuration does not contain all of the required fields.
+     * @param fields The fields from the Channel Entry.
+     * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
     public ChannelEntry(Map<String, Object> fields) {
         this(fields, null);
@@ -253,18 +266,18 @@ public class ChannelEntry {
     //Methods
     
     /**
-     * Returns whether the Channel Entry is a Channel or not.
+     * Returns whether the Channel Entry is a Channel Config.
      *
-     * @return Whether the Channel Entry is a Channel or not.
+     * @return Whether the Channel Entry is a Channel Config.
      */
     public boolean isChannel() {
         return !isGroup();
     }
     
     /**
-     * Returns whether the Channel Entry is a Channel Group or not.
+     * Returns whether the Channel Entry is a Channel Group.
      *
-     * @return Whether the Channel Entry is a Channel Group or not.
+     * @return Whether the Channel Entry is a Channel Group.
      */
     @SuppressWarnings("unchecked")
     public boolean isGroup() {
@@ -329,10 +342,10 @@ public class ChannelEntry {
     }
     
     /**
-     * Returns whether the Channel Entry is a member of a specific group or not.
+     * Returns whether the Channel Entry is a member of a specific group.
      *
      * @param groupKeyOrName The key or name of the group.
-     * @return Whether the Channel Entry is a member of the specified group or not.
+     * @return Whether the Channel Entry is a member of the specified group.
      */
     public boolean isMemberOfGroup(String groupKeyOrName) {
         final BiPredicate<String, String> groupEquals = (String test, String target) ->
@@ -349,11 +362,11 @@ public class ChannelEntry {
     }
     
     /**
-     * Returns the map of the field values of the Channel Entry.
+     * Returns the configuration data of the Channel Entry.
      *
-     * @return The map of the field values of the Channel Entry.
+     * @return The configuration data of the Channel Entry.
      */
-    public Map<String, Object> getFields() {
+    public Map<String, Object> getConfig() {
         final Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("key", Optional.ofNullable(key).map(String::strip).orElse(null));
         fields.put("active", active);
@@ -370,11 +383,11 @@ public class ChannelEntry {
     }
     
     /**
-     * Returns the map of the effective field values of the Channel Entry.
+     * Returns the effective configuration data of the Channel Entry.
      *
-     * @return The map of the effective field values of the Channel Entry.
+     * @return The effective configuration data of the Channel Entry.
      */
-    public Map<String, Object> getEffectiveFields() {
+    public Map<String, Object> getEffectiveConfig() {
         final Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("key", getKey());
         fields.put("active", isActive());
@@ -413,13 +426,13 @@ public class ChannelEntry {
     }
     
     /**
-     * Returns the string representation of the Channel Entry.
+     * Returns a string representation of the Channel Entry.
      *
-     * @return the string representation of the Channel Entry.
+     * @return a string representation of the Channel Entry.
      */
     @Override
     public String toString() {
-        return key;
+        return getKey();
     }
     
     
@@ -501,7 +514,7 @@ public class ChannelEntry {
      */
     public String getOutputFolderPath() {
         return Optional.ofNullable(outputFolderPath).orElse("~")
-                .replaceAll("^~", Optional.ofNullable(parent).map(ChannelEntry::getOutputFolderPath).orElse(""));
+                .replaceAll("^~", Optional.ofNullable(parent).map(ChannelEntry::getOutputFolderPath).map(Matcher::quoteReplacement).orElse(""));
     }
     
     /**
@@ -545,6 +558,16 @@ public class ChannelEntry {
     }
     
     /**
+     * Returns whether to disregard the globally configured storage drive and video and music directories when determining the paths for the Channel Entry.
+     *
+     * @return Whether to disregard the globally configured storage drive and video and music directories when determining the paths for the Channel Entry.
+     */
+    public String getLocationPrefix() {
+        return Optional.ofNullable(locationPrefix).orElseGet(() ->
+                Optional.ofNullable(parent).map(ChannelEntry::getLocationPrefix).orElse(""));
+    }
+    
+    /**
      * Returns whether to delete files from the output directory that were removed from the referenced Youtube source.
      *
      * @return Whether to delete files from the output directory that were removed from the referenced Youtube source.
@@ -569,7 +592,7 @@ public class ChannelEntry {
      *
      * @return The parent of the Channel Entry.
      */
-    public ChannelEntry getParent() {
+    public ChannelGroup getParent() {
         return parent;
     }
     
@@ -586,7 +609,7 @@ public class ChannelEntry {
     @SuppressWarnings("unchecked")
     protected static <T extends ChannelEntry> T load(Map<String, Object> fields, ChannelGroup parent) throws Exception {
         T channelEntry = isGroupConfiguration(fields) ? (T) new ChannelGroup(fields, parent) : (T) new ChannelConfig(fields, parent);
-        validateRequiredFields(channelEntry.getEffectiveFields());
+        validateRequiredFields(channelEntry.getEffectiveConfig());
         return channelEntry;
     }
     
@@ -658,18 +681,18 @@ public class ChannelEntry {
     }
     
     /**
-     * Validates that a map of fields being used to construct a new Channel Entry contains all the required fields.
+     * Validates that the configuration data used to construct a new Channel Entry contains all the required fields.
      *
-     * @param fields The map of fields being used to construct a new Channel Entry.
-     * @throws RuntimeException When the map of fields does not contain all the required fields.
+     * @param config The configuration data.
+     * @throws RuntimeException When the configuration data does not contain all the required fields.
      */
-    protected static void validateRequiredFields(Map<String, Object> fields) {
-        Optional.of((isGroupConfiguration(fields) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
-                        .filter(e -> !MapUtility.contains(fields, e))
+    protected static void validateRequiredFields(Map<String, Object> config) {
+        Optional.of((isGroupConfiguration(config) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
+                        .filter(e -> !MapUtility.contains(config, e))
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())
                 .ifPresent(missingFields -> {
-                    System.out.println(Color.bad("Channel: ") + Color.channel(MapUtility.getOrNull(fields, "key")) +
+                    System.out.println(Color.bad("Channel: ") + Color.channel(MapUtility.getOrNull(config, "key")) +
                             Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
                             missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
                     throw new RuntimeException();

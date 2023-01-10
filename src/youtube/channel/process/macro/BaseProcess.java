@@ -15,7 +15,8 @@ import java.util.function.Predicate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.VideoInfo;
+import youtube.entity.Channel;
+import youtube.entity.Video;
 
 /**
  * Provides base Channel Process macros.
@@ -58,33 +59,36 @@ public class BaseProcess {
     /**
      * Performs an action for each entry in the video map.
      *
-     * @param videoMap The video map.
+     * @param channel  The Channel.
+     * @param videoMap The Video map.
      * @param action   The action to perform.
      */
-    public static void forEach(Map<String, VideoInfo> videoMap, BiConsumer<String, VideoInfo> action) {
+    public static void forEach(Channel channel, Map<String, Video> videoMap, BiConsumer<String, Video> action) {
         videoMap.forEach(action);
     }
     
     /**
      * Renames entries in the video map.
      *
-     * @param videoMap The video map.
+     * @param channel  The Channel.
+     * @param videoMap The Video map.
      * @param function The function to rename with.
      */
-    public static void rename(Map<String, VideoInfo> videoMap, BiFunction<String, VideoInfo, String> function) {
-        forEach(videoMap, (id, video) ->
+    public static void rename(Channel channel, Map<String, Video> videoMap, BiFunction<String, Video, String> function) {
+        forEach(channel, videoMap, (id, video) ->
                 video.updateTitle(function.apply(id, video)));
     }
     
     /**
      * Filters entries in the video map.
      *
-     * @param videoMap  The video map.
+     * @param channel   The Channel.
+     * @param videoMap  The Video map.
      * @param condition The condition to filter by.
      */
-    public static void filter(Map<String, VideoInfo> videoMap, Predicate<VideoInfo> condition) {
-        forEach(videoMap, (id, video) ->
-                Optional.ofNullable(video.channel.state.blocked)
+    public static void filter(Channel channel, Map<String, Video> videoMap, Predicate<Video> condition) {
+        forEach(channel, videoMap, (id, video) ->
+                Optional.ofNullable(channel.getState().blocked)
                         .filter(e -> condition.test(video))
                         .ifPresent(e -> e.add(id)));
     }

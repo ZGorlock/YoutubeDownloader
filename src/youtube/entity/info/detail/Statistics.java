@@ -87,7 +87,28 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          */
         @Override
         public String toString() {
-            return String.valueOf(count);
+            return String.valueOf(getCount());
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the name of the Stat.
+         *
+         * @return The name of the Stat.
+         */
+        public String getName() {
+            return name;
+        }
+        
+        /**
+         * Returns the count of the Stat.
+         *
+         * @return The count of the Stat.
+         */
+        public Long getCount() {
+            return count;
         }
         
     }

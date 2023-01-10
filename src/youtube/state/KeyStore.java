@@ -10,13 +10,10 @@ package youtube.state;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import commons.lambda.stream.collector.MapCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
@@ -98,6 +95,16 @@ public class KeyStore {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    /**
+     * Returns the key store for a Channel.
+     *
+     * @param channelName The name of the Channel.
+     * @return The key store for the Channel.
+     */
+    public static Map<String, String> get(String channelName) {
+        return keyStore.computeIfAbsent(channelName, k -> new LinkedHashMap<>());
     }
     
 }

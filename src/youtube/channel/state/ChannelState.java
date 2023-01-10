@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedConsumer;
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.ChannelConfig;
 import youtube.config.Color;
 import youtube.config.Configurator;
+import youtube.state.KeyStore;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 
@@ -59,9 +60,9 @@ public class ChannelState {
     //Fields
     
     /**
-     * The Channel.
+     * The name of the Channel.
      */
-    public ChannelConfig channel;
+    public String channelName;
     
     /**
      * The ids of the videos queued for download for the Channel.
@@ -113,16 +114,21 @@ public class ChannelState {
      */
     public File blockFile;
     
+    /**
+     * A flag indicating whether there was an error processing the Channel this run or not.
+     */
+    public AtomicBoolean error;
+    
     
     //Constructors
     
     /**
      * Creates a Channel State for a Channel.
      *
-     * @param channel The Channel.
+     * @param channelConfig The Channel Config associated with the Channel.
      */
-    public ChannelState(ChannelConfig channel) {
-        this.channel = channel;
+    public ChannelState(ChannelConfig channelConfig) {
+        this.channelName = channelConfig.getName();
         
         this.queued = new ArrayList<>();
         this.saved = new ArrayList<>();
@@ -130,12 +136,16 @@ public class ChannelState {
         
         this.keyStore = KeyStore.get(channelName);
         
-        this.stateLocation = new File(CHANNEL_DATA_DIR, channel.getName());
-        this.dataFile = new File(this.stateLocation, (channel.getName() + "-data.json"));
-        this.callLogFile = new File(this.stateLocation, (channel.getName() + "-callLog.log"));
-        this.saveFile = new File(this.stateLocation, (channel.getName() + "-save.txt"));
-        this.queueFile = new File(this.stateLocation, (channel.getName() + "-queue.txt"));
-        this.blockFile = new File(this.stateLocation, (channel.getName() + "-blocked.txt"));
+        this.stateLocation = new File(CHANNEL_DATA_DIR, channelName);
+        this.dataFile = new File(this.stateLocation, (channelName + "-data.json"));
+        this.callLogFile = new File(this.stateLocation, (channelName + "-callLog.log"));
+        this.saveFile = new File(this.stateLocation, (channelName + "-save.txt"));
+        this.queueFile = new File(this.stateLocation, (channelName + "-queue.txt"));
+        this.blockFile = new File(this.stateLocation, (channelName + "-blocked.txt"));
+        
+        this.error = new AtomicBoolean(false);
+        
+        load();
     }
     
     
@@ -146,7 +156,7 @@ public class ChannelState {
      *
      * @throws RuntimeException When there is an error loading the state.
      */
-    public void load() {
+    private void load() {
         try {
             cleanupLegacyState();
             
@@ -155,7 +165,7 @@ public class ChannelState {
             blocked = FileUtils.readLines(blockFile);
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to load the state of channel: ") + Color.channel(channel));
+            System.out.println(Color.bad("Failed to load the state of Channel: ") + Color.channel(channelName));
             throw new RuntimeException(e);
         }
     }
@@ -182,7 +192,7 @@ public class ChannelState {
             FileUtils.writeLines(blockFile, blocked);
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to save the state of channel: ") + Color.channel(channel));
+            System.out.println(Color.bad("Failed to save the state of Channel: ") + Color.channel(channelName));
             throw new RuntimeException(e);
         }
     }
@@ -256,6 +266,16 @@ public class ChannelState {
                 .map(e -> stateLocation.listFiles(f -> f.getName().startsWith(e) && f.getName().endsWith(".txt")))
                 .filter(Objects::nonNull).flatMap(Arrays::stream)
                 .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
+    }
+    
+    /**
+     * Returns a string representation of the Channel State.
+     *
+     * @return A string representation of the Channel State.
+     */
+    @Override
+    public String toString() {
+        return channelName;
     }
     
 }

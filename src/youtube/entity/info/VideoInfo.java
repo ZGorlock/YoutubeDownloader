@@ -7,27 +7,21 @@
 
 package youtube.entity.info;
 
-import java.io.File;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import commons.object.collection.MapUtility;
+import commons.object.string.StringUtility;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
-import youtube.channel.ChannelEntry;
-import youtube.config.Configurator;
 import youtube.entity.info.base.EntityInfo;
 import youtube.entity.info.detail.ChapterList;
 import youtube.entity.info.detail.Location;
-import youtube.util.PathUtils;
-import youtube.util.Utils;
 import youtube.util.WebUtils;
 
 /**
- * Defines the Info of a Youtube Video Entity.
+ * Defines the Video Info of a Youtube Video.
  */
 public class VideoInfo extends EntityInfo {
     
@@ -37,6 +31,31 @@ public class VideoInfo extends EntityInfo {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(VideoInfo.class);
+    
+    
+    //Constants
+    
+    /**
+     * A list of titles indicating that a Video is private.
+     */
+    private static final String[] PRIVATE_TITLES = new String[] {
+            "Private video"
+    };
+    
+    /**
+     * A list of titles indicating that a Video is deleted.
+     */
+    private static final String[] DELETED_TITLES = new String[] {
+            "Deleted video"
+    };
+    
+    /**
+     * A list of broadcast types indicating that a Video is a live stream.
+     */
+    private static final String[] LIVE_STREAM_BROADCAST_TYPES = new String[] {
+            "live",
+            "upcoming"
+    };
     
     
     //Fields
@@ -62,12 +81,12 @@ public class VideoInfo extends EntityInfo {
     public Long duration;
     
     /**
-     * The Chapter List of the Entity.
+     * The Chapter List of the Video.
      */
-    public ChapterList chapterList;
+    public ChapterList chapters;
     
     /**
-     * The definition of the Video.
+     * The quality definition of the Video.
      */
     public String definition;
     
@@ -91,28 +110,17 @@ public class VideoInfo extends EntityInfo {
      */
     public String broadcastType;
     
-    /**
-     * The download file for the Video.
-     */
-    public File download;
-    
-    /**
-     * The output file for the Video.
-     */
-    public File output;
-    
     
     //Constructors
     
     /**
-     * Creates a Video Entity Info.
+     * Creates a Video Info.
      *
      * @param videoData The json data of the Video.
-     * @param channel   The Channel containing the Video Entity.
      */
     @SuppressWarnings("unchecked")
-    public VideoInfo(Map<String, Object> videoData, ChannelConfig channel) {
-        super(videoData, channel);
+    public VideoInfo(Map<String, Object> videoData) {
+        super(videoData);
         
         this.videoId = Optional.ofNullable((Map<String, Object>) getData("resourceId"))
                 .map(e -> (String) e.get("videoId")).orElse(metadata.itemId);
@@ -124,7 +132,7 @@ public class VideoInfo extends EntityInfo {
         
         this.durationString = getData("contentDetails", "duration");
         this.duration = durationParser.apply(durationString);
-        this.chapterList = new ChapterList(description, duration);
+        this.chapters = new ChapterList(description, duration);
         
         this.definition = getData("contentDetails", "definition");
         this.language = getData("defaultLanguage");
@@ -133,53 +141,29 @@ public class VideoInfo extends EntityInfo {
         this.location = new Location(getDataPart("recordingDetails"));
         this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
                 .orElseGet(() -> thumbnails.values().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
-        
-        init(channel);
     }
     
     /**
-     * Creates a Video Entity Info.
-     *
-     * @param videoData The json data of the Video.
-     */
-    public VideoInfo(Map<String, Object> videoData) {
-        this(videoData, null);
-    }
-    
-    /**
-     * Creates a Video Entity Info.
+     * Creates a Video Info.
      *
      * @param videoId The id of the Video.
      * @param title   The title of the Video.
      * @param date    The date the Video was uploaded.
-     * @param channel The Channel containing the Video.
      */
     @SuppressWarnings("unchecked")
-    public VideoInfo(String videoId, String title, String date, ChannelConfig channel) {
-        this(MapUtility.mapOf(
-                        new ImmutablePair<>("snippet", MapUtility.mapOf(
-                                new ImmutablePair<>("title", title),
-                                new ImmutablePair<>("publishedAt", date),
-                                new ImmutablePair<>("resourceId", MapUtility.mapOf(
-                                        new ImmutablePair<>("videoId", videoId)))))),
-                channel);
-    }
-    
-    /**
-     * Creates a Video Entity Info.
-     *
-     * @param videoId The id of the Video.
-     * @param title   The title of the Video.
-     * @param date    The date the Video was uploaded.
-     */
     public VideoInfo(String videoId, String title, String date) {
-        this(videoId, title, date, null);
+        this(MapUtility.mapOf(
+                new ImmutablePair<>("snippet", MapUtility.mapOf(
+                        new ImmutablePair<>("title", title),
+                        new ImmutablePair<>("publishedAt", date),
+                        new ImmutablePair<>("resourceId", MapUtility.mapOf(
+                                new ImmutablePair<>("videoId", videoId)))))));
     }
     
     /**
-     * The default no-argument constructor for a Video Entity Info.
+     * The default no-argument constructor for a Video Info.
      */
-    public VideoInfo() {
+    protected VideoInfo() {
         super();
     }
     
@@ -187,36 +171,13 @@ public class VideoInfo extends EntityInfo {
     //Methods
     
     /**
-     * Initializes the Channel of the Video.
+     * Returns whether the Entity is private.
      *
-     * @param channel The Channel containing the Video.
+     * @return Whether the Entity is private.
      */
     @Override
-    public void init(ChannelConfig channel) {
-        super.init(channel);
-        
-        initFiles(Optional.ofNullable(channel).map(ChannelEntry::getOutputFolder).orElse(PathUtils.TMP_DIR),
-                Optional.ofNullable(channel).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3));
-    }
-    
-    /**
-     * Initializes the file locations of the Video.
-     *
-     * @param outputDir The output directory of the Video.
-     * @param saveAsMp3 Whether to save the Video as an mp3 or not.
-     */
-    public void initFiles(File outputDir, boolean saveAsMp3) {
-        this.download = new File(outputDir, this.title);
-        this.output = new File(outputDir, (this.title + '.' + (saveAsMp3 ? Utils.AUDIO_FORMAT : Utils.VIDEO_FORMAT)));
-    }
-    
-    /**
-     * Returns whether the Video is a live stream.
-     *
-     * @return Whether the Video is a live stream.
-     */
-    public boolean isLiveStream() {
-        return Optional.ofNullable(broadcastType).map(e -> List.of("live", "upcoming").contains(e)).orElse(false);
+    public boolean isPrivate() {
+        return super.isPrivate() || StringUtility.containsAnyIgnoreCase(getRawTitle(), PRIVATE_TITLES);
     }
     
     /**
@@ -225,7 +186,16 @@ public class VideoInfo extends EntityInfo {
      * @return Whether the Video is deleted.
      */
     public boolean isDeleted() {
-        return Optional.ofNullable(title).map(e -> e.equalsIgnoreCase("Deleted video")).orElse(false);
+        return StringUtility.containsAnyIgnoreCase(getRawTitle(), DELETED_TITLES);
+    }
+    
+    /**
+     * Returns whether the Video is a live stream.
+     *
+     * @return Whether the Video is a live stream.
+     */
+    public boolean isLiveStream() {
+        return StringUtility.containsAnyIgnoreCase(getBroadcastType(), LIVE_STREAM_BROADCAST_TYPES);
     }
     
     /**
@@ -237,35 +207,97 @@ public class VideoInfo extends EntityInfo {
         return !isPrivate() && !isDeleted() && !isLiveStream();
     }
     
+    
+    //Getters
+    
     /**
-     * Updates the title of the Video.
+     * Returns the id of the Video.
      *
-     * @param title The title.
+     * @return The id of the Video.
      */
-    public void updateTitle(String title) {
-        this.title = Utils.cleanVideoTitle(title);
-        this.download = new File(this.download.getParentFile(), this.title);
-        this.output = new File(this.output.getParentFile(), (this.title + '.' + Utils.getFileFormat(this.output.getName())));
+    public String getVideoId() {
+        return videoId;
     }
     
     /**
-     * Updates the output folder of the Video.
+     * Returns the index position of the Video in its Youtube playlist.
      *
-     * @param outputDir The output folder.
+     * @return The index position of the Video in its Youtube playlist.
      */
-    public void updateOutputDir(File outputDir) {
-        this.download = new File(outputDir, this.download.getName());
-        this.output = new File(outputDir, this.output.getName());
+    public Long getPlaylistPosition() {
+        return playlistPosition;
     }
     
     /**
-     * Updates the output file of the Video.
+     * Returns the string representing the duration of the Video.
      *
-     * @param output The output file.
+     * @return The string representing the duration of the Video.
      */
-    public void updateOutput(File output) {
-        updateTitle(output.getName().replaceAll("\\.[^.]+$", ""));
-        updateOutputDir(output.getParentFile());
+    public String getDurationString() {
+        return durationString;
+    }
+    
+    /**
+     * Returns the duration of the Video, in seconds.
+     *
+     * @return The duration of the Video, in seconds.
+     */
+    public Long getDuration() {
+        return duration;
+    }
+    
+    /**
+     * Returns the Chapter List of the Video.
+     *
+     * @return The Chapter List of the Video.
+     */
+    public ChapterList getChapters() {
+        return chapters;
+    }
+    
+    /**
+     * Returns the quality definition of the Video.
+     *
+     * @return The quality definition of the Video.
+     */
+    public String getDefinition() {
+        return definition;
+    }
+    
+    /**
+     * Returns the language of the Video.
+     *
+     * @return The language of the Video.
+     */
+    public String getLanguage() {
+        return language;
+    }
+    
+    /**
+     * Returns the audio language of the Video.
+     *
+     * @return The audio language of the Video.
+     */
+    public String getAudioLanguage() {
+        return audioLanguage;
+    }
+    
+    /**
+     * Returns the Location of the Video.
+     *
+     * @return The Location of the Video.
+     */
+    public Location getLocation() {
+        return location;
+    }
+    
+    /**
+     * Returns the broadcast type of the Video.
+     *
+     * @return The broadcast type of the Video.
+     */
+    public String getBroadcastType() {
+        return broadcastType;
     }
     
 }

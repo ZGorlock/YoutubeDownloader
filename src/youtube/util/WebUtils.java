@@ -29,6 +29,7 @@ import youtube.channel.ChannelConfig;
 import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.Configurator;
+import youtube.entity.Video;
 import youtube.entity.info.VideoInfo;
 
 /**
@@ -144,11 +145,11 @@ public final class WebUtils {
     }
     
     /**
-     * Fetches the Video information from a Youtube video url.
+     * Fetches the Video from a Youtube video url.
      *
-     * @param url    The Youtube video url.
-     * @param useApi Whether to use the Youtube API to get the Video information.
-     * @return The fetched Video.
+     * @param url    The video url.
+     * @param useApi Whether to use the Youtube API to fetch the Video.
+     * @return The Video.
      */
     @SuppressWarnings("unchecked")
     public static VideoInfo fetchVideo(String url, boolean useApi) {
@@ -184,20 +185,20 @@ public final class WebUtils {
     }
     
     /**
-     * Fetches the Video information from a Youtube video url.
+     * Fetches the Video from a Youtube video url.
      *
-     * @param url The Youtube video url.
-     * @return The fetched Video.
+     * @param url The video url.
+     * @return The Video.
      */
-    public static VideoInfo fetchVideo(String url) {
-        return fetchVideo(url, true);
+    public static Video fetchVideo(String url) {
+        return new Video(fetchVideo(url, true));
     }
     
     /**
      * Fetches the Channel playlist id from a Youtube channel url.
      *
      * @param url The Youtube channel url.
-     * @return The fetched playlist id, or an empty string if there was an error.
+     * @return The playlist id, or an empty string if there was an error.
      */
     public static String fetchPlaylistId(String url) {
         return Optional.ofNullable(url)
@@ -217,7 +218,7 @@ public final class WebUtils {
     /**
      * Checks and attempts to automatically fetch the playlist id for a Channel if needed.
      *
-     * @param channel The Channel.
+     * @param channel The Channel Config.
      */
     public static void checkPlaylistId(ChannelConfig channel) {
         if (StringUtility.isNullOrBlank(channel.getPlaylistId())) {

@@ -14,12 +14,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import commons.lambda.function.checked.CheckedFunction;
-import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
 import youtube.entity.info.detail.Statistics;
 import youtube.entity.info.detail.TagList;
 import youtube.entity.info.detail.ThumbnailSet;
@@ -27,7 +25,7 @@ import youtube.entity.info.detail.TopicList;
 import youtube.util.Utils;
 
 /**
- * Defines the base Info of a Youtube Entity.
+ * Defines the Entity Info of a Youtube Entity.
  */
 public abstract class EntityInfo {
     
@@ -45,6 +43,13 @@ public abstract class EntityInfo {
      * The date format used in Entity data.
      */
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    /**
+     * A list of statuses indicating that an Entity is private.
+     */
+    private static final String[] PRIVATE_STATUSES = new String[] {
+            "private"
+    };
     
     
     //Static Functions
@@ -77,30 +82,25 @@ public abstract class EntityInfo {
                     .orElse(null);
     
     /**
-     * Parses an integer from Entity data into a long; or null if there was an error.
+     * Parses an integer from Entity data into a long; or null if it could not be parsed.
      */
     public static final CheckedFunction<Object, Long> integerParser = (Object integerObject) ->
             Optional.ofNullable(integerObject)
                     .map(String::valueOf)
-                    .map((UncheckedFunction<String, Long>) Long::parseLong)
+                    .map((CheckedFunction<String, Long>) Long::parseLong)
                     .orElse(null);
     
     /**
-     * Parses a number from Entity data into a double; or null if there was an error.
+     * Parses a number from Entity data into a double; or null if it could not be parsed.
      */
     public static final CheckedFunction<Object, Double> numberParser = (Object numberObject) ->
             Optional.ofNullable(numberObject)
                     .map(String::valueOf)
-                    .map((UncheckedFunction<String, Double>) Double::parseDouble)
+                    .map((CheckedFunction<String, Double>) Double::parseDouble)
                     .orElse(null);
     
     
     //Fields
-    
-    /**
-     * The Channel containing the Entity.
-     */
-    public ChannelConfig channel;
     
     /**
      * The Metadata of the Entity.
@@ -113,9 +113,9 @@ public abstract class EntityInfo {
     public String url;
     
     /**
-     * The original title of the Entity.
+     * The raw title of the Entity.
      */
-    public String originalTitle;
+    public String rawTitle;
     
     /**
      * The title of the Entity.
@@ -163,7 +163,7 @@ public abstract class EntityInfo {
     public ThumbnailSet thumbnails;
     
     /**
-     * The html to embed the Entity player.
+     * The html used to embed the player of the Entity.
      */
     public String embeddedPlayer;
     
@@ -173,16 +173,13 @@ public abstract class EntityInfo {
     /**
      * Creates an Entity Info.
      *
-     * @param entityData The json data of the Entity,
-     * @param channel    The Channel containing the Entity.
+     * @param entityData The json data of the Entity.
      */
-    protected EntityInfo(Map<String, Object> entityData, ChannelConfig channel) {
-        this.channel = channel;
-        
+    protected EntityInfo(Map<String, Object> entityData) {
         this.metadata = new EntityMetadata(entityData);
         
-        this.originalTitle = getData("title");
-        this.title = Utils.cleanVideoTitle(originalTitle);
+        this.rawTitle = getData("title");
+        this.title = Utils.cleanVideoTitle(rawTitle);
         
         this.description = getData("description");
         this.status = getData("status", "privacyStatus");
@@ -200,15 +197,6 @@ public abstract class EntityInfo {
     }
     
     /**
-     * Creates an Entity Info.
-     *
-     * @param entityData The json data of the Entity,
-     */
-    protected EntityInfo(Map<String, Object> entityData) {
-        this(entityData, null);
-    }
-    
-    /**
      * The default no-argument constructor for an Entity Info.
      */
     protected EntityInfo() {
@@ -218,22 +206,13 @@ public abstract class EntityInfo {
     //Methods
     
     /**
-     * Initializes the Channel of the Entity.
-     *
-     * @param channel The Channel containing the Entity.
-     */
-    public void init(ChannelConfig channel) {
-        this.channel = channel;
-    }
-    
-    /**
      * Returns a part of the raw data of the Entity.
      *
      * @param part The name of the data part.
      * @return The part of the raw data of the Entity, or null if it does not exist.
      */
     protected Map<String, Object> getDataPart(String part) {
-        return metadata.getDataPart(part);
+        return getMetadata().getDataPart(part);
     }
     
     /**
@@ -245,7 +224,7 @@ public abstract class EntityInfo {
      * @return The element from a specific part of the raw data of the Entity, or null if it does not exist.
      */
     protected <T> T getData(String part, String field) {
-        return metadata.getData(part, field);
+        return getMetadata().getData(part, field);
     }
     
     /**
@@ -265,18 +244,137 @@ public abstract class EntityInfo {
      * @return Whether the Entity is private.
      */
     public boolean isPrivate() {
-        return Optional.ofNullable(title).map(e -> e.equalsIgnoreCase("Private video")).orElse(false) ||
-                Optional.ofNullable(status).map(e -> e.equalsIgnoreCase("private")).orElse(false);
+        return StringUtility.containsAnyIgnoreCase(getStatus(), PRIVATE_STATUSES);
     }
     
     /**
-     * Returns the string representation of the Entity.
+     * Returns a string representation of the Entity.
      *
-     * @return the string representation of the Entity.
+     * @return a string representation of the Entity.
      */
     @Override
     public String toString() {
+        return getTitle();
+    }
+    
+    
+    //Getters
+    
+    /**
+     * Returns the Entity Metadata of the Entity.
+     *
+     * @return The Entity Metadata of the Entity.
+     */
+    public EntityMetadata getMetadata() {
+        return metadata;
+    }
+    
+    /**
+     * Returns the url of the Entity.
+     *
+     * @return The url of the Entity.
+     */
+    public String getUrl() {
+        return url;
+    }
+    
+    /**
+     * Returns the raw title of the Entity.
+     *
+     * @return The raw title of the Entity.
+     */
+    public String getRawTitle() {
+        return rawTitle;
+    }
+    
+    /**
+     * Returns the title of the Entity.
+     *
+     * @return The title of the Entity.
+     */
+    public String getTitle() {
         return title;
+    }
+    
+    /**
+     * Returns the description of the Entity.
+     *
+     * @return The description of the Entity.
+     */
+    public String getDescription() {
+        return description;
+    }
+    
+    /**
+     * Returns the privacy status of the Entity.
+     *
+     * @return The privacy status of the Entity.
+     */
+    public String getStatus() {
+        return status;
+    }
+    
+    /**
+     * Returns the string representing the date the Entity was uploaded.
+     *
+     * @return The string representing the date the Entity was uploaded.
+     */
+    public String getDateString() {
+        return dateString;
+    }
+    
+    /**
+     * Returns the date the Entity was uploaded.
+     *
+     * @return The date the Entity was uploaded.
+     */
+    public LocalDateTime getDate() {
+        return date;
+    }
+    
+    /**
+     * Returns the Tag List of the Entity.
+     *
+     * @return The Tag List of the Entity.
+     */
+    public TagList getTags() {
+        return tags;
+    }
+    
+    /**
+     * Returns the Topic List of the Entity.
+     *
+     * @return The Topic List of the Entity.
+     */
+    public TopicList getTopics() {
+        return topics;
+    }
+    
+    /**
+     * Returns the Statistics of the Entity.
+     *
+     * @return The Statistics of the Entity.
+     */
+    public Statistics getStatistics() {
+        return stats;
+    }
+    
+    /**
+     * Returns the Thumbnail Set of the Entity.
+     *
+     * @return The Thumbnail Set of the Entity.
+     */
+    public ThumbnailSet getThumbnails() {
+        return thumbnails;
+    }
+    
+    /**
+     * Returns the html used to embed the player of the Entity.
+     *
+     * @return The html used to embed the player of the Entity.
+     */
+    public String getEmbeddedPlayer() {
+        return embeddedPlayer;
     }
     
 }

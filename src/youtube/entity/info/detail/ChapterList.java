@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import youtube.util.Utils;
 
 /**
- * Defines the Chapter List of a Video Entity.
+ * Defines the Chapter List of a Youtube Video.
  */
 public class ChapterList extends ArrayList<ChapterList.Chapter> {
     
@@ -51,10 +51,10 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
     //Constructors
     
     /**
-     * Creates the Chapter List for a Video Entity.
+     * Creates the Chapter List for a Video.
      *
-     * @param description The description of the Video Entity.
-     * @param duration    The duration of the Video Entity.
+     * @param description The description of the Video.
+     * @param duration    The duration of the Video.
      */
     public ChapterList(String description, Long duration) {
         Optional.ofNullable(description).map(StringUtility::splitLines)
@@ -77,9 +77,9 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
     }
     
     /**
-     * Creates the Chapter List for a Video Entity.
+     * Creates the Chapter List for a Video.
      *
-     * @param description The description of the Video Entity.
+     * @param description The description of the Video.
      */
     public ChapterList(String description) {
         this(description, null);
@@ -147,7 +147,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
         //Methods
         
         /**
-         * Links a Chapter to the surrounding chapters.
+         * Links a Chapter to the neighboring chapters.
          *
          * @param previous The previous Chapter, or null.
          * @param next     The next Chapter, or null.
@@ -155,7 +155,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
         private void link(Chapter previous, Chapter next) {
             this.previous = previous;
             this.next = next;
-            this.endTime = Optional.ofNullable(next).map(e -> e.startTime).orElse(endTime);
+            this.endTime = Optional.ofNullable(next).map(Chapter::getStartTime).orElse(getEndTime());
         }
         
         /**
@@ -176,7 +176,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
          * @return The duration of the Chapter.
          */
         public long getDuration() {
-            return endTime - startTime;
+            return getEndTime() - getStartTime();
         }
         
         /**
@@ -185,7 +185,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
          * @return The url parameter.
          */
         public String getUrlParameter() {
-            return "&t=" + startTime;
+            return "&t=" + getStartTime();
         }
         
         /**
@@ -195,7 +195,64 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
          */
         @Override
         public String toString() {
-            return timestamp + " -> " + title;
+            return getTimestamp() + " -> " + getTitle();
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the title of the Chapter.
+         *
+         * @return The title of the Chapter.
+         */
+        public String getTitle() {
+            return title;
+        }
+        
+        /**
+         * Returns the timestamp of the Chapter.
+         *
+         * @return The timestamp of the Chapter.
+         */
+        public String getTimestamp() {
+            return timestamp;
+        }
+        
+        /**
+         * Returns the start time of the Chapter, in seconds.
+         *
+         * @return The start time of the Chapter, in seconds.
+         */
+        public Long getStartTime() {
+            return startTime;
+        }
+        
+        /**
+         * Returns the end time of the Chapter, in seconds.
+         *
+         * @return The end time of the Chapter, in seconds.
+         */
+        public Long getEndTime() {
+            return endTime;
+        }
+        
+        /**
+         * Returns the previous Chapter.
+         *
+         * @return The previous Chapter.
+         */
+        public Chapter getPrevious() {
+            return previous;
+        }
+        
+        /**
+         * Returns the next Chapter.
+         *
+         * @return The next Chapter.
+         */
+        public Chapter getNext() {
+            return next;
         }
         
     }

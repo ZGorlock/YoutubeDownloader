@@ -239,23 +239,23 @@ public class SponsorBlocker {
         /**
          * Creates a SponsorBlock Config.
          *
-         * @param fields The fields from the SponsorBlock configuration.
+         * @param config The json data of the SponsorBlock configuration.
          */
-        public SponsorBlockConfig(Map<String, Object> fields) {
+        public SponsorBlockConfig(Map<String, Object> config) {
             final Function<String, Optional<Boolean>> booleanFieldGetter = (String name) ->
-                    Optional.ofNullable((Boolean) fields.get(name));
+                    Optional.ofNullable((Boolean) config.get(name));
             
-            enabled = booleanFieldGetter.apply("enabled").orElse(SponsorBlockConfig.DEFAULT_ENABLED);
-            forceGlobally = booleanFieldGetter.apply("forceGlobally").orElse(SponsorBlockConfig.DEFAULT_FORCE_GLOBALLY);
-            overrideGlobal = booleanFieldGetter.apply("overrideGlobal").orElse(SponsorBlockConfig.DEFAULT_OVERRIDE_GLOBAL);
-            skipAll = booleanFieldGetter.apply("skipAll").orElse(SponsorBlockConfig.DEFAULT_SKIP_ALL);
-            skipSponsor = booleanFieldGetter.apply("skipSponsor").orElse(SponsorBlockConfig.DEFAULT_SKIP_SPONSOR);
-            skipIntro = booleanFieldGetter.apply("skipIntro").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTRO);
-            skipOutro = booleanFieldGetter.apply("skipOutro").orElse(SponsorBlockConfig.DEFAULT_SKIP_OUTRO);
-            skipSelfPromo = booleanFieldGetter.apply("skipSelfPromo").orElse(SponsorBlockConfig.DEFAULT_SKIP_SELF_PROMO);
-            skipPreview = booleanFieldGetter.apply("skipPreview").orElse(SponsorBlockConfig.DEFAULT_SKIP_PREVIEW);
-            skipInteraction = booleanFieldGetter.apply("skipInteraction").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTERACTION);
-            skipMusicOffTopic = booleanFieldGetter.apply("skipMusicOffTopic").orElse(SponsorBlockConfig.DEFAULT_SKIP_MUSIC_OFF_TOPIC);
+            this.enabled = booleanFieldGetter.apply("enabled").orElse(SponsorBlockConfig.DEFAULT_ENABLED);
+            this.forceGlobally = booleanFieldGetter.apply("forceGlobally").orElse(SponsorBlockConfig.DEFAULT_FORCE_GLOBALLY);
+            this.overrideGlobal = booleanFieldGetter.apply("overrideGlobal").orElse(SponsorBlockConfig.DEFAULT_OVERRIDE_GLOBAL);
+            this.skipAll = booleanFieldGetter.apply("skipAll").orElse(SponsorBlockConfig.DEFAULT_SKIP_ALL);
+            this.skipSponsor = booleanFieldGetter.apply("skipSponsor").orElse(SponsorBlockConfig.DEFAULT_SKIP_SPONSOR);
+            this.skipIntro = booleanFieldGetter.apply("skipIntro").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTRO);
+            this.skipOutro = booleanFieldGetter.apply("skipOutro").orElse(SponsorBlockConfig.DEFAULT_SKIP_OUTRO);
+            this.skipSelfPromo = booleanFieldGetter.apply("skipSelfPromo").orElse(SponsorBlockConfig.DEFAULT_SKIP_SELF_PROMO);
+            this.skipPreview = booleanFieldGetter.apply("skipPreview").orElse(SponsorBlockConfig.DEFAULT_SKIP_PREVIEW);
+            this.skipInteraction = booleanFieldGetter.apply("skipInteraction").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTERACTION);
+            this.skipMusicOffTopic = booleanFieldGetter.apply("skipMusicOffTopic").orElse(SponsorBlockConfig.DEFAULT_SKIP_MUSIC_OFF_TOPIC);
         }
         
         /**

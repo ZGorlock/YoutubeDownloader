@@ -27,7 +27,7 @@ public final class ChannelJsonFormatter {
     //Constants
     
     /**
-     * The map of default field values in a Channel Entry configuration; the default value of fields that are not included is null.
+     * The map of default field values in the data of a Channel Entry; the default value of fields that are not included is null.
      */
     private static final Map<String, Object> DEFAULT_FIELD_VALUES = Map.of(
             "active", ChannelEntry.DEFAULT_ACTIVE,
@@ -369,7 +369,7 @@ public final class ChannelJsonFormatter {
      * @return The field map of a Channel Entry.
      */
     private static Map<String, Object> getFields(ChannelEntry channelEntry, boolean effective) {
-        return effective ? channelEntry.getEffectiveFields() : channelEntry.getFields();
+        return effective ? channelEntry.getEffectiveConfig() : channelEntry.getConfig();
     }
     
 }

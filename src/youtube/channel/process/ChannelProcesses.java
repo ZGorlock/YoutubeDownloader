@@ -11,11 +11,11 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
-import youtube.entity.info.VideoInfo;
+import youtube.entity.Channel;
+import youtube.entity.Video;
 
 /**
- * Holds pre and post processes to operate on Channels before or after generating the download queue.
+ * Defines custom processes that operate on Channels during execution.
  */
 @SuppressWarnings({"SpellCheckingInspection", "DuplicateBranchesInSwitch", "StatementWithEmptyBody", "RedundantSuppression"})
 public class ChannelProcesses {
@@ -28,18 +28,18 @@ public class ChannelProcesses {
     private static final Logger logger = LoggerFactory.getLogger(ChannelProcesses.class);
     
     
-    //Functions
+    //Static Methods
     
     /**
      * Performs special checks specific to a Channel before producing the download queue.<br/>
      * Typically used for renaming videos in the video map.
      *
      * @param channel  The Channel.
-     * @param videoMap The video map.
+     * @param videoMap The Video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
-        switch (channel.getKey()) {
+    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+        switch (channel.getConfig().getKey()) {
             
         }
     }
@@ -49,11 +49,11 @@ public class ChannelProcesses {
      * Typically used for filtering; Do not use this to rename videos in the video map.
      *
      * @param channel  The Channel.
-     * @param videoMap The video map.
+     * @param videoMap The Video map.
      * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(ChannelConfig channel, Map<String, VideoInfo> videoMap) throws Exception {
-        switch (channel.getKey()) {
+    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+        switch (channel.getConfig().getKey()) {
             
         }
     }

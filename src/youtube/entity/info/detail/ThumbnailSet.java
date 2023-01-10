@@ -130,8 +130,47 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
          * @return The size of the Thumbnail.
          */
         public long getSize() {
-            return ((width == null) || (height == null)) ? -1 :
-                   (width * height);
+            return ((getWidth() == null) || (getHeight() == null)) ? -1 :
+                   (getWidth() * getHeight());
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the quality of the Thumbnail.
+         *
+         * @return The quality of the Thumbnail.
+         */
+        public Quality getQuality() {
+            return quality;
+        }
+        
+        /**
+         * Returns the url of the Thumbnail.
+         *
+         * @return The url of the Thumbnail.
+         */
+        public String getUrl() {
+            return url;
+        }
+        
+        /**
+         * Returns the width of the Thumbnail.
+         *
+         * @return The width of the Thumbnail.
+         */
+        public Long getWidth() {
+            return width;
+        }
+        
+        /**
+         * Returns the height of the Thumbnail.
+         *
+         * @return The height of the Thumbnail.
+         */
+        public Long getHeight() {
+            return height;
         }
         
     }

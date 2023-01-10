@@ -34,7 +34,7 @@ public class EntityMetadata {
     /**
      * The raw json data of the Entity.
      */
-    public Map<String, Object> rawData;
+    public Map<String, Object> data;
     
     /**
      * The kind of the Entity.
@@ -47,37 +47,37 @@ public class EntityMetadata {
     public String eTag;
     
     /**
-     * The Youtube item id of the Entity.
+     * The item id of the Entity.
      */
     public String itemId;
     
     /**
-     * The Youtube channel id of the Entity.
+     * The id of the Channel containing the Entity.
      */
     public String channelId;
     
     /**
-     * The Youtube channel title of the Entity.
+     * The title of the Channel containing the Entity.
      */
     public String channelTitle;
     
     /**
-     * The Youtube channel entity of the Entity.
+     * The Channel containing the Entity.
      */
     public ChannelInfo channel;
     
     /**
-     * The Youtube playlist id of the Entity.
+     * The id of the Playlist containing the Entity.
      */
     public String playlistId;
     
     /**
-     * The Youtube playlist entity of the Entity.
+     * The Playlist containing the Entity.
      */
     public PlaylistInfo playlist;
     
     /**
-     * The Youtube id of the Entity.
+     * The id of the Entity.
      */
     public String entityId;
     
@@ -90,7 +90,7 @@ public class EntityMetadata {
      * @param entityData The json data of the Entity,
      */
     protected EntityMetadata(Map<String, Object> entityData) {
-        this.rawData = entityData;
+        this.data = entityData;
         
         this.kind = getData("kind");
         this.eTag = getData("etag");
@@ -117,11 +117,13 @@ public class EntityMetadata {
      * Returns a part of the raw data of the Entity.
      *
      * @param part The name of the data part, or null for the root part.
-     * @return The part of the raw data of the Entity, or null if it does not exist.
+     * @return The part of the raw data of the Entity, or an empty map if it does not exist.
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> getDataPart(String part) {
-        return Optional.ofNullable(part).map(e -> (Map<String, Object>) rawData.get(e)).orElse(null);
+        return Optional.ofNullable(part)
+                .map(e -> (Map<String, Object>) getData().getOrDefault(e, Map.of()))
+                .orElseGet(this::getData);
     }
     
     /**
@@ -134,7 +136,9 @@ public class EntityMetadata {
      */
     @SuppressWarnings("unchecked")
     public <T> T getData(String part, String field) {
-        return (T) Optional.ofNullable(getDataPart(part)).map(e -> e.get(field)).orElse(null);
+        return (T) Optional.ofNullable(getDataPart(part))
+                .map(e -> e.get(field))
+                .orElse(null);
     }
     
     /**
@@ -144,9 +148,111 @@ public class EntityMetadata {
      * @param <T>   The type of the element.
      * @return The element from a default part of the raw data of the Entity, or null if it does not exist.
      */
-    @SuppressWarnings("unchecked")
     public <T> T getData(String field) {
-        return (T) rawData.get(field);
+        return getData(null, field);
+    }
+    
+    /**
+     * Returns a string representation of the Entity Metadata.
+     *
+     * @return a string representation of the Entity Metadata.
+     */
+    @Override
+    public String toString() {
+        return getKind() + Optional.ofNullable(getEntityId()).map(e -> (":" + e)).orElse("");
+    }
+    
+    
+    //Getters
+    
+    /**
+     * Returns the raw json data of the Entity.
+     *
+     * @return the raw json data of the Entity.
+     */
+    public Map<String, Object> getData() {
+        return data;
+    }
+    
+    /**
+     * Returns the kind of the Entity.
+     *
+     * @return The kind of the Entity.
+     */
+    public String getKind() {
+        return kind;
+    }
+    
+    /**
+     * Returns the eTag of the Entity.
+     *
+     * @return The eTag of the Entity.
+     */
+    public String getETag() {
+        return eTag;
+    }
+    
+    /**
+     * Returns the item id of the Entity.
+     *
+     * @return The item id of the Entity.
+     */
+    public String getItemId() {
+        return itemId;
+    }
+    
+    /**
+     * Returns id of the Channel containing the Entity.
+     *
+     * @return The id of the Channel containing the Entity.
+     */
+    public String getChannelId() {
+        return channelId;
+    }
+    
+    /**
+     * Returns title of the Channel containing the Entity.
+     *
+     * @return The title of the Channel containing the Entity.
+     */
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+    
+    /**
+     * Returns the Channel containing the Entity.
+     *
+     * @return The Channel containing the Entity.
+     */
+    public ChannelInfo getChannel() {
+        return channel;
+    }
+    
+    /**
+     * Returns the id of the Playlist containing the Entity.
+     *
+     * @return The id of the Playlist containing the Entity.
+     */
+    public String getPlaylistId() {
+        return playlistId;
+    }
+    
+    /**
+     * Returns the Playlist containing the Entity.
+     *
+     * @return The Playlist containing the Entity.
+     */
+    public PlaylistInfo getPlaylist() {
+        return playlist;
+    }
+    
+    /**
+     * Returns the id of the Entity.
+     *
+     * @return The id of the Entity.
+     */
+    public String getEntityId() {
+        return entityId;
     }
     
 }

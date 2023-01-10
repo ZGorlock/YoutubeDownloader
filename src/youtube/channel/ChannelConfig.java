@@ -11,16 +11,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.state.ChannelState;
 import youtube.util.Utils;
 
 /**
- * Defines a Channel configuration of the Youtube Channel Downloader.
+ * Defines a Channel Config of the Youtube Channel Downloader.
  */
 public class ChannelConfig extends ChannelEntry {
     
@@ -35,17 +33,17 @@ public class ChannelConfig extends ChannelEntry {
     //Constants
     
     /**
-     * A list of required fields in a Channel configuration.
+     * A list of required fields in the configuration of a Channel Config.
      */
     public static final List<String> REQUIRED_FIELDS = List.of("key", "playlistId", "outputFolder");
     
     /**
-     * A list of base fields in a Channel configuration.
+     * A list of base fields in the configuration of a Channel Config.
      */
     public static final List<String> BASE_FIELDS = List.of("key", "active", "name", "url", "playlistId", "outputFolder");
     
     /**
-     * A list of all fields in a Channel configuration.
+     * A list of all fields in the configuration of a Channel Config.
      */
     public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "playlistFile", "saveAsMp3", "savePlaylist", "reversePlaylist", "ignoreGlobalLocations", "keepClean");
     
@@ -102,48 +100,35 @@ public class ChannelConfig extends ChannelEntry {
      */
     public ChannelType type;
     
-    /**
-     * The state of the Channel.
-     */
-    public ChannelState state;
-    
-    /**
-     * A flag indicating whether there was an error processing the Channel this run or not.
-     */
-    public AtomicBoolean error;
-    
     
     //Constructors
     
     /**
      * Creates a Channel Config.
      *
-     * @param fields The fields from the Channel configuration.
-     * @param parent The parent of the Channel configuration.
-     * @throws Exception When the Channel configuration does not contain all of the required fields.
+     * @param config The configuration data.
+     * @param parent The parent of the Channel Config.
+     * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelConfig(Map<String, Object> fields, ChannelGroup parent) throws Exception {
-        super(fields, parent);
+    public ChannelConfig(Map<String, Object> config, ChannelGroup parent) throws Exception {
+        super(config, parent);
         
-        this.name = stringFieldGetter.apply("name").map(e -> e.replaceAll("[.|]", "")).orElseGet(() -> StringUtility.toPascalCase(key));
+        this.name = stringFieldGetter.apply("name").map(identifierFormatter).orElseGet(() -> StringUtility.toPascalCase(key));
         
         this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
         this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
         
         this.type = ChannelType.determineType(playlistId);
-        
-        this.state = new ChannelState(this);
-        this.error = new AtomicBoolean(false);
     }
     
     /**
      * Creates a Channel Config.
      *
-     * @param fields The fields from the Channel configuration.
-     * @throws Exception When the Channel configuration does not contain all of the required fields.
+     * @param config The configuration data.
+     * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelConfig(Map<String, Object> fields) throws Exception {
-        this(fields, null);
+    public ChannelConfig(Map<String, Object> config) throws Exception {
+        this(config, null);
     }
     
     /**
@@ -175,13 +160,13 @@ public class ChannelConfig extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the field values of the Channel Config.
+     * Returns the configuration data of the Channel Config.
      *
-     * @return The map of the field values of the Channel Config.
+     * @return The configuration data of the Channel Config.
      */
     @Override
-    public Map<String, Object> getFields() {
-        final Map<String, Object> fields = super.getFields();
+    public Map<String, Object> getConfig() {
+        final Map<String, Object> fields = super.getConfig();
         fields.put("name", Optional.ofNullable(name).map(String::strip).orElse(null));
         fields.put("playlistFile", Optional.ofNullable(playlistFilePath).orElse(Optional.ofNullable(playlistFile).map(File::getAbsolutePath).orElse(null)));
         
@@ -192,13 +177,13 @@ public class ChannelConfig extends ChannelEntry {
     }
     
     /**
-     * Returns the map of the effective field values of the Channel Config.
+     * Returns the effective configuration data of the Channel Config.
      *
-     * @return The map of the effective field values of the Channel Config.
+     * @return The effective configuration data of the Channel Config.
      */
     @Override
-    public Map<String, Object> getEffectiveFields() {
-        final Map<String, Object> fields = super.getEffectiveFields();
+    public Map<String, Object> getEffectiveConfig() {
+        final Map<String, Object> fields = super.getEffectiveConfig();
         fields.put("name", getName());
         fields.put("playlistFile", getPlaylistFile());
         
@@ -209,37 +194,37 @@ public class ChannelConfig extends ChannelEntry {
     }
     
     /**
-     * Returns the string representation of the Channel.
+     * Returns a string representation of the Channel Config.
      *
-     * @return the string representation of the Channel.
+     * @return A string representation of the Channel Config.
      */
     @Override
     public String toString() {
-        return name;
+        return getName();
     }
     
     
     //Getters
     
     /**
-     * Returns the name of the Channel.
+     * Returns the name of the Channel Config.
      *
-     * @return The name of the Channel.
+     * @return The name of the Channel Config.
      */
     public String getName() {
         return name;
     }
     
     /**
-     * Returns the display name of the Channel.
+     * Returns the display name of the Channel Config.
      *
-     * @return The display name of the Channel.
+     * @return The display name of the Channel Config.
      */
     public String getDisplayName() {
         return getName() + Optional.ofNullable(name)
                 .filter(e -> e.matches(".*P\\d+$"))
                 .map(e -> Optional.ofNullable(outputFolderPath).orElse(playlistFilePath))
-                .map(e -> e.replaceAll("^~\\s*[-/]", "").replace(".m3u", ""))
+                .map(Utils::getFileTitle).map(e -> e.replaceAll("^~\\s*[-/]", ""))
                 .map(String::strip)
                 .map(e -> (" - (" + e + ")")).orElse("");
     }
@@ -263,6 +248,15 @@ public class ChannelConfig extends ChannelEntry {
         return Optional.ofNullable(playlistFilePath).orElse("~")
                 .replaceAll("^~", getOutputFolderPath())
                 .replaceAll("(?<!^)(?:\\." + Utils.PLAYLIST_FORMAT + ")+?$", ("." + Utils.PLAYLIST_FORMAT));
+    }
+    
+    /**
+     * Returns the type of the Channel.
+     *
+     * @return The type of the Channel.
+     */
+    public ChannelType getType() {
+        return type;
     }
     
     /**

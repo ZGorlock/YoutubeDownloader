@@ -79,6 +79,18 @@ public class TagList extends ArrayList<TagList.Tag> {
          */
         @Override
         public String toString() {
+            return getName();
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the name of the Tag.
+         *
+         * @return The name of the Tag.
+         */
+        public String getName() {
             return name;
         }
         

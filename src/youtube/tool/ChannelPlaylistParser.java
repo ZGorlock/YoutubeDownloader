@@ -9,6 +9,7 @@ package youtube.tool;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import commons.lambda.function.unchecked.UncheckedFunction;
@@ -19,10 +20,11 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.ChannelConfig;
-import youtube.channel.ChannelGroup;
 import youtube.channel.Channels;
 import youtube.channel.util.ChannelJsonFormatter;
 import youtube.config.Configurator;
+import youtube.entity.Channel;
+import youtube.entity.Playlist;
 import youtube.entity.info.PlaylistInfo;
 import youtube.util.ApiUtils;
 import youtube.util.Utils;
@@ -94,56 +96,58 @@ public class ChannelPlaylistParser {
         Configurator.loadSettings(Utils.Project.YOUTUBE_CHANNEL_DOWNLOADER);
         Channels.loadChannels();
         
-        final ChannelConfig baseChannel = Channels.getChannel(baseChannelKey);
-        if ((baseChannel == null) || !baseChannel.isYoutubeChannel()) {
+        final Channel baseChannel = Channels.getChannel(baseChannelKey);
+        if ((baseChannel == null) || !baseChannel.getConfig().isYoutubeChannel()) {
             return;
         }
-        baseChannel.state.cleanupData();
+        baseChannel.getState().cleanupData();
         
-        final List<PlaylistInfo> playlistData = parsePlaylistData(baseChannel);
-        final List<ChannelConfig> playlistChannels = makePlaylistChannels(baseChannel, playlistData);
+        final List<Playlist> playlists = fetchPlaylists(baseChannel);
+        final List<ChannelConfig> playlistChannels = makePlaylistChannels(playlists);
         
-        final String playlistJson = formatPlaylistChannels(playlistChannels);
-        System.out.println(playlistJson);
+        final String playlistChannelsJson = formatPlaylistChannels(playlistChannels);
+        System.out.println(playlistChannelsJson);
     }
     
     
     //Static Methods
     
     /**
-     * Parses the playlist data from the API json response.
+     * Fetches the Playlists of a Channel from the API.
      *
-     * @param channel The base Channel.
-     * @return The list of parsed Playlists.
+     * @param channel The Channel.
+     * @return The list of Playlists.
      * @throws Exception When there is an error.
      */
-    private static List<PlaylistInfo> parsePlaylistData(ChannelConfig channel) throws Exception {
-        return ApiUtils.fetchChannelPlaylists(channel);
+    private static List<Playlist> fetchPlaylists(Channel channel) throws Exception {
+        return ApiUtils.fetchChannelPlaylists(channel).stream()
+                .map(playlistInfo -> new Playlist(playlistInfo, channel))
+                .collect(Collectors.toList());
     }
     
     /**
-     * Creates playlist Channels from the parsed playlist data.
+     * Creates playlist Channel Configs from the list of Playlists.
      *
-     * @param baseChannel The base Channel.
-     * @param playlists   The list of parsed Playlists.
-     * @return The list of playlist Channels.
+     * @param playlists The list of Playlists.
+     * @return The list of playlist Channel Configs.
      * @throws Exception When there is an error.
      */
-    private static List<ChannelConfig> makePlaylistChannels(ChannelConfig baseChannel, List<PlaylistInfo> playlists) throws Exception {
+    private static List<ChannelConfig> makePlaylistChannels(List<Playlist> playlists) throws Exception {
         return playlists.stream()
                 .filter(Objects::nonNull)
-                .filter(playlist -> !skipPlaylists.contains(playlist.title))
-                .map((UncheckedFunction<PlaylistInfo, ChannelConfig>) playlist ->
+                .filter(playlist -> Optional.ofNullable(playlist.getInfo()).map(PlaylistInfo::getTitle)
+                        .map(e -> skipPlaylists.stream().noneMatch(e::equalsIgnoreCase)).orElse(false))
+                .map((UncheckedFunction<Playlist, ChannelConfig>) playlist ->
                         new ChannelConfig(MapUtility.mapOf(List.of(
-                                new ImmutablePair<>("key", (baseChannel.key + "_P")),
-                                new ImmutablePair<>("playlistId", playlist.playlistId),
+                                new ImmutablePair<>("key", (playlist.getConfig().key + "_P")),
+                                new ImmutablePair<>("playlistId", playlist.getInfo().playlistId),
                                 new ImmutablePair<>("active", true),
-                                new ImmutablePair<>("saveAsMp3", baseChannel.isSaveAsMp3()),
-                                new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || baseChannel.isSavePlaylist())),
-                                new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && baseChannel.isKeepClean())),
-                                new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.title) : null),
-                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.title + '.' + Utils.PLAYLIST_FORMAT) : null)
-                        )), (ChannelGroup) baseChannel.getParent()))
+                                new ImmutablePair<>("saveAsMp3", playlist.getConfig().isSaveAsMp3()),
+                                new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || playlist.getConfig().isSavePlaylist())),
+                                new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && playlist.getConfig().isKeepClean())),
+                                new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().title) : null),
+                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().title + '.' + Utils.PLAYLIST_FORMAT) : null)
+                        )), playlist.getConfig().getParent()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(),
                         playlistChannels -> playlistChannels.stream()
                                 .map(Mappers.forEach(playlistChannel ->
@@ -152,18 +156,18 @@ public class ChannelPlaylistParser {
     }
     
     /**
-     * Prints the playlist Channels.
+     * Formats the json configuration of a list of Playlist Channel Configs.
      *
-     * @param playlistChannels The list of playlist Channels.
-     * @return The formatted playlist Channels json string.
+     * @param playlistChannelConfigs The list of Playlist Channel Configs.
+     * @return The json configuration.
      * @throws Exception When there is an error.
      */
     @SuppressWarnings("PointlessArithmeticExpression")
-    private static String formatPlaylistChannels(List<ChannelConfig> playlistChannels) throws Exception {
-        return playlistChannels.stream().sequential()
-                .map(e -> StringUtility.splitLines(
-                                ChannelJsonFormatter.toMinJsonString(e, FORCE_INCLUDE_FIELDS, FORCE_EXCLUDE_FIELDS)).stream()
-                        .map(e2 -> (StringUtility.spaces(INDENTATION_COUNT + (FORMAT_AS_ARRAY ? 1 : 0) * ChannelJsonFormatter.INDENT_WIDTH) + e2))
+    private static String formatPlaylistChannels(List<ChannelConfig> playlistChannelConfigs) throws Exception {
+        return playlistChannelConfigs.stream()
+                .map(playlistChannelConfig -> StringUtility.splitLines(
+                                ChannelJsonFormatter.toMinJsonString(playlistChannelConfig, FORCE_INCLUDE_FIELDS, FORCE_EXCLUDE_FIELDS)).stream()
+                        .map(jsonConfigLine -> (StringUtility.spaces(INDENTATION_COUNT + (FORMAT_AS_ARRAY ? 1 : 0) * ChannelJsonFormatter.INDENT_WIDTH) + jsonConfigLine))
                         .collect(Collectors.joining(System.lineSeparator())))
                 .collect(Collectors.joining(("," + System.lineSeparator()),
                         FORMAT_AS_ARRAY ? ("[" + System.lineSeparator()) : "",
