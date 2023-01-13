@@ -106,6 +106,7 @@
                             "key": "MIND_FIELD_S1",
                             "active": true,
                             "name": "MindFieldS1",
+                            "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
                             "playlistId": "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
                             "outputFolder": "~/Season 1"
                           },
@@ -113,6 +114,7 @@
                             "key": "MIND_FIELD_S2",
                             "active": true,
                             "name": "MindFieldS2",
+                            "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
                             "playlistId": "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
                             "outputFolder": "~/Season 2"
                           },
@@ -120,6 +122,7 @@
                             "key": "MIND_FIELD_S3",
                             "active": true,
                             "name": "MindFieldS3",
+                            "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
                             "playlistId": "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
                             "outputFolder": "~/Season 3"
                           }
@@ -534,6 +537,14 @@
                     "outputFolder": "~/Machine Thinking"
                   },
                   {
+                    "key": "REAL_ENGINEERING",
+                    "active": true,
+                    "name": "RealEngineering",
+                    "url": "https://www.youtube.com/@RealEngineering",
+                    "playlistId": "UUR1IuLEqb6UEA_zQ81kwXfg",
+                    "outputFolder": "~/Real Engineering"
+                  },
+                  {
                     "key": "ZACK_FREEDMAN",
                     "active": true,
                     "name": "ZackFreedman",
@@ -731,6 +742,14 @@
                         "playlistFile": "~ - Heat Pumps.m3u"
                       }
                     ]
+                  },
+                  {
+                    "key": "UNDECIDED",
+                    "active": true,
+                    "name": "Undecided",
+                    "url": "https://www.youtube.com/@UndecidedMF",
+                    "playlistId": "UUjtUS7-SZTi6pXjUbzGHQCg",
+                    "outputFolder": "~/Undecided"
                   },
                   {
                     "key": "ASIANOMETRY",
@@ -1173,6 +1192,14 @@
                     ]
                   },
                   {
+                    "key": "KARLTON_DENNIS",
+                    "active": true,
+                    "name": "KarltonDennis",
+                    "url": "https://www.youtube.com/@karltondennis4259",
+                    "playlistId": "UUEc3bAbOtPEUIgpNkViF_PQ",
+                    "outputFolder": "~/Karlton Dennis"
+                  },
+                  {
                     "key": "GME",
                     "active": true,
                     "outputFolder": "~/GME",
@@ -1346,6 +1373,14 @@
                     "outputFolder": "~/Free Documentary"
                   },
                   {
+                    "key": "NATURE_DOCUMENTARY",
+                    "active": true,
+                    "name": "NatureDocumentaries",
+                    "url": "https://www.youtube.com/playlist?list=PL3GrymsIop4ka3VVrrMVjjde4T9Zi_r7F",
+                    "playlistId": "PL3GrymsIop4ka3VVrrMVjjde4T9Zi_r7F",
+                    "outputFolder": "~/Nature Documentaries"
+                  },
+                  {
                     "key": "HISTORY_OF_EARTH",
                     "active": true,
                     "name": "HistoryOfEarth",
@@ -1403,6 +1438,7 @@
                   {
                     "key": "DW_DOCUMENTARY",
                     "active": true,
+                    "url": "https://www.youtube.com/c/DWDocumentary",
                     "outputFolder": "~/DW Documentary",
                     "keepClean": false,
                     "channels": [
@@ -1410,70 +1446,60 @@
                         "key": "DW_DOCUMENTARY",
                         "active": true,
                         "name": "DwDocumentary",
-                        "url": "https://www.youtube.com/c/DWDocumentary",
                         "playlistId": "UUW39zufHfsuGgpLviKh297Q",
                         "keepClean": true
                       },
                       {
                         "key": "DW_DOCUMENTARY_P01",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6DhA5EKIe5evDkD1Mxsumci",
                         "playlistId": "PLovlAKbQVz6DhA5EKIe5evDkD1Mxsumci",
                         "playlistFile": "~ - Technology, Science, and Innovation.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P02",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw",
                         "playlistId": "PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw",
                         "playlistFile": "~ - Crime and Corruption.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P03",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6Bp4ee317J-w05CZa7iYttf",
                         "playlistId": "PLovlAKbQVz6Bp4ee317J-w05CZa7iYttf",
                         "playlistFile": "~ - Human Nature and Society.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P04",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6D2c8fc_GNgofSbJQsSfHVd",
                         "playlistId": "PLovlAKbQVz6D2c8fc_GNgofSbJQsSfHVd",
                         "playlistFile": "~ - Environment and Nature.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P05",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6B7ejlCOfz1x7lDgHONJJkh",
                         "playlistId": "PLovlAKbQVz6B7ejlCOfz1x7lDgHONJJkh",
                         "playlistFile": "~ - Politics and Economics.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P06",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6BE-32_-Q5ojt-Pgqap-Ye9",
                         "playlistId": "PLovlAKbQVz6BE-32_-Q5ojt-Pgqap-Ye9",
                         "playlistFile": "~ - Travel.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P07",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6C2PG0uSVQWmzot321mQuMN",
                         "playlistId": "PLovlAKbQVz6C2PG0uSVQWmzot321mQuMN",
                         "playlistFile": "~ - History.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P08",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6AF5hFvjI7ZbU2-MY0xHKX9",
                         "playlistId": "PLovlAKbQVz6AF5hFvjI7ZbU2-MY0xHKX9",
                         "playlistFile": "~ - Culture and Arts.m3u"
                       },
                       {
                         "key": "DW_DOCUMENTARY_P09",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLovlAKbQVz6A5GUO5HaeNOeqv16tyEjXL",
                         "playlistId": "PLovlAKbQVz6A5GUO5HaeNOeqv16tyEjXL",
                         "playlistFile": "~ - Health and Sports.m3u"
                       }
@@ -1521,105 +1547,90 @@
                       {
                         "key": "FRONTLINE_PBS_P01",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxLJx01g24Z-CuYKw56qwKd",
                         "playlistId": "PL_pPc6-qR9ZxLJx01g24Z-CuYKw56qwKd",
                         "playlistFile": "~ - Business and Economy.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P02",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zxu3GcHj9o35jpCD4Fs5tgF",
                         "playlistId": "PL_pPc6-qR9Zxu3GcHj9o35jpCD4Fs5tgF",
                         "playlistFile": "~ - Climate and Environment.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P03",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZwKLVMyfYFUIvN477qYsKmJ",
                         "playlistId": "PL_pPc6-qR9ZwKLVMyfYFUIvN477qYsKmJ",
                         "playlistFile": "~ - COVID-19.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P04",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZwsPahoXae3q6l7hpkhrQU4",
                         "playlistId": "PL_pPc6-qR9ZwsPahoXae3q6l7hpkhrQU4",
                         "playlistFile": "~ - Criminal Justice.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P05",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zx7665ZORzJtIR5560d9Lp6",
                         "playlistId": "PL_pPc6-qR9Zx7665ZORzJtIR5560d9Lp6",
                         "playlistFile": "~ - Education.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P06",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zy80Ttb2ONnGc0A_ijZhNM3",
                         "playlistId": "PL_pPc6-qR9Zy80Ttb2ONnGc0A_ijZhNM3",
                         "playlistFile": "~ - Elections.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P07",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zw1Z282HjVjHABlFQ9LSLEb",
                         "playlistId": "PL_pPc6-qR9Zw1Z282HjVjHABlFQ9LSLEb",
                         "playlistFile": "~ - Health.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P08",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxQXZ6sib4JEIcC10CzQSoC",
                         "playlistId": "PL_pPc6-qR9ZxQXZ6sib4JEIcC10CzQSoC",
                         "playlistFile": "~ - Immigration.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P09",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZyUY226nHV2OTCrFdnqZyzQ",
                         "playlistId": "PL_pPc6-qR9ZyUY226nHV2OTCrFdnqZyzQ",
                         "playlistFile": "~ - Religion and Beliefs.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P10",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZzdqmIxnPuqyB4nP2n1He-d",
                         "playlistId": "PL_pPc6-qR9ZzdqmIxnPuqyB4nP2n1He-d",
                         "playlistFile": "~ - Social Issues.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P11",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZzI8HRiccaI9wNSqtj0EVox",
                         "playlistId": "PL_pPc6-qR9ZzI8HRiccaI9wNSqtj0EVox",
                         "playlistFile": "~ - Sports.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P12",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9Zzuo7QJB7yM6QUrm22ZE36B",
                         "playlistId": "PL_pPc6-qR9Zzuo7QJB7yM6QUrm22ZE36B",
                         "playlistFile": "~ - Terrorism.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P13",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxJbwR0tb88w5XP8rRqLRn7",
                         "playlistId": "PL_pPc6-qR9ZxJbwR0tb88w5XP8rRqLRn7",
                         "playlistFile": "~ - U.S. Politics.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P14",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZyjUSsmGvCSKt65jn2pgmmm",
                         "playlistId": "PL_pPc6-qR9ZyjUSsmGvCSKt65jn2pgmmm",
                         "playlistFile": "~ - War and Conflict.m3u"
                       },
                       {
                         "key": "FRONTLINE_PBS_P15",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PL_pPc6-qR9ZxODyY_CAQ9blGcnk1yGn2Q",
                         "playlistId": "PL_pPc6-qR9ZxODyY_CAQ9blGcnk1yGn2Q",
                         "playlistFile": "~ - World.m3u"
                       }
@@ -1642,231 +1653,198 @@
                       {
                         "key": "SPARK_DOCUMENTARY_P01",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKE2ngcoLpa3uMrt6XaO2e2",
                         "playlistId": "PLo1_uWd0YBJKE2ngcoLpa3uMrt6XaO2e2",
                         "playlistFile": "~ - Professor Jim Al-Khalili.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P02",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIslmo5dln_JhE09mq-G9_q",
                         "playlistId": "PLo1_uWd0YBJIslmo5dln_JhE09mq-G9_q",
                         "playlistFile": "~ - Trajectory.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P03",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJJJ5gfE48XCNyi-2mXvJPH",
                         "playlistId": "PLo1_uWd0YBJJJJ5gfE48XCNyi-2mXvJPH",
                         "playlistFile": "~ - Tech Effect.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P04",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJI70SUdhSdk0-e8bLXdRyHc",
                         "playlistId": "PLo1_uWd0YBJI70SUdhSdk0-e8bLXdRyHc",
                         "playlistFile": "~ - How Do They Do It.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P05",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKqDDFXi6PzVc5Dkfp6mlJX",
                         "playlistId": "PLo1_uWd0YBJKqDDFXi6PzVc5Dkfp6mlJX",
                         "playlistFile": "~ - Zenith.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P06",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKXnsRVeEWzx19p58hAFlop",
                         "playlistId": "PLo1_uWd0YBJKXnsRVeEWzx19p58hAFlop",
                         "playlistFile": "~ - Apollo Mission.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P07",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLyKy44Rir0IcRTgObDXdas",
                         "playlistId": "PLo1_uWd0YBJLyKy44Rir0IcRTgObDXdas",
                         "playlistFile": "~ - Underground Britain.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P08",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIZCISaZlP43S-TN1ZiIZIj",
                         "playlistId": "PLo1_uWd0YBJIZCISaZlP43S-TN1ZiIZIj",
                         "playlistFile": "~ - Combat Machines.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P09",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJK0LPY18Rlq5j1XajSa1rTL",
                         "playlistId": "PLo1_uWd0YBJK0LPY18Rlq5j1XajSa1rTL",
                         "playlistFile": "~ - Extreme Constructions.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P10",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKdaKL0aS0udvBE1jY-zMB_",
                         "playlistId": "PLo1_uWd0YBJKdaKL0aS0udvBE1jY-zMB_",
                         "playlistFile": "~ - Mega Disaster.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P11",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIThFunz8kEMFFRfNtMABzq",
                         "playlistId": "PLo1_uWd0YBJIThFunz8kEMFFRfNtMABzq",
                         "playlistFile": "~ - Size Matters.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P12",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKWZJvj0H57oxnRbEterx-k",
                         "playlistId": "PLo1_uWd0YBJKWZJvj0H57oxnRbEterx-k",
                         "playlistFile": "~ - The UnEarth Series.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P13",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJIuBbsOlN2rSiBXM890ura6",
                         "playlistId": "PLo1_uWd0YBJIuBbsOlN2rSiBXM890ura6",
                         "playlistFile": "~ - Age of Robots.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P14",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJqyoRumDZy3Yhw5AM1eZIn",
                         "playlistId": "PLo1_uWd0YBJJqyoRumDZy3Yhw5AM1eZIn",
                         "playlistFile": "~ - Behind The Wings.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P15",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJZ1IxYQMoJ7hqNPDCSG5NI",
                         "playlistId": "PLo1_uWd0YBJJZ1IxYQMoJ7hqNPDCSG5NI",
                         "playlistFile": "~ - The Evolution Of Us.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P16",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLUQPF0c3gG8__8eHC7J6As",
                         "playlistId": "PLo1_uWd0YBJLUQPF0c3gG8__8eHC7J6As",
                         "playlistFile": "~ - Heavy Lift.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P17",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLAsIr1zAhnejmNz88FPgoF",
                         "playlistId": "PLo1_uWd0YBJLAsIr1zAhnejmNz88FPgoF",
                         "playlistFile": "~ - Unexplained Science.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P18",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLKJGDmxu-VxlAlz3tO5Ulu",
                         "playlistId": "PLo1_uWd0YBJLKJGDmxu-VxlAlz3tO5Ulu",
                         "playlistFile": "~ - Science vs God.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P19",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKWQGqM0LJdf1AMevd_Zkbx",
                         "playlistId": "PLo1_uWd0YBJKWQGqM0LJdf1AMevd_Zkbx",
                         "playlistFile": "~ - The Secret Life Of.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P20",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJGhCJrKg1MLeCgSeKxwUP4",
                         "playlistId": "PLo1_uWd0YBJJGhCJrKg1MLeCgSeKxwUP4",
                         "playlistFile": "~ - Documentaries To Fall Asleep To.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P21",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLYvjYKFamaEpv2COj5pzTz",
                         "playlistId": "PLo1_uWd0YBJLYvjYKFamaEpv2COj5pzTz",
                         "playlistFile": "~ - Science Documentaries.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P22",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJII3o9SgduZ0uAfOvTs--v1",
                         "playlistId": "PLo1_uWd0YBJII3o9SgduZ0uAfOvTs--v1",
                         "playlistFile": "~ - The Greatest Ever.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P23",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKKBShh8h4w7yw-PNOfFQOD",
                         "playlistId": "PLo1_uWd0YBJKKBShh8h4w7yw-PNOfFQOD",
                         "playlistFile": "~ - Warbird Workshop.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P24",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL7OwcXXRHGfFeGe919GD4l",
                         "playlistId": "PLo1_uWd0YBJL7OwcXXRHGfFeGe919GD4l",
                         "playlistFile": "~ - Supersized Structures.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P25",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKkFGISnQBZloyU7od9xxtb",
                         "playlistId": "PLo1_uWd0YBJKkFGISnQBZloyU7od9xxtb",
                         "playlistFile": "~ - Nigel Latta Blows Stuff Up.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P26",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJcB_DeitVw85-yCET0rhXR",
                         "playlistId": "PLo1_uWd0YBJJcB_DeitVw85-yCET0rhXR",
                         "playlistFile": "~ - Warships - Life At Sea.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P27",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJLkWPOFZJNF3WL69LGFfaz7",
                         "playlistId": "PLo1_uWd0YBJLkWPOFZJNF3WL69LGFfaz7",
                         "playlistFile": "~ - Meteorite Men.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P28",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJImEwHM5Ui1bgKMXrzBf4SP",
                         "playlistId": "PLo1_uWd0YBJImEwHM5Ui1bgKMXrzBf4SP",
                         "playlistFile": "~ - Predict My Future - The Science Of Us.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P29",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL4Rv2Xf0YQeSQMd2hbRFVG",
                         "playlistId": "PLo1_uWd0YBJL4Rv2Xf0YQeSQMd2hbRFVG",
                         "playlistFile": "~ - Medical Documentaries.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P30",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL7Ep0PTqoDDiaqx98AGDDD",
                         "playlistId": "PLo1_uWd0YBJL7Ep0PTqoDDiaqx98AGDDD",
                         "playlistFile": "~ - The Science Of Ships.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P31",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJJ-I06MayZYFTskHf82J-_F",
                         "playlistId": "PLo1_uWd0YBJJ-I06MayZYFTskHf82J-_F",
                         "playlistFile": "~ - The Science Of Planes.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P32",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJL8TYMhvfBGVJYmd3DlmEIr",
                         "playlistId": "PLo1_uWd0YBJL8TYMhvfBGVJYmd3DlmEIr",
                         "playlistFile": "~ - The Science Of Trains.m3u"
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P33",
                         "active": true,
-                        "url": "https://www.youtube.com/playlist?list=PLo1_uWd0YBJKKJagCDMeKacx4MFTQtjCD",
                         "playlistId": "PLo1_uWd0YBJKKJagCDMeKacx4MFTQtjCD",
                         "playlistFile": "~ - The Science of Nature.m3u"
                       }
@@ -2249,6 +2227,268 @@
                     "url": "https://www.youtube.com/playlist?list=PLsmjZYZs1ps0vrqrWyowb3y6VZDGG1ZHC",
                     "playlistId": "PLsmjZYZs1ps0vrqrWyowb3y6VZDGG1ZHC",
                     "outputFolder": "~/Ginny Di - D&D Tips"
+                  },
+                  {
+                    "key": "BARDIFY",
+                    "active": true,
+                    "outputFolder": "${D}/Documents/DnD/Music/Bardify",
+                    "saveAsMp3": true,
+                    "ignoreGlobalLocations": true,
+                    "channels": [
+                      {
+                        "key": "BARDIFY",
+                        "active": false,
+                        "name": "Bardify",
+                        "url": "https://www.youtube.com/@bardify",
+                        "playlistId": "UUFSwyTXM2RPPMpb1MNH3J6A",
+                        "outputFolder": "~/All"
+                      },
+                      {
+                        "key": "BARDIFY_EVENTS_AND_SITUATIONS",
+                        "active": true,
+                        "name": "BardifyEventsAndSituations",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabGmKCuoEptEq_sUSJsX47LT",
+                        "playlistId": "PLPkQh2SAuabGmKCuoEptEq_sUSJsX47LT",
+                        "outputFolder": "~/Events and Situations"
+                      },
+                      {
+                        "key": "BARDIFY_CITIES_AND_VILLAGES",
+                        "active": true,
+                        "name": "BardifyCitiesAndVillages",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabE1-0NnCEwoQVnk_B-Cs5C6",
+                        "playlistId": "PLPkQh2SAuabE1-0NnCEwoQVnk_B-Cs5C6",
+                        "outputFolder": "~/Cities and Villages"
+                      },
+                      {
+                        "key": "BARDIFY_DUNGEONS_AND_CRYPTS",
+                        "active": true,
+                        "name": "BardifyDungeonsAndCrypts",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabEhQhgoDdOfimLSsud2Dz2L",
+                        "playlistId": "PLPkQh2SAuabEhQhgoDdOfimLSsud2Dz2L",
+                        "outputFolder": "~/Dungeons and Crypts"
+                      },
+                      {
+                        "key": "BARDIFY_TRAVEL",
+                        "active": true,
+                        "name": "BardifyTravel",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabF3v05tmrK-hIKwDDjmcHVl",
+                        "playlistId": "PLPkQh2SAuabF3v05tmrK-hIKwDDjmcHVl",
+                        "outputFolder": "~/Travel"
+                      },
+                      {
+                        "key": "BARDIFY_COMBAT",
+                        "active": true,
+                        "name": "BardifyCombat",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabExfT0ufQXMtSIIAFvRM5vH",
+                        "playlistId": "PLPkQh2SAuabExfT0ufQXMtSIIAFvRM5vH",
+                        "outputFolder": "~/Combat"
+                      },
+                      {
+                        "key": "BARDIFY_TAVERN",
+                        "active": true,
+                        "name": "BardifyTavern",
+                        "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabEi2pGCrbE14Zl-x8yW2EgJ",
+                        "playlistId": "PLPkQh2SAuabEi2pGCrbE14Zl-x8yW2EgJ",
+                        "outputFolder": "~/Tavern"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "key": "PAD",
+                "active": true,
+                "outputFolder": "~/PaD",
+                "channels": [
+                  {
+                    "key": "SGT_502",
+                    "active": true,
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "SGT_502",
+                        "active": true,
+                        "name": "Sgt502",
+                        "url": "https://www.youtube.com/@sgt502",
+                        "playlistId": "UUV-nybgNQywxb4eqEU9vPzw",
+                        "outputFolder": "~/sgt502",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "SGT_502_P01",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEWK2wa3HWkAvthDOm3LPs7L",
+                        "playlistFile": "~ - Colosseum Arena.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P02",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUhk-OowVxMTiox8F1ViKAF",
+                        "playlistFile": "~ - Limited Time Dungeons.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P03",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEXirCYnrk-ixIj_g4xciNpJ",
+                        "playlistFile": "~ - Unknown Nova - Hundred Dragon of the Hellfires.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P04",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVlDlUUrp_-7Di9jVkpCiyy",
+                        "playlistFile": "~ - Alt Stellar Stage of the Supreme (ASR3).m3u"
+                      },
+                      {
+                        "key": "SGT_502_P05",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUhlMfnkGVLgmVPULFptPvM",
+                        "playlistFile": "~ - Stellar Stage of the Supreme (SR3).m3u"
+                      },
+                      {
+                        "key": "SGT_502_P06",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUpMCs0RBo0LyszdNp0RgWk",
+                        "playlistFile": "~ - Alt Dimension of the Mystic.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P07",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUR3uibjRtNlD_roqVNyFMU",
+                        "playlistFile": "~ - Dimension of the Mystic.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P08",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUvNFtz_HzOkEiEtMS-wRpu",
+                        "playlistFile": "~ - Super Ultimate Colosseum.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P09",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVIPQ_4-DDa3TRPS-0gFeN5",
+                        "playlistFile": "~ - Sanctuary of the Gods.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P10",
+                        "active": false,
+                        "playlistId": "PL1r_AIMp2rEXOX39NDanNZWX1xC2K45sX",
+                        "playlistFile": "~ - Shorts.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P11",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEV57LtFQy21HrRiFqB_DkUM",
+                        "playlistFile": "~ - Gathering of Talents 3.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P12",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEWLzY-_RXQvXSrbhhUQdibh",
+                        "playlistFile": "~ - Alt Ruler of Hell's Halls.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P13",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEW_HnBmiw-T1dyqwbXUb0k2",
+                        "playlistFile": "~ - Ranking Dungeons.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P14",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUV-RehTgaWvw8VeI9ZzQW2",
+                        "playlistFile": "~ - 8-Player Mode (PvP).m3u"
+                      },
+                      {
+                        "key": "SGT_502_P15",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEW0--znmhWNJ60xxRwjavEy",
+                        "playlistFile": "~ - All Day Arena.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P16",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEWfqTTgihfQpEnzdUghi2-2",
+                        "playlistFile": "~ - Ruler of Hell's Halls.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P17",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUI3_8rU0UdT-TySgJpiL9b",
+                        "playlistFile": "~ - Alt Guardian of the Demon Gate.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P18",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUteKXkHd6H0GH9DcTSExxT",
+                        "playlistFile": "~ - Annihilation Colosseum.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P19",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUGDr_W262ljGufJHYnR80_",
+                        "playlistFile": "~ - Rush Dungeons.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P20",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVDbj7sDixQ3bE_kTCFwbOG",
+                        "playlistFile": "~ - Illusory World of Carnage.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P21",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEX2ZpZYNBYph5MjcmX2hEXc",
+                        "playlistFile": "~ - Ultimate Arena.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P22",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVfOZCXE1BTLDRoAJ6cXuJt",
+                        "playlistFile": "~ - Alt Arena.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P23",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEXtZQYT8HSnZ1cA3Ncb_vBO",
+                        "playlistFile": "~ - Rare Egg Machine Rolls.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P24",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEUpaclUq_YsIc8x01JIO-BZ",
+                        "playlistFile": "~ - One Shot Challenges.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P25",
+                        "active": false,
+                        "playlistId": "PL1r_AIMp2rEUKWjpgxpsnB_3FZxW8uwDJ",
+                        "playlistFile": "~ - Other.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P26",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVe0DlXDQiSMzEl1v6zMQdf",
+                        "playlistFile": "~ - Miscellaneous Challenges.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P27",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEW9WjWsVycfD0E-R2Vz6oEv",
+                        "playlistFile": "~ - Monthly Quests.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P28",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEVksMvSgyYAfijyP4La8a6w",
+                        "playlistFile": "~ - Miscellaneous Farming.m3u"
+                      },
+                      {
+                        "key": "SGT_502_P29",
+                        "active": true,
+                        "playlistId": "PL1r_AIMp2rEWfAf8dwcbxoJ9tVMZLvb3G",
+                        "playlistFile": "~ - Descended Dungeons.m3u"
+                      }
+                    ]
                   }
                 ]
               },
@@ -2388,6 +2628,50 @@
                     "url": "https://www.youtube.com/playlist?list=PLkFo9OAxAI5YESYXQdUYJ5G-FofIg-D3R",
                     "playlistId": "PLkFo9OAxAI5YESYXQdUYJ5G-FofIg-D3R",
                     "outputFolder": "~/LOTR Dubs"
+                  },
+                  {
+                    "key": "WIZARDS_WITH_GUNS",
+                    "active": true,
+                    "url": "https://www.youtube.com/@Wizards_with_Guns",
+                    "playlistId": "UUfJxmjbygyA5KEdzzZv6Pbw",
+                    "outputFolder": "~/Wizards with Guns",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "WIZARDS_WITH_GUNS",
+                        "active": true,
+                        "name": "WizardsWithGuns",
+                        "savePlaylist": false,
+                        "keepClean": true
+                      },
+                      {
+                        "key": "WIZARDS_WITH_GUNS_SKITS",
+                        "active": true,
+                        "name": "WizardsWithGunsSkits"
+                      },
+                      {
+                        "key": "WIZARDS_WITH_GUNS_WIZARDS_WATCH",
+                        "active": true,
+                        "name": "WizardsWithGunsWizardsWatch",
+                        "playlistFile": "~ - Wizards Watch.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "NATHAN_FOR_YOU",
+                    "active": true,
+                    "name": "NathanForYou",
+                    "url": "https://www.youtube.com/playlist?list=PLD7nPL1U-R5p2A2PNhFaimVdzjIg6CNpI",
+                    "playlistId": "PLD7nPL1U-R5p2A2PNhFaimVdzjIg6CNpI",
+                    "outputFolder": "~/Nathan For You"
+                  },
+                  {
+                    "key": "FRIDAY_BEERS",
+                    "active": true,
+                    "name": "FridayBeers",
+                    "url": "https://www.youtube.com/@friday.beers",
+                    "playlistId": "UUCgK6peZI5-FKDCWzMIFk2A",
+                    "outputFolder": "~/Friday Beers"
                   }
                 ]
               },
@@ -2509,7 +2793,6 @@
           {
             "key": "MUSIC",
             "active": true,
-            "keepClean": false,
             "channels": [
               {
                 "key": "THE_COMET_IS_COMING",
@@ -2518,7 +2801,17 @@
                 "url": "https://www.youtube.com/playlist?list=PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
                 "playlistId": "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
                 "outputFolder": "Music/The Comet Is Coming",
-                "playlistFile": "My Playlists/The Comet Is Coming.m3u"
+                "playlistFile": "Playlists/Artist/The Comet Is Coming.m3u",
+                "keepClean": false
+              },
+              {
+                "key": "NEONI",
+                "active": true,
+                "name": "Neoni",
+                "url": "https://www.youtube.com/@neoni",
+                "playlistId": "UUQJ-a2IzCJ-gwlHvqvOWGhw",
+                "outputFolder": "Music/Neoni",
+                "playlistFile": "Playlists/Artist/Neoni.m3u"
               }
             ]
           },
@@ -2876,6 +3169,21 @@
                     "url": "https://www.youtube.com/playlist?list=PLLEnbi5KRv6aQ4k_isTi5DurcM8qxmca2",
                     "playlistId": "PLLEnbi5KRv6aQ4k_isTi5DurcM8qxmca2",
                     "outputFolder": "~/White Bat Audio"
+                  }
+                ]
+              },
+              {
+                "key": "PHONK",
+                "active": true,
+                "outputFolder": "~/Phonk",
+                "channels": [
+                  {
+                    "key": "FULL_CHILL_MUSIC",
+                    "active": true,
+                    "name": "FullChillMusic",
+                    "url": "https://www.youtube.com/@fullchillmusic",
+                    "playlistId": "UUhDLK20w8Z3VFWIotsKCpTw",
+                    "outputFolder": "~/Full Chill Music"
                   }
                 ]
               },

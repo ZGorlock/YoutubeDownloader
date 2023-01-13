@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import commons.object.string.StringUtility;
@@ -89,11 +90,11 @@ public class ChannelProcesses_Sample {
                     videoMap.put(videoInfo.videoId, new Video(videoInfo));
                     videoMap.putAll(tmp);
                 }
-                RenameProcess.replace(channel, videoMap,
-                        "Series Premiere", "S01E01");
-                RenameProcess.regexReplace(channel, videoMap, List.of(
-                        Map.entry("^(?:Medical\\sDetectives\\s)?\\(?Forensic\\sFiles\\s?\\)?(?:\\s?in\\sHD)?", "Forensic Files"),
-                        Map.entry("Season\\s(\\d+)\\s?,\\sEp(?:isode)?\\s(\\d+)\\s*-", "S$1E$2 -"),
+                RenameProcess.replaceIgnoreCase(channel, videoMap,
+                        "SERIES PREMIERE", "S01E01");
+                RenameProcess.regexReplaceIgnoreCase(channel, videoMap, List.of(
+                        Map.entry("^(?:MEDICAL\\sDETECTIVES\\s)?\\(?FORENSIC\\sFILES\\s?\\)?(?:\\s?IN\\sHD)?", "Forensic Files"),
+                        Map.entry("SEASON\\s(\\d+)\\s?,\\sEP(?:ISODE|\\.)?\\s(\\d+)\\s*-", "S$1E$2 -"),
                         Map.entry("S(\\d)E", "S0$1E"),
                         Map.entry("E(\\d)\\s", "E0$1 ")));
                 break;
@@ -102,6 +103,14 @@ public class ChannelProcesses_Sample {
                 RenameProcess.regexReplace(channel, videoMap, List.of(
                         Map.entry("\\[(\\d+)]\\s", "000$1 - "),
                         Map.entry("^\\d+(?=\\d{4})", "")));
+                break;
+            
+            
+            //NATURE
+            
+            case "FREE_DOCUMENTARY":
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "\\s*[\\-|]\\s*(?:FD|FREE\\sDOCUMENTARY)\\s*(?:NATURE)?$");
                 break;
             
             
@@ -125,8 +134,8 @@ public class ChannelProcesses_Sample {
             case "FRONTLINE_PBS":
                 RenameProcess.regexRemoveIgnoreCase(channel, videoMap, List.of(
                         "\\[4K]",
-                        "\\s*[\\-|]?\\s*@Associated\\s+Press",
-                        "\\s*[\\-|]?\\s*#AskFRONTLINE",
+                        "\\s*[\\-|]?\\s*@ASSOCIATED\\s+PRESS",
+                        "\\s*[\\-|]?\\s*#ASKFRONTLINE",
                         "\\s*-\\s*FRONTLINE(?:\\sPBS)?(?:\\s(?:DOCUMENTARY|EXPLAINS))?",
                         "\\s+\\((?:(?:FULL|FREE)\\s+)*DOCUMENTARY\\)",
                         "\\s+\\(.*CAPTIONS\\sAVAILABLE.*\\)"));
@@ -165,14 +174,14 @@ public class ChannelProcesses_Sample {
             
             case "OSRS_CHALLENGES_TANZOO":
             case "OSRS_CHALLENGES_VIRTOSO":
-                RenameProcess.regexReplace(channel, videoMap, List.of(
-                        Map.entry("Tanzoo\\s*vs?\\.?\\s*Virtoso\\s*-", ""),
-                        Map.entry("\\s*-?\\sRunescape\\s2007\\s*-?", ""),
-                        Map.entry("-\\s*Challenge\\s*Episodes?", "- Episode"),
-                        Map.entry("(?:\\s*-\\s*)?(?:OSRS|Osrs|osrs)\\s*Challenges?\\s*-?", ""),
-                        Map.entry("\\s*Special\\s*$", ""),
-                        Map.entry("(?:\\s*-\\s*)?\\((?:Tanzoo|Virtoso)\\)", ""),
-                        Map.entry("\\s*-*\\s*(?:Episode|EP\\.|Ep\\.)\\s*(?<episode>\\d+)\\s*$", ""),
+                RenameProcess.regexReplaceIgnoreCase(channel, videoMap, List.of(
+                        Map.entry("TANZOO\\s*VS?\\.?\\s*VIRTOSO\\s*-", ""),
+                        Map.entry("\\s*-?\\sRUNESCAPE\\s2007\\s*-?", ""),
+                        Map.entry("-\\s*CHALLENGE\\s*EPISODES?", "- Episode"),
+                        Map.entry("(?:\\s*-\\s*)?OSRS\\s*CHALLENGES?\\s*-?", ""),
+                        Map.entry("\\s*SPECIAL\\s*$", ""),
+                        Map.entry("(?:\\s*-\\s*)?\\((?:TANZOO|VIRTOSO)\\)", ""),
+                        Map.entry("\\s*-*\\s*EP(?:ISODE|\\.)?\\s*(?<episode>\\d+)\\s*$", ""),
                         Map.entry("^\\s*", "OSRS Challenges - "),
                         Map.entry("\\s*$", (" (" + channel.getConfig().getName().replace("OsrsChallenges", "") + ")"))));
                 break;
@@ -226,11 +235,45 @@ public class ChannelProcesses_Sample {
                 break;
             
             case "ONE_KICK_RICK":
-                RenameProcess.replace(channel, videoMap,
-                        "Series Trailer", "ep.0");
+                RenameProcess.replaceIgnoreCase(channel, videoMap,
+                        "SERIES TRAILER", "ep.0");
                 RenameProcess.format(channel, videoMap,
                         "^(?<title>.+?)\\s*-\\s*(?:Lumbridge\\s*-\\s*Draynor\\s(?:Only\\s)?HCIM\\s-\\s)?(?:One\\sKick\\sRick\\s-\\s)?ep\\.(?<episode>\\d+)$",
                         "One Kick Rick - $episode - $title");
+                break;
+            
+            
+            //D&D
+            
+            case "BARDIFY":
+            case "BARDIFY_EVENTS_AND_SITUATIONS":
+            case "BARDIFY_CITIES_AND_VILLAGES":
+            case "BARDIFY_DUNGEONS_AND_CRYPTS":
+            case "BARDIFY_TRAVEL":
+            case "BARDIFY_COMBAT":
+            case "BARDIFY_TAVERN":
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "\\s*[\\-|]\\s*RPG\\s*[\\-|/]\\s*D[N&]D.*\\sMUSIC\\s*(?:[\\-|]\\s*\\d+\\sHOUR\\s*)?");
+                break;
+            
+            
+            //PAD
+            
+            case "SGT_502":
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "^\\[PAD\\]\\s*(?:[\\-|:]\\s*)?");
+                break;
+            
+            
+            //MUSIC
+            
+            case "NEONI":
+                RenameProcess.replaceIgnoreCase(channel, videoMap,
+                        "Neoni - HOOLIGAN (Official Lyric Video)", UUID.randomUUID().toString());
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "\\s*-?\\s*\\(\\s*(?:OFFICIAL)?\\s*(?:MUSIC|LYRICS?|LIVE)?\\s*VIDEOS?\\s*\\)\\s*");
+                RenameProcess.regexReplace(channel, videoMap,
+                        "^NEONI\\s*-\\s*", "Neoni - ");
                 break;
             
             
@@ -277,15 +320,15 @@ public class ChannelProcesses_Sample {
             //DARKSYNTH
             
             case "JIMTV_PROGRAMMING":
-                RenameProcess.replace(channel, videoMap, List.of(
-                        Map.entry("Programming - Coding - Hacking music vol.", "Volume "),
+                RenameProcess.replaceIgnoreCase(channel, videoMap, List.of(
+                        Map.entry("PROGRAMMING - CODING - HACKING MUSIC VOL.", "Volume "),
                         Map.entry(" (", " - "),
                         Map.entry(")", "")));
                 break;
             
             case "AIM_TO_HEAD":
-                RenameProcess.regexRemove(channel, videoMap,
-                        "\\[(?:Copyright\\s)?(?:FREE|SOLD)]\\s*", true);
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "\\[(?:COPYRIGHT\\s)?(?:FREE|SOLD)]\\s*");
                 break;
             
             
@@ -314,8 +357,8 @@ public class ChannelProcesses_Sample {
             //SOUNDBYTE
             
             case "SOUND_LIBRARY":
-                RenameProcess.regexRemove(channel, videoMap,
-                        "\\s*-\\s*(?:Sound Effects?|Music) for Editing", true);
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
+                        "\\s*-\\s*(?:SOUND\\sEFFECTS?|MUSIC)\\sFOR\\sEDITING");
                 break;
         }
     }
@@ -335,7 +378,7 @@ public class ChannelProcesses_Sample {
             
             case "ANSWERS_WITH_JOE":
                 FilterProcess.containsIgnoreCase(channel, videoMap,
-                        "live stream");
+                        "LIVE STREAM");
                 break;
             
             case "THOUGHTY2_NEW_INTRO_ONLY":
@@ -344,13 +387,13 @@ public class ChannelProcesses_Sample {
                 break;
             
             case "VSAUCE":
-                FilterProcess.contains(channel, videoMap, List.of(
+                FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
                         "#",
-                        "- shorts",
+                        "- SHORTS",
                         "LUT -",
                         "IMG! -",
                         "DONG",
-                        "Mind Field"));
+                        "MIND FIELD"));
                 FilterProcess.dateBefore(channel, videoMap,
                         LocalDate.of(2011, Month.OCTOBER, 15));
                 break;
@@ -364,15 +407,13 @@ public class ChannelProcesses_Sample {
             //SPACE
             
             case "ISAAC_ARTHUR":
-                FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
-                        "livestream",
-                        "live stream",
-                        "collab",
-                        "colab",
-                        "patreon",
-                        " diy ",
-                        "hades",
-                        "in the beginning"));
+                FilterProcess.regexContainsIgnoreCase(channel, videoMap, List.of(
+                        "LIVE\\s?STREAM",
+                        "COLL?AB",
+                        "PATREON",
+                        "\\s*DIY\\s*",
+                        "HADES",
+                        "IN\\sTHE\\sBEGINNING"));
                 break;
             
             case "PBS_SPACE_TIME_MATT_ONLY":
@@ -384,32 +425,35 @@ public class ChannelProcesses_Sample {
             //PHYSICS
             
             case "UP_AND_ATOM":
-                FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
-                        "merchandise",
-                        "livestream",
-                        "live stream"));
+                FilterProcess.regexContainsIgnoreCase(channel, videoMap, List.of(
+                        "LIVE\\s?STREAM",
+                        "MERCHANDISE"));
                 break;
             
             
             //ENGINEERING
             
             case "ADAM_SAVAGE_ONE_DAY_BUILDS":
-                FilterProcess.notContainsIgnoreCase(channel, videoMap, "one day build");
-                FilterProcess.containsIgnoreCase(channel, videoMap, "last call");
+                FilterProcess.notContainsIgnoreCase(channel, videoMap,
+                        "ONE DAY BUILD");
+                FilterProcess.containsIgnoreCase(channel, videoMap,
+                        "LAST CALL");
                 break;
             
             
             //COMPUTING
             
             case "NEAT_AI":
-                FilterProcess.contains(channel, videoMap, "#short");
+                FilterProcess.containsIgnoreCase(channel, videoMap,
+                        "#SHORT");
                 break;
             
             
             //CHEMISTRY
             
             case "NILE_BLUE":
-                FilterProcess.containsIgnoreCase(channel, videoMap, "announcement");
+                FilterProcess.containsIgnoreCase(channel, videoMap,
+                        "ANNOUNCEMENT");
                 break;
             
             
@@ -422,14 +466,19 @@ public class ChannelProcesses_Sample {
             
             case "LIKE_YOU":
                 FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
-                        "photographer", "phone", "friend", "my son", "dogs"));
+                        "PHOTOGRAPHER",
+                        "PHONE",
+                        "FRIEND",
+                        "MY SON",
+                        "DOGS"));
                 break;
             
             
             //DOCUMENTARY
             
             case "ENDEVR_DOCUMENTARY":
-                FilterProcess.containsIgnoreCase(channel, videoMap, "DW Documentary");
+                FilterProcess.containsIgnoreCase(channel, videoMap,
+                        "DW DOCUMENTARY");
                 break;
             
             case "PHILON":
@@ -442,25 +491,44 @@ public class ChannelProcesses_Sample {
             
             case "OSRS_BEATZ":
                 FilterProcess.notContainsIgnoreCase(channel, videoMap,
-                        "runescape");
+                        "RUNESCAPE");
                 break;
             
             case "OSRS_WEEKLY_RECAP":
                 FilterProcess.notContainsIgnoreCase(channel, videoMap,
-                        "weekly recap");
+                        "WEEKLY RECAP");
                 break;
             
             case "OSRS_MARKET_ANALYSIS":
                 FilterProcess.notContainsIgnoreCase(channel, videoMap, List.of(
-                        "market", "economy"));
+                        "MARKET",
+                        "ECONOMY"));
+                break;
+            
+            
+            //PAD
+            
+            case "SGT_502":
+                FilterProcess.regexContainsIgnoreCase(channel, videoMap,
+                        "CAT ");
                 break;
             
             
             //FUNNY
             
             case "KITBOGA_UNCUT":
+                FilterProcess.regexContainsIgnoreCase(channel, videoMap,
+                        "LIVE\\s?STREAM");
+                break;
+            
+            case "WIZARDS_WITH_GUNS_SKITS":
+                FilterProcess.notContainsIgnoreCase(channel, videoMap,
+                        "WIZARDS WATCH");
+                break;
+            
+            case "WIZARDS_WITH_GUNS_WIZARDS_WATCH":
                 FilterProcess.containsIgnoreCase(channel, videoMap,
-                        "live stream");
+                        "WIZARDS WATCH");
                 break;
             
             
@@ -469,12 +537,26 @@ public class ChannelProcesses_Sample {
             case "BEST_CUBE_COUBOY":
             case "BEST_CUBE_SPARTA":
                 FilterProcess.regexNotContainsIgnoreCase(channel, videoMap,
-                        "best c(?:ube|oub)");
+                        "BEST\\sC(?:UBE|OUB)");
                 break;
             
             case "SEXY_CUBE":
                 FilterProcess.regexNotContainsIgnoreCase(channel, videoMap,
-                        "sexy c(?:ube|oub)");
+                        "SEXY\\sC(?:UBE|OUB)");
+                break;
+            
+            
+            //MUSIC
+            
+            case "NEONI":
+                FilterProcess.notStartsWithIgnoreCase(channel, videoMap,
+                        "NEONI");
+                FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
+                        "PREVIEW",
+                        "SNEAK PEEK",
+                        "UNRELEASED MUSIC",
+                        "CAR REEL",
+                        "RECAP"));
                 break;
             
             
@@ -501,8 +583,8 @@ public class ChannelProcesses_Sample {
             case "AMBIENT_MUSIC_LAB_MOVIES_AMBIENT":
             case "AMBIENT_MUSIC_LAB_DARK_AMBIENT":
             case "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC":
-                FilterProcess.containsIgnoreCase(channel, videoMap,
-                        "live 24-7");
+                FilterProcess.regexContainsIgnoreCase(channel, videoMap,
+                        "LIVE\\s24[\\-|/]7");
                 break;
             
             
@@ -525,7 +607,10 @@ public class ChannelProcesses_Sample {
             
             case "GREATEST_AUDIOBOOKS":
                 FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
-                        "Book Review", "Author Interview", "Preview", "Excerpt"));
+                        "BOOK REVIEW",
+                        "AUTHOR INTERVIEW",
+                        "PREVIEW",
+                        "EXCERPT"));
                 break;
         }
     }
