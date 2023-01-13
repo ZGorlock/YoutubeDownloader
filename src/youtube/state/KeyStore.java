@@ -10,10 +10,13 @@ package youtube.state;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import commons.lambda.stream.collector.MapCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
@@ -105,6 +108,70 @@ public class KeyStore {
      */
     public static Map<String, String> get(String channelName) {
         return keyStore.computeIfAbsent(channelName, k -> new LinkedHashMap<>());
+    }
+    
+    /**
+     * Returns the entire key store.
+     *
+     * @return The key store.
+     */
+    public static Map<String, Map<String, String>> getAll() {
+        return keyStore.entrySet().stream()
+                .map(store -> Map.entry(store.getKey(), Map.copyOf(store.getValue())))
+                .collect(MapCollectors.toLinkedHashMap());
+    }
+    
+    /**
+     * Returns the entire compacted key store.
+     *
+     * @return The compacted key store.
+     */
+    public static Map<String, String> getCompact() {
+        return keyStore.entrySet().stream()
+                .flatMap(store -> store.getValue().entrySet().stream()
+                        .map(entry -> Map.entry(
+                                (store.getKey() + KEYSTORE_SEPARATOR + entry.getKey()),
+                                entry.getValue())))
+                .collect(MapCollectors.toLinkedHashMap());
+    }
+    
+    /**
+     * Returns all video keys contained in the key store.
+     *
+     * @return The distinct list of video keys contained in the key store.
+     */
+    public static List<String> getAllKeys() {
+        return keyStore.values().stream()
+                .flatMap(store -> store.keySet().stream())
+                .distinct()
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Returns all files contained in the key store.
+     *
+     * @return The distinct list of files contained in the key store.
+     */
+    public static List<File> getAllFiles() {
+        return keyStore.values().stream()
+                .flatMap(store -> store.values().stream())
+                .distinct().map(File::new)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Determines if the key store contains a file.
+     *
+     * @param file The file.
+     * @return Whether the key store contains the file.
+     */
+    public static boolean containsFile(File file) {
+        return Optional.ofNullable(file)
+                .map(PathUtils::localPath)
+                .map(path -> keyStore.values().stream()
+                        .flatMap(store -> store.values().stream())
+                        .anyMatch(value -> value.equals(path)))
+                .orElse(false);
     }
     
 }
