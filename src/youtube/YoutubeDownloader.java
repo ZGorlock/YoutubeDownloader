@@ -128,7 +128,7 @@ public class YoutubeDownloader {
      * @return Whether or not downloading is allowed.
      */
     private static boolean allowDownload(Video video) {
-        return Optional.of(!Configurator.Config.preventDownload)
+        return Optional.of(Configurator.Config.preventDownload).map(e -> !e)
                 .filter(e -> e).map(Mappers.forEach(e ->
                         System.out.println(Color.base("Downloading: ") + Color.video(video.getTitle()))))
                 .orElseGet(() -> {
@@ -175,9 +175,10 @@ public class YoutubeDownloader {
      * @param in The input scanner.
      */
     private static void getInput(Scanner in) {
-        Optional.ofNullable(in).map(Scanner::nextLine)
-                .filter(e -> !StringUtility.isNullOrBlank(e))
-                .map(String::strip)
+        Optional.ofNullable(in)
+                .map(Mappers.forEach(e -> System.out.print(Color.log(": "))))
+                .map(Scanner::nextLine).map(String::strip)
+                .filter(e -> !e.isBlank())
                 .ifPresent(input -> {
                     download.add(input);
                     saveDownloadQueue();
