@@ -179,7 +179,7 @@ public class Video extends Entity<VideoInfo> {
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                                          .map(ChannelEntry::isSaveAsMp3)
                                          .orElse(Configurator.Config.asMp3)
-                                 ? Utils.AUDIO_FORMAT : Utils.VIDEO_FORMAT);
+                                 ? Utils.DEFAULT_AUDIO_FORMAT : Utils.DEFAULT_VIDEO_FORMAT);
     }
     
     /**

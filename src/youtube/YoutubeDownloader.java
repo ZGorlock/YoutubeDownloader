@@ -48,7 +48,7 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    public static final File DOWNLOAD_QUEUE = new File(PathUtils.DATA_DIR, "downloadQueue.txt");
+    public static final File DOWNLOAD_QUEUE = new File(PathUtils.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
      * The default output directory.

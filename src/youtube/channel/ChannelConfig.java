@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -237,7 +238,7 @@ public class ChannelConfig extends ChannelEntry {
      */
     public File getPlaylistFile() {
         return Optional.ofNullable(playlistFile).orElseGet(() ->
-                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + '.' + Utils.PLAYLIST_FORMAT) : null));
+                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null));
     }
     
     /**
@@ -248,7 +249,7 @@ public class ChannelConfig extends ChannelEntry {
     public String getPlaylistFilePath() {
         return Optional.ofNullable(playlistFilePath).orElse("~")
                 .replaceAll("^~", getOutputFolderPath())
-                .replaceAll("(?<!^)(?:\\." + Utils.PLAYLIST_FORMAT + ")+?$", ("." + Utils.PLAYLIST_FORMAT));
+                .replaceAll("(?<!^)(?:" + Pattern.quote('.' + Utils.DEFAULT_PLAYLIST_FORMAT) + ")+?$", ('.' + Utils.DEFAULT_PLAYLIST_FORMAT));
     }
     
     /**

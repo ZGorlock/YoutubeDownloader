@@ -146,7 +146,7 @@ public class ChannelPlaylistParser {
                                 new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || playlist.getConfig().isSavePlaylist())),
                                 new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && playlist.getConfig().isKeepClean())),
                                 new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().title) : null),
-                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().title + '.' + Utils.PLAYLIST_FORMAT) : null)
+                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().title + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null)
                         )), playlist.getConfig().getParent()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(),
                         playlistChannels -> playlistChannels.stream()

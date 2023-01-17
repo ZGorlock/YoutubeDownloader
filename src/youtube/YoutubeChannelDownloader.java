@@ -239,7 +239,7 @@ public class YoutubeChannelDownloader {
                     
                 } else {
                     File newOutput = new File(video.getConfig().getOutputFolder(), video.getOutput().getName()
-                            .replace(("." + FileUtils.getFileFormat(video.getOutput().getName())), ("." + FileUtils.getFileFormat(oldOutput.getName()))));
+                            .replace(('.' + FileUtils.getFileFormat(video.getOutput().getName())), ('.' + FileUtils.getFileFormat(oldOutput.getName()))));
                     
                     if (oldOutput.getName().equals(newOutput.getName())) {
                         video.updateOutput(newOutput);
@@ -397,7 +397,7 @@ public class YoutubeChannelDownloader {
             List<File> videos = FileUtils.getFiles(channel.getConfig().getOutputFolder());
             for (File video : videos) {
                 if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
-                    boolean isPartFile = video.getName().endsWith(".part");
+                    boolean isPartFile = video.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT);
                     String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
                     
                     if (!Configurator.Config.preventDeletion) {

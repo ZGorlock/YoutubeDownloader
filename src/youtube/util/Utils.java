@@ -80,19 +80,54 @@ public final class Utils {
     public static final List<String> AUDIO_FORMATS_OPTIONS = List.of("aac", "m4a", "mp3", "ogg", "wav");
     
     /**
-     * The video file format.
+     * The default video file format.
      */
-    public static final String VIDEO_FORMAT = "mp4";
+    public static final String DEFAULT_VIDEO_FORMAT = "mp4";
     
     /**
-     * The audio file format.
+     * The default audio file format.
      */
-    public static final String AUDIO_FORMAT = "mp3";
+    public static final String DEFAULT_AUDIO_FORMAT = "mp3";
     
     /**
-     * The playlist file format.
+     * The default playlist file format.
      */
-    public static final String PLAYLIST_FORMAT = "m3u";
+    public static final String DEFAULT_PLAYLIST_FORMAT = "m3u";
+    
+    /**
+     * The configuration file format.
+     */
+    public static final String CONFIG_FILE_FORMAT = "json";
+    
+    /**
+     * The configuration file format.
+     */
+    public static final String DATA_FILE_FORMAT = "json";
+    
+    /**
+     * The list file format.
+     */
+    public static final String LIST_FILE_FORMAT = "txt";
+    
+    /**
+     * The log file format.
+     */
+    public static final String LOG_FILE_FORMAT = "log";
+    
+    /**
+     * The executable file format.
+     */
+    public static final String EXECUTABLE_FILE_FORMAT = "exe";
+    
+    /**
+     * The download file format.
+     */
+    public static final String DOWNLOAD_FILE_FORMAT = "part";
+    
+    /**
+     * The backup file format.
+     */
+    public static final String BACKUP_FILE_FORMAT = "bak";
     
     /**
      * The newline string.

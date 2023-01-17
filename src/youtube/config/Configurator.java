@@ -39,7 +39,7 @@ public class Configurator {
     /**
      * The file containing the configuration for the Youtube Downloader.
      */
-    public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, "conf.json");
+    public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, ("conf" + '.' + Utils.CONFIG_FILE_FORMAT));
     
     
     //Static Fields

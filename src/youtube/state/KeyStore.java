@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
+import youtube.util.Utils;
 
 /**
  * Manages the key store.
@@ -40,12 +41,12 @@ public class KeyStore {
     /**
      * The store of video keys and their current saved file name.
      */
-    public static final File KEY_STORE_FILE = new File(PathUtils.DATA_DIR, "keyStore.txt");
+    public static final File KEY_STORE_FILE = new File(PathUtils.DATA_DIR, ("keyStore" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
      * The backup file of the keystore.
      */
-    public static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getParentFile(), (KEY_STORE_FILE.getName() + ".bak"));
+    public static final File KEY_STORE_BACKUP = new File(KEY_STORE_FILE.getParentFile(), (KEY_STORE_FILE.getName() + '.' + Utils.BACKUP_FILE_FORMAT));
     
     /**
      * The separator used in the keystore file.

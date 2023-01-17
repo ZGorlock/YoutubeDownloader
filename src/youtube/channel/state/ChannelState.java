@@ -30,6 +30,7 @@ import youtube.config.Configurator;
 import youtube.state.KeyStore;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
+import youtube.util.Utils;
 
 /**
  * Manages the state of a Channel.
@@ -137,11 +138,11 @@ public class ChannelState {
         this.keyStore = KeyStore.get(channelName);
         
         this.stateLocation = new File(CHANNEL_DATA_DIR, channelName);
-        this.dataFile = new File(this.stateLocation, (channelName + "-data.json"));
-        this.callLogFile = new File(this.stateLocation, (channelName + "-callLog.log"));
-        this.saveFile = new File(this.stateLocation, (channelName + "-save.txt"));
-        this.queueFile = new File(this.stateLocation, (channelName + "-queue.txt"));
-        this.blockFile = new File(this.stateLocation, (channelName + "-blocked.txt"));
+        this.dataFile = new File(this.stateLocation, (channelName + "-data" + '.' + Utils.DATA_FILE_FORMAT));
+        this.callLogFile = new File(this.stateLocation, (channelName + "-callLog" + '.' + Utils.LOG_FILE_FORMAT));
+        this.saveFile = new File(this.stateLocation, (channelName + "-save" + '.' + Utils.LIST_FILE_FORMAT));
+        this.queueFile = new File(this.stateLocation, (channelName + "-queue" + '.' + Utils.LIST_FILE_FORMAT));
+        this.blockFile = new File(this.stateLocation, (channelName + "-blocked" + '.' + Utils.LIST_FILE_FORMAT));
         
         this.error = new AtomicBoolean(false);
         
@@ -206,7 +207,7 @@ public class ChannelState {
         return Optional.ofNullable(stateLocation)
                 .map((UncheckedFunction<File, List<File>>) FileUtils::getFiles)
                 .map(e -> e.stream()
-                        .filter(e2 -> e2.getName().startsWith(dataFile.getName().replace(".json", "")))
+                        .filter(e2 -> e2.getName().startsWith(dataFile.getName().replace(('.' + Utils.DATA_FILE_FORMAT), "")))
                         .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
     }
@@ -267,7 +268,7 @@ public class ChannelState {
         Stream.of(dataFile, callLogFile)
                 .map(e -> e.getName().replaceAll("\\..+$", ""))
                 .map((UncheckedFunction<String, List<File>>) e -> FileUtils.getFiles(stateLocation).stream()
-                        .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith(".txt"))
+                        .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith('.' + Utils.LIST_FILE_FORMAT))
                         .collect(Collectors.toList()))
                 .flatMap(Collection::stream)
                 .forEach((CheckedConsumer<File>) FileUtils::deleteFile);

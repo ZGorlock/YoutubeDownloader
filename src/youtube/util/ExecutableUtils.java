@@ -94,9 +94,9 @@ public final class ExecutableUtils {
          */
         Executable(String name, String website) {
             this.name = name;
-            this.exe = new File(EXECUTABLE_DIR, (this.name + (OperatingSystem.isWindows() ? ".exe" : "")));
+            this.exe = new File(EXECUTABLE_DIR, (this.name + (OperatingSystem.isWindows() ? ('.' + Utils.EXECUTABLE_FILE_FORMAT) : "")));
             this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(this.exe.getAbsolutePath()) :
-                        ((OperatingSystem.isWindows() ? "" : ("." + PathUtils.SEPARATOR)) + this.exe.getName());
+                        ((OperatingSystem.isWindows() ? "" : ('.' + PathUtils.SEPARATOR)) + this.exe.getName());
             this.website = website;
         }
         

@@ -46,7 +46,7 @@ public class Channels {
     /**
      * The file containing the Channel configuration for the Youtube Downloader.
      */
-    public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, "channels.json");
+    public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, ("channels" + '.' + Utils.CONFIG_FILE_FORMAT));
     
     /**
      * The default drive to use for storage of downloaded files.

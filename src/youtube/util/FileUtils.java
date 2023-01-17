@@ -234,7 +234,7 @@ public final class FileUtils {
      * @return The title from the file name.
      */
     public static String getFileTitle(String fileName) {
-        return fileName.replaceAll(("\\." + Pattern.quote(getFileFormat(fileName)) + "$"), "");
+        return fileName.replaceAll((Pattern.quote('.' + getFileFormat(fileName)) + "$"), "");
     }
     
 }
