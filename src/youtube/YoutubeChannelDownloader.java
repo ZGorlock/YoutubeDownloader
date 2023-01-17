@@ -19,7 +19,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import commons.lambda.function.unchecked.UncheckedSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
@@ -223,16 +222,16 @@ public class YoutubeChannelDownloader {
         videoMap.forEach((videoId, video) -> {
             channel.getState().saved.remove(videoId);
             
-            if (video.getOutput().exists()) {
+            if (video.getOutput().exists() && FileUtils.getCanonicalFile(video.getOutput()).getAbsolutePath().equals(video.getOutput().getAbsolutePath())) {
                 channel.getState().saved.add(videoId);
                 channel.getState().blocked.remove(videoId);
                 channel.getState().keyStore.put(videoId, PathUtils.localPath(video.getOutput()));
                 
             } else if (!channel.getState().blocked.contains(videoId)) {
                 File oldOutput = Optional.ofNullable(channel.getState().keyStore.get(videoId))
-                        .map(File::new)
-                        .filter(File::exists)
-                        .orElseGet((UncheckedSupplier<File>) () -> Utils.findVideoFile(video.getOutput()));
+                        .map(File::new).filter(File::exists)
+                        .map(FileUtils::getCanonicalFile).filter(File::exists)
+                        .orElseGet(() -> Utils.findVideoFile(video.getOutput()));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
                     channel.getState().queued.add(videoId);

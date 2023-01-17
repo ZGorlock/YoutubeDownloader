@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -117,10 +118,10 @@ public final class FileUtils {
      * @param dir       The directory.
      * @param recursive Whether to list files recursively or not.
      * @return The list of files and directories in the directory.
-     * @throws IOException When there is an error listing the directory.
      */
-    public static List<File> getFiles(File dir, boolean recursive) throws IOException {
-        return new ArrayList<>(org.apache.commons.io.FileUtils.listFiles(dir, null, recursive));
+    public static List<File> getFiles(File dir, boolean recursive) {
+        return ((dir == null) || !dir.exists() || !dir.isDirectory()) ? new ArrayList<>() :
+               new ArrayList<>(org.apache.commons.io.FileUtils.listFiles(dir, null, recursive));
     }
     
     /**
@@ -128,9 +129,8 @@ public final class FileUtils {
      *
      * @param dir The directory.
      * @return The list of files and directories in the directory.
-     * @throws IOException When there is an error listing the directory.
      */
-    public static List<File> getFiles(File dir) throws IOException {
+    public static List<File> getFiles(File dir) {
         return getFiles(dir, false);
     }
     
@@ -140,11 +140,10 @@ public final class FileUtils {
      * @param dir       The directory.
      * @param recursive Whether to list files recursively or not.
      * @return The list of canonical files and directories in the directory.
-     * @throws IOException When there is an error listing the directory.
      */
-    public static List<File> getCanonicalFiles(File dir, boolean recursive) throws IOException {
+    public static List<File> getCanonicalFiles(File dir, boolean recursive) {
         return getFiles(dir, recursive).stream()
-                .map((UncheckedFunction<File, File>) File::getCanonicalFile)
+                .map(FileUtils::getCanonicalFile)
                 .collect(Collectors.toList());
     }
     
@@ -153,9 +152,8 @@ public final class FileUtils {
      *
      * @param dir The directory.
      * @return The list of canonical files and directories in the directory.
-     * @throws IOException When there is an error listing the directory.
      */
-    public static List<File> getCanonicalFiles(File dir) throws IOException {
+    public static List<File> getCanonicalFiles(File dir) {
         return getCanonicalFiles(dir, false);
     }
     
@@ -218,6 +216,18 @@ public final class FileUtils {
     }
     
     /**
+     * Returns the canonical version of a file.
+     *
+     * @param file The file.
+     * @return The canonical version of the file.
+     */
+    public static File getCanonicalFile(File file) {
+        return Optional.ofNullable(file)
+                .map((UncheckedFunction<File, File>) File::getCanonicalFile)
+                .orElse(file);
+    }
+    
+    /**
      * Returns the file format from a file name.
      *
      * @param fileName The file name.
@@ -235,6 +245,17 @@ public final class FileUtils {
      */
     public static String getFileTitle(String fileName) {
         return fileName.replaceAll((Pattern.quote('.' + getFileFormat(fileName)) + "$"), "");
+    }
+    
+    /**
+     * Returns the reduced title from a file name.
+     *
+     * @param fileName The file name.
+     * @return The reduced title from the file name.
+     */
+    public static String getFileTitleKey(String fileName) {
+        return getFileTitle(fileName).toUpperCase()
+                .replaceAll("[^A-Z\\d" + Pattern.quote(Utils.TITLE_NON_ASCII_CHAR) + "]", "");
     }
     
 }

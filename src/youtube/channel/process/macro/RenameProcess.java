@@ -415,20 +415,21 @@ public class RenameProcess {
      */
     public static void format(Channel channel, Map<String, Video> videoMap, boolean strict, String pattern, boolean ignoreCase, String result, String dateFormat) {
         final AtomicInteger index = new AtomicInteger(0);
-        final List<String> variables = Pattern.compile("\\(\\?<(?<name>[A-Za-z\\d]+)>").matcher(pattern).results()
+        final Pattern matchPattern = Pattern.compile((ignoreCase ? "(?i)" : "") + pattern);
+        final List<String> variables = Pattern.compile("(?i)\\(\\?<(?<name>[A-Z\\d]+)>").matcher(pattern).results()
                 .map(e -> ("$" + e.group(1)))
                 .sorted(Comparator.comparingInt(e -> -e.length()))
                 .collect(Collectors.toList());
         
         BaseProcess.rename(channel, videoMap, (id, video) ->
-                Optional.of(Pattern.compile(pattern).matcher(video.getTitle()))
+                Optional.of(matchPattern.matcher(video.getTitle()))
                         .filter(e -> (index.incrementAndGet() > 0))
                         .filter(Matcher::matches)
-                        .map(matcher -> video.getTitle().replaceAll(((ignoreCase ? "(?i)" : "") + pattern),
+                        .map(matcher -> video.getTitle().replaceAll(matchPattern.pattern(), Matcher.quoteReplacement(
                                 expandTitle(variables.stream()
                                                 .filter(e -> result.matches("^.*" + Pattern.quote(e) + "\\b.*$"))
                                                 .reduce(result, (s, e) -> s.replace(e, matcher.group(e.substring(1)))),
-                                        video.getInfo(), index.get(), dateFormat)))
+                                        video.getInfo(), index.get(), dateFormat))))
                         .orElseGet(() -> {
                             if (strict) {
                                 System.out.println(Color.bad("The video: ") + Color.videoName(video.getTitle()) + Color.bad(" does not match the pattern: ") + Color.quoted(Color.base(pattern)));

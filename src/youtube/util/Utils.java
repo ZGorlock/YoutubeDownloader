@@ -8,13 +8,11 @@
 package youtube.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -130,6 +128,11 @@ public final class Utils {
     public static final String BACKUP_FILE_FORMAT = "bak";
     
     /**
+     * The character used in a video title in place of non-ascii characters.
+     */
+    public static final String TITLE_NON_ASCII_CHAR = "+";
+    
+    /**
      * The newline string.
      */
     public static final String NEWLINE = "";
@@ -161,44 +164,44 @@ public final class Utils {
     }
     
     /**
-     * Tries to find a video.
+     * Attempts to find a video file.
      *
      * @param output The output file for the video.
-     * @return The found file or files.
-     * @throws IOException When there is an error finding the video file.
+     * @return The uniquely found file; or null if the file could not be found, or if multiple files were found.
      */
-    public static File findVideoFile(File output) throws IOException {
-        File outputDir = output.getParentFile();
-        if (!outputDir.exists()) {
-            return null;
-        }
-        
-        List<File> existingFiles = FileUtils.getFiles(outputDir);
-        
-        final Function<File, String> fileNameFormatter = (File file) ->
-                file.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
-        
-        String name = fileNameFormatter.apply(output);
-        
-        List<File> found = new ArrayList<>();
-        for (File existingFile : existingFiles) {
-            String existingName = fileNameFormatter.apply(existingFile);
-            if (existingName.equalsIgnoreCase(name) && (existingFile.length() > 0)) {
-                String format = FileUtils.getFileFormat(output.getName());
-                String existingFormat = FileUtils.getFileFormat(existingFile.getName());
-                if (format.equalsIgnoreCase(existingFormat) ||
-                        (VIDEO_FORMATS_OPTIONS.contains(format) && VIDEO_FORMATS_OPTIONS.contains(existingFormat)) ||
-                        (AUDIO_FORMATS_OPTIONS.contains(format) && AUDIO_FORMATS_OPTIONS.contains(existingFormat))) {
-                    found.add(existingFile);
-                }
-            }
-        }
-        
-        if (found.size() == 1) {
-            return found.get(0);
-        } else {
-            return null;
-        }
+    public static File findVideoFile(File output) {
+        return Optional.ofNullable(output)
+                .map(File::getParentFile).filter(File::exists)
+                .map(FileUtils::getCanonicalFiles)
+                .map(files -> files.stream()
+                        .filter(e -> FileUtils.getFileTitleKey(e.getName()).equals(FileUtils.getFileTitleKey(output.getName())))
+                        .filter(File::exists).filter(e -> (e.length() > 0))
+                        .filter(e -> FileUtils.getFileFormat(e.getName()).equals(FileUtils.getFileFormat(output.getName())) ||
+                                (isVideoFormat(e.getName()) && isVideoFormat(output.getName())) ||
+                                (isAudioFormat(e.getName()) && isAudioFormat(output.getName()))
+                        ).collect(Collectors.toList()))
+                .filter(e -> (e.size() == 1)).map(e -> e.get(0))
+                .orElse(null);
+    }
+    
+    /**
+     * Determines if the file format from a file name is an audio format.
+     *
+     * @param fileName The file name.
+     * @return Whether the file format from the file name is an audio format.
+     */
+    public static boolean isAudioFormat(String fileName) {
+        return AUDIO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(fileName));
+    }
+    
+    /**
+     * Determines if the file format from a file name is an video format.
+     *
+     * @param fileName The file name.
+     * @return Whether the file format from the file name is an video format.
+     */
+    public static boolean isVideoFormat(String fileName) {
+        return VIDEO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(fileName));
     }
     
     /**
@@ -240,7 +243,7 @@ public final class Utils {
                 
                 .replaceAll("[\r\n\t ]+", " ")
                 .replaceAll("\\p{Cntrl}&&[^\r\n\t]", "")
-                .replaceAll("[^\\x00-\\xFF]", "+")
+                .replaceAll("[^\\x00-\\xFF]", TITLE_NON_ASCII_CHAR)
                 .strip()
                 
                 .replaceAll("(\\d{1,2}):(\\d{2}):(\\d{2})", "$1-$2-$3")
