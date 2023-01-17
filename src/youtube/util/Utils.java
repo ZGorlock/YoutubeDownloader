@@ -8,13 +8,13 @@
 package youtube.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -130,17 +130,15 @@ public final class Utils {
      *
      * @param output The output file for the video.
      * @return The found file or files.
+     * @throws IOException When there is an error finding the video file.
      */
-    public static File findVideoFile(File output) {
+    public static File findVideoFile(File output) throws IOException {
         File outputDir = output.getParentFile();
         if (!outputDir.exists()) {
             return null;
         }
         
-        File[] existingFiles = outputDir.listFiles();
-        if (existingFiles == null) {
-            return null;
-        }
+        List<File> existingFiles = FileUtils.getFiles(outputDir);
         
         final Function<File, String> fileNameFormatter = (File file) ->
                 file.getName().replaceAll("\\.[^.]+$|[^a-zA-Z\\d+]|\\s+", "");
@@ -151,8 +149,8 @@ public final class Utils {
         for (File existingFile : existingFiles) {
             String existingName = fileNameFormatter.apply(existingFile);
             if (existingName.equalsIgnoreCase(name) && (existingFile.length() > 0)) {
-                String format = getFileFormat(output.getName());
-                String existingFormat = getFileFormat(existingFile.getName());
+                String format = FileUtils.getFileFormat(output.getName());
+                String existingFormat = FileUtils.getFileFormat(existingFile.getName());
                 if (format.equalsIgnoreCase(existingFormat) ||
                         (VIDEO_FORMATS_OPTIONS.contains(format) && VIDEO_FORMATS_OPTIONS.contains(existingFormat)) ||
                         (AUDIO_FORMATS_OPTIONS.contains(format) && AUDIO_FORMATS_OPTIONS.contains(existingFormat))) {
@@ -236,26 +234,6 @@ public final class Utils {
                 .replaceAll("\\$(?:\\s*\\$)+", Matcher.quoteReplacement("$"))
                 .replaceAll("\\s+", " ")
                 .strip();
-    }
-    
-    /**
-     * Returns the file format from a file name.
-     *
-     * @param fileName The file name.
-     * @return The file format from the file name.
-     */
-    public static String getFileFormat(String fileName) {
-        return fileName.replaceAll("^.*?\\.((?:f\\d+\\.)*[^.]+)$", "$1").toLowerCase();
-    }
-    
-    /**
-     * Returns the title from a file name.
-     *
-     * @param fileName The file name.
-     * @return The title from the file name.
-     */
-    public static String getFileTitle(String fileName) {
-        return fileName.replaceAll(("\\." + Pattern.quote(getFileFormat(fileName)) + "$"), "");
     }
     
     /**

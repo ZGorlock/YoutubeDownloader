@@ -15,6 +15,7 @@ import java.util.Optional;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.FileUtils;
 import youtube.util.Utils;
 
 /**
@@ -224,9 +225,9 @@ public class ChannelConfig extends ChannelEntry {
         return getName() + Optional.ofNullable(name)
                 .filter(e -> e.matches(".*P\\d+$"))
                 .map(e -> Optional.ofNullable(outputFolderPath).orElse(playlistFilePath))
-                .map(Utils::getFileTitle).map(e -> e.replaceAll("^~\\s*[-/]", ""))
-                .map(String::strip)
-                .map(e -> (" - (" + e + ")")).orElse("");
+                .map(FileUtils::getFileTitle).map(e -> e.replaceAll("^~\\s*[-/]", ""))
+                .map(String::strip).map(e -> (" - (" + e + ")"))
+                .orElse("");
     }
     
     /**

@@ -10,16 +10,16 @@ package youtube.channel.state;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedConsumer;
+import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -203,9 +203,12 @@ public class ChannelState {
      * @return The list of data files.
      */
     public List<File> getDataFiles() {
-        return Optional.ofNullable(stateLocation.listFiles(
-                        f -> f.getName().startsWith(dataFile.getName().replace(".json", ""))))
-                .map(Arrays::asList).orElse(new ArrayList<>());
+        return Optional.ofNullable(stateLocation)
+                .map((UncheckedFunction<File, List<File>>) FileUtils::getFiles)
+                .map(e -> e.stream()
+                        .filter(e2 -> e2.getName().startsWith(dataFile.getName().replace(".json", "")))
+                        .collect(Collectors.toList()))
+                .orElse(new ArrayList<>());
     }
     
     /**
@@ -263,8 +266,10 @@ public class ChannelState {
                 });
         Stream.of(dataFile, callLogFile)
                 .map(e -> e.getName().replaceAll("\\..+$", ""))
-                .map(e -> stateLocation.listFiles(f -> f.getName().startsWith(e) && f.getName().endsWith(".txt")))
-                .filter(Objects::nonNull).flatMap(Arrays::stream)
+                .map((UncheckedFunction<String, List<File>>) e -> FileUtils.getFiles(stateLocation).stream()
+                        .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith(".txt"))
+                        .collect(Collectors.toList()))
+                .flatMap(Collection::stream)
                 .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
     }
     

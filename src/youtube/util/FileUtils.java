@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import commons.lambda.function.unchecked.UncheckedFunction;
 
 /**
  * Provides file utility methods for the Youtube Downloader.
@@ -108,6 +112,54 @@ public final class FileUtils {
     }
     
     /**
+     * Lists the files and directories in a directory.
+     *
+     * @param dir       The directory.
+     * @param recursive Whether to list files recursively or not.
+     * @return The list of files and directories in the directory.
+     * @throws IOException When there is an error listing the directory.
+     */
+    public static List<File> getFiles(File dir, boolean recursive) throws IOException {
+        return new ArrayList<>(org.apache.commons.io.FileUtils.listFiles(dir, null, recursive));
+    }
+    
+    /**
+     * Lists the files and directories in a directory.
+     *
+     * @param dir The directory.
+     * @return The list of files and directories in the directory.
+     * @throws IOException When there is an error listing the directory.
+     */
+    public static List<File> getFiles(File dir) throws IOException {
+        return getFiles(dir, false);
+    }
+    
+    /**
+     * Lists the canonical files and directories in a directory.
+     *
+     * @param dir       The directory.
+     * @param recursive Whether to list files recursively or not.
+     * @return The list of canonical files and directories in the directory.
+     * @throws IOException When there is an error listing the directory.
+     */
+    public static List<File> getCanonicalFiles(File dir, boolean recursive) throws IOException {
+        return getFiles(dir, recursive).stream()
+                .map((UncheckedFunction<File, File>) File::getCanonicalFile)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Lists the canonical files and directories in a directory.
+     *
+     * @param dir The directory.
+     * @return The list of canonical files and directories in the directory.
+     * @throws IOException When there is an error listing the directory.
+     */
+    public static List<File> getCanonicalFiles(File dir) throws IOException {
+        return getCanonicalFiles(dir, false);
+    }
+    
+    /**
      * Copies a file.
      *
      * @param source The source file.
@@ -163,6 +215,26 @@ public final class FileUtils {
      */
     public static void downloadFile(String url, File file) throws IOException {
         org.apache.commons.io.FileUtils.copyURLToFile(new URL(url), file, 200, Integer.MAX_VALUE);
+    }
+    
+    /**
+     * Returns the file format from a file name.
+     *
+     * @param fileName The file name.
+     * @return The file format from the file name.
+     */
+    public static String getFileFormat(String fileName) {
+        return fileName.replaceAll("^.*?\\.((?:f\\d+\\.)*[^.]+)$", "$1").toLowerCase();
+    }
+    
+    /**
+     * Returns the title from a file name.
+     *
+     * @param fileName The file name.
+     * @return The title from the file name.
+     */
+    public static String getFileTitle(String fileName) {
+        return fileName.replaceAll(("\\." + Pattern.quote(getFileFormat(fileName)) + "$"), "");
     }
     
 }

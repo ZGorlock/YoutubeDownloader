@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import commons.lambda.function.unchecked.UncheckedSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
@@ -231,14 +232,14 @@ public class YoutubeChannelDownloader {
                 File oldOutput = Optional.ofNullable(channel.getState().keyStore.get(videoId))
                         .map(File::new)
                         .filter(File::exists)
-                        .orElseGet(() -> Utils.findVideoFile(video.getOutput()));
+                        .orElseGet((UncheckedSupplier<File>) () -> Utils.findVideoFile(video.getOutput()));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
                     channel.getState().queued.add(videoId);
                     
                 } else {
                     File newOutput = new File(video.getConfig().getOutputFolder(), video.getOutput().getName()
-                            .replace(("." + Utils.getFileFormat(video.getOutput().getName())), ("." + Utils.getFileFormat(oldOutput.getName()))));
+                            .replace(("." + FileUtils.getFileFormat(video.getOutput().getName())), ("." + FileUtils.getFileFormat(oldOutput.getName()))));
                     
                     if (oldOutput.getName().equals(newOutput.getName())) {
                         video.updateOutput(newOutput);
@@ -393,28 +394,26 @@ public class YoutubeChannelDownloader {
         
         if (!channel.getState().error.get() && channel.getConfig().isKeepClean()) {
             
-            File[] videos = channel.getConfig().getOutputFolder().listFiles();
-            if (videos != null) {
-                for (File video : videos) {
-                    if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
-                        boolean isPartFile = video.getName().endsWith(".part");
-                        String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
+            List<File> videos = FileUtils.getFiles(channel.getConfig().getOutputFolder());
+            for (File video : videos) {
+                if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
+                    boolean isPartFile = video.getName().endsWith(".part");
+                    String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
+                    
+                    if (!Configurator.Config.preventDeletion) {
+                        System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
+                        FileUtils.deleteFile(video);
                         
-                        if (!Configurator.Config.preventDeletion) {
-                            System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
-                            FileUtils.deleteFile(video);
-                            
-                            if (!isPartFile) {
-                                if (channel.getConfig().isSaveAsMp3()) {
-                                    Stats.totalAudioDeletions.incrementAndGet();
-                                } else {
-                                    Stats.totalVideoDeletions.incrementAndGet();
-                                }
+                        if (!isPartFile) {
+                            if (channel.getConfig().isSaveAsMp3()) {
+                                Stats.totalAudioDeletions.incrementAndGet();
+                            } else {
+                                Stats.totalVideoDeletions.incrementAndGet();
                             }
-                            
-                        } else {
-                            System.out.println(Color.bad("Would have deleted: ") + Color.quoted(printedFile) + Color.bad(" but deletion is disabled"));
                         }
+                        
+                    } else {
+                        System.out.println(Color.bad("Would have deleted: ") + Color.quoted(printedFile) + Color.bad(" but deletion is disabled"));
                     }
                 }
             }

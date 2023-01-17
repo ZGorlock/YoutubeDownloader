@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.Configurator;
+import youtube.util.FileUtils;
 import youtube.util.Utils;
 
 /**
@@ -146,10 +147,10 @@ public final class Stats {
                 .filter(Objects::nonNull).distinct()
                 .map(File::new).filter(File::exists)
                 .forEach(file -> {
-                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()).toLowerCase())) {
+                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(file.getName()).toLowerCase())) {
                         Stats.totalVideo.incrementAndGet();
                         Stats.totalVideoData.addAndGet(file.length());
-                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(Utils.getFileFormat(file.getName()).toLowerCase())) {
+                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(file.getName()).toLowerCase())) {
                         Stats.totalAudio.incrementAndGet();
                         Stats.totalAudioData.addAndGet(file.length());
                     }

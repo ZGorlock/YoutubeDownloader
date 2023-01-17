@@ -17,6 +17,7 @@ import youtube.config.Configurator;
 import youtube.entity.base.Entity;
 import youtube.entity.base.EntityType;
 import youtube.entity.info.VideoInfo;
+import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -127,7 +128,7 @@ public class Video extends Entity<VideoInfo> {
     public void updateOutput(File output) {
         this.output = output;
         updateOutputDir(output.getParentFile());
-        updateTitle(Utils.getFileTitle(output.getName()));
+        updateTitle(FileUtils.getFileTitle(output.getName()));
     }
     
     /**
@@ -174,7 +175,7 @@ public class Video extends Entity<VideoInfo> {
     public String getFormat() {
         return Optional.ofNullable(getOutput())
                 .map(File::getName)
-                .map(Utils::getFileFormat)
+                .map(FileUtils::getFileFormat)
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                                          .map(ChannelEntry::isSaveAsMp3)
                                          .orElse(Configurator.Config.asMp3)
