@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.entity.info.base.EntityInfo;
+import youtube.entity.info.detail.Statistics;
 import youtube.util.WebUtils;
 
 /**
@@ -61,20 +62,19 @@ public class ChannelInfo extends EntityInfo {
     public ChannelInfo(Map<String, Object> channelData) {
         super(channelData);
         
-        this.channelId = metadata.itemId;
-        this.metadata.entityId = channelId;
-        
+        this.channelId = metadata.getEntityId();
         this.url = WebUtils.CHANNEL_BASE + channelId;
+        
         this.customUrlKey = getData("customUrl");
         this.customUrl = Optional.ofNullable(customUrlKey).map(e -> e.replaceAll("^@*", WebUtils.CHANNEL_BASE)).orElse(url);
         
-        this.videoCount = Optional.ofNullable(stats).map(e -> e.get("videoCount")).map(e -> e.count).orElse(null);
+        this.videoCount = Optional.ofNullable(getStats()).map(e -> e.get("videoCount")).map(Statistics.Stat::getCount).orElse(null);
     }
     
     /**
-     * The default no-argument constructor for a Channel Info.
+     * Creates an empty Channel Info.
      */
-    protected ChannelInfo() {
+    public ChannelInfo() {
         super();
     }
     

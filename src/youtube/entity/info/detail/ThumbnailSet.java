@@ -51,14 +51,20 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
      *
      * @param thumbnailData The Thumbnail Set json data of the Entity.
      */
-    @SuppressWarnings("unchecked")
     public ThumbnailSet(Map<String, Object> thumbnailData) {
         Optional.ofNullable(thumbnailData)
                 .map(Map::entrySet).stream().flatMap(Collection::stream)
                 .filter(e -> (e.getValue() != null))
-                .map(e -> new Thumbnail(e.getKey(), (Map<String, Object>) e.getValue()))
-                .sorted(Comparator.comparingInt(o -> o.quality.ordinal()))
-                .forEachOrdered(e -> put(e.quality, e));
+                .map(Thumbnail::new)
+                .sorted(Comparator.comparingInt(o -> o.getQuality().ordinal()))
+                .forEachOrdered(e -> put(e.getQuality(), e));
+    }
+    
+    /**
+     * Creates an empty Thumbnail Set.
+     */
+    public ThumbnailSet() {
+        super();
     }
     
     
@@ -111,14 +117,40 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
         /**
          * Creates a Thumbnail.
          *
-         * @param quality       The quality of the Thumbnail.
          * @param thumbnailData The json data of the Thumbnail.
          */
-        public Thumbnail(String quality, Map<String, Object> thumbnailData) {
-            this.quality = Quality.valueOf(quality.toUpperCase());
-            this.url = (String) thumbnailData.get("url");
-            this.width = EntityInfo.integerParser.apply(thumbnailData.get("width"));
-            this.height = EntityInfo.integerParser.apply(thumbnailData.get("height"));
+        @SuppressWarnings("unchecked")
+        public Thumbnail(Map.Entry<String, Object> thumbnailData) {
+            Optional.ofNullable(thumbnailData)
+                    .map(thumbnailEntry -> {
+                        this.quality = Quality.valueOf(thumbnailEntry.getKey().toUpperCase());
+                        return (Map<String, Object>) thumbnailEntry.getValue();
+                    }).ifPresent(thumbnailDetails -> {
+                        this.url = (String) thumbnailDetails.get("url");
+                        this.width = EntityInfo.integerParser.apply(thumbnailDetails.get("width"));
+                        this.height = EntityInfo.integerParser.apply(thumbnailDetails.get("height"));
+                    });
+        }
+        
+        /**
+         * Creates a Thumbnail.
+         *
+         * @param quality The quality of the Thumbnail.
+         * @param url     The url of the Thumbnail.
+         * @param width   The width of the Thumbnail.
+         * @param height  The height of the Thumbnail.
+         */
+        public Thumbnail(Quality quality, String url, Long width, Long height) {
+            this.quality = quality;
+            this.url = url;
+            this.width = width;
+            this.height = height;
+        }
+        
+        /**
+         * Creates an empty Thumbnail.
+         */
+        public Thumbnail() {
         }
         
         

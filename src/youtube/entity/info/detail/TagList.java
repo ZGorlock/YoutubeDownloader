@@ -42,6 +42,13 @@ public class TagList extends ArrayList<TagList.Tag> {
                 .forEachOrdered(this::add);
     }
     
+    /**
+     * Creates an empty Tag List.
+     */
+    public TagList() {
+        super();
+    }
+    
     
     //Inner Classes
     
@@ -67,6 +74,12 @@ public class TagList extends ArrayList<TagList.Tag> {
          */
         public Tag(String name) {
             this.name = name;
+        }
+        
+        /**
+         * Creates an empty Tag.
+         */
+        public Tag() {
         }
         
         

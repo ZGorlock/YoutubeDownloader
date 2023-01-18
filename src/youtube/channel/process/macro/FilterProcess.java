@@ -986,7 +986,7 @@ public class FilterProcess {
      */
     public static void date(Channel channel, Map<String, Video> videoMap, Predicate<LocalDate> dateCondition, boolean negate) {
         BaseProcess.filter(channel, videoMap, video ->
-                Optional.ofNullable(video.getInfo().date).map(e -> (negate ^ dateCondition.test(e.toLocalDate()))).orElse(false));
+                Optional.ofNullable(video.getInfo().getDate()).map(e -> (negate ^ dateCondition.test(e.toLocalDate()))).orElse(false));
     }
     
     /**

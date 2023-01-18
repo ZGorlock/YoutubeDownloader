@@ -8,7 +8,10 @@
 package youtube.entity.info.base;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,12 +105,14 @@ public class EntityMetadata {
         
         this.playlistId = getData("snippet", "playlistId");
         this.playlist = ApiUtils.fetchPlaylist(playlistId);
+        
+        this.entityId = itemId;
     }
     
     /**
-     * The default no-argument constructor for an EntityMetadata.
+     * Creates an empty Entity Metadata.
      */
-    protected EntityMetadata() {
+    public EntityMetadata() {
     }
     
     
@@ -159,7 +164,8 @@ public class EntityMetadata {
      */
     @Override
     public String toString() {
-        return getKind() + Optional.ofNullable(getEntityId()).map(e -> (":" + e)).orElse("");
+        return Stream.of(getKind(), getEntityId())
+                .filter(Objects::nonNull).collect(Collectors.joining(":"));
     }
     
     

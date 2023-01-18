@@ -50,18 +50,16 @@ public class PlaylistInfo extends EntityInfo {
     public PlaylistInfo(Map<String, Object> playlistData) {
         super(playlistData);
         
-        this.playlistId = metadata.itemId;
-        this.metadata.entityId = playlistId;
-        
+        this.playlistId = metadata.getEntityId();
         this.url = WebUtils.PLAYLIST_BASE + playlistId;
         
         this.videoCount = getData("contentDetails", "itemCount");
     }
     
     /**
-     * The default no-argument constructor for a Playlist Info.
+     * Creates an empty Playlist Info.
      */
-    protected PlaylistInfo() {
+    public PlaylistInfo() {
         super();
     }
     

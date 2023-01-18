@@ -7,6 +7,8 @@
 
 package youtube.entity.info;
 
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import youtube.entity.info.base.EntityInfo;
 import youtube.entity.info.detail.ChapterList;
 import youtube.entity.info.detail.Location;
+import youtube.entity.info.detail.ThumbnailSet;
 import youtube.util.WebUtils;
 
 /**
@@ -118,14 +121,10 @@ public class VideoInfo extends EntityInfo {
      *
      * @param videoData The json data of the Video.
      */
-    @SuppressWarnings("unchecked")
     public VideoInfo(Map<String, Object> videoData) {
         super(videoData);
         
-        this.videoId = Optional.ofNullable((Map<String, Object>) getData("resourceId"))
-                .map(e -> (String) e.get("videoId")).orElse(metadata.itemId);
-        this.metadata.entityId = videoId;
-        
+        this.videoId = metadata.getEntityId();
         this.url = WebUtils.VIDEO_BASE + videoId;
         
         this.playlistPosition = integerParser.apply(getData("position"));
@@ -140,7 +139,8 @@ public class VideoInfo extends EntityInfo {
         
         this.location = new Location(getDataPart("recordingDetails"));
         this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
-                .orElseGet(() -> thumbnails.values().stream().anyMatch(e -> e.url.contains("_live.")) ? "live" : "none");
+                .orElseGet(() -> Optional.ofNullable(thumbnails).map(LinkedHashMap::values).stream().flatMap(Collection::stream)
+                                         .map(ThumbnailSet.Thumbnail::getUrl).anyMatch(e -> e.contains("_live.")) ? "live" : "none");
     }
     
     /**
@@ -153,17 +153,17 @@ public class VideoInfo extends EntityInfo {
     @SuppressWarnings("unchecked")
     public VideoInfo(String videoId, String title, String date) {
         this(MapUtility.mapOf(
+                new ImmutablePair<>("kind", "youtube#video"),
+                new ImmutablePair<>("id", videoId),
                 new ImmutablePair<>("snippet", MapUtility.mapOf(
                         new ImmutablePair<>("title", title),
-                        new ImmutablePair<>("publishedAt", date),
-                        new ImmutablePair<>("resourceId", MapUtility.mapOf(
-                                new ImmutablePair<>("videoId", videoId)))))));
+                        new ImmutablePair<>("publishedAt", date)))));
     }
     
     /**
-     * The default no-argument constructor for a Video Info.
+     * Creates an empty Video Info.
      */
-    protected VideoInfo() {
+    public VideoInfo() {
         super();
     }
     

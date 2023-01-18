@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import youtube.util.Utils;
 
 /**
- * Defines the Chapter List of a Youtube Video.
+ * Defines the Chapter List of a Video.
  */
 public class ChapterList extends ArrayList<ChapterList.Chapter> {
     
@@ -53,23 +53,23 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
     /**
      * Creates the Chapter List for a Video.
      *
-     * @param description The description of the Video.
-     * @param duration    The duration of the Video.
+     * @param videoDescription The description of the Video.
+     * @param videoDuration    The duration of the Video.
      */
-    public ChapterList(String description, Long duration) {
-        Optional.ofNullable(description).map(StringUtility::splitLines)
+    public ChapterList(String videoDescription, Long videoDuration) {
+        Optional.ofNullable(videoDescription).map(StringUtility::splitLines)
                 .stream().flatMap(Collection::stream)
                 .filter(e -> !e.isEmpty()).filter(e -> e.contains(":"))
                 .filter(e -> e.matches("^.*" + TIMESTAMP_PATTERN.pattern() + ".*$"))
                 .map(Chapter::new)
-                .sorted(Comparator.comparing(o -> o.startTime))
+                .sorted(Comparator.comparing(Chapter::getStartTime))
                 .forEachOrdered(this::add);
         
         if (!isEmpty()) {
-            if (get(0).startTime != 0) {
+            if (get(0).getStartTime() != 0) {
                 clear();
             } else {
-                get(size() - 1).endTime = duration;
+                get(size() - 1).endTime = videoDuration;
                 IntStream.range(0, size()).forEach(i ->
                         get(i).link(ListUtility.getOrNull(this, (i - 1)), ListUtility.getOrNull(this, (i + 1))));
             }
@@ -79,10 +79,17 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
     /**
      * Creates the Chapter List for a Video.
      *
-     * @param description The description of the Video.
+     * @param videoDescription The description of the Video.
      */
-    public ChapterList(String description) {
-        this(description, null);
+    public ChapterList(String videoDescription) {
+        this(videoDescription, null);
+    }
+    
+    /**
+     * Creates an empty Chapter List.
+     */
+    public ChapterList() {
+        super();
     }
     
     
@@ -131,16 +138,34 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
         /**
          * Creates a Chapter.
          *
-         * @param line The description line defining the Chapter.
+         * @param definition The description line defining the Chapter.
          */
-        public Chapter(String line) {
-            Optional.ofNullable(line)
+        public Chapter(String definition) {
+            Optional.ofNullable(definition)
                     .map(CHAPTER_DEFINITION_PATTERN::matcher).filter(Matcher::matches)
                     .ifPresent(chapterDefinitionMatcher -> {
                         this.title = cleanTitle(chapterDefinitionMatcher.group("titlePart1"), chapterDefinitionMatcher.group("titlePart2"));
                         this.timestamp = chapterDefinitionMatcher.group("timestamp");
-                        this.startTime = DateTimeUtility.durationStampToDuration(chapterDefinitionMatcher.group("timestamp")) / 1000L;
+                        this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
                     });
+        }
+        
+        /**
+         * Creates a Chapter.
+         *
+         * @param title          The title of the Chapter.
+         * @param startTimestamp The timestamp of the Chapter.
+         */
+        public Chapter(String title, String startTimestamp) {
+            this.title = title;
+            this.timestamp = startTimestamp;
+            this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
+        }
+        
+        /**
+         * Creates an empty Chapter.
+         */
+        public Chapter() {
         }
         
         
@@ -149,25 +174,24 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
         /**
          * Links a Chapter to the neighboring chapters.
          *
-         * @param previous The previous Chapter, or null.
-         * @param next     The next Chapter, or null.
+         * @param previousChapter The previous Chapter, or null.
+         * @param nextChapter     The next Chapter, or null.
          */
-        private void link(Chapter previous, Chapter next) {
-            this.previous = previous;
-            this.next = next;
-            this.endTime = Optional.ofNullable(next).map(Chapter::getStartTime).orElse(getEndTime());
+        private void link(Chapter previousChapter, Chapter nextChapter) {
+            previous = previousChapter;
+            next = nextChapter;
+            endTime = Optional.ofNullable(next).map(Chapter::getStartTime).orElse(getEndTime());
         }
         
         /**
          * Cleans the title of the Chapter.
          *
-         * @param titlePart1 The first part of the title.
-         * @param titlePart2 The second part of the title.
+         * @param titleParts The title parts.
          * @return The cleaned title.
          */
-        private String cleanTitle(String titlePart1, String titlePart2) {
-            return Utils.cleanVideoTitle((titlePart1 + titlePart2)
-                    .replace(":", "-"));
+        private String cleanTitle(String... titleParts) {
+            return Utils.cleanVideoTitle(
+                    String.join("", titleParts).replace(":", "-"));
         }
         
         /**

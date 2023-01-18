@@ -42,6 +42,13 @@ public class TopicList extends ArrayList<TopicList.Topic> {
                 .forEachOrdered(this::add);
     }
     
+    /**
+     * Creates an empty Topic List.
+     */
+    public TopicList() {
+        super();
+    }
+    
     
     //Inner Classes
     
@@ -67,6 +74,12 @@ public class TopicList extends ArrayList<TopicList.Topic> {
          */
         public Topic(String url) {
             this.url = url;
+        }
+        
+        /**
+         * Creates an empty Topic.
+         */
+        public Topic() {
         }
         
         

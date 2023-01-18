@@ -39,22 +39,22 @@ public class Video extends Entity<VideoInfo> {
     /**
      * The title of the Video.
      */
-    public String title;
+    protected String title;
     
     /**
      * The output directory of the Video.
      */
-    public File outputDir;
+    protected File outputDir;
     
     /**
      * The download file of the Video.
      */
-    public File download;
+    protected File download;
     
     /**
      * The output file of the Video.
      */
-    public File output;
+    protected File output;
     
     
     //Constructors
@@ -123,10 +123,10 @@ public class Video extends Entity<VideoInfo> {
     /**
      * Updates the output file of the Video.
      *
-     * @param output The output file.
+     * @param outputFile The output file.
      */
-    public void updateOutput(File output) {
-        this.output = output;
+    public void updateOutput(File outputFile) {
+        output = outputFile;
         updateOutputDir(output.getParentFile());
         updateTitle(FileUtils.getFileTitle(output.getName()));
     }

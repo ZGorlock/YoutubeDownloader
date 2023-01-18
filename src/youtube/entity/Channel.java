@@ -16,7 +16,6 @@ import youtube.channel.state.ChannelState;
 import youtube.entity.base.Entity;
 import youtube.entity.base.EntityType;
 import youtube.entity.info.ChannelInfo;
-import youtube.entity.info.base.EntityInfo;
 import youtube.util.ApiUtils;
 
 /**
@@ -37,12 +36,12 @@ public class Channel extends Entity<ChannelInfo> {
     /**
      * The Channel Config associated with the Channel.
      */
-    public final ChannelConfig config;
+    protected final ChannelConfig config;
     
     /**
      * The Channel State of the Channel.
      */
-    public final ChannelState state;
+    protected final ChannelState state;
     
     
     //Constructors
@@ -83,9 +82,7 @@ public class Channel extends Entity<ChannelInfo> {
     public String toString() {
         return Optional.ofNullable(getConfig())
                 .map(ChannelConfig::toString)
-                .orElseGet(() -> Optional.ofNullable(getInfoQuietly())
-                        .map(EntityInfo::toString)
-                        .orElseGet(() -> this.getClass().getSimpleName()));
+                .orElseGet(super::toString);
     }
     
     

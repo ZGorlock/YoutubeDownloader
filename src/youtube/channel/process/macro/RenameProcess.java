@@ -24,6 +24,8 @@ import youtube.config.Color;
 import youtube.entity.Channel;
 import youtube.entity.Video;
 import youtube.entity.info.VideoInfo;
+import youtube.entity.info.base.EntityInfo;
+import youtube.entity.info.base.EntityMetadata;
 
 /**
  * Provides Channel Process macros to help with renaming.
@@ -596,13 +598,13 @@ public class RenameProcess {
     private static String expandTitle(String title, VideoInfo videoInfo, Integer index, String dateFormat) {
         return Stream.of(
                         Map.entry("i", Optional.ofNullable(index)),
-                        Map.entry("n", Optional.ofNullable(videoInfo.playlistPosition)),
-                        Map.entry("p", Optional.ofNullable(videoInfo.metadata).map(e -> e.playlist).map(e -> e.title)),
-                        Map.entry("c", Optional.ofNullable(videoInfo.metadata).map(e -> e.channel).map(e -> e.title)),
-                        Map.entry("v?Id", Optional.ofNullable(videoInfo.metadata).map(e -> e.entityId)),
-                        Map.entry("pId", Optional.ofNullable(videoInfo.metadata).map(e -> e.playlistId)),
-                        Map.entry("cId", Optional.ofNullable(videoInfo.metadata).map(e -> e.channelId)),
-                        Map.entry("d", Optional.ofNullable(videoInfo.date).map(e -> e.format(
+                        Map.entry("n", Optional.ofNullable(videoInfo).map(VideoInfo::getPlaylistPosition)),
+                        Map.entry("p", Optional.ofNullable(videoInfo).map(EntityInfo::getMetadata).map(EntityMetadata::getPlaylist).map(EntityInfo::getTitle)),
+                        Map.entry("c", Optional.ofNullable(videoInfo).map(EntityInfo::getMetadata).map(EntityMetadata::getChannel).map(EntityInfo::getTitle)),
+                        Map.entry("v?Id", Optional.ofNullable(videoInfo).map(EntityInfo::getMetadata).map(EntityMetadata::getEntityId)),
+                        Map.entry("pId", Optional.ofNullable(videoInfo).map(EntityInfo::getMetadata).map(EntityMetadata::getPlaylistId)),
+                        Map.entry("cId", Optional.ofNullable(videoInfo).map(EntityInfo::getMetadata).map(EntityMetadata::getChannelId)),
+                        Map.entry("d", Optional.ofNullable(videoInfo).map(EntityInfo::getDate).map(e -> e.format(
                                 DateTimeFormatter.ofPattern(Optional.ofNullable(dateFormat).orElse(DEFAULT_DATE_FORMAT))))))
                 .reduce(Map.entry(title, Optional.empty()),
                         (s, e) -> Map.entry(

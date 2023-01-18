@@ -197,9 +197,9 @@ public abstract class EntityInfo {
     }
     
     /**
-     * The default no-argument constructor for an Entity Info.
+     * Creates an empty Entity Info.
      */
-    protected EntityInfo() {
+    public EntityInfo() {
     }
     
     
@@ -355,7 +355,7 @@ public abstract class EntityInfo {
      *
      * @return The Statistics of the Entity.
      */
-    public Statistics getStatistics() {
+    public Statistics getStats() {
         return stats;
     }
     

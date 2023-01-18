@@ -39,8 +39,15 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
     public Statistics(Map<String, Object> statisticsData) {
         Optional.ofNullable(statisticsData)
                 .map(Map::entrySet).stream().flatMap(Collection::stream)
-                .map(e -> new Stat(e.getKey(), e.getValue()))
-                .forEachOrdered(stat -> put(stat.name, stat));
+                .map(Stat::new)
+                .forEachOrdered(stat -> put(stat.getName(), stat));
+    }
+    
+    /**
+     * Creates an empty Statistics.
+     */
+    public Statistics() {
+        super();
     }
     
     
@@ -69,12 +76,31 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
         /**
          * Creates a Stat.
          *
+         * @param statData The json data of the Stat.
+         */
+        public Stat(Map.Entry<String, Object> statData) {
+            Optional.ofNullable(statData)
+                    .ifPresent(statDetails -> {
+                        this.name = statDetails.getKey();
+                        this.count = EntityInfo.integerParser.apply(statDetails.getValue());
+                    });
+        }
+        
+        /**
+         * Creates a Stat.
+         *
          * @param name  The name of the Stat.
          * @param count The count of the Stat.
          */
         public Stat(String name, Object count) {
             this.name = name;
             this.count = EntityInfo.integerParser.apply(count);
+        }
+        
+        /**
+         * Creates an empty Stat.
+         */
+        public Stat() {
         }
         
         
@@ -87,7 +113,7 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          */
         @Override
         public String toString() {
-            return String.valueOf(getCount());
+            return getName() + ": " + getCount();
         }
         
         

@@ -134,7 +134,7 @@ public class ChannelConfig extends ChannelEntry {
     }
     
     /**
-     * The default no-argument constructor for a Channel Config.
+     * Creates an empty Channel Config.
      */
     public ChannelConfig() {
         super();

@@ -160,12 +160,12 @@ public class ChannelEntry {
     /**
      * The json data of the Channel Entry configuration.
      */
-    protected JSONObject channelEntryJson;
+    public JSONObject channelEntryJson;
     
     /**
      * The parent of the Channel Entry.
      */
-    protected ChannelGroup parent = null;
+    public ChannelGroup parent = null;
     
     
     //Functions
@@ -257,7 +257,7 @@ public class ChannelEntry {
     }
     
     /**
-     * The default no-argument constructor for a Channel Entry.
+     * Creates an empty Channel Entry.
      */
     public ChannelEntry() {
     }

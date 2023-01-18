@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import youtube.entity.info.base.EntityInfo;
 
 /**
- * Defines the Location of a Youtube Video.
+ * Defines the Location of a Video.
  */
 public class Location {
     
@@ -68,6 +68,27 @@ public class Location {
                     this.longitude = EntityInfo.numberParser.apply(coordinates.get("longitude"));
                     this.altitude = EntityInfo.numberParser.apply(coordinates.get("altitude"));
                 });
+    }
+    
+    /**
+     * Creates the Location for a Video.
+     *
+     * @param description The description of the Location.
+     * @param latitude    The latitude of the Location.
+     * @param longitude   The longitude of the Location.
+     * @param altitude    The altitude of the Location.
+     */
+    public Location(String description, Double latitude, Double longitude, Double altitude) {
+        this.description = description;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+    }
+    
+    /**
+     * Creates an empty Location.
+     */
+    public Location() {
     }
     
     

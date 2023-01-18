@@ -87,7 +87,7 @@ public class ChannelProcesses_Sample {
                     final VideoInfo videoInfo = new VideoInfo("OZc6vcGjknI", "Medical Detectives (Forensic Files) - Series Premiere - The Disappearance of Helle Crafts", "2015-01-23 12:15:00");
                     final HashMap<String, Video> tmp = new LinkedHashMap<>(videoMap);
                     videoMap.clear();
-                    videoMap.put(videoInfo.videoId, new Video(videoInfo));
+                    videoMap.put(videoInfo.getVideoId(), new Video(videoInfo));
                     videoMap.putAll(tmp);
                 }
                 RenameProcess.replaceIgnoreCase(channel, videoMap,

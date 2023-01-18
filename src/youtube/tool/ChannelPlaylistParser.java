@@ -139,14 +139,14 @@ public class ChannelPlaylistParser {
                         .map(e -> skipPlaylists.stream().noneMatch(e::equalsIgnoreCase)).orElse(false))
                 .map((UncheckedFunction<Playlist, ChannelConfig>) playlist ->
                         new ChannelConfig(MapUtility.mapOf(List.of(
-                                new ImmutablePair<>("key", (playlist.getConfig().key + "_P")),
-                                new ImmutablePair<>("playlistId", playlist.getInfo().playlistId),
+                                new ImmutablePair<>("key", (playlist.getConfig().getKey() + "_P")),
+                                new ImmutablePair<>("playlistId", playlist.getInfo().getPlaylistId()),
                                 new ImmutablePair<>("active", true),
                                 new ImmutablePair<>("saveAsMp3", playlist.getConfig().isSaveAsMp3()),
                                 new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || playlist.getConfig().isSavePlaylist())),
                                 new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && playlist.getConfig().isKeepClean())),
-                                new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().title) : null),
-                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().title + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null)
+                                new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().getTitle()) : null),
+                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().getTitle() + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null)
                         )), playlist.getConfig().getParent()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(),
                         playlistChannels -> playlistChannels.stream()

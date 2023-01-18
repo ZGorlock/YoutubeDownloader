@@ -8,6 +8,7 @@ package youtube.entity.base;
 
 import java.util.Optional;
 
+import commons.object.string.EntityStringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.ChannelConfig;
@@ -35,17 +36,17 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
     /**
      * The Entity Type of the Entity.
      */
-    public final EntityType type;
+    protected final EntityType type;
     
     /**
      * The Entity Info associated with the Entity.
      */
-    public T info;
+    protected T info;
     
     /**
      * The parent Channel of the Entity.
      */
-    public final Channel parent;
+    protected final Channel parent;
     
     
     //Constructors
@@ -83,11 +84,11 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
      */
     @Override
     public String toString() {
-        return Optional.ofNullable(getInfoQuietly())
+        return Optional.ofNullable(getInfo(true))
                 .map(EntityInfo::toString)
                 .orElseGet(() -> Optional.ofNullable(getType())
                         .map(EntityType::getName)
-                        .orElseGet(() -> this.getClass().getSimpleName()));
+                        .orElseGet(() -> EntityStringUtility.simpleClassString(this)));
     }
     
     
@@ -115,12 +116,13 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
     }
     
     /**
-     * Returns the Entity Info associated with the Entity, without checking if it exists.
+     * Returns the Entity Info associated with the Entity.
      *
-     * @return The Entity Info, or null if it does not exist.
+     * @param immediate Whether to return the Entity Info without additional processing or validation.
+     * @return The Entity Info.
      */
-    protected final T getInfoQuietly() {
-        return info;
+    protected final T getInfo(boolean immediate) {
+        return immediate ? info : getInfo();
     }
     
     /**
@@ -141,7 +143,7 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
     @Override
     public ChannelConfig getConfig() {
         return Optional.ofNullable(getParent())
-                .map(Channel::getConfig)
+                .map(Entity::getConfig)
                 .orElse(null);
     }
     
@@ -153,7 +155,7 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
     @Override
     public ChannelState getState() {
         return Optional.ofNullable(getParent())
-                .map(Channel::getState)
+                .map(Entity::getState)
                 .orElse(null);
     }
     

@@ -47,7 +47,7 @@ public class ChannelGroup extends ChannelEntry {
     /**
      * The children of the Channel Group.
      */
-    protected List<ChannelEntry> children = new ArrayList<>();
+    public List<ChannelEntry> children = new ArrayList<>();
     
     
     //Constructors
@@ -74,7 +74,7 @@ public class ChannelGroup extends ChannelEntry {
     }
     
     /**
-     * The default no-argument constructor for a Channel Group.
+     * Creates an empty Channel Group.
      */
     public ChannelGroup() {
         super();
@@ -150,7 +150,7 @@ public class ChannelGroup extends ChannelEntry {
      * @return The children of the Channel Group.
      */
     public List<ChannelEntry> getChildren() {
-        return new ArrayList<>(children);
+        return children;
     }
     
 }

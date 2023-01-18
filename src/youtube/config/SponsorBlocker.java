@@ -259,7 +259,7 @@ public class SponsorBlocker {
         }
         
         /**
-         * The default no-argument constructor for a SponsorBlock Config.
+         * Creates an empty SponsorBlock Config.
          */
         public SponsorBlockConfig() {
         }
