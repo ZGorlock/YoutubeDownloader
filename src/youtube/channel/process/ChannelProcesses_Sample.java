@@ -599,7 +599,7 @@ public class ChannelProcesses_Sample {
             //PSYTRANCE
             
             case "SPEEDSOUND":
-                channel.getState().blocked.add("FhOSu5fq5eE");
+                channel.getState().getBlocked().add("FhOSu5fq5eE");
                 break;
             
             

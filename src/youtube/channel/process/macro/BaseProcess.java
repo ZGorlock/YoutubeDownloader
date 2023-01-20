@@ -88,7 +88,7 @@ public class BaseProcess {
      */
     public static void filter(Channel channel, Map<String, Video> videoMap, Predicate<Video> condition) {
         forEach(channel, videoMap, (id, video) ->
-                Optional.ofNullable(channel.getState().blocked)
+                Optional.ofNullable(channel.getState().getBlocked())
                         .filter(e -> condition.test(video))
                         .ifPresent(e -> e.add(id)));
     }

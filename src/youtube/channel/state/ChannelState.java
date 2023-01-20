@@ -63,62 +63,62 @@ public class ChannelState {
     /**
      * The name of the Channel.
      */
-    public String channelName;
+    private final String channelName;
     
     /**
      * The ids of the videos queued for download for the Channel.
      */
-    public List<String> queued;
+    private final List<String> queued;
     
     /**
      * The ids of the saved videos of the Channel.
      */
-    public List<String> saved;
+    private final List<String> saved;
     
     /**
      * The ids of the blocked videos of the Channel.
      */
-    public List<String> blocked;
+    private final List<String> blocked;
     
     /**
      * The key store of the Channel.
      */
-    public Map<String, String> keyStore;
+    private final Map<String, String> keyStore;
     
     /**
      * The internal directory to store the Channel State.
      */
-    public File stateLocation;
+    private final File stateLocation;
     
     /**
      * The internal data file for the Channel.
      */
-    public File dataFile;
+    private final File dataFile;
     
     /**
      * The internal call log file for the Channel.
      */
-    public File callLogFile;
+    private final File callLogFile;
     
     /**
      * The internal file holding the saved videos for the Channel.
      */
-    public File saveFile;
+    private final File saveFile;
     
     /**
      * The internal file holding the videos queued for download for the Channel.
      */
-    public File queueFile;
+    private final File queueFile;
     
     /**
      * The internal file holding the blocked videos for the Channel.
      */
-    public File blockFile;
+    private final File blockFile;
     
     /**
      * A flag indicating whether there was an error processing the Channel this run or not.
      */
-    public AtomicBoolean error;
+    private final AtomicBoolean errorFlag;
     
     
     //Constructors
@@ -144,7 +144,7 @@ public class ChannelState {
         this.queueFile = new File(this.stateLocation, (channelName + "-queue" + '.' + Utils.LIST_FILE_FORMAT));
         this.blockFile = new File(this.stateLocation, (channelName + "-blocked" + '.' + Utils.LIST_FILE_FORMAT));
         
-        this.error = new AtomicBoolean(false);
+        this.errorFlag = new AtomicBoolean(false);
         
         load();
     }
@@ -158,15 +158,16 @@ public class ChannelState {
      * @throws RuntimeException When there is an error loading the state.
      */
     private void load() {
+        Stream.of(getQueued(), getSaved(), getBlocked()).forEach(List::clear);
+        cleanupLegacyState();
+        
         try {
-            cleanupLegacyState();
-            
-            queued = FileUtils.readLines(queueFile);
-            saved = FileUtils.readLines(saveFile);
-            blocked = FileUtils.readLines(blockFile);
+            getQueued().addAll(FileUtils.readLines(getQueueFile()));
+            getSaved().addAll(FileUtils.readLines(getSaveFile()));
+            getBlocked().addAll(FileUtils.readLines(getBlockFile()));
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to load the state of Channel: ") + Color.channel(channelName));
+            System.out.println(Color.bad("Failed to load the state of Channel: ") + Color.channel(getChannelName()));
             throw new RuntimeException(e);
         }
     }
@@ -177,23 +178,23 @@ public class ChannelState {
      * @throws RuntimeException When there is an error saving the state.
      */
     public void save() {
-        Stream.of(queued, saved, blocked).forEach(list -> {
+        Stream.of(getQueued(), getSaved(), getBlocked()).forEach(list -> {
             list.removeIf(StringUtility::isNullOrBlank);
             ListUtility.removeDuplicates(list);
         });
         
-        queued.removeAll(blocked);
-        queued.removeAll(saved);
-        saved.removeAll(blocked);
-        blocked.removeAll(saved);
+        getQueued().removeAll(getBlocked());
+        getQueued().removeAll(getSaved());
+        getSaved().removeAll(getBlocked());
+        getBlocked().removeAll(getSaved());
         
         try {
-            FileUtils.writeLines(queueFile, queued);
-            FileUtils.writeLines(saveFile, saved);
-            FileUtils.writeLines(blockFile, blocked);
+            FileUtils.writeLines(getQueueFile(), getQueued());
+            FileUtils.writeLines(getSaveFile(), getSaved());
+            FileUtils.writeLines(getBlockFile(), getBlocked());
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to save the state of Channel: ") + Color.channel(channelName));
+            System.out.println(Color.bad("Failed to save the state of Channel: ") + Color.channel(getChannelName()));
             throw new RuntimeException(e);
         }
     }
@@ -204,10 +205,10 @@ public class ChannelState {
      * @return The list of data files.
      */
     public List<File> getDataFiles() {
-        return Optional.ofNullable(stateLocation)
+        return Optional.ofNullable(getStateLocation())
                 .map((UncheckedFunction<File, List<File>>) FileUtils::getFiles)
                 .map(e -> e.stream()
-                        .filter(e2 -> e2.getName().startsWith(dataFile.getName().replace(('.' + Utils.DATA_FILE_FORMAT), "")))
+                        .filter(e2 -> e2.getName().startsWith(getDataFile().getName().replace(('.' + Utils.DATA_FILE_FORMAT), "")))
                         .collect(Collectors.toList()))
                 .orElse(new ArrayList<>());
     }
@@ -219,8 +220,8 @@ public class ChannelState {
      * @return The data file.
      */
     public File getDataFile(String type) {
-        return new File(stateLocation, (dataFile.getName()
-                .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type))));
+        return new File(getStateLocation(), getDataFile().getName()
+                .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type)));
     }
     
     /**
@@ -243,18 +244,16 @@ public class ChannelState {
      */
     public void cleanupData() throws Exception {
         if (!Configurator.Config.preventChannelFetch) {
-            Stream.of(getDataFiles(), List.of(callLogFile)).flatMap(Collection::stream)
+            Stream.of(getDataFiles(), List.of(getCallLogFile())).flatMap(Collection::stream)
                     .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
         }
     }
     
     /**
      * Cleans up any legacy state files.
-     *
-     * @throws IOException When there is an error cleaning up legacy state files.
      */
-    private void cleanupLegacyState() throws IOException {
-        Stream.of(dataFile, saveFile, queueFile, blockFile)
+    private void cleanupLegacyState() {
+        Stream.of(getDataFile(), getSaveFile(), getQueueFile(), getBlockFile())
                 .forEach((CheckedConsumer<File>) stateFile -> {
                     final File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), stateFile.getParentFile().getName()), stateFile.getName());
                     if (oldFile.exists()) {
@@ -265,9 +264,9 @@ public class ChannelState {
                         }
                     }
                 });
-        Stream.of(dataFile, callLogFile)
+        Stream.of(getDataFile(), getCallLogFile())
                 .map(e -> e.getName().replaceAll("\\..+$", ""))
-                .map((UncheckedFunction<String, List<File>>) e -> FileUtils.getFiles(stateLocation).stream()
+                .map((UncheckedFunction<String, List<File>>) e -> FileUtils.getFiles(getStateLocation()).stream()
                         .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith('.' + Utils.LIST_FILE_FORMAT))
                         .collect(Collectors.toList()))
                 .flatMap(Collection::stream)
@@ -281,7 +280,118 @@ public class ChannelState {
      */
     @Override
     public String toString() {
+        return getChannelName();
+    }
+    
+    
+    //Getters
+    
+    /**
+     * Returns the name of the Channel.
+     *
+     * @return The name of the Channel.
+     */
+    public String getChannelName() {
         return channelName;
+    }
+    
+    /**
+     * Returns the ids of the videos queued for download for the Channel.
+     *
+     * @return The ids of the videos queued for download for the Channel.
+     */
+    public List<String> getQueued() {
+        return queued;
+    }
+    
+    /**
+     * Returns the ids of the saved videos of the Channel.
+     *
+     * @return The ids of the saved videos of the Channel.
+     */
+    public List<String> getSaved() {
+        return saved;
+    }
+    
+    /**
+     * Returns the ids of the blocked videos of the Channel.
+     *
+     * @return The ids of the blocked videos of the Channel.
+     */
+    public List<String> getBlocked() {
+        return blocked;
+    }
+    
+    /**
+     * Returns the key store of the Channel.
+     *
+     * @return The key store of the Channel.
+     */
+    public Map<String, String> getKeyStore() {
+        return keyStore;
+    }
+    
+    /**
+     * Returns the internal directory to store the Channel State.
+     *
+     * @return The internal directory to store the Channel State.
+     */
+    public File getStateLocation() {
+        return stateLocation;
+    }
+    
+    /**
+     * Returns the internal data file for the Channel.
+     *
+     * @return The internal data file for the Channel.
+     */
+    public File getDataFile() {
+        return dataFile;
+    }
+    
+    /**
+     * Returns the internal call log file for the Channel.
+     *
+     * @return The internal call log file for the Channel.
+     */
+    public File getCallLogFile() {
+        return callLogFile;
+    }
+    
+    /**
+     * Returns the internal file holding the saved videos for the Channel.
+     *
+     * @return The internal file holding the saved videos for the Channel.
+     */
+    public File getSaveFile() {
+        return saveFile;
+    }
+    
+    /**
+     * Returns the internal file holding the videos queued for download for the Channel.
+     *
+     * @return The internal file holding the videos queued for download for the Channel.
+     */
+    public File getQueueFile() {
+        return queueFile;
+    }
+    
+    /**
+     * Returns the internal file holding the blocked videos for the Channel.
+     *
+     * @return The internal file holding the blocked videos for the Channel.
+     */
+    public File getBlockFile() {
+        return blockFile;
+    }
+    
+    /**
+     * Returns a flag indicating whether there was an error processing the Channel this run or not.
+     *
+     * @return A flag indicating whether there was an error processing the Channel this run or not.
+     */
+    public AtomicBoolean getErrorFlag() {
+        return errorFlag;
     }
     
 }

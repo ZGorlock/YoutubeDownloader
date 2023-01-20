@@ -208,9 +208,9 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        channel.getState().queued.clear();
+        channel.getState().getQueued().clear();
         if (Configurator.Config.retryPreviousFailures) {
-            channel.getState().blocked.clear();
+            channel.getState().getBlocked().clear();
         }
         
         ChannelProcesses.performSpecialPreConditions(channel, videoMap);
@@ -220,21 +220,21 @@ public class YoutubeChannelDownloader {
                         System.out.println(Color.bad("The title: ") + Color.videoName(e.getValue().get(0).getTitle()) + Color.bad(" appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
         
         videoMap.forEach((videoId, video) -> {
-            channel.getState().saved.remove(videoId);
+            channel.getState().getSaved().remove(videoId);
             
             if (video.getOutput().exists() && FileUtils.getCanonicalFile(video.getOutput()).getAbsolutePath().equals(video.getOutput().getAbsolutePath())) {
-                channel.getState().saved.add(videoId);
-                channel.getState().blocked.remove(videoId);
-                channel.getState().keyStore.put(videoId, PathUtils.localPath(video.getOutput()));
+                channel.getState().getSaved().add(videoId);
+                channel.getState().getBlocked().remove(videoId);
+                channel.getState().getKeyStore().put(videoId, PathUtils.localPath(video.getOutput()));
                 
-            } else if (!channel.getState().blocked.contains(videoId)) {
-                File oldOutput = Optional.ofNullable(channel.getState().keyStore.get(videoId))
+            } else if (!channel.getState().getBlocked().contains(videoId)) {
+                File oldOutput = Optional.ofNullable(channel.getState().getKeyStore().get(videoId))
                         .map(File::new).filter(File::exists)
                         .map(FileUtils::getCanonicalFile).filter(File::exists)
                         .orElseGet(() -> Utils.findVideoFile(video.getOutput()));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
-                    channel.getState().queued.add(videoId);
+                    channel.getState().getQueued().add(videoId);
                     
                 } else {
                     File newOutput = new File(video.getConfig().getOutputFolder(), video.getOutput().getName()
@@ -260,8 +260,8 @@ public class YoutubeChannelDownloader {
                         video.updateOutput(oldOutput);
                     }
                     
-                    channel.getState().saved.add(videoId);
-                    channel.getState().keyStore.replace(videoId, PathUtils.localPath(video.getOutput()));
+                    channel.getState().getSaved().add(videoId);
+                    channel.getState().getKeyStore().replace(videoId, PathUtils.localPath(video.getOutput()));
                 }
             }
         });
@@ -284,11 +284,11 @@ public class YoutubeChannelDownloader {
             return false;
         }
         
-        if (!channel.getState().queued.isEmpty()) {
-            System.out.println(Color.number(String.valueOf(channel.getState().queued.size())) + Color.base(" in Queue..."));
+        if (!channel.getState().getQueued().isEmpty()) {
+            System.out.println(Color.number(String.valueOf(channel.getState().getQueued().size())) + Color.base(" in Queue..."));
         }
         
-        List<String> working = new ArrayList<>(channel.getState().queued);
+        List<String> working = new ArrayList<>(channel.getState().getQueued());
         for (int i = 0; i < working.size(); i++) {
             String videoId = working.get(i);
             Video video = videoMap.get(videoId);
@@ -303,8 +303,8 @@ public class YoutubeChannelDownloader {
             DownloadUtils.DownloadResponse response = DownloadUtils.downloadYoutubeVideo(video);
             switch (response.status) {
                 case SUCCESS:
-                    channel.getState().saved.add(videoId);
-                    channel.getState().keyStore.put(videoId, PathUtils.localPath(video.getOutput()));
+                    channel.getState().getSaved().add(videoId);
+                    channel.getState().getKeyStore().put(videoId, PathUtils.localPath(video.getOutput()));
                     
                     if (channel.getConfig().isSaveAsMp3()) {
                         Stats.totalAudioDownloads.incrementAndGet();
@@ -316,7 +316,7 @@ public class YoutubeChannelDownloader {
                     break;
                 
                 case ERROR:
-                    channel.getState().blocked.add(videoId);
+                    channel.getState().getBlocked().add(videoId);
                 case FAILURE:
                     if (channel.getConfig().isSaveAsMp3()) {
                         Stats.totalAudioDownloadFailures.incrementAndGet();
@@ -327,7 +327,7 @@ public class YoutubeChannelDownloader {
             }
             System.out.println(Utils.INDENT + response.printedResponse());
             
-            channel.getState().queued.remove(videoId);
+            channel.getState().getQueued().remove(videoId);
             channel.getState().save();
         }
         return true;
@@ -353,7 +353,7 @@ public class YoutubeChannelDownloader {
         
         List<String> playlist = new ArrayList<>();
         for (Map.Entry<String, Video> video : videoMap.entrySet()) {
-            if (channel.getState().saved.contains(video.getKey())) {
+            if (channel.getState().getSaved().contains(video.getKey())) {
                 playlist.add(PathUtils.localPath(video.getValue().getOutput()).replace(playlistPath, ""));
             }
         }
@@ -362,7 +362,7 @@ public class YoutubeChannelDownloader {
             Collections.reverse(playlist);
         }
         
-        if (!channel.getState().error.get() && !playlist.equals(existingPlaylist)) {
+        if (!channel.getState().getErrorFlag().get() && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
                 System.out.println(Color.base("Updating playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()));
                 FileUtils.writeLines(channel.getConfig().getPlaylistFile(), playlist);
@@ -387,11 +387,11 @@ public class YoutubeChannelDownloader {
         
         List<String> saved = Channels.getChannels().stream()
                 .filter(e -> e.getConfig().getKey().matches(channel.getConfig().getKey() + "(?:_P\\d+)?"))
-                .flatMap(e -> e.getState().saved.stream().map(save -> e.getState().keyStore.get(save)))
+                .flatMap(e -> e.getState().getSaved().stream().map(save -> e.getState().getKeyStore().get(save)))
                 .map(PathUtils::localPath)
                 .distinct().collect(Collectors.toList());
         
-        if (!channel.getState().error.get() && channel.getConfig().isKeepClean()) {
+        if (!channel.getState().getErrorFlag().get() && channel.getConfig().isKeepClean()) {
             
             List<File> videos = FileUtils.getFiles(channel.getConfig().getOutputFolder());
             for (File video : videos) {

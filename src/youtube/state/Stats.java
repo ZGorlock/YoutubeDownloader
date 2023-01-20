@@ -142,8 +142,8 @@ public final class Stats {
      */
     private static void calculateData() {
         Channels.getChannels().stream()
-                .flatMap(channel -> channel.getState().saved.stream()
-                        .map(saved -> channel.getState().keyStore.get(saved)))
+                .flatMap(channel -> channel.getState().getSaved().stream()
+                        .map(saved -> channel.getState().getKeyStore().get(saved)))
                 .filter(Objects::nonNull).distinct()
                 .map(File::new).filter(File::exists)
                 .forEach(file -> {

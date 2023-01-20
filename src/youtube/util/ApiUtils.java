@@ -802,7 +802,7 @@ public final class ApiUtils {
                     Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
                     Stats.totalApiFailures.addAndGet(error.get() ? 1 : 0);
                     if (channelState != null) {
-                        FileUtils.writeStringToFile(channelState.callLogFile,
+                        FileUtils.writeStringToFile(channelState.getCallLogFile(),
                                 (StringUtility.padLeft(String.valueOf(response.get().length()), 8) + " bytes " +
                                         (error.get() ? "=XXX=" : "=====") + ' ' + request.getURI() + System.lineSeparator()), true);
                     }
@@ -895,7 +895,7 @@ public final class ApiUtils {
                                 break;
                         }
                         if (channelState != null) {
-                            channelState.error.set(true);
+                            channelState.getErrorFlag().set(true);
                         }
                         throw new RuntimeException("Youtube Data API responded with error code: " + errorCode +
                                 (response.contains("\"reason\":") ? (" (" + response.replaceAll("(?s)^.*\"reason\": \"([^\"]+)\",.*$", "$1") + ")") : ""));
@@ -917,7 +917,7 @@ public final class ApiUtils {
                             (Map<String, Object>) new JSONParser().parse(e))
                     .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
                     .orElseThrow(() -> {
-                        if ((channelState != null) && channelState.error.compareAndSet(false, true)) {
+                        if ((channelState != null) && channelState.getErrorFlag().compareAndSet(false, true)) {
                             System.out.println(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState) + Color.bad("; Skipping this run"));
                         }
                         throw new RuntimeException("Youtube Data API responded with invalid data");
