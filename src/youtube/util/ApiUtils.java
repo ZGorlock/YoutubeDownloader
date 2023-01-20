@@ -169,6 +169,36 @@ public final class ApiUtils {
             this.responseParts = responseParts.stream().distinct().collect(Collectors.toList());
         }
         
+        
+        //Getters
+        
+        /**
+         * Returns the name of the Endpoint.
+         *
+         * @return The name of the Endpoint.
+         */
+        public String getName() {
+            return name;
+        }
+        
+        /**
+         * Returns the Category of the Endpoint.
+         *
+         * @return The Category of the Endpoint.
+         */
+        public EndpointCategory getCategory() {
+            return category;
+        }
+        
+        /**
+         * Returns the response parts to retrieve from the Endpoint.
+         *
+         * @return The response parts to retrieve from the Endpoint.
+         */
+        public List<ResponsePart> getResponseParts() {
+            return responseParts;
+        }
+        
     }
     
     /**
@@ -221,7 +251,28 @@ public final class ApiUtils {
          */
         @SuppressWarnings("unchecked")
         public <T extends EntityInfo> T parse(Map<String, Object> entityData) {
-            return (T) entityParser.apply(entityData);
+            return (T) Optional.ofNullable(entityData).map(getEntityParser()).orElse(null);
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the Endpoint used to fetch the Entity.
+         *
+         * @return The Endpoint used to fetch the Entity.
+         */
+        public Endpoint getEndpoint() {
+            return endpoint;
+        }
+        
+        /**
+         * Returns the function that parses the Entity.
+         *
+         * @return The function that parses the Entity.
+         */
+        public Function<Map<String, Object>, EntityInfo> getEntityParser() {
+            return entityParser;
         }
         
     }
@@ -262,6 +313,18 @@ public final class ApiUtils {
          */
         ResponsePart() {
             this.name = StringUtility.toCamelCase(name());
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the name of the Response Part.
+         *
+         * @return The name of the Response Part.
+         */
+        public String getName() {
+            return name;
         }
         
     }
@@ -626,7 +689,9 @@ public final class ApiUtils {
          * @throws Exception When there is an error.
          */
         private static Map<String, Object> fetchEntityData(ApiEntity entityType, String id, Map<String, String> parameters, ChannelState channelState) throws Exception {
-            return Optional.ofNullable(callApi(entityType.endpoint, parameters, channelState))
+            return Optional.ofNullable(entityType).map(ApiEntity::getEndpoint)
+                    .map((UncheckedFunction<Endpoint, String>) e ->
+                            callApi(e, parameters, channelState))
                     .map(e -> parseResponse(e, channelState))
                     .map(e -> ListUtility.getOrNull(e, 0))
                     .orElse(Map.of());
@@ -686,7 +751,7 @@ public final class ApiUtils {
          * @return The list of cached pages, or null if it could not be loaded.
          */
         private static List<String> loadPagedDataCache(Endpoint endpoint, ChannelState channelState) {
-            return Optional.ofNullable(channelState).map(e -> e.getDataFile(endpoint.name))
+            return Optional.ofNullable(channelState).map(e -> e.getDataFile(endpoint.getName()))
                     .filter(File::exists).map((CheckedFunction<File, String>) FileUtils::readFileToString)
                     .filter(e -> !StringUtility.isNullOrBlank(e))
                     .map(e -> e.split("(?:^|\r?\n)[\\[,\\]](?:\r?\n|$)"))
@@ -705,7 +770,7 @@ public final class ApiUtils {
          * @param channelState The Channel State of the calling Channel.
          */
         private static void savePagedDataCache(List<String> pages, Endpoint endpoint, ChannelState channelState) {
-            Optional.ofNullable(channelState).map(e -> e.getDataFile(endpoint.name))
+            Optional.ofNullable(channelState).map(e -> e.getDataFile(endpoint.getName()))
                     .ifPresent((CheckedConsumer<File>) dataFile -> FileUtils.writeStringToFile(dataFile,
                             pages.stream().collect(Collectors.joining(
                                     (System.lineSeparator() + "," + System.lineSeparator()),
@@ -733,8 +798,8 @@ public final class ApiUtils {
                     error.set(httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
                     
                     Stats.totalApiCalls.incrementAndGet();
-                    Stats.totalApiEntityCalls.addAndGet((endpoint.category == EndpointCategory.ENTITY) ? 1 : 0);
-                    Stats.totalApiDataCalls.addAndGet((endpoint.category == EndpointCategory.DATA) ? 1 : 0);
+                    Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
+                    Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
                     Stats.totalApiFailures.addAndGet(error.get() ? 1 : 0);
                     if (channelState != null) {
                         FileUtils.writeStringToFile(channelState.callLogFile,
@@ -760,7 +825,7 @@ public final class ApiUtils {
          * @throws Exception When there is an error building the request.
          */
         private static HttpGet buildApiRequest(Endpoint endpoint, Map<String, String> parameters) throws Exception {
-            parameters.putIfAbsent("part", endpoint.responseParts.stream().map(e -> e.name).collect(Collectors.joining(",")));
+            parameters.putIfAbsent("part", endpoint.getResponseParts().stream().map(ResponsePart::getName).collect(Collectors.joining(",")));
             parameters.putIfAbsent("maxResults", String.valueOf(MAX_RESULTS_PER_PAGE));
             parameters.putIfAbsent("key", API_KEY);
             
@@ -778,7 +843,7 @@ public final class ApiUtils {
          * @throws Exception When there is an error encoding the url.
          */
         private static String buildApiUrl(Endpoint endpoint, Map<String, String> parameters) throws Exception {
-            return String.join("/", REQUEST_BASE, endpoint.name) +
+            return String.join("/", REQUEST_BASE, endpoint.getName()) +
                     buildApiParameterString(parameters);
         }
         
