@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -54,17 +53,17 @@ public class Channels {
     /**
      * The default drive to use for storage of downloaded files.
      */
-    public static final File DEFAULT_STORAGE_DRIVE = PathUtils.getUserDrive();
+    public static final String DEFAULT_STORAGE_DRIVE = PathUtils.getUserDrivePath();
     
     /**
      * The default Music directory in the storage drive.
      */
-    public static final File DEFAULT_MUSIC_DIR = new File(PathUtils.getUserHome(), "Music");
+    public static final String DEFAULT_MUSIC_DIR = "Music/";
     
     /**
      * The default Videos directory in the storage drive.
      */
-    public static final File DEFAULT_VIDEOS_DIR = new File(PathUtils.getUserHome(), "Videos");
+    public static final String DEFAULT_VIDEOS_DIR = "Videos/";
     
     
     //Static Fields
@@ -97,23 +96,17 @@ public class Channels {
     /**
      * The drive to use for storage of downloaded files.
      */
-    public static final File storageDrive = Optional.ofNullable((String) Configurator.getSetting("location.storageDrive"))
-            .map(File::new)
-            .orElse(DEFAULT_STORAGE_DRIVE);
+    public static final File storageDrive = new File(Configurator.getSetting("location.storageDrive", DEFAULT_STORAGE_DRIVE));
     
     /**
      * The Music directory in the storage drive.
      */
-    public static final File musicDir = Optional.ofNullable((String) Configurator.getSetting("location.musicDir"))
-            .map(e -> new File(storageDrive, e))
-            .orElse(DEFAULT_MUSIC_DIR);
+    public static final File musicDir = new File(storageDrive, Configurator.getSetting("location.musicDir", DEFAULT_MUSIC_DIR));
     
     /**
      * The Videos directory in the storage drive.
      */
-    public static final File videoDir = Optional.ofNullable((String) Configurator.getSetting("location.videoDir"))
-            .map(e -> new File(storageDrive, e))
-            .orElse(DEFAULT_VIDEOS_DIR);
+    public static final File videoDir = new File(storageDrive, Configurator.getSetting("location.videoDir", DEFAULT_VIDEOS_DIR));
     
     
     //Static Methods
@@ -220,9 +213,9 @@ public class Channels {
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
-                final JSONArray channelList = (JSONArray) new JSONParser().parse(readChannelConfiguration());
+                final JSONArray channelListData = (JSONArray) new JSONParser().parse(readChannelConfiguration());
                 
-                loadChannelList(channelList, root);
+                loadChannelList(channelListData, root);
                 
             } catch (Exception e) {
                 System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
@@ -235,33 +228,42 @@ public class Channels {
     }
     
     /**
-     * Loads the Channels configuration from a json channel list.
+     * Loads a list of Channel Entry configurations.
      *
-     * @param channelList The json channel list.
-     * @param parent      The parent of the configurations in the channel list.
+     * @param channelListData The json data of the channel list.
+     * @param parent          The parent of the configurations in the channel list.
+     */
+    private static void loadChannelList(JSONArray channelListData, ChannelGroup parent) {
+        for (Object channelListEntry : channelListData) {
+            final JSONObject channelEntryData = (JSONObject) channelListEntry;
+            
+            loadChannelEntry(channelEntryData, parent);
+        }
+    }
+    
+    /**
+     * Loads a Channel Entry configuration.
+     *
+     * @param channelEntryData The json data of the Channel Entry.
+     * @param parent           The parent of the Channel Entry.
      */
     @SuppressWarnings("unchecked")
-    private static void loadChannelList(JSONArray channelList, ChannelGroup parent) {
-        for (Object channelListEntry : channelList) {
-            final JSONObject channelJson = (JSONObject) channelListEntry;
+    private static void loadChannelEntry(JSONObject channelEntryData, ChannelGroup parent) {
+        try {
+            final ChannelEntry channelEntry = ChannelEntry.load(channelEntryData, parent);
             
-            try {
-                final ChannelEntry channelEntry = ChannelEntry.load(channelJson, parent);
-                
-                if (channelEntry.isGroup()) {
-                    loadChannelList((JSONArray) channelJson.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
-                    groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
-                } else {
-                    configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
-                    channels.put(channelEntry.getKey(), new Channel((ChannelConfig) channelEntry));
-                }
-                
-            } catch (Exception e) {
-                System.out.println(Color.bad("Could not load channel" + (ChannelEntry.isGroupConfiguration(channelJson) ? " group" : "") + ": ") +
-                        Color.channel(channelJson.getOrDefault("key", "null")));
-                if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
-                    System.out.println(Utils.INDENT + Color.bad(e.getMessage()));
-                }
+            if (channelEntry.isGroup()) {
+                loadChannelList((JSONArray) channelEntryData.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
+                groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
+            } else {
+                configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
+                channels.put(channelEntry.getKey(), new Channel((ChannelConfig) channelEntry));
+            }
+            
+        } catch (Exception e) {
+            System.out.println(Color.bad("Could not load: ") + Color.channel(channelEntryData.getOrDefault("key", "null")));
+            if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
+                System.out.println(Utils.INDENT + Color.bad(e.getMessage()));
             }
         }
     }

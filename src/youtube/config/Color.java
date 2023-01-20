@@ -129,8 +129,8 @@ public class Color {
     /**
      * A function that loads a color setting configuration.
      */
-    private static final BiFunction<String, String, Console.ConsoleEffect> colorSettingLoader = (String conf, String def) -> {
-        final String confColor = (String) Configurator.getSetting("color", conf, def);
+    private static final BiFunction<String, String, Console.ConsoleEffect> colorSettingLoader = (String name, String def) -> {
+        final String confColor = Configurator.getSetting("color", name, def);
         String color = confColor.matches("(?i)DEFAULT(?:.COLOR)?") ? def :
                        confColor.toUpperCase().replace(" ", "_");
         
@@ -147,7 +147,7 @@ public class Color {
     /**
      * A flag indicating whether to enable colors or not.
      */
-    public static final boolean enableColors = (boolean) Configurator.getSetting("color", "enableColors", DEFAULT_ENABLE_COLORS);
+    public static final boolean enableColors = Configurator.getSetting("color", "enableColors", DEFAULT_ENABLE_COLORS);
     
     /**
      * The color to use for "base" text.

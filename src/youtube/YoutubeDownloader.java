@@ -51,9 +51,9 @@ public class YoutubeDownloader {
     public static final File DOWNLOAD_QUEUE = new File(PathUtils.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
-     * The default output directory.
+     * The default output location.
      */
-    public static final File DEFAULT_OUTPUT_DIR = new File(PathUtils.getUserHome(), "Youtube");
+    public static final String DEFAULT_OUTPUT_LOCATION = PathUtils.path(PathUtils.getUserHomePath(), "Youtube");
     
     
     //Static Fields
@@ -211,9 +211,7 @@ public class YoutubeDownloader {
      * @return The output directory.
      */
     private static File getOutputDir() {
-        return Optional.ofNullable((String) Configurator.getSetting("location.output"))
-                .map(File::new)
-                .orElse(DEFAULT_OUTPUT_DIR);
+        return new File(Configurator.getSetting("location.output", DEFAULT_OUTPUT_LOCATION));
     }
     
 }

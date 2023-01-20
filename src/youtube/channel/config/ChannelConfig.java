@@ -108,12 +108,12 @@ public class ChannelConfig extends ChannelEntry {
     /**
      * Creates a Channel Config.
      *
-     * @param config The configuration data.
-     * @param parent The parent of the Channel Config.
+     * @param configData The json data of the Channel Config.
+     * @param parent     The parent of the Channel Config.
      * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelConfig(Map<String, Object> config, ChannelGroup parent) throws Exception {
-        super(config, parent);
+    public ChannelConfig(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+        super(configData, parent);
         
         this.name = stringFieldGetter.apply("name").map(identifierFormatter).orElseGet(() -> StringUtility.toPascalCase(key));
         
@@ -126,11 +126,11 @@ public class ChannelConfig extends ChannelEntry {
     /**
      * Creates a Channel Config.
      *
-     * @param config The configuration data.
+     * @param configData The json data of the Channel Config.
      * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelConfig(Map<String, Object> config) throws Exception {
-        this(config, null);
+    public ChannelConfig(Map<String, Object> configData) throws Exception {
+        this(configData, null);
     }
     
     /**

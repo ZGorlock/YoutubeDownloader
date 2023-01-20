@@ -10,9 +10,11 @@ package youtube.config;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import commons.object.collection.MapUtility;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -63,81 +65,88 @@ public class Configurator {
     //Static Methods
     
     /**
-     * Returns a list of configuration settings.
+     * Fetches the configuration settings of a config section.
      *
-     * @param section The section of the configuration.
-     * @return The list of configuration settings.
+     * @param section The config section.
+     * @return The configuration settings.
      */
-    public static Map<String, Object> getSettings(Utils.Project section) {
-        return (section == null) ? new HashMap<>() :
-               new HashMap<>(settings.get(section));
+    public static Map<String, Object> getSettings(String section) {
+        return Optional.ofNullable(section)
+                .map(settings::get).map(MapUtility::clone)
+                .orElseGet(MapUtility::emptyMap);
     }
     
     /**
-     * Returns a list of configuration settings.
+     * Fetches the configuration settings of the active project.
      *
-     * @return The list of configuration settings.
-     * @see #getSettings(Utils.Project)
+     * @return The configuration settings.
      */
     public static Map<String, Object> getSettings() {
-        return (activeProject == null) ? new HashMap<>() :
-               getSettings(activeProject);
+        return Optional.ofNullable(activeProject)
+                .map(Utils.Project::getTitle)
+                .map(Configurator::getSettings)
+                .orElseGet(MapUtility::emptyMap);
     }
     
     /**
-     * Returns a configuration setting by name.
+     * Fetches a configuration setting of a config section.
      *
-     * @param section The section of the configuration setting.
+     * @param section The config section.
      * @param name    The name of the configuration setting.
      * @param def     The default value to return if the configuration setting does not exist.
+     * @param <T>     The type of the setting.
      * @return The value of the configuration setting, or the default value if it does not exist.
      */
-    public static Object getSetting(String section, String name, Object def) {
-        return !settings.containsKey(section) ? def :
-               settings.get(section).getOrDefault(name, def);
+    @SuppressWarnings("unchecked")
+    public static <T> T getSetting(String section, String name, T def) {
+        return (T) Optional.of(section)
+                .map(Configurator::getSettings)
+                .map(e -> e.getOrDefault(name, def))
+                .orElse(null);
     }
     
     /**
-     * Returns a configuration setting by name.
+     * Fetches a configuration setting of the active project.
      *
      * @param name The name of the configuration setting.
      * @param def  The default value to return if the configuration setting does not exist.
+     * @param <T>  The type of the setting.
      * @return The value of the configuration setting, or the default value if it does not exist.
-     * @see #getSetting(String, String, Object)
      */
-    public static Object getSetting(String name, Object def) {
-        return (activeProject == null) ? def :
-               getSetting(activeProject.getTitle(), name, def);
+    public static <T> T getSetting(String name, T def) {
+        return Optional.ofNullable(activeProject)
+                .map(Utils.Project::getTitle)
+                .map(e -> getSetting(e, name, def))
+                .orElse(null);
     }
     
     /**
-     * Returns a configuration setting by name.
+     * Fetches a configuration setting of the active project.
      *
      * @param name The name of the configuration setting.
+     * @param <T>  The type of the setting.
      * @return The value of the configuration setting, or null if it does not exist.
-     * @see #getSetting(String, Object)
      */
-    public static Object getSetting(String name) {
+    public static <T> T getSetting(String name) {
         return getSetting(name, null);
     }
     
     /**
-     * Loads the configuration settings from the configuration file.
+     * Loads the settings configuration from the configuration file.
      *
-     * @param project The current active project.
-     * @see #loadSettings(JSONObject, String)
+     * @param project The project.
      */
     public static void loadSettings(Utils.Project project) {
         if (loaded.compareAndSet(false, true)) {
             activeProject = project;
             
             try {
-                final JSONObject conf = (JSONObject) new JSONParser().parse(readConfiguration());
+                final JSONObject settingsData = (JSONObject) new JSONParser().parse(readConfiguration());
                 
-                loadSettings(conf, activeProject.getTitle());
-                loadSettings(conf, "sponsorBlock");
-                loadSettings(conf, "color");
-                loadSettings(conf, "log");
+                loadSettingSection(settingsData, activeProject.getTitle());
+                loadSettingSection(settingsData, "sponsorBlock");
+                loadSettingSection(settingsData, "color");
+                loadSettingSection(settingsData, "log");
                 
             } catch (Exception e) {
                 System.out.println(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE));
@@ -148,43 +157,56 @@ public class Configurator {
     }
     
     /**
-     * Loads the configuration settings from a configuration section.
+     * Loads a section of the setting configurations.
      *
-     * @param json    The root configuration json object.
-     * @param section The section of the configuration.
-     * @see #loadSettings(JSONObject, String, String)
+     * @param settingsData The json data of the settings.
+     * @param section      The config section.
      */
-    private static void loadSettings(JSONObject json, String section) {
-        JSONObject conf = (JSONObject) json.get(section);
-        if (conf != null) {
+    private static void loadSettingSection(JSONObject settingsData, String section) {
+        final JSONObject settingSectionData = (JSONObject) settingsData.get(section);
+        
+        if (settingSectionData != null) {
             if (section.equals("sponsorBlock") && (SponsorBlocker.globalConfig == null)) {
-                SponsorBlocker.loadGlobalConfig(conf);
+                SponsorBlocker.loadGlobalConfig(settingSectionData);
             }
-            loadSettings(conf, section, "");
+            loadSettingSection(settingSectionData, section, "");
         }
     }
     
     /**
-     * Loads the configuration settings from a configuration JSON object.
+     * Loads a section of the setting configurations.
      *
-     * @param conf    The configuration JSON object.
-     * @param section The section of the configuration.
-     * @param prefix  The name prefix of the settings in the current configuration JSON object.
+     * @param settingSectionData The json data of the settings section.
+     * @param section            The config section.
+     * @param prefix             The name prefix of the setting configurations in the section.
      */
     @SuppressWarnings("unchecked")
-    private static void loadSettings(JSONObject conf, String section, String prefix) {
-        for (Object setting : conf.entrySet()) {
-            Map.Entry<String, Object> settingEntry = (Map.Entry<String, Object>) setting;
-            if ((settingEntry.getValue() != null) && (settingEntry.getValue() instanceof JSONObject)) {
-                if (settingEntry.getKey().equals("sponsorBlock")) {
-                    SponsorBlocker.loadGlobalConfig(((JSONObject) settingEntry.getValue()));
-                }
-                loadSettings(((JSONObject) settingEntry.getValue()), section, (prefix + settingEntry.getKey() + '.'));
-            } else {
-                settings.putIfAbsent(section, new HashMap<>());
-                settings.get(section).put((prefix + settingEntry.getKey()), settingEntry.getValue());
-            }
+    private static void loadSettingSection(JSONObject settingSectionData, String section, String prefix) {
+        for (Object settingsSectionEntry : settingSectionData.entrySet()) {
+            final Map.Entry<String, Object> settingEntryData = (Map.Entry<String, Object>) settingsSectionEntry;
+            
+            loadSettingEntry(settingEntryData, section, prefix);
         }
+    }
+    
+    /**
+     * Loads a setting configuration.
+     *
+     * @param settingEntryData The json data of the setting.
+     * @param section          The config section of the setting.
+     * @param prefix           The name prefix of the setting.
+     */
+    private static void loadSettingEntry(Map.Entry<String, Object> settingEntryData, String section, String prefix) {
+        if ((settingEntryData.getValue() != null) && (settingEntryData.getValue() instanceof JSONObject)) {
+            if (settingEntryData.getKey().equals("sponsorBlock")) {
+                SponsorBlocker.loadGlobalConfig(((JSONObject) settingEntryData.getValue()));
+            }
+            loadSettingSection(((JSONObject) settingEntryData.getValue()), section, (prefix + settingEntryData.getKey() + '.'));
+        } else {
+            settings.putIfAbsent(section, new HashMap<>());
+            settings.get(section).put((prefix + settingEntryData.getKey()), settingEntryData.getValue());
+        }
+        
     }
     
     /**
@@ -307,130 +329,130 @@ public class Configurator {
         /**
          * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
          */
-        public static final boolean preMerged = (boolean) Configurator.getSetting("format.preMerged", DEFAULT_PRE_MERGED);
+        public static final boolean preMerged = Configurator.getSetting("format.preMerged", DEFAULT_PRE_MERGED);
         
         /**
          * A flag indicating whether to download the videos as mp3 files or not.
          */
-        public static final boolean asMp3 = (boolean) Configurator.getSetting("format.asMp3", DEFAULT_AS_MP3) ||
-                (boolean) Configurator.getSetting("asMp3", DEFAULT_AS_MP3);
+        public static final boolean asMp3 = Configurator.getSetting("format.asMp3", DEFAULT_AS_MP3) ||
+                Configurator.getSetting("asMp3", DEFAULT_AS_MP3);
         
         /**
          * A flag indicating whether to print statistics at the end of the run or not.
          */
-        public static final boolean printStats = (boolean) Configurator.getSetting("log.printStats",
+        public static final boolean printStats = Configurator.getSetting("log.printStats",
                 Configurator.getSetting("output.printStats", DEFAULT_PRINT_STATS));
         
         /**
          * A flag indicating whether to print the Channel list at the beginning of the run or not.
          */
-        public static final boolean printChannels = (boolean) Configurator.getSetting("log.printChannels",
+        public static final boolean printChannels = Configurator.getSetting("log.printChannels",
                 Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS));
         
         /**
          * A flag indicating whether to run in safe mode or not.
          */
-        public static final boolean safeMode = (boolean) Configurator.getSetting("flag.safeMode", DEFAULT_SAFE_MODE);
+        public static final boolean safeMode = Configurator.getSetting("flag.safeMode", DEFAULT_SAFE_MODE);
         
         /**
          * A flag indicating whether to disable downloading content or not.
          */
-        public static final boolean preventDownload = safeMode || (boolean) Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
+        public static final boolean preventDownload = safeMode || Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
         
         /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
-        public static final boolean preventDeletion = safeMode || (boolean) Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
+        public static final boolean preventDeletion = safeMode || Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
         
         /**
          * A flag indicating whether to globally prevent any media renaming or not.
          */
-        public static final boolean preventRenaming = safeMode || (boolean) Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
+        public static final boolean preventRenaming = safeMode || Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
         
         /**
          * A flag indicating whether to disable playlist modification or not.
          */
-        public static final boolean preventPlaylistEdit = safeMode || (boolean) Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
+        public static final boolean preventPlaylistEdit = safeMode || Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
         
         /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
-        public static final boolean preventChannelFetch = safeMode || (boolean) Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
+        public static final boolean preventChannelFetch = safeMode || Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
         
         /**
          * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean preventVideoFetch = safeMode || (boolean) Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
+        public static final boolean preventVideoFetch = safeMode || Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
         
         /**
          * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeAutoUpdate = safeMode || (boolean) Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+        public static final boolean preventExeAutoUpdate = safeMode || Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
         
         /**
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeVersionCheck = safeMode || (boolean) Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        public static final boolean preventExeVersionCheck = safeMode || Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
         
         /**
          * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
          */
-        public static final boolean neverUseBrowserCookies = (boolean) Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
+        public static final boolean neverUseBrowserCookies = Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
         
         /**
          * A flag indicating whether to retry previously failed videos or not.
          */
-        public static final boolean retryPreviousFailures = (boolean) Configurator.getSetting("flag.retryPreviousFailures",
+        public static final boolean retryPreviousFailures = Configurator.getSetting("flag.retryPreviousFailures",
                 Configurator.getSetting("flag.retryFailed", DEFAULT_RETRY_PREVIOUS_FAILURES));
         
         /**
          * A flag indicating whether to print the executable version at the beginning of the run or not.
          */
-        public static final boolean printExeVersion = (boolean) Configurator.getSetting("output.printExeVersion",
+        public static final boolean printExeVersion = Configurator.getSetting("output.printExeVersion",
                 Configurator.getSetting("log", "printExeVersion", DEFAULT_PRINT_EXE_VERSION));
         
         /**
          * A flag indicating whether to log the download command or not.
          */
-        public static final boolean logCommand = (boolean) Configurator.getSetting("flag.logCommand",
+        public static final boolean logCommand = Configurator.getSetting("flag.logCommand",
                 Configurator.getSetting("log", "logCommand", DEFAULT_LOG_COMMAND));
         
         /**
          * A flag indicating whether to log the download work or not.
          */
-        public static final boolean logWork = (boolean) Configurator.getSetting("flag.logWork",
+        public static final boolean logWork = Configurator.getSetting("flag.logWork",
                 Configurator.getSetting("log", "logWork", DEFAULT_LOG_WORK));
         
         /**
          * A flag indicating whether to print a progress bar for downloads or not.
          */
-        public static final boolean showProgressBar = (boolean) Configurator.getSetting("flag.showProgressBar",
+        public static final boolean showProgressBar = Configurator.getSetting("flag.showProgressBar",
                 Configurator.getSetting("log", "showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
          */
-        public static final String browser = (String) Configurator.getSetting("location.browser");
+        public static final String browser = Configurator.getSetting("location.browser");
         
         /**
          * The Channel to process, or null if all Channels should be processed.
          */
-        public static final String channel = (String) Configurator.getSetting("filter.channel");
+        public static final String channel = Configurator.getSetting("filter.channel");
         
         /**
          * The group to process, or null if all groups should be processed.
          */
-        public static final String group = (String) Configurator.getSetting("filter.group");
+        public static final String group = Configurator.getSetting("filter.group");
         
         /**
          * The Channel to start processing from, if processing all Channels.
          */
-        public static final String startAt = (String) Configurator.getSetting("filter.startAt");
+        public static final String startAt = Configurator.getSetting("filter.startAt");
         
         /**
          * The Channel to stop processing at, if processing all Channels.
          */
-        public static final String stopAt = (String) Configurator.getSetting("filter.stopAt");
+        public static final String stopAt = Configurator.getSetting("filter.stopAt");
         
     }
     

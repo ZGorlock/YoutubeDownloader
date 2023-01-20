@@ -38,7 +38,7 @@ import youtube.util.Utils;
 /**
  * Defines a Channel Entry configuration of the Youtube Channel Downloader.
  */
-public class ChannelEntry {
+public abstract class ChannelEntry {
     
     //Logger
     
@@ -205,17 +205,17 @@ public class ChannelEntry {
     /**
      * Creates a Channel Entry.
      *
-     * @param config The configuration data.
-     * @param parent The parent of the Channel Entry.
+     * @param configData The json data of the Channel Entry.
+     * @param parent     The parent of the Channel Entry.
      * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
-    public ChannelEntry(Map<String, Object> config, ChannelGroup parent) {
+    public ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
         Optional.ofNullable(parent).filter(e -> (e.getKey() != null)).ifPresent(e -> {
             this.parent = e;
             e.children.add(this);
         });
         
-        this.channelEntryJson = new JSONObject(config);
+        this.channelEntryJson = new JSONObject(configData);
         
         this.key = stringFieldGetter.apply("key").map(identifierFormatter)
                 .orElseThrow(() -> {
@@ -241,7 +241,7 @@ public class ChannelEntry {
         this.outputFolderPath = stringFieldGetter.apply("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("outputFolderPath").orElse(null));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
         
-        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) config.get("sponsorBlock"))
+        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) configData.get("sponsorBlock"))
                 .map(SponsorBlocker::loadConfig)
                 .map(Mappers.forEach(e -> e.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL))
                 .orElse(null);
@@ -250,11 +250,11 @@ public class ChannelEntry {
     /**
      * Creates a Channel Entry.
      *
-     * @param fields The fields from the Channel Entry.
+     * @param configData The json data of the Channel Entry.
      * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
-    public ChannelEntry(Map<String, Object> fields) {
-        this(fields, null);
+    public ChannelEntry(Map<String, Object> configData) {
+        this(configData, null);
     }
     
     /**
@@ -601,37 +601,41 @@ public class ChannelEntry {
     //Static Methods
     
     /**
-     * Loads and validates a Channel Entry configuration.
+     * Loads and validates a Channel Entry.
      *
-     * @param fields The map of fields of the Channel Entry.
-     * @param parent The parent of the Channel configuration.
+     * @param configData The json data of the Channel Entry configuration.
+     * @param parent     The parent of the Channel Entry.
      * @return The Channel Entry.
+     * @throws Exception When the configuration data does not contain all the required fields.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends ChannelEntry> T load(Map<String, Object> fields, ChannelGroup parent) throws Exception {
-        T channelEntry = isGroupConfiguration(fields) ? (T) new ChannelGroup(fields, parent) : (T) new ChannelConfig(fields, parent);
+    public static <T extends ChannelEntry> T load(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+        final T channelEntry = isGroupConfiguration(configData) ?
+                               (T) new ChannelGroup(configData, parent) :
+                               (T) new ChannelConfig(configData, parent);
         validateRequiredFields(channelEntry.getEffectiveConfig());
         return channelEntry;
     }
     
     /**
-     * Loads and validates a Channel Entry configuration.
+     * Loads and validates a Channel Entry.
      *
-     * @param fields The map of fields of the Channel Entry.
+     * @param configData The json data of the Channel Entry configuration.
      * @return The Channel Entry.
+     * @throws Exception When the configuration data does not contain all the required fields.
      */
-    public static <T extends ChannelEntry> T load(Map<String, Object> fields) throws Exception {
-        return load(fields, null);
+    public static <T extends ChannelEntry> T load(Map<String, Object> configData) throws Exception {
+        return load(configData, null);
     }
     
     /**
-     * Returns whether a Channel Entry configuration represents a Channel Group.
+     * Determines whether the json data of a Channel Entry represents a Channel Group.
      *
-     * @param fields The map of fields of the Channel Entry.
-     * @return Whether a Channel Entry configuration represents a Channel Group.
+     * @param configData The json data of the Channel Entry.
+     * @return Whether the json data represents a Channel Group.
      */
-    public static boolean isGroupConfiguration(Map<String, Object> fields) {
-        return fields.containsKey(ChannelGroup.CHILD_CONFIGURATION_KEY);
+    protected static boolean isGroupConfiguration(Map<String, Object> configData) {
+        return configData.containsKey(ChannelGroup.CHILD_CONFIGURATION_KEY);
     }
     
     /**
@@ -682,18 +686,18 @@ public class ChannelEntry {
     }
     
     /**
-     * Validates that the configuration data used to construct a new Channel Entry contains all the required fields.
+     * Validates that the json data of a Channel Entry contains all the required fields.
      *
-     * @param config The configuration data.
+     * @param configData The json data of the Channel Entry.
      * @throws RuntimeException When the configuration data does not contain all the required fields.
      */
-    protected static void validateRequiredFields(Map<String, Object> config) {
-        Optional.of((isGroupConfiguration(config) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
-                        .filter(e -> !MapUtility.contains(config, e))
+    protected static void validateRequiredFields(Map<String, Object> configData) {
+        Optional.of((isGroupConfiguration(configData) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
+                        .filter(e -> (MapUtility.getOrNull(configData, e) == null))
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())
                 .ifPresent(missingFields -> {
-                    System.out.println(Color.bad("Channel: ") + Color.channel(MapUtility.getOrNull(config, "key")) +
+                    System.out.println(Color.bad("Channel" + (ChannelEntry.isGroupConfiguration(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
                             Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
                             missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
                     throw new RuntimeException();

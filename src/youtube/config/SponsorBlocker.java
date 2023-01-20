@@ -10,9 +10,8 @@ package youtube.config;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,12 +36,12 @@ public class SponsorBlocker {
     //Static Fields
     
     /**
-     * The global SponsorBlock configuration.
+     * The global SponsorBlock Config.
      */
     public static SponsorBlockConfig globalConfig = null;
     
     /**
-     * A flag indicating whether the global SponsorBlock configuration has been loaded yet or not.
+     * A flag indicating whether the global SponsorBlock Config has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
@@ -50,10 +49,10 @@ public class SponsorBlocker {
     //Static Methods
     
     /**
-     * Returns the SponsorBlock command for a SponsorBlock configuration.
+     * Returns the SponsorBlock command for a SponsorBlock Config.
      *
-     * @param config The SponsorBlock configuration.
-     * @return The SponsorBlock command for the SponsorBlock configuration, or an empty string if the selected Executable is not yt-dlp.
+     * @param config The SponsorBlock Config.
+     * @return The SponsorBlock command for the SponsorBlock Config, or an empty string if the selected Executable is not yt-dlp.
      */
     public static String getCommand(SponsorBlockConfig config) {
         final boolean configValid = (config != null) && config.enabled;
@@ -72,24 +71,24 @@ public class SponsorBlocker {
     }
     
     /**
-     * Loads a SponsorBlock Config from a json SponsorBlock configuration.
+     * Loads a SponsorBlock Config.
      *
-     * @param sponsorBlockJson The json SponsorBlock configuration.
+     * @param configData The json data of the SponsorBlock Config.
      * @return The SponsorBlock Config.
      */
     @SuppressWarnings("unchecked")
-    public static SponsorBlockConfig loadConfig(JSONObject sponsorBlockJson) {
-        return new SponsorBlockConfig(sponsorBlockJson);
+    public static SponsorBlockConfig loadConfig(JSONObject configData) {
+        return new SponsorBlockConfig(configData);
     }
     
     /**
-     * Loads the global SponsorBlock Config from a json SponsorBlock configuration.
+     * Loads the global SponsorBlock Config.
      *
-     * @param sponsorBlockJson The json SponsorBlock configuration.
+     * @param configData The json data of the global SponsorBlock Config.
      */
-    public static void loadGlobalConfig(JSONObject sponsorBlockJson) {
+    public static void loadGlobalConfig(JSONObject configData) {
         if (loaded.compareAndSet(false, true)) {
-            globalConfig = loadConfig(sponsorBlockJson);
+            globalConfig = loadConfig(configData);
             globalConfig.type = SponsorBlockConfig.Type.GLOBAL;
         }
     }
@@ -98,7 +97,7 @@ public class SponsorBlocker {
     //Inner Classes
     
     /**
-     * Holds a configuration for SponsorBlock.
+     * Defines a SponsorBlock Config.
      */
     public static class SponsorBlockConfig {
         
@@ -163,7 +162,7 @@ public class SponsorBlocker {
         //Enums
         
         /**
-         * An enumeration of SponsorBlock configuration types.
+         * An enumeration of SponsorBlock Config Types.
          */
         public enum Type {
             GLOBAL,
@@ -174,7 +173,7 @@ public class SponsorBlocker {
         //Fields
         
         /**
-         * The type of the SponsorBlock config.
+         * The type of the SponsorBlock Config.
          */
         public Type type;
         
@@ -239,23 +238,23 @@ public class SponsorBlocker {
         /**
          * Creates a SponsorBlock Config.
          *
-         * @param config The json data of the SponsorBlock configuration.
+         * @param config The json data of the SponsorBlock Config.
          */
         public SponsorBlockConfig(Map<String, Object> config) {
-            final Function<String, Optional<Boolean>> booleanFieldGetter = (String name) ->
-                    Optional.ofNullable((Boolean) config.get(name));
+            final BiFunction<String, Boolean, Boolean> booleanFieldGetter = (String name, Boolean def) ->
+                    (Boolean) config.getOrDefault(name, def);
             
-            this.enabled = booleanFieldGetter.apply("enabled").orElse(SponsorBlockConfig.DEFAULT_ENABLED);
-            this.forceGlobally = booleanFieldGetter.apply("forceGlobally").orElse(SponsorBlockConfig.DEFAULT_FORCE_GLOBALLY);
-            this.overrideGlobal = booleanFieldGetter.apply("overrideGlobal").orElse(SponsorBlockConfig.DEFAULT_OVERRIDE_GLOBAL);
-            this.skipAll = booleanFieldGetter.apply("skipAll").orElse(SponsorBlockConfig.DEFAULT_SKIP_ALL);
-            this.skipSponsor = booleanFieldGetter.apply("skipSponsor").orElse(SponsorBlockConfig.DEFAULT_SKIP_SPONSOR);
-            this.skipIntro = booleanFieldGetter.apply("skipIntro").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTRO);
-            this.skipOutro = booleanFieldGetter.apply("skipOutro").orElse(SponsorBlockConfig.DEFAULT_SKIP_OUTRO);
-            this.skipSelfPromo = booleanFieldGetter.apply("skipSelfPromo").orElse(SponsorBlockConfig.DEFAULT_SKIP_SELF_PROMO);
-            this.skipPreview = booleanFieldGetter.apply("skipPreview").orElse(SponsorBlockConfig.DEFAULT_SKIP_PREVIEW);
-            this.skipInteraction = booleanFieldGetter.apply("skipInteraction").orElse(SponsorBlockConfig.DEFAULT_SKIP_INTERACTION);
-            this.skipMusicOffTopic = booleanFieldGetter.apply("skipMusicOffTopic").orElse(SponsorBlockConfig.DEFAULT_SKIP_MUSIC_OFF_TOPIC);
+            this.enabled = booleanFieldGetter.apply("enabled", SponsorBlockConfig.DEFAULT_ENABLED);
+            this.forceGlobally = booleanFieldGetter.apply("forceGlobally", SponsorBlockConfig.DEFAULT_FORCE_GLOBALLY);
+            this.overrideGlobal = booleanFieldGetter.apply("overrideGlobal", SponsorBlockConfig.DEFAULT_OVERRIDE_GLOBAL);
+            this.skipAll = booleanFieldGetter.apply("skipAll", SponsorBlockConfig.DEFAULT_SKIP_ALL);
+            this.skipSponsor = booleanFieldGetter.apply("skipSponsor", SponsorBlockConfig.DEFAULT_SKIP_SPONSOR);
+            this.skipIntro = booleanFieldGetter.apply("skipIntro", SponsorBlockConfig.DEFAULT_SKIP_INTRO);
+            this.skipOutro = booleanFieldGetter.apply("skipOutro", SponsorBlockConfig.DEFAULT_SKIP_OUTRO);
+            this.skipSelfPromo = booleanFieldGetter.apply("skipSelfPromo", SponsorBlockConfig.DEFAULT_SKIP_SELF_PROMO);
+            this.skipPreview = booleanFieldGetter.apply("skipPreview", SponsorBlockConfig.DEFAULT_SKIP_PREVIEW);
+            this.skipInteraction = booleanFieldGetter.apply("skipInteraction", SponsorBlockConfig.DEFAULT_SKIP_INTERACTION);
+            this.skipMusicOffTopic = booleanFieldGetter.apply("skipMusicOffTopic", SponsorBlockConfig.DEFAULT_SKIP_MUSIC_OFF_TOPIC);
         }
         
         /**

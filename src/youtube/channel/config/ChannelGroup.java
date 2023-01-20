@@ -37,7 +37,7 @@ public class ChannelGroup extends ChannelEntry {
     public static final List<String> ALL_FIELDS = List.of("key", "active", "group", "url", "playlistId", "outputFolder", "saveAsMp3", "reversePlaylist", "ignoreGlobalLocations", "keepClean", "channels");
     
     /**
-     * The key of the field in the configuration of a Channel Group that contains the list of children.
+     * The name of the field in the configuration of a Channel Group that contains the list of children.
      */
     public static final String CHILD_CONFIGURATION_KEY = "channels";
     
@@ -55,22 +55,22 @@ public class ChannelGroup extends ChannelEntry {
     /**
      * Creates a Channel Group.
      *
-     * @param config The configuration data.
-     * @param parent The parent of the Channel Group.
+     * @param configData The json data of the Channel Group.
+     * @param parent     The parent of the Channel Group.
      * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelGroup(Map<String, Object> config, ChannelGroup parent) throws Exception {
-        super(config, parent);
+    public ChannelGroup(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+        super(configData, parent);
     }
     
     /**
      * Creates a Channel Group.
      *
-     * @param config The configuration data.
+     * @param configData The json data of the Channel Group.
      * @throws Exception When the configuration data does not contain all of the required fields.
      */
-    public ChannelGroup(Map<String, Object> config) throws Exception {
-        this(config, null);
+    public ChannelGroup(Map<String, Object> configData) throws Exception {
+        this(configData, null);
     }
     
     /**

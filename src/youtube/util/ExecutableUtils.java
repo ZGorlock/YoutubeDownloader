@@ -45,7 +45,7 @@ public final class ExecutableUtils {
      * The Youtube Downloader executable to use.
      */
     public static final Executable EXECUTABLE = Executable.valueOf(
-            ((String) Configurator.getSetting("executable", Executable.YT_DLP.name)).toUpperCase().replace("-", "_"));
+            Configurator.getSetting("executable", Executable.YT_DLP.getName()).toUpperCase().replace("-", "_"));
     
     
     //Enums
@@ -89,14 +89,14 @@ public final class ExecutableUtils {
         /**
          * Constructs an Executable.
          *
-         * @param name    The name of the Executable.
-         * @param website The website of the Executable.
+         * @param executableName The name of the Executable.
+         * @param website        The website of the Executable.
          */
-        Executable(String name, String website) {
-            this.name = name;
-            this.exe = new File(EXECUTABLE_DIR, (this.name + (OperatingSystem.isWindows() ? ('.' + Utils.EXECUTABLE_FILE_FORMAT) : "")));
-            this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(this.exe.getAbsolutePath()) :
-                        ((OperatingSystem.isWindows() ? "" : ('.' + PathUtils.SEPARATOR)) + this.exe.getName());
+        Executable(String executableName, String website) {
+            this.name = executableName;
+            this.exe = new File(EXECUTABLE_DIR, (name + (OperatingSystem.isWindows() ? ('.' + Utils.EXECUTABLE_FILE_FORMAT) : "")));
+            this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(exe.getAbsolutePath()) :
+                        ((OperatingSystem.isWindows() ? "" : ('.' + PathUtils.SEPARATOR)) + exe.getName());
             this.website = website;
         }
         
