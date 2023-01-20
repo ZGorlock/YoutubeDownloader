@@ -1,11 +1,11 @@
 /*
  * File:    ChannelGroup.java
- * Package: youtube.channel
+ * Package: youtube.channel.config
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel;
+package youtube.channel.config;
 
 import java.util.ArrayList;
 import java.util.List;

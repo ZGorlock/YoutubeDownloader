@@ -6,7 +6,7 @@
 
 package youtube.entity.base;
 
-import youtube.channel.ChannelConfig;
+import youtube.channel.config.ChannelConfig;
 import youtube.channel.state.ChannelState;
 import youtube.entity.Channel;
 import youtube.entity.info.base.EntityInfo;

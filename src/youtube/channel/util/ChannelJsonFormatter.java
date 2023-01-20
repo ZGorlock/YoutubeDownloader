@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
-import youtube.channel.ChannelConfig;
-import youtube.channel.ChannelEntry;
-import youtube.channel.ChannelGroup;
+import youtube.channel.config.ChannelConfig;
+import youtube.channel.config.ChannelEntry;
+import youtube.channel.config.ChannelGroup;
 
 /**
  * Handles the formatting of Channel json strings.

@@ -1,11 +1,11 @@
 /*
  * File:    ChannelEntry.java
- * Package: youtube.channel
+ * Package: youtube.channel.config
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
-package youtube.channel;
+package youtube.channel.config;
 
 import java.io.File;
 import java.util.Arrays;
@@ -28,6 +28,7 @@ import commons.object.string.StringUtility;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.SponsorBlocker;
 import youtube.state.KeyStore;
@@ -607,7 +608,7 @@ public class ChannelEntry {
      * @return The Channel Entry.
      */
     @SuppressWarnings("unchecked")
-    protected static <T extends ChannelEntry> T load(Map<String, Object> fields, ChannelGroup parent) throws Exception {
+    public static <T extends ChannelEntry> T load(Map<String, Object> fields, ChannelGroup parent) throws Exception {
         T channelEntry = isGroupConfiguration(fields) ? (T) new ChannelGroup(fields, parent) : (T) new ChannelConfig(fields, parent);
         validateRequiredFields(channelEntry.getEffectiveConfig());
         return channelEntry;
@@ -619,7 +620,7 @@ public class ChannelEntry {
      * @param fields The map of fields of the Channel Entry.
      * @return The Channel Entry.
      */
-    protected static <T extends ChannelEntry> T load(Map<String, Object> fields) throws Exception {
+    public static <T extends ChannelEntry> T load(Map<String, Object> fields) throws Exception {
         return load(fields, null);
     }
     
@@ -629,7 +630,7 @@ public class ChannelEntry {
      * @param fields The map of fields of the Channel Entry.
      * @return Whether a Channel Entry configuration represents a Channel Group.
      */
-    protected static boolean isGroupConfiguration(Map<String, Object> fields) {
+    public static boolean isGroupConfiguration(Map<String, Object> fields) {
         return fields.containsKey(ChannelGroup.CHILD_CONFIGURATION_KEY);
     }
     

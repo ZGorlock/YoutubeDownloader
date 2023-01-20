@@ -15,7 +15,7 @@ import commons.console.Console;
 import commons.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
+import youtube.channel.config.ChannelConfig;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 

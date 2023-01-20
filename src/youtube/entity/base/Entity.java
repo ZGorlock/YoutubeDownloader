@@ -11,7 +11,7 @@ import java.util.Optional;
 import commons.object.string.EntityStringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.ChannelConfig;
+import youtube.channel.config.ChannelConfig;
 import youtube.channel.state.ChannelState;
 import youtube.entity.Channel;
 import youtube.entity.info.base.EntityInfo;
