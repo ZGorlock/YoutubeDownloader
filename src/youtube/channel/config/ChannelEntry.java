@@ -209,7 +209,7 @@ public abstract class ChannelEntry {
      * @param parent     The parent of the Channel Entry.
      * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
-    public ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
+    protected ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
         Optional.ofNullable(parent).filter(e -> (e.getKey() != null)).ifPresent(e -> {
             this.parent = e;
             e.children.add(this);
@@ -253,14 +253,14 @@ public abstract class ChannelEntry {
      * @param configData The json data of the Channel Entry.
      * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
-    public ChannelEntry(Map<String, Object> configData) {
+    protected ChannelEntry(Map<String, Object> configData) {
         this(configData, null);
     }
     
     /**
      * Creates an empty Channel Entry.
      */
-    public ChannelEntry() {
+    protected ChannelEntry() {
     }
     
     

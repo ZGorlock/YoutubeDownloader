@@ -9,18 +9,18 @@ package youtube.entity.info.detail;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.EntityInfo;
+import youtube.entity.info.detail.base.EntityDetail;
+import youtube.entity.info.detail.base.EntityDetailSet;
 
 /**
  * Defines the Thumbnail Set of an Entity.
  */
-public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailSet.Thumbnail> {
+public class ThumbnailSet extends EntityDetailSet<ThumbnailSet.Thumbnail> {
     
     //Logger
     
@@ -52,12 +52,14 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
      * @param thumbnailData The Thumbnail Set json data of the Entity.
      */
     public ThumbnailSet(Map<String, Object> thumbnailData) {
+        super(thumbnailData);
+        
         Optional.ofNullable(thumbnailData)
                 .map(Map::entrySet).stream().flatMap(Collection::stream)
-                .filter(e -> (e.getValue() != null))
+                .filter(e -> (e.getKey() != null) && (e.getValue() != null))
                 .map(Thumbnail::new)
                 .sorted(Comparator.comparingInt(o -> o.getQuality().ordinal()))
-                .forEachOrdered(e -> put(e.getQuality(), e));
+                .forEachOrdered(this::add);
     }
     
     /**
@@ -76,7 +78,7 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
      * @return The best Thumbnail.
      */
     public Thumbnail getBest() {
-        return values().stream()
+        return getAll().stream()
                 .max(Comparator.comparingLong(Thumbnail::getSize))
                 .orElse(null);
     }
@@ -87,7 +89,7 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
     /**
      * Defines a Thumbnail.
      */
-    public static class Thumbnail {
+    public static class Thumbnail extends EntityDetail {
         
         //Fields
         
@@ -119,17 +121,13 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
          *
          * @param thumbnailData The json data of the Thumbnail.
          */
-        @SuppressWarnings("unchecked")
         public Thumbnail(Map.Entry<String, Object> thumbnailData) {
-            Optional.ofNullable(thumbnailData)
-                    .map(thumbnailEntry -> {
-                        this.quality = Quality.valueOf(thumbnailEntry.getKey().toUpperCase());
-                        return (Map<String, Object>) thumbnailEntry.getValue();
-                    }).ifPresent(thumbnailDetails -> {
-                        this.url = (String) thumbnailDetails.get("url");
-                        this.width = EntityInfo.integerParser.apply(thumbnailDetails.get("width"));
-                        this.height = EntityInfo.integerParser.apply(thumbnailDetails.get("height"));
-                    });
+            super(Map.ofEntries(thumbnailData));
+            
+            this.quality = Quality.valueOf(thumbnailData.getKey().toUpperCase());
+            this.url = getData(thumbnailData.getKey(), "url");
+            this.width = integerParser.apply(getData(thumbnailData.getKey(), "width"));
+            this.height = integerParser.apply(getData(thumbnailData.getKey(), "height"));
         }
         
         /**
@@ -141,6 +139,8 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
          * @param height  The height of the Thumbnail.
          */
         public Thumbnail(Quality quality, String url, Long width, Long height) {
+            super();
+            
             this.quality = quality;
             this.url = url;
             this.width = width;
@@ -151,6 +151,7 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
          * Creates an empty Thumbnail.
          */
         public Thumbnail() {
+            super();
         }
         
         
@@ -164,6 +165,16 @@ public class ThumbnailSet extends LinkedHashMap<ThumbnailSet.Quality, ThumbnailS
         public long getSize() {
             return ((getWidth() == null) || (getHeight() == null)) ? -1 :
                    (getWidth() * getHeight());
+        }
+        
+        /**
+         * Returns the key of the Thumbnail.
+         *
+         * @return The key of the Thumbnail.
+         */
+        @Override
+        protected String getKey() {
+            return getQuality().name().toLowerCase();
         }
         
         

@@ -7,7 +7,6 @@
 
 package youtube.entity.info.detail;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -15,17 +14,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import commons.time.DateTimeUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.entity.info.detail.base.EntityDetail;
+import youtube.entity.info.detail.base.EntityDetailSet;
 import youtube.util.Utils;
 
 /**
  * Defines the Chapter List of a Video.
  */
-public class ChapterList extends ArrayList<ChapterList.Chapter> {
+public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
     
     //Logger
     
@@ -57,10 +57,12 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
      * @param videoDuration    The duration of the Video.
      */
     public ChapterList(String videoDescription, Long videoDuration) {
+        super();
+        
         Optional.ofNullable(videoDescription).map(StringUtility::splitLines)
                 .stream().flatMap(Collection::stream)
                 .filter(e -> !e.isEmpty()).filter(e -> e.contains(":"))
-                .filter(e -> e.matches("^.*" + TIMESTAMP_PATTERN.pattern() + ".*$"))
+                .map(CHAPTER_DEFINITION_PATTERN::matcher).filter(Matcher::matches)
                 .map(Chapter::new)
                 .sorted(Comparator.comparing(Chapter::getStartTime))
                 .forEachOrdered(this::add);
@@ -71,7 +73,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
             } else {
                 get(size() - 1).endTime = videoDuration;
                 IntStream.range(0, size()).forEach(i ->
-                        get(i).link(ListUtility.getOrNull(this, (i - 1)), ListUtility.getOrNull(this, (i + 1))));
+                        get(i).link(get(i - 1), get(i + 1)));
             }
         }
     }
@@ -98,7 +100,7 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
     /**
      * Defines a Chapter.
      */
-    public static class Chapter {
+    public static class Chapter extends EntityDetail {
         
         //Fields
         
@@ -138,34 +140,36 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
         /**
          * Creates a Chapter.
          *
-         * @param definition The description line defining the Chapter.
+         * @param chapterMatcher The pattern matcher of the description line defining the Chapter.
          */
-        public Chapter(String definition) {
-            Optional.ofNullable(definition)
-                    .map(CHAPTER_DEFINITION_PATTERN::matcher).filter(Matcher::matches)
-                    .ifPresent(chapterDefinitionMatcher -> {
-                        this.title = cleanTitle(chapterDefinitionMatcher.group("titlePart1"), chapterDefinitionMatcher.group("titlePart2"));
-                        this.timestamp = chapterDefinitionMatcher.group("timestamp");
-                        this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
-                    });
+        public Chapter(Matcher chapterMatcher) {
+            super();
+            
+            this.title = cleanTitle(chapterMatcher.group("titlePart1"), chapterMatcher.group("titlePart2"));
+            this.timestamp = chapterMatcher.group("timestamp");
+            this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
         }
         
         /**
          * Creates a Chapter.
          *
-         * @param title          The title of the Chapter.
-         * @param startTimestamp The timestamp of the Chapter.
+         * @param title     The title of the Chapter.
+         * @param timestamp The timestamp of the Chapter.
+         * @param startTime The start time of the Chapter, in seconds.
          */
-        public Chapter(String title, String startTimestamp) {
+        public Chapter(String title, String timestamp, Long startTime) {
+            super();
+            
             this.title = title;
-            this.timestamp = startTimestamp;
-            this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
+            this.timestamp = timestamp;
+            this.startTime = startTime;
         }
         
         /**
          * Creates an empty Chapter.
          */
         public Chapter() {
+            super();
         }
         
         
@@ -210,6 +214,16 @@ public class ChapterList extends ArrayList<ChapterList.Chapter> {
          */
         public String getUrlParameter() {
             return "&t=" + getStartTime();
+        }
+        
+        /**
+         * Returns the key of the Chapter.
+         *
+         * @return The key of the Chapter.
+         */
+        @Override
+        protected String getKey() {
+            return getTitle();
         }
         
         /**

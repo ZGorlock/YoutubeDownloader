@@ -8,16 +8,18 @@
 package youtube.entity.info.detail;
 
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.EntityInfo;
+import youtube.entity.info.detail.base.EntityDetail;
 
 /**
  * Defines the Location of a Video.
  */
-public class Location {
+public class Location extends EntityDetail {
     
     //Logger
     
@@ -57,17 +59,13 @@ public class Location {
      *
      * @param locationData The Location json data of the Video.
      */
-    @SuppressWarnings("unchecked")
     public Location(Map<String, Object> locationData) {
-        Optional.ofNullable(locationData)
-                .map(location -> {
-                    this.description = (String) location.get("locationDescription");
-                    return (Map<String, Object>) location.get("location");
-                }).ifPresent(coordinates -> {
-                    this.latitude = EntityInfo.numberParser.apply(coordinates.get("latitude"));
-                    this.longitude = EntityInfo.numberParser.apply(coordinates.get("longitude"));
-                    this.altitude = EntityInfo.numberParser.apply(coordinates.get("altitude"));
-                });
+        super(locationData);
+        
+        this.description = getData("locationDescription");
+        this.latitude = numberParser.apply(getData("location", "latitude"));
+        this.longitude = numberParser.apply(getData("location", "longitude"));
+        this.altitude = numberParser.apply(getData("location", "altitude"));
     }
     
     /**
@@ -79,6 +77,8 @@ public class Location {
      * @param altitude    The altitude of the Location.
      */
     public Location(String description, Double latitude, Double longitude, Double altitude) {
+        super();
+        
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -89,6 +89,41 @@ public class Location {
      * Creates an empty Location.
      */
     public Location() {
+        super();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Returns a string representation of the coordinates of the Location.
+     *
+     * @return A string representation of the coordinates of the Location.
+     */
+    public String coordinateString() {
+        return Stream.of(getLatitude(), getLongitude(), getAltitude())
+                .filter(Objects::nonNull).map(String::valueOf)
+                .collect(Collectors.joining(", "));
+    }
+    
+    /**
+     * Returns the key of the Location.
+     *
+     * @return The key of the Location.
+     */
+    @Override
+    protected String getKey() {
+        return getDescription();
+    }
+    
+    /**
+     * Returns a string representation of the Location.
+     *
+     * @return A string representation of the Location.
+     */
+    @Override
+    public String toString() {
+        return getDescription() + " [" + coordinateString() + "]";
     }
     
     

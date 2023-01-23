@@ -9,7 +9,6 @@ package youtube.entity.info.base;
 
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,9 +19,9 @@ import youtube.entity.info.PlaylistInfo;
 import youtube.util.ApiUtils;
 
 /**
- * Defines the Metadata of a Youtube Entity.
+ * Defines the Entity Metadata of an Entity.
  */
-public class EntityMetadata {
+public class EntityMetadata extends EntityData {
     
     //Logger
     
@@ -33,11 +32,6 @@ public class EntityMetadata {
     
     
     //Fields
-    
-    /**
-     * The raw json data of the Entity.
-     */
-    public Map<String, Object> data;
     
     /**
      * The kind of the Entity.
@@ -90,10 +84,10 @@ public class EntityMetadata {
     /**
      * Creates the Metadata for an Entity.
      *
-     * @param entityData The json data of the Entity,
+     * @param entityData The json data of the Entity.
      */
-    protected EntityMetadata(Map<String, Object> entityData) {
-        this.data = entityData;
+    public EntityMetadata(Map<String, Object> entityData) {
+        super(entityData);
         
         this.kind = getData("kind");
         this.eTag = getData("etag");
@@ -119,45 +113,6 @@ public class EntityMetadata {
     //Methods
     
     /**
-     * Returns a part of the raw data of the Entity.
-     *
-     * @param part The name of the data part, or null for the root part.
-     * @return The part of the raw data of the Entity, or an empty map if it does not exist.
-     */
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> getDataPart(String part) {
-        return Optional.ofNullable(part)
-                .map(e -> (Map<String, Object>) getData().getOrDefault(e, Map.of()))
-                .orElseGet(this::getData);
-    }
-    
-    /**
-     * Returns an element from a specific part of the raw data of the Entity.
-     *
-     * @param part  The name of the data part.
-     * @param field The name of the data element.
-     * @param <T>   The type of the element.
-     * @return The element from a specific part of the raw data of the Entity, or null if it does not exist.
-     */
-    @SuppressWarnings("unchecked")
-    public <T> T getData(String part, String field) {
-        return (T) Optional.ofNullable(getDataPart(part))
-                .map(e -> e.get(field))
-                .orElse(null);
-    }
-    
-    /**
-     * Returns an element from the default part of the raw data of the Entity.
-     *
-     * @param field The name of the data element.
-     * @param <T>   The type of the element.
-     * @return The element from a default part of the raw data of the Entity, or null if it does not exist.
-     */
-    public <T> T getData(String field) {
-        return getData(null, field);
-    }
-    
-    /**
      * Returns a string representation of the Entity Metadata.
      *
      * @return a string representation of the Entity Metadata.
@@ -170,15 +125,6 @@ public class EntityMetadata {
     
     
     //Getters
-    
-    /**
-     * Returns the raw json data of the Entity.
-     *
-     * @return the raw json data of the Entity.
-     */
-    public Map<String, Object> getData() {
-        return data;
-    }
     
     /**
      * Returns the kind of the Entity.

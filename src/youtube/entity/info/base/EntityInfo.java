@@ -8,13 +8,8 @@
 package youtube.entity.info.base;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.Optional;
 
-import commons.lambda.function.checked.CheckedFunction;
-import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +20,9 @@ import youtube.entity.info.detail.TopicList;
 import youtube.util.Utils;
 
 /**
- * Defines the Entity Info of a Youtube Entity.
+ * Defines the Entity Info of an Entity.
  */
-public abstract class EntityInfo {
+public abstract class EntityInfo extends EntityData {
     
     //Logger
     
@@ -40,64 +35,11 @@ public abstract class EntityInfo {
     //Constants
     
     /**
-     * The date format used in Entity data.
-     */
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
-    /**
      * A list of statuses indicating that an Entity is private.
      */
     private static final String[] PRIVATE_STATUSES = new String[] {
             "private"
     };
-    
-    
-    //Static Functions
-    
-    /**
-     * Parses a date string from Entity data into a date; or null if there was an error.
-     */
-    public static final CheckedFunction<String, LocalDateTime> dateParser = (String dateString) ->
-            Optional.ofNullable(dateString)
-                    .map(e -> e.replaceAll("(?i)[TZ]", " ")).map(String::strip)
-                    .map(e -> LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
-                    .orElse(null);
-    
-    /**
-     * Parses a duration string from Entity data into a duration, in seconds; or null if there was an error.
-     */
-    public static final CheckedFunction<String, Long> durationParser = (String durationString) ->
-            Optional.ofNullable(durationString)
-                    .map(e -> e.replaceAll("(?i)[PT\\s]", ""))
-                    .map(e -> Arrays.stream(e.split("(?<=\\D)"))
-                            .map(e2 -> Map.entry(
-                                    StringUtility.rSnip(e2, 1).toUpperCase(),
-                                    Long.parseLong(StringUtility.rShear(e2, 1))))
-                            .collect(MapCollectors.toHashMap()))
-                    .map(e -> (((((
-                            e.getOrDefault("D", 0L) * 24) +
-                            e.getOrDefault("H", 0L)) * 60) +
-                            e.getOrDefault("M", 0L)) * 60) +
-                            e.getOrDefault("S", 0L))
-                    .orElse(null);
-    
-    /**
-     * Parses an integer from Entity data into a long; or null if it could not be parsed.
-     */
-    public static final CheckedFunction<Object, Long> integerParser = (Object integerObject) ->
-            Optional.ofNullable(integerObject)
-                    .map(String::valueOf)
-                    .map((CheckedFunction<String, Long>) Long::parseLong)
-                    .orElse(null);
-    
-    /**
-     * Parses a number from Entity data into a double; or null if it could not be parsed.
-     */
-    public static final CheckedFunction<Object, Double> numberParser = (Object numberObject) ->
-            Optional.ofNullable(numberObject)
-                    .map(String::valueOf)
-                    .map((CheckedFunction<String, Double>) Double::parseDouble)
-                    .orElse(null);
     
     
     //Fields
@@ -176,67 +118,36 @@ public abstract class EntityInfo {
      * @param entityData The json data of the Entity.
      */
     protected EntityInfo(Map<String, Object> entityData) {
+        super(entityData);
         this.metadata = new EntityMetadata(entityData);
         
-        this.rawTitle = getData("title");
+        this.rawTitle = getData("snippet", "title");
         this.title = Utils.cleanVideoTitle(rawTitle);
         
-        this.description = getData("description");
+        this.description = getData("snippet", "description");
         this.status = getData("status", "privacyStatus");
         
-        this.dateString = getData("publishedAt");
+        this.dateString = getData("snippet", "publishedAt");
         this.date = dateParser.apply(dateString);
         
-        this.tags = new TagList(getData("tags"));
+        this.tags = new TagList(getData("snippet", "tags"));
         this.topics = new TopicList(getData("topicDetails", "topicCategories"));
         
-        this.stats = new Statistics(getDataPart("statistics"));
+        this.stats = new Statistics(getData("statistics"));
         
-        this.thumbnails = new ThumbnailSet(getData("thumbnails"));
+        this.thumbnails = new ThumbnailSet(getData("snippet", "thumbnails"));
         this.embeddedPlayer = getData("player", "embedHtml");
     }
     
     /**
      * Creates an empty Entity Info.
      */
-    public EntityInfo() {
+    protected EntityInfo() {
+        super();
     }
     
     
     //Methods
-    
-    /**
-     * Returns a part of the raw data of the Entity.
-     *
-     * @param part The name of the data part.
-     * @return The part of the raw data of the Entity, or null if it does not exist.
-     */
-    protected Map<String, Object> getDataPart(String part) {
-        return getMetadata().getDataPart(part);
-    }
-    
-    /**
-     * Returns an element from a specific part of the raw data of the Entity.
-     *
-     * @param part  The name of the data part.
-     * @param field The name of the data element.
-     * @param <T>   The type of the element.
-     * @return The element from a specific part of the raw data of the Entity, or null if it does not exist.
-     */
-    protected <T> T getData(String part, String field) {
-        return getMetadata().getData(part, field);
-    }
-    
-    /**
-     * Returns an element from the default part of the raw data of the Entity.
-     *
-     * @param field The name of the data element.
-     * @param <T>   The type of the element.
-     * @return The element from a default part of the raw data of the Entity, or null if it does not exist.
-     */
-    protected <T> T getData(String field) {
-        return getData("snippet", field);
-    }
     
     /**
      * Returns whether the Entity is private.

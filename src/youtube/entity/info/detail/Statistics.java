@@ -8,18 +8,18 @@
 package youtube.entity.info.detail;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.entity.info.base.EntityInfo;
+import youtube.entity.info.detail.base.EntityDetail;
+import youtube.entity.info.detail.base.EntityDetailSet;
 
 /**
  * Defines the Statistics of an Entity.
  */
-public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
+public class Statistics extends EntityDetailSet<Statistics.Stat> {
     
     //Logger
     
@@ -37,10 +37,13 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
      * @param statisticsData The Statistics json data of the Entity.
      */
     public Statistics(Map<String, Object> statisticsData) {
+        super(statisticsData);
+        
         Optional.ofNullable(statisticsData)
                 .map(Map::entrySet).stream().flatMap(Collection::stream)
+                .filter(e -> (e.getKey() != null) && (e.getValue() != null))
                 .map(Stat::new)
-                .forEachOrdered(stat -> put(stat.getName(), stat));
+                .forEachOrdered(this::add);
     }
     
     /**
@@ -56,7 +59,7 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
     /**
      * Defines a Stat.
      */
-    public static class Stat {
+    public static class Stat extends EntityDetail {
         
         //Fields
         
@@ -79,11 +82,10 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          * @param statData The json data of the Stat.
          */
         public Stat(Map.Entry<String, Object> statData) {
-            Optional.ofNullable(statData)
-                    .ifPresent(statDetails -> {
-                        this.name = statDetails.getKey();
-                        this.count = EntityInfo.integerParser.apply(statDetails.getValue());
-                    });
+            super(Map.ofEntries(statData));
+            
+            this.name = statData.getKey();
+            this.count = integerParser.apply(statData.getValue());
         }
         
         /**
@@ -92,19 +94,32 @@ public class Statistics extends LinkedHashMap<String, Statistics.Stat> {
          * @param name  The name of the Stat.
          * @param count The count of the Stat.
          */
-        public Stat(String name, Object count) {
+        public Stat(String name, Long count) {
+            super();
+            
             this.name = name;
-            this.count = EntityInfo.integerParser.apply(count);
+            this.count = count;
         }
         
         /**
          * Creates an empty Stat.
          */
         public Stat() {
+            super();
         }
         
         
         //Methods
+        
+        /**
+         * Returns the key of the Stat.
+         *
+         * @return The key of the Stat.
+         */
+        @Override
+        protected String getKey() {
+            return getName();
+        }
         
         /**
          * Returns a string representation of the Stat.

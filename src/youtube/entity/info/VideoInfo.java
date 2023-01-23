@@ -8,7 +8,6 @@
 package youtube.entity.info;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -21,6 +20,7 @@ import youtube.entity.info.base.EntityInfo;
 import youtube.entity.info.detail.ChapterList;
 import youtube.entity.info.detail.Location;
 import youtube.entity.info.detail.ThumbnailSet;
+import youtube.entity.info.detail.base.EntityDetailSet;
 import youtube.util.WebUtils;
 
 /**
@@ -127,19 +127,19 @@ public class VideoInfo extends EntityInfo {
         this.videoId = metadata.getEntityId();
         this.url = WebUtils.VIDEO_BASE + videoId;
         
-        this.playlistPosition = integerParser.apply(getData("position"));
+        this.playlistPosition = integerParser.apply(getData("snippet", "position"));
         
         this.durationString = getData("contentDetails", "duration");
         this.duration = durationParser.apply(durationString);
         this.chapters = new ChapterList(description, duration);
         
         this.definition = getData("contentDetails", "definition");
-        this.language = getData("defaultLanguage");
-        this.audioLanguage = getData("defaultAudioLanguage");
+        this.language = getData("snippet", "defaultLanguage");
+        this.audioLanguage = getData("snippet", "defaultAudioLanguage");
         
-        this.location = new Location(getDataPart("recordingDetails"));
-        this.broadcastType = Optional.ofNullable((String) getData("liveBroadcastContent"))
-                .orElseGet(() -> Optional.ofNullable(thumbnails).map(LinkedHashMap::values).stream().flatMap(Collection::stream)
+        this.location = new Location(getData("recordingDetails"));
+        this.broadcastType = Optional.ofNullable((String) getData("snippet", "liveBroadcastContent"))
+                .orElseGet(() -> Optional.ofNullable(thumbnails).map(EntityDetailSet::getAll).stream().flatMap(Collection::stream)
                                          .map(ThumbnailSet.Thumbnail::getUrl).anyMatch(e -> e.contains("_live.")) ? "live" : "none");
     }
     

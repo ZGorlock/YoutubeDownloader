@@ -7,18 +7,20 @@
 
 package youtube.entity.info.detail;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.entity.info.detail.base.EntityDetail;
+import youtube.entity.info.detail.base.EntityDetailSet;
 
 /**
  * Defines the Tag List of an Entity.
  */
-public class TagList extends ArrayList<TagList.Tag> {
+public class TagList extends EntityDetailSet<EntityDetail> {
     
     //Logger
     
@@ -35,9 +37,13 @@ public class TagList extends ArrayList<TagList.Tag> {
      *
      * @param entityTags The tag list of the Entity.
      */
-    public TagList(List<String> entityTags) {
+    public TagList(List<Object> entityTags) {
+        super();
+        
         Optional.ofNullable(entityTags)
                 .stream().flatMap(Collection::stream)
+                .filter(Objects::nonNull).map(String::valueOf)
+                .filter(e -> !e.isEmpty())
                 .distinct().map(Tag::new)
                 .forEachOrdered(this::add);
     }
@@ -55,7 +61,7 @@ public class TagList extends ArrayList<TagList.Tag> {
     /**
      * Defines a Tag.
      */
-    public static class Tag {
+    public static class Tag extends EntityDetail {
         
         //Fields
         
@@ -73,6 +79,8 @@ public class TagList extends ArrayList<TagList.Tag> {
          * @param name The name of the Tag.
          */
         public Tag(String name) {
+            super();
+            
             this.name = name;
         }
         
@@ -80,18 +88,19 @@ public class TagList extends ArrayList<TagList.Tag> {
          * Creates an empty Tag.
          */
         public Tag() {
+            super();
         }
         
         
         //Methods
         
         /**
-         * Returns a string representation of the Tag.
+         * Returns the key of the Tag.
          *
-         * @return A string representation of the Tag.
+         * @return The key of the Tag.
          */
         @Override
-        public String toString() {
+        protected String getKey() {
             return getName();
         }
         

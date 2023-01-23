@@ -245,7 +245,7 @@ public final class ApiUtils {
         /**
          * Parses an Entity.
          *
-         * @param entityData The json data of the Youtube Entity.
+         * @param entityData The json data of the Entity.
          * @param <T>        The type of the Entity.
          * @return The Entity.
          */
@@ -927,7 +927,7 @@ public final class ApiUtils {
     }
     
     /**
-     * Handles Youtube Entity loading and caching.
+     * Handles Entity loading and caching.
      */
     private static class EntityHandler {
         
@@ -943,12 +943,12 @@ public final class ApiUtils {
         //Static Methods
         
         /**
-         * Caches a Youtube Entity.
+         * Caches an Entity.
          *
          * @param entityType   The Type of the Entity.
          * @param entityId     The id of the Entity.
          * @param entityLoader The function used to load the Entity.
-         * @return The Youtube Entity, or null if it could not be loaded.
+         * @return The Entity, or null if it could not be loaded.
          */
         @SuppressWarnings("unchecked")
         private static <T extends EntityInfo> T cacheEntity(ApiEntity entityType, String entityId, CheckedFunction<String, T> entityLoader) {
@@ -958,53 +958,53 @@ public final class ApiUtils {
         }
         
         /**
-         * Loads a Youtube Entity.
+         * Loads an Entity.
          *
          * @param entityType       The Entity Type of the Entity.
          * @param entityId         The id of the Entity.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @param channelState     The Channel State of the calling Channel.
          * @param <T>              The type of the Entity.
-         * @return The Youtube Entity, or null if it could not be loaded.
+         * @return The Entity, or null if it could not be loaded.
          */
         private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, CheckedBiFunction<String, ChannelState, Map<String, Object>> entityDataLoader, ChannelState channelState) {
             return cacheEntity(entityType, entityId, id -> entityType.parse(entityDataLoader.apply(id, channelState)));
         }
         
         /**
-         * Loads a Youtube Entity.
+         * Loads an Entity.
          *
          * @param entityType       The Entity Type of the Entity.
          * @param entityId         The id of the Entity.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @param <T>              The type of the Entity.
-         * @return The Youtube Entity, or null if it could not be loaded.
+         * @return The Entity, or null if it could not be loaded.
          */
         private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, CheckedFunction<String, Map<String, Object>> entityDataLoader) {
             return loadEntity(entityType, entityId, (id, state) -> entityDataLoader.apply(id), null);
         }
         
         /**
-         * Loads a Youtube Entity.
+         * Loads an Entity.
          *
          * @param entityType The Entity Type of the Entity.
          * @param entityData The json data of the Entity.
          * @param <T>        The type of the Entity.
-         * @return The Youtube Entity.
+         * @return The Entity.
          */
         private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, Map<String, Object> entityData) {
             return loadEntity(entityType, (String) entityData.get("id"), id -> entityData);
         }
         
         /**
-         * Loads a list of Youtube Entities.
+         * Loads a list of Entities.
          *
          * @param entityType       The Entity Type of the Entities.
          * @param entityId         The id of the parent Entity.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @param channelState     The Channel State of the calling Channel.
          * @param <T>              The type of the Entities.
-         * @return The list of Youtube Entities, or null it could not be loaded.
+         * @return The list of Entities, or null it could not be loaded.
          */
         @SuppressWarnings("unchecked")
         private static <T extends EntityInfo> List<T> loadEntities(ApiEntity entityType, String entityId, CheckedBiFunction<String, ChannelState, List<Map<String, Object>>> entityDataLoader, ChannelState channelState) {
@@ -1018,13 +1018,13 @@ public final class ApiUtils {
         }
         
         /**
-         * Loads a list of Youtube Entities.
+         * Loads a list of Entities.
          *
          * @param entityType       The Entity Type of the Entities.
          * @param entityId         The id of the parent Entity.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @param <T>              The type of the Entities.
-         * @return The list of Youtube Entities, or null it could not be loaded.
+         * @return The list of Entities, or null it could not be loaded.
          */
         private static <T extends EntityInfo> List<T> loadEntities(ApiEntity entityType, String entityId, CheckedFunction<String, List<Map<String, Object>>> entityDataLoader) {
             return loadEntities(entityType, entityId, (id, state) -> entityDataLoader.apply(id), null);
