@@ -25,7 +25,6 @@
                   {
                     "key": "KURZGESAGT",
                     "active": true,
-                    "name": "Kurzgesagt",
                     "url": "https://www.youtube.com/c/inanutshell",
                     "playlistId": "UUsXVk37bltHxD1rDPwtNM8Q",
                     "outputFolder": "~/Kurzgesagt"
@@ -33,7 +32,6 @@
                   {
                     "key": "SCI_SHOW",
                     "active": true,
-                    "name": "SciShow",
                     "url": "https://www.youtube.com/c/SciShow",
                     "playlistId": "UUZYTClx2T1of7BRZ86-8fow",
                     "outputFolder": "~/SciShow"
@@ -41,7 +39,6 @@
                   {
                     "key": "VERITASIUM",
                     "active": true,
-                    "name": "Veritasium",
                     "url": "https://www.youtube.com/c/veritasium",
                     "playlistId": "UUHnyfMqiRRG1u-2MsSQLbXA",
                     "outputFolder": "~/Veritasium"
@@ -49,7 +46,6 @@
                   {
                     "key": "ANSWERS_WITH_JOE",
                     "active": true,
-                    "name": "AnswersWithJoe",
                     "url": "https://www.youtube.com/playlist?list=PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl",
                     "playlistId": "PLAnwfqs0VrqoWNqkWnLM65HS6BIOEFsMl",
                     "outputFolder": "~/Answers With Joe"
@@ -57,7 +53,6 @@
                   {
                     "key": "BE_SMART",
                     "active": true,
-                    "name": "BeSmart",
                     "url": "https://www.youtube.com/c/itsokaytobesmart",
                     "playlistId": "UUH4BNI0-FOK2dMXoFtViWHw",
                     "outputFolder": "~/Be Smart"
@@ -133,7 +128,6 @@
                   {
                     "key": "CGP_GREY",
                     "active": true,
-                    "name": "CgpGrey",
                     "url": "https://www.youtube.com/greymatter",
                     "playlistId": "UU2C_jShtL725hvbm1arSV9w",
                     "outputFolder": "~/CGP Grey"
@@ -141,7 +135,6 @@
                   {
                     "key": "SMARTER_EVERY_DAY",
                     "active": false,
-                    "name": "SmarterEveryDay",
                     "url": "https://www.youtube.com/c/smartereveryday",
                     "playlistId": "UU6107grRI4m0o2-emgoDnAA",
                     "outputFolder": "~/Smarter Every Day"
@@ -149,7 +142,6 @@
                   {
                     "key": "RATIONAL_ANIMATIONS",
                     "active": true,
-                    "name": "RationalAnimations",
                     "url": "https://www.youtube.com/c/RationalAnimations",
                     "playlistId": "UUgqt1RE0k0MIr0LoyJRy2lg",
                     "outputFolder": "~/Rational Animations"
@@ -157,7 +149,6 @@
                   {
                     "key": "DOMAIN_OF_SCIENCE",
                     "active": true,
-                    "name": "DomainOfScience",
                     "url": "https://www.youtube.com/c/DomainofScience",
                     "playlistId": "UUxqAWLTk1CmBvZFPzeZMd9A",
                     "outputFolder": "~/Domain of Science"
@@ -408,7 +399,6 @@
                   {
                     "key": "HISTORY_OF_THE_UNIVERSE",
                     "active": true,
-                    "name": "HistoryOfTheUniverse",
                     "url": "https://www.youtube.com/c/HistoryoftheUniverse",
                     "playlistId": "UUtRFmSyL4fSLQkn-wMqlmdA",
                     "outputFolder": "~/History of the Universe"
@@ -416,7 +406,6 @@
                   {
                     "key": "SCI_SHOW_SPACE",
                     "active": true,
-                    "name": "SciShowSpace",
                     "url": "https://www.youtube.com/c/scishowspace",
                     "playlistId": "UUrMePiHCWG4Vwqv3t7W9EFg",
                     "outputFolder": "~/SciShow Space"
@@ -424,7 +413,6 @@
                   {
                     "key": "COOL_WORLDS",
                     "active": true,
-                    "name": "CoolWorlds",
                     "url": "https://www.youtube.com/c/CoolWorldsLab",
                     "playlistId": "UUGHZpIpAWJQ-Jy_CeCdXhMA",
                     "outputFolder": "~/Cool Worlds"
@@ -439,7 +427,6 @@
                   {
                     "key": "STEVE_MOULD",
                     "active": true,
-                    "name": "SteveMould",
                     "url": "https://www.youtube.com/c/SteveMould",
                     "playlistId": "UUEIwxahdLz7bap-VDs9h35A",
                     "outputFolder": "~/Steve Mould"
@@ -447,7 +434,6 @@
                   {
                     "key": "UP_AND_ATOM",
                     "active": true,
-                    "name": "UpAndAtom",
                     "url": "https://www.youtube.com/c/UpandAtom",
                     "playlistId": "UUSIvk78tK2TiviLQn4fSHaw",
                     "outputFolder": "~/Up and Atom"
@@ -455,7 +441,6 @@
                   {
                     "key": "MINUTE_PHYSICS",
                     "active": true,
-                    "name": "MinutePhysics",
                     "url": "https://www.youtube.com/user/minutephysics",
                     "playlistId": "UUUHW94eEFW7hkUMVaZz4eDg",
                     "outputFolder": "~/Minute Physics"
@@ -470,7 +455,6 @@
                   {
                     "key": "STUFF_MADE_HERE",
                     "active": true,
-                    "name": "StuffMadeHere",
                     "url": "https://www.youtube.com/c/StuffMadeHere",
                     "playlistId": "UUj1VqrHhDte54oLgPG4xpuQ",
                     "outputFolder": "~/Stuff Made Here"
@@ -478,7 +462,6 @@
                   {
                     "key": "HOW_ITS_MADE",
                     "active": false,
-                    "name": "HowItsMade",
                     "url": "https://www.youtube.com/channel/UCWBkudOTaVbvkCBc0pyZFMA",
                     "playlistId": "UUWBkudOTaVbvkCBc0pyZFMA",
                     "outputFolder": "~/How its Made"
@@ -486,7 +469,6 @@
                   {
                     "key": "THE_POST_APOCALYPTIC_INVENTOR",
                     "active": true,
-                    "name": "ThePostApocalypticInventor",
                     "url": "https://www.youtube.com/c/ThePostApocalypticInventor",
                     "playlistId": "UUDbWmfrwmzn1ZsGgrYRUxoA",
                     "outputFolder": "~/The Post Apocalyptic Inventor"
@@ -494,7 +476,6 @@
                   {
                     "key": "NEW_MIND",
                     "active": true,
-                    "name": "NewMind",
                     "url": "https://www.youtube.com/c/NewMind",
                     "playlistId": "UU5_Y-BKzq1uW_2rexWkUzlA",
                     "outputFolder": "~/New Mind"
@@ -523,7 +504,6 @@
                   {
                     "key": "APPLIED_SCIENCE",
                     "active": true,
-                    "name": "AppliedScience",
                     "url": "https://www.youtube.com/c/AppliedScience",
                     "playlistId": "UUivA7_KLKWo43tFcCkFvydw",
                     "outputFolder": "~/Applied Science"
@@ -531,7 +511,6 @@
                   {
                     "key": "MACHINE_THINKING",
                     "active": true,
-                    "name": "MachineThinking",
                     "url": "https://www.youtube.com/c/machinethinking",
                     "playlistId": "UUfsznjef2zGJnrCRQBXqo6Q",
                     "outputFolder": "~/Machine Thinking"
@@ -539,7 +518,6 @@
                   {
                     "key": "REAL_ENGINEERING",
                     "active": true,
-                    "name": "RealEngineering",
                     "url": "https://www.youtube.com/@RealEngineering",
                     "playlistId": "UUR1IuLEqb6UEA_zQ81kwXfg",
                     "outputFolder": "~/Real Engineering"
@@ -547,7 +525,6 @@
                   {
                     "key": "ZACK_FREEDMAN",
                     "active": true,
-                    "name": "ZackFreedman",
                     "url": "https://www.youtube.com/c/ZackFreedman",
                     "playlistId": "UUUW49KGPezggFi0PGyDvcvg",
                     "outputFolder": "~/Zack Freedman"
@@ -560,9 +537,8 @@
                 "outputFolder": "~/Math",
                 "channels": [
                   {
-                    "key": "THREE_BLUE_ONE_BROWN",
+                    "key": "3_BLUE_1_BROWN",
                     "active": true,
-                    "name": "3Blue1Brown",
                     "url": "https://www.youtube.com/c/3blue1brown",
                     "playlistId": "UUYO_jab_esuFRV4b17AJtAw",
                     "outputFolder": "~/3Blue1Brown"
@@ -570,7 +546,6 @@
                   {
                     "key": "NUMBERPHILE",
                     "active": true,
-                    "name": "Numberphile",
                     "url": "https://www.youtube.com/user/numberphile",
                     "playlistId": "UUoxcjq-8xIDTYp3uz647V5A",
                     "outputFolder": "~/Numberphile"
@@ -578,7 +553,6 @@
                   {
                     "key": "ZACH_STAR",
                     "active": true,
-                    "name": "ZachStar",
                     "url": "https://www.youtube.com/c/zachstar",
                     "playlistId": "UUpCSAcbqs-sjEVfk_hMfY9w",
                     "outputFolder": "~/Zach Star"
@@ -586,7 +560,6 @@
                   {
                     "key": "SIXTY_SYMBOLS",
                     "active": true,
-                    "name": "SixtySymbols",
                     "url": "https://www.youtube.com/user/sixtysymbols",
                     "playlistId": "UUvBqzzvUBLCs8Y7Axb-jZew",
                     "outputFolder": "~/Sixty Symbols"
@@ -594,7 +567,6 @@
                   {
                     "key": "MATHOLOGER",
                     "active": true,
-                    "name": "Mathologer",
                     "url": "https://www.youtube.com/c/Mathologer",
                     "playlistId": "UU1_uAIS3r8Vu6JjXWvastJg",
                     "outputFolder": "~/Mathologer"
@@ -609,7 +581,6 @@
                   {
                     "key": "ELECTROBOOM",
                     "active": true,
-                    "name": "Electroboom",
                     "url": "https://www.youtube.com/c/Electroboom",
                     "playlistId": "UUJ0-OtVpF0wOKEqT2Z1HEtA",
                     "outputFolder": "~/ElectroBOOM"
@@ -746,7 +717,6 @@
                   {
                     "key": "UNDECIDED",
                     "active": true,
-                    "name": "Undecided",
                     "url": "https://www.youtube.com/@UndecidedMF",
                     "playlistId": "UUjtUS7-SZTi6pXjUbzGHQCg",
                     "outputFolder": "~/Undecided"
@@ -754,7 +724,6 @@
                   {
                     "key": "ASIANOMETRY",
                     "active": true,
-                    "name": "Asianometry",
                     "url": "https://www.youtube.com/playlist?list=PLKtxx9TnH76Qqdqb5H40GXRNw8mQKN8Ou",
                     "playlistId": "PLKtxx9TnH76Qqdqb5H40GXRNw8mQKN8Ou",
                     "outputFolder": "~/Asianometry"
@@ -769,7 +738,6 @@
                   {
                     "key": "COMPUTERPHILE",
                     "active": true,
-                    "name": "Computerphile",
                     "url": "https://www.youtube.com/user/Computerphile",
                     "playlistId": "UU9-y-6csu5WGm29I7JiwpnA",
                     "outputFolder": "~/Computerphile"
@@ -777,7 +745,6 @@
                   {
                     "key": "ROBERT_MILES",
                     "active": true,
-                    "name": "RobertMiles",
                     "url": "https://www.youtube.com/c/RobertMilesAI",
                     "playlistId": "UULB7AzTwc6VFZrBsO2ucBMg",
                     "outputFolder": "~/Robert Miles"
@@ -785,7 +752,6 @@
                   {
                     "key": "REDUCIBLE",
                     "active": true,
-                    "name": "Reducible",
                     "url": "https://www.youtube.com/c/Reducible",
                     "playlistId": "UUK8XIGR5kRidIw2fWqwyHRA",
                     "outputFolder": "~/Reducible"
@@ -793,7 +759,6 @@
                   {
                     "key": "CODE_BULLET",
                     "active": true,
-                    "name": "CodeBullet",
                     "url": "https://www.youtube.com/c/CodeBullet",
                     "playlistId": "UU0e3QhIYukixgh5VVpKHH9Q",
                     "outputFolder": "~/Code Bullet"
@@ -801,7 +766,6 @@
                   {
                     "key": "MAJOR_GEEKS",
                     "active": true,
-                    "name": "MajorGeeks",
                     "url": "https://www.youtube.com/user/majorgeeks",
                     "playlistId": "UU9-wz8Md_X6V3BCihYW3jig",
                     "outputFolder": "~/Major Geeks"
@@ -816,7 +780,6 @@
                   {
                     "key": "PERIODIC_VIDEOS",
                     "active": true,
-                    "name": "PeriodicVideos",
                     "url": "https://www.youtube.com/user/periodicvideos",
                     "playlistId": "UUtESv1e7ntJaLJYKIO1FoYw",
                     "outputFolder": "~/Periodic Videos"
@@ -846,7 +809,6 @@
                   {
                     "key": "CODYS_LAB",
                     "active": false,
-                    "name": "CodysLab",
                     "url": "https://www.youtube.com/user/theCodyReeder",
                     "playlistId": "UUu6mSoMNzHQiBIOCkHUa2Aw",
                     "outputFolder": "~/Cody's Lab"
@@ -876,7 +838,6 @@
                   {
                     "key": "BIG_STACK_D",
                     "active": true,
-                    "name": "BigStackD",
                     "url": "https://www.youtube.com/c/bigstackD",
                     "playlistId": "UUfNQkKS2AkN_BX36MdvY70Q",
                     "outputFolder": "~/Big Stack D"
@@ -891,7 +852,6 @@
                   {
                     "key": "CHUBBYEMU",
                     "active": true,
-                    "name": "Chubbyemu",
                     "url": "https://www.youtube.com/c/ChubbyemuGames",
                     "playlistId": "UUKOvOaJv4GK-oDqx-sj7VVg",
                     "outputFolder": "~/Chubbyemu"
@@ -899,7 +859,6 @@
                   {
                     "key": "INSTITUTE_OF_HUMAN_ANATOMY",
                     "active": true,
-                    "name": "InstituteOfHumanAnatomy",
                     "url": "https://www.youtube.com/c/InstituteofHumanAnatomy",
                     "playlistId": "UUgBg0aacyJnw4qUnb1FlfEQ",
                     "outputFolder": "~/Institute of Human Anatomy"
@@ -946,7 +905,6 @@
                   {
                     "key": "HISTORY_TIME",
                     "active": true,
-                    "name": "HistoryTime",
                     "url": "https://www.youtube.com/c/HistoryTime",
                     "playlistId": "UUN9v4QG3AQEP3zuRvVs2dAg",
                     "outputFolder": "~/History Time"
@@ -954,7 +912,6 @@
                   {
                     "key": "VOICES_OF_THE_PAST",
                     "active": true,
-                    "name": "VoicesOfThePast",
                     "url": "https://www.youtube.com/c/VoicesofthePast",
                     "playlistId": "UUqoGR_EedlhKDVuWNwYWRbg",
                     "outputFolder": "~/Voices of the Past"
@@ -969,7 +926,6 @@
                   {
                     "key": "NOT_JUST_BIKES",
                     "active": true,
-                    "name": "NotJustBikes",
                     "url": "https://www.youtube.com/c/NotJustBikes",
                     "playlistId": "UU0intLFzLaudFG-xAvUEO-A",
                     "outputFolder": "~/Not Just Bikes"
@@ -977,7 +933,6 @@
                   {
                     "key": "PRACTICAL_ENGINEERING",
                     "active": true,
-                    "name": "PracticalEngineering",
                     "url": "https://www.youtube.com/c/PracticalEngineeringChannel",
                     "playlistId": "UUMOqf8ab-42UUQIdVoKwjlQ",
                     "outputFolder": "~/Practical Engineering"
@@ -1194,7 +1149,6 @@
                   {
                     "key": "KARLTON_DENNIS",
                     "active": true,
-                    "name": "KarltonDennis",
                     "url": "https://www.youtube.com/@karltondennis4259",
                     "playlistId": "UUEc3bAbOtPEUIgpNkViF_PQ",
                     "outputFolder": "~/Karlton Dennis"
@@ -1352,7 +1306,6 @@
                   {
                     "key": "LOCK_PICKING_LAWYER",
                     "active": false,
-                    "name": "LockPickingLawyer",
                     "url": "https://www.youtube.com/c/lockpickinglawyer",
                     "playlistId": "UUm9K6rby98W8JigLoZOh6FQ",
                     "outputFolder": "~/Lock Picking Lawyer"
@@ -1367,7 +1320,6 @@
                   {
                     "key": "FREE_DOCUMENTARY",
                     "active": true,
-                    "name": "FreeDocumentary",
                     "url": "https://www.youtube.com/c/FreeDocumentaryNature",
                     "playlistId": "UUQtW2oz8ec8pHjjxawujNjg",
                     "outputFolder": "~/Free Documentary"
@@ -1375,7 +1327,6 @@
                   {
                     "key": "NATURE_DOCUMENTARY",
                     "active": true,
-                    "name": "NatureDocumentaries",
                     "url": "https://www.youtube.com/playlist?list=PL3GrymsIop4ka3VVrrMVjjde4T9Zi_r7F",
                     "playlistId": "PL3GrymsIop4ka3VVrrMVjjde4T9Zi_r7F",
                     "outputFolder": "~/Nature Documentaries"
@@ -1383,7 +1334,6 @@
                   {
                     "key": "HISTORY_OF_EARTH",
                     "active": true,
-                    "name": "HistoryOfEarth",
                     "url": "https://www.youtube.com/c/HistoryoftheEarth",
                     "playlistId": "UU_aOteuWIY8ITg7DQQspG1g",
                     "outputFolder": "~/History of Earth"
@@ -1391,7 +1341,6 @@
                   {
                     "key": "PBS_EONS",
                     "active": true,
-                    "name": "PbsEons",
                     "url": "https://www.youtube.com/c/eons",
                     "playlistId": "UUzR-rom72PHN9Zg7RML9EbA",
                     "outputFolder": "~/PBS Eons"
@@ -1399,7 +1348,6 @@
                   {
                     "key": "REAL_WILD",
                     "active": false,
-                    "name": "RealWild",
                     "url": "https://www.youtube.com/c/WildThingsChannel",
                     "playlistId": "UUbq-4OJxnziD3awH-aTezeA",
                     "outputFolder": "~/Real Wild"
@@ -1407,7 +1355,6 @@
                   {
                     "key": "TIER_ZOO",
                     "active": true,
-                    "name": "TierZoo",
                     "url": "https://www.youtube.com/channel/UCHsRtomD4twRf5WVHHk-cMw",
                     "playlistId": "UUHsRtomD4twRf5WVHHk-cMw",
                     "outputFolder": "~/Tier Zoo"
@@ -1415,7 +1362,6 @@
                   {
                     "key": "BRAVE_WILDERNESS",
                     "active": false,
-                    "name": "BraveWilderness",
                     "url": "https://www.youtube.com/c/BraveWilderness",
                     "playlistId": "UU6E2mP01ZLH_kbAyeazCNdg",
                     "outputFolder": "~/Brave Wilderness"
@@ -1423,7 +1369,6 @@
                   {
                     "key": "RIVER_MONSTERS",
                     "active": true,
-                    "name": "RiverMonsters",
                     "url": "https://www.youtube.com/c/rivermonsters",
                     "playlistId": "UUomwL29zYKujb1JhkB0EcGA",
                     "outputFolder": "~/River Monsters"
@@ -2013,7 +1958,6 @@
                   {
                     "key": "SOUP_EMPORIUM",
                     "active": true,
-                    "name": "SoupEmporium",
                     "url": "https://www.youtube.com/c/SoupEmporiums-Emporium-Of-Regrettable-Choices",
                     "playlistId": "UU60sV1b2e_EQRDnueRxgiIQ",
                     "outputFolder": "~/Soup Emporium"
@@ -2021,7 +1965,6 @@
                   {
                     "key": "DOWN_THE_RABBIT_HOLE",
                     "active": true,
-                    "name": "DownTheRabbitHole",
                     "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
                     "playlistId": "PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
                     "outputFolder": "~/Down The Rabbit Hole"
@@ -2029,7 +1972,6 @@
                   {
                     "key": "PHILON",
                     "active": true,
-                    "name": "Philon",
                     "url": "https://www.youtube.com/c/Philion",
                     "playlistId": "UUgKJPhVzv8w0VaZFnS_VmaA",
                     "outputFolder": "~/Philon"
@@ -2198,7 +2140,6 @@
                   {
                     "key": "OSRS_BEATZ",
                     "active": true,
-                    "name": "OsrsBeatz",
                     "url": "https://www.youtube.com/c/OSRSBeatz",
                     "playlistId": "UUs1rnF_c_VSg74M5CQ-HKWg",
                     "outputFolder": "Runescape/OSRS Beatz",
@@ -2215,7 +2156,6 @@
                   {
                     "key": "DND_LORE",
                     "active": true,
-                    "name": "DndLore",
                     "url": "https://www.youtube.com/playlist?list=PL-Tj3kmYOOy2OVjoqTO8joausM-6JjcI-",
                     "playlistId": "PL-Tj3kmYOOy2OVjoqTO8joausM-6JjcI-",
                     "outputFolder": "~/Dungeons and Dragons Lore"
@@ -2223,7 +2163,6 @@
                   {
                     "key": "GINNY_DI_DND_TIPS",
                     "active": true,
-                    "name": "GinnyDiDndTips",
                     "url": "https://www.youtube.com/playlist?list=PLsmjZYZs1ps0vrqrWyowb3y6VZDGG1ZHC",
                     "playlistId": "PLsmjZYZs1ps0vrqrWyowb3y6VZDGG1ZHC",
                     "outputFolder": "~/Ginny Di - D&D Tips"
@@ -2500,7 +2439,6 @@
                   {
                     "key": "AVE",
                     "active": true,
-                    "name": "Ave",
                     "url": "https://www.youtube.com/c/arduinoversusevil2025",
                     "playlistId": "UUhWv6Pn_zP0rI6lgGt3MyfA",
                     "outputFolder": "~/AvE"
@@ -2508,7 +2446,6 @@
                   {
                     "key": "THIS_OLD_TONY",
                     "active": true,
-                    "name": "ThisOldTony",
                     "url": "https://www.youtube.com/c/ThisOldTony",
                     "playlistId": "UU5NO8MgTQKHAWXp6z8Xl7yQ",
                     "outputFolder": "~/This Old Tony"
@@ -2516,7 +2453,6 @@
                   {
                     "key": "TORQUE_TEST_CHANNEL",
                     "active": true,
-                    "name": "TorqueTestChannel",
                     "url": "https://www.youtube.com/c/TorqueTestChannel",
                     "playlistId": "UUZem9C5rWjSb0B8tV3k2EZg",
                     "outputFolder": "~/Torque Test Channel"
@@ -2584,7 +2520,6 @@
                   {
                     "key": "CASUALLY_EXPLAINED",
                     "active": true,
-                    "name": "CasuallyExplained",
                     "url": "https://www.youtube.com/c/CasuallyExplained",
                     "playlistId": "UUr3cBLTYmIK9kY0F_OdFWFQ",
                     "outputFolder": "~/Casually Explained"
@@ -2592,7 +2527,6 @@
                   {
                     "key": "SAM_ONELLA_ACADEMY",
                     "active": true,
-                    "name": "SamOnellaAcademy",
                     "url": "https://www.youtube.com/c/SamONellaAcademy",
                     "playlistId": "UU1DTYW241WD64ah5BFWn4JA",
                     "outputFolder": "~/Sam O'Nella Academy"
@@ -2600,7 +2534,6 @@
                   {
                     "key": "CYANIDE_AND_HAPPINESS",
                     "active": true,
-                    "name": "CyanideAndHappiness",
                     "url": "https://www.youtube.com/c/ExplosmEntertainment",
                     "playlistId": "PLA1F18BC2CFDB46FF",
                     "outputFolder": "~/Cyanide and Happiness"
@@ -2608,7 +2541,6 @@
                   {
                     "key": "ZEFRANK",
                     "active": true,
-                    "name": "Zefrank",
                     "url": "https://www.youtube.com/c/zefrank",
                     "playlistId": "UUVpankR4HtoAVtYnFDUieYA",
                     "outputFolder": "~/Zefrank"
@@ -2616,7 +2548,6 @@
                   {
                     "key": "OZZY_MAN_REVIEWS",
                     "active": false,
-                    "name": "OzzyManReviews",
                     "url": "https://www.youtube.com/user/ozzymanreviews",
                     "playlistId": "UUeE3lj6pLX_gCd0Yvns517Q",
                     "outputFolder": "~/Ozzy Man Reviews"
@@ -2624,7 +2555,6 @@
                   {
                     "key": "LOTR_DUBS",
                     "active": true,
-                    "name": "LotrDubs",
                     "url": "https://www.youtube.com/playlist?list=PLkFo9OAxAI5YESYXQdUYJ5G-FofIg-D3R",
                     "playlistId": "PLkFo9OAxAI5YESYXQdUYJ5G-FofIg-D3R",
                     "outputFolder": "~/LOTR Dubs"
@@ -2660,7 +2590,6 @@
                   {
                     "key": "NATHAN_FOR_YOU",
                     "active": true,
-                    "name": "NathanForYou",
                     "url": "https://www.youtube.com/playlist?list=PLD7nPL1U-R5p2A2PNhFaimVdzjIg6CNpI",
                     "playlistId": "PLD7nPL1U-R5p2A2PNhFaimVdzjIg6CNpI",
                     "outputFolder": "~/Nathan For You"
@@ -2668,7 +2597,6 @@
                   {
                     "key": "FRIDAY_BEERS",
                     "active": true,
-                    "name": "FridayBeers",
                     "url": "https://www.youtube.com/@friday.beers",
                     "playlistId": "UUCgK6peZI5-FKDCWzMIFk2A",
                     "outputFolder": "~/Friday Beers"
@@ -2705,7 +2633,6 @@
                   {
                     "key": "BEST_CUBE_COUBOY",
                     "active": false,
-                    "name": "BestCubeCouboy",
                     "url": "https://www.youtube.com/channel/UCfU5Otc792c-lNXfFK8PM7Q",
                     "playlistId": "UUfU5Otc792c-lNXfFK8PM7Q",
                     "outputFolder": "~/Best Cube - Couboy"
@@ -2713,7 +2640,6 @@
                   {
                     "key": "BEST_CUBE_SPARTA",
                     "active": false,
-                    "name": "BestCubeSparta",
                     "url": "https://www.youtube.com/channel/UCqb-JGYhFaV_jkJE026YZyA",
                     "playlistId": "UUqb-JGYhFaV_jkJE026YZyA",
                     "outputFolder": "~/Best Cube - Sparta"
@@ -2743,7 +2669,6 @@
                   {
                     "key": "SEXY_CUBE",
                     "active": false,
-                    "name": "SexyCube",
                     "url": "https://www.youtube.com/channel/UCI1JjfDCiMyeSnSXtAZL5zg",
                     "playlistId": "UUI1JjfDCiMyeSnSXtAZL5zg",
                     "outputFolder": "~/Sexy Cube"
@@ -2751,7 +2676,6 @@
                   {
                     "key": "ANIME_CUBE",
                     "active": true,
-                    "name": "AnimeCube",
                     "url": "https://www.youtube.com/channel/UC2M5ugO54csNiDOEb8pOvvg",
                     "playlistId": "UU2M5ugO54csNiDOEb8pOvvg",
                     "outputFolder": "~/Anime Cube"
@@ -2766,7 +2690,6 @@
                   {
                     "key": "FELIX_COSGRAVE",
                     "active": true,
-                    "name": "FelixCosgrave",
                     "url": "https://www.youtube.com/c/FelixColgrave",
                     "playlistId": "UUO7fujFV_MuxTM0TuZrnE6Q",
                     "outputFolder": "~/Felix Cosgrave"
@@ -2774,7 +2697,6 @@
                   {
                     "key": "MICHAEL_CUSACK",
                     "active": true,
-                    "name": "MichaelCusack",
                     "url": "https://www.youtube.com/c/MichaelCusackCartoons",
                     "playlistId": "UUkHPqmBsJkws8HbPP1cd_NA",
                     "outputFolder": "~/Michael Cusack"
@@ -2803,7 +2725,6 @@
                   {
                     "key": "THE_COMET_IS_COMING",
                     "active": false,
-                    "name": "TheCometIsComing",
                     "url": "https://www.youtube.com/playlist?list=PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
                     "playlistId": "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
                     "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming.m3u"
@@ -2855,7 +2776,6 @@
                   {
                     "key": "NEONI",
                     "active": true,
-                    "name": "Neoni",
                     "url": "https://www.youtube.com/@neoni",
                     "playlistId": "UUQJ-a2IzCJ-gwlHvqvOWGhw",
                     "playlistFile": "Playlists/Artist/Neoni/Neoni.m3u",
@@ -2890,7 +2810,6 @@
                   {
                     "key": "MR_KITTY",
                     "active": true,
-                    "name": "MrKitty",
                     "url": "https://www.youtube.com/@mrkittydm",
                     "playlistId": "UU7C0JKhMViaCv7AUubtEMng",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty.m3u",
@@ -2899,35 +2818,30 @@
                   {
                     "key": "MR_KITTY_2011_DEATH",
                     "active": true,
-                    "name": "MrKitty2011Death",
                     "playlistId": "PLDb_G8HX8POSa17RdL7QK8GmFLeo2mGrL",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2011] - D E A T H.m3u"
                   },
                   {
                     "key": "MR_KITTY_2012_ETERNITY",
                     "active": true,
-                    "name": "MrKitty2012Eternity",
                     "playlistId": "PLDb_G8HX8POQcnsBT-76TjEwpxWRFGXBy",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2012] - Eternity.m3u"
                   },
                   {
                     "key": "MR_KITTY_2014_TIME",
                     "active": true,
-                    "name": "MrKitty2014Time",
                     "playlistId": "PLDb_G8HX8POTRWg-qc6khXKMXAMOd1WLb",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2014] - Time.m3u"
                   },
                   {
                     "key": "MR_KITTY_2015_FRAGMENTS",
                     "active": true,
-                    "name": "MrKitty2015Fragments",
                     "playlistId": "PLDb_G8HX8POTGVy2RI3ZnOKO1wTjGDY0q",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2015] - Fragments.m3u"
                   },
                   {
                     "key": "MR_KITTY_2017_AI",
                     "active": true,
-                    "name": "MrKitty2017Ai",
                     "playlistId": "PLDb_G8HX8POTwLYVfOSALLmSdWrsSKPjY",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2017] - A.I..m3u"
                   },
@@ -3125,7 +3039,6 @@
                   {
                     "key": "DREAMHOP_MUSIC",
                     "active": true,
-                    "name": "DreamhopMusic",
                     "url": "https://www.youtube.com/c/DreamhopMusic",
                     "playlistId": "UUz9_4daWw-uWuqeB6_IkhMg",
                     "outputFolder": "~/Dreamhop Music"
@@ -3133,7 +3046,6 @@
                   {
                     "key": "LITTLE_SOUL",
                     "active": true,
-                    "name": "LittleSoul",
                     "url": "https://www.youtube.com/channel/UCdTB4hMadQoqVaDiunBIkmQ",
                     "playlistId": "UUdTB4hMadQoqVaDiunBIkmQ",
                     "outputFolder": "~/Little Soul"
@@ -3148,7 +3060,6 @@
                   {
                     "key": "TRAP_FAVORITES",
                     "active": true,
-                    "name": "TrapFavorites",
                     "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
                     "playlistId": "PLjSkQXDlBqvnt4CBLfQxiAfIqaivk76g0",
                     "outputFolder": "~/Youtube Trap Favorites",
@@ -3157,7 +3068,6 @@
                   {
                     "key": "TRAP_CITY",
                     "active": true,
-                    "name": "TrapCity",
                     "url": "https://www.youtube.com/trapcity",
                     "playlistId": "UU65afEgL62PGFWXY7n6CUbA",
                     "outputFolder": "~/Trap City"
@@ -3165,7 +3075,6 @@
                   {
                     "key": "SKY_BASS",
                     "active": true,
-                    "name": "SkyBass",
                     "url": "https://www.youtube.com/c/Skybassofficial",
                     "playlistId": "UUpXbwekw4ySNHGt26aAKvHQ",
                     "outputFolder": "~/Sky Bass"
@@ -3173,7 +3082,6 @@
                   {
                     "key": "TRAP_NATION",
                     "active": true,
-                    "name": "TrapNation",
                     "url": "https://www.youtube.com/c/TrapNation",
                     "playlistId": "UUa10nxShhzNrCE1o2ZOPztg",
                     "outputFolder": "~/Trap Nation"
@@ -3181,7 +3089,6 @@
                   {
                     "key": "BASS_NATION",
                     "active": true,
-                    "name": "BassNation",
                     "url": "https://www.youtube.com/channel/UCCvVpbYRgYjMN7mG7qQN0Pg",
                     "playlistId": "UUCvVpbYRgYjMN7mG7qQN0Pg",
                     "outputFolder": "~/Bass Nation"
@@ -3196,7 +3103,6 @@
                   {
                     "key": "POP_FAVORITES",
                     "active": true,
-                    "name": "PopFavorites",
                     "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
                     "playlistId": "PLjSkQXDlBqvlXGQedQB8TU1-FGX-xLvKR",
                     "outputFolder": "~/Youtube Pop Favorites",
@@ -3227,7 +3133,6 @@
                   {
                     "key": "MR_SUICIDE_SHEEP",
                     "active": true,
-                    "name": "MrSuicideSheep",
                     "url": "https://www.youtube.com/user/MrSuicideSheep",
                     "playlistId": "UU5nc_ZtjKW1htCVZVRxlQAQ",
                     "outputFolder": "~/Mr Suicide Sheep"
@@ -3235,7 +3140,6 @@
                   {
                     "key": "NIGHTBLUE_MUSIC",
                     "active": true,
-                    "name": "NightblueMusic",
                     "url": "https://www.youtube.com/channel/UCe55Gy-hFDvLZp8C8BZhBnw",
                     "playlistId": "UUe55Gy-hFDvLZp8C8BZhBnw",
                     "outputFolder": "~/Nightblue Music"
@@ -3250,7 +3154,6 @@
                   {
                     "key": "ENTER_DYSTOPIA_RECORDS",
                     "active": true,
-                    "name": "EnterDystopiaRecords",
                     "url": "https://www.youtube.com/channel/UC-NM1_vcSZ0O2dtuASOwRew",
                     "playlistId": "UU-NM1_vcSZ0O2dtuASOwRew",
                     "outputFolder": "~/Enter Dystopia Records"
@@ -3258,7 +3161,6 @@
                   {
                     "key": "JIMTV_PROGRAMMING",
                     "active": true,
-                    "name": "JimTVProgramming",
                     "url": "https://www.youtube.com/playlist?list=PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y",
                     "playlistId": "PLUja9J5M1XReqoBal5IKog_PWz2Q_hZ7Y",
                     "outputFolder": "~/JimTV",
@@ -3289,7 +3191,6 @@
                   {
                     "key": "VERSUS_MUSIC",
                     "active": true,
-                    "name": "VersusMusic",
                     "url": "https://www.youtube.com/user/VersusMusicOfficial",
                     "playlistId": "UUigSgBzRaVs1xGuCEEwzuZA",
                     "outputFolder": "~/Versus Music"
@@ -3297,7 +3198,6 @@
                   {
                     "key": "WHITE_BAT_AUDIO",
                     "active": true,
-                    "name": "WhiteBatAudio",
                     "url": "https://www.youtube.com/playlist?list=PLLEnbi5KRv6aQ4k_isTi5DurcM8qxmca2",
                     "playlistId": "PLLEnbi5KRv6aQ4k_isTi5DurcM8qxmca2",
                     "outputFolder": "~/White Bat Audio"
@@ -3312,7 +3212,6 @@
                   {
                     "key": "FULL_CHILL_MUSIC",
                     "active": true,
-                    "name": "FullChillMusic",
                     "url": "https://www.youtube.com/@fullchillmusic",
                     "playlistId": "UUhDLK20w8Z3VFWIotsKCpTw",
                     "outputFolder": "~/Full Chill Music"
@@ -3327,7 +3226,6 @@
                   {
                     "key": "SPEEDSOUND",
                     "active": true,
-                    "name": "Speedsound",
                     "url": "https://www.youtube.com/user/speedsoundtv",
                     "playlistId": "UUUq4FP_9pOdMi3wy4C7kRGQ",
                     "outputFolder": "~/Speedsound"
@@ -3342,7 +3240,6 @@
                   {
                     "key": "KURUMI",
                     "active": true,
-                    "name": "Kurumi",
                     "url": "https://www.youtube.com/c/KurumiMixes",
                     "playlistId": "UUN1UX97MkTb-nuiqJaBPRTA",
                     "outputFolder": "~/Kurumi"
@@ -3350,7 +3247,6 @@
                   {
                     "key": "NEZUKO",
                     "active": true,
-                    "name": "Nezuko",
                     "url": "https://www.youtube.com/channel/UCcW7SgXcpV421npo9BSJGVg",
                     "playlistId": "UUcW7SgXcpV421npo9BSJGVg",
                     "outputFolder": "~/Nezuko"
@@ -3358,7 +3254,6 @@
                   {
                     "key": "ASUNA",
                     "active": true,
-                    "name": "Asuna",
                     "url": "https://www.youtube.com/channel/UC2oGnY6k_f1ZgT2fZ-dHlNw",
                     "playlistId": "UU2oGnY6k_f1ZgT2fZ-dHlNw",
                     "outputFolder": "~/Asuna"
@@ -3388,7 +3283,6 @@
                   {
                     "key": "SYREX",
                     "active": true,
-                    "name": "Syrex",
                     "url": "https://www.youtube.com/channel/UCeZje_7vr6CPK9vPQDfV3WA",
                     "playlistId": "UUeZje_7vr6CPK9vPQDfV3WA",
                     "outputFolder": "~/Syrex"
@@ -3410,7 +3304,6 @@
                   {
                     "key": "GREATEST_AUDIOBOOKS",
                     "active": false,
-                    "name": "GreatestAudiobooks",
                     "outputFolder": "~/Greatest Audiobooks",
                     "url": "https://www.youtube.com/c/GreatestAudioBooks",
                     "playlistId": "UUf099SXtegD4kv9-M3GIgnw"
@@ -4075,7 +3968,6 @@
                   {
                     "key": "SOUND_LIBRARY",
                     "active": false,
-                    "name": "SoundLibrary",
                     "url": "https://www.youtube.com/c/SoundLibrary1",
                     "playlistId": "UUXm0O2N7IWtjSGv9tblq34g",
                     "outputFolder": "~/Sound Library"
