@@ -78,7 +78,7 @@ public class EntityData extends ConfigData {
      * Parses a duration string from the Entity Data into a duration.
      *
      * @param durationString The duration string.
-     * @return The duration, in seconds, or null if it could not be parsed.
+     * @return The duration, in milliseconds, or null if it could not be parsed.
      */
     @SuppressWarnings("DataFlowIssue")
     protected long parseDuration(String durationString) {
@@ -89,11 +89,11 @@ public class EntityData extends ConfigData {
                                 StringUtility.rSnip(e2, 1).toUpperCase(),
                                 Long.parseLong(StringUtility.rShear(e2, 1))))
                         .collect(MapCollectors.toHashMap()))
-                .map(e -> (((((
+                .map(e -> (((((((
                         e.getOrDefault("D", 0L) * 24) +
                         e.getOrDefault("H", 0L)) * 60) +
                         e.getOrDefault("M", 0L)) * 60) +
-                        e.getOrDefault("S", 0L))
+                        e.getOrDefault("S", 0L)) * 1000))
                 .orElse(null);
     }
     

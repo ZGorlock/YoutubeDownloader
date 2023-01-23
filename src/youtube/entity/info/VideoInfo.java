@@ -79,7 +79,7 @@ public class VideoInfo extends EntityInfo {
     public String durationString;
     
     /**
-     * The duration of the Video, in seconds.
+     * The duration of the Video, in milliseconds.
      */
     public Long duration;
     

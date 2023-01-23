@@ -54,7 +54,7 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
      * Creates the Chapter List for a Video.
      *
      * @param videoDescription The description of the Video.
-     * @param videoDuration    The duration of the Video.
+     * @param videoDuration    The duration of the Video, in milliseconds.
      */
     public ChapterList(String videoDescription, Long videoDuration) {
         super();
@@ -115,12 +115,12 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
         public String timestamp;
         
         /**
-         * The start time of the Chapter, in seconds.
+         * The start time of the Chapter, in milliseconds.
          */
         public Long startTime;
         
         /**
-         * The end time of the Chapter, in seconds.
+         * The end time of the Chapter, in milliseconds.
          */
         public Long endTime;
         
@@ -147,7 +147,7 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
             
             this.title = cleanTitle(chapterMatcher.group("titlePart1"), chapterMatcher.group("titlePart2"));
             this.timestamp = chapterMatcher.group("timestamp");
-            this.startTime = DateTimeUtility.durationStampToDuration(timestamp) / 1000L;
+            this.startTime = DateTimeUtility.durationStampToDuration(timestamp);
         }
         
         /**
@@ -155,7 +155,7 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
          *
          * @param title     The title of the Chapter.
          * @param timestamp The timestamp of the Chapter.
-         * @param startTime The start time of the Chapter, in seconds.
+         * @param startTime The start time of the Chapter, in milliseconds.
          */
         public Chapter(String title, String timestamp, Long startTime) {
             super();
@@ -199,9 +199,9 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
         }
         
         /**
-         * Returns the duration of the Chapter.
+         * Returns the duration of the Chapter, in milliseconds.
          *
-         * @return The duration of the Chapter.
+         * @return The duration of the Chapter, in milliseconds.
          */
         public long getDuration() {
             return getEndTime() - getStartTime();
@@ -258,18 +258,18 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
         }
         
         /**
-         * Returns the start time of the Chapter, in seconds.
+         * Returns the start time of the Chapter, in milliseconds.
          *
-         * @return The start time of the Chapter, in seconds.
+         * @return The start time of the Chapter, in milliseconds.
          */
         public Long getStartTime() {
             return startTime;
         }
         
         /**
-         * Returns the end time of the Chapter, in seconds.
+         * Returns the end time of the Chapter, in milliseconds.
          *
-         * @return The end time of the Chapter, in seconds.
+         * @return The end time of the Chapter, in milliseconds.
          */
         public Long getEndTime() {
             return endTime;
