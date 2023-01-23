@@ -2303,6 +2303,7 @@
                   {
                     "key": "SGT_502",
                     "active": true,
+                    "outputFolder": "~/sgt502",
                     "keepClean": false,
                     "channels": [
                       {
@@ -2311,7 +2312,6 @@
                         "name": "Sgt502",
                         "url": "https://www.youtube.com/@sgt502",
                         "playlistId": "UUV-nybgNQywxb4eqEU9vPzw",
-                        "outputFolder": "~/sgt502",
                         "keepClean": true
                       },
                       {
@@ -2796,22 +2796,154 @@
             "channels": [
               {
                 "key": "THE_COMET_IS_COMING",
-                "active": false,
-                "name": "TheCometIsComing",
-                "url": "https://www.youtube.com/playlist?list=PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
-                "playlistId": "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
+                "active": true,
                 "outputFolder": "Music/The Comet Is Coming",
-                "playlistFile": "Playlists/Artist/The Comet Is Coming.m3u",
-                "keepClean": false
+                "keepClean": false,
+                "channels": [
+                  {
+                    "key": "THE_COMET_IS_COMING",
+                    "active": false,
+                    "name": "TheCometIsComing",
+                    "url": "https://www.youtube.com/playlist?list=PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
+                    "playlistId": "PLqffNt5cY34WycBZsqhVoXgRnehbbxyTB",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming.m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2015_PROPHECY_EP",
+                    "active": true,
+                    "playlistId": "OLAK5uy_nscW_r4Z_dRgZB_k0EHEqmBgrIBfzj7EY",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2015] - Prophecy [EP].m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2016_CHANNEL_THE_SPIRITS",
+                    "active": true,
+                    "playlistId": "OLAK5uy_k0iTWZQL5MC2V5KhIpGjkAMlp0B690vxM",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2016] - Channel the Spirits.m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2017_DEATH_TO_THE_PLANET_EP",
+                    "active": true,
+                    "playlistId": "OLAK5uy_kDIyut2vE2O5z0CCn2MyhBhm-ojwP2Bns",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2017] - Death to the Planet [EP].m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2019_THE_AFTERLIFE_EP",
+                    "active": true,
+                    "playlistId": "OLAK5uy_kKrlzFzQeWqayrW9HFXTWlG2YfZmpJdRs",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2019] - The Afterlife [EP].m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2019_TRUST_IN_THE_LIFEFORCE_OF_THE_DEEP_MYSTERY",
+                    "active": true,
+                    "playlistId": "OLAK5uy_nWJW4-jmYwclPTL-WQ7i7dAGUvV5DYCI4",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2019] - Trust In The Lifeforce Of The Deep Mystery.m3u"
+                  },
+                  {
+                    "key": "THE_COMET_IS_COMING_2022_HYPERDIMENSIONAL_EXPANSION_BEAM",
+                    "active": true,
+                    "playlistId": "OLAK5uy_kpH60HaIGkB4U9Ly1owqUVhRvht1ou2zE",
+                    "playlistFile": "Playlists/Artist/The Comet Is Coming/The Comet Is Coming - [2022] - Hyper-Dimensional Expansion Beam.m3u"
+                  }
+                ]
               },
               {
                 "key": "NEONI",
                 "active": true,
-                "name": "Neoni",
-                "url": "https://www.youtube.com/@neoni",
-                "playlistId": "UUQJ-a2IzCJ-gwlHvqvOWGhw",
                 "outputFolder": "Music/Neoni",
-                "playlistFile": "Playlists/Artist/Neoni.m3u"
+                "keepClean": false,
+                "channels": [
+                  {
+                    "key": "NEONI",
+                    "active": true,
+                    "name": "Neoni",
+                    "url": "https://www.youtube.com/@neoni",
+                    "playlistId": "UUQJ-a2IzCJ-gwlHvqvOWGhw",
+                    "playlistFile": "Playlists/Artist/Neoni/Neoni.m3u",
+                    "keepClean": true
+                  },
+                  {
+                    "key": "NEONI_2021_WARS_IN_A_WONDERLAND",
+                    "active": true,
+                    "playlistId": "OLAK5uy_kOvzoV-KW81Vo7wzLeIFnUOva20vVwUnc",
+                    "playlistFile": "Playlists/Artist/Neoni/Neoni - [2021] - Wars in a Wonderland.m3u"
+                  },
+                  {
+                    "key": "NEONI_2021_MACHINE",
+                    "active": true,
+                    "playlistId": "OLAK5uy_kKn9pZbuP-Gl49rJmxRX4oqwPNZN33oJo",
+                    "playlistFile": "Playlists/Artist/Neoni/Neoni - [2021] - MACHINE.m3u"
+                  },
+                  {
+                    "key": "NEONI_2022_ALL_MY_FAVORITE_MONSTERS",
+                    "active": true,
+                    "playlistId": "OLAK5uy_nHEs02vebNBD9MevGK8ltnM8JBXkikdM4",
+                    "playlistFile": "Playlists/Artist/Neoni/Neoni - [2022] - ALL MY FAVORITE MONSTERS.m3u"
+                  }
+                ]
+              },
+              {
+                "key": "MR_KITTY",
+                "active": true,
+                "outputFolder": "Music/Mr.Kitty",
+                "keepClean": false,
+                "channels": [
+                  {
+                    "key": "MR_KITTY",
+                    "active": true,
+                    "name": "MrKitty",
+                    "url": "https://www.youtube.com/@mrkittydm",
+                    "playlistId": "UU7C0JKhMViaCv7AUubtEMng",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty.m3u",
+                    "keepClean": true
+                  },
+                  {
+                    "key": "MR_KITTY_2011_DEATH",
+                    "active": true,
+                    "name": "MrKitty2011Death",
+                    "playlistId": "PLDb_G8HX8POSa17RdL7QK8GmFLeo2mGrL",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2011] - D E A T H.m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2012_ETERNITY",
+                    "active": true,
+                    "name": "MrKitty2012Eternity",
+                    "playlistId": "PLDb_G8HX8POQcnsBT-76TjEwpxWRFGXBy",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2012] - Eternity.m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2014_TIME",
+                    "active": true,
+                    "name": "MrKitty2014Time",
+                    "playlistId": "PLDb_G8HX8POTRWg-qc6khXKMXAMOd1WLb",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2014] - Time.m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2015_FRAGMENTS",
+                    "active": true,
+                    "name": "MrKitty2015Fragments",
+                    "playlistId": "PLDb_G8HX8POTGVy2RI3ZnOKO1wTjGDY0q",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2015] - Fragments.m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2017_AI",
+                    "active": true,
+                    "name": "MrKitty2017Ai",
+                    "playlistId": "PLDb_G8HX8POTwLYVfOSALLmSdWrsSKPjY",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2017] - A.I..m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2019_EPHEMERAL",
+                    "active": true,
+                    "playlistId": "PLDb_G8HX8POTJMl1bmdmOfI9VHYNuRwtN",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2019] - Ephemeral.m3u"
+                  },
+                  {
+                    "key": "MR_KITTY_2020_EP",
+                    "active": true,
+                    "playlistId": "PLDb_G8HX8POTwtlz3m3M8cm34weJLpyGE",
+                    "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2020] - -+ [EP].m3u"
+                  }
+                ]
               }
             ]
           },

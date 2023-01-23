@@ -57,8 +57,8 @@ public class ChannelProcesses_Sample {
             //GENERAL
             
             case "MIND_FIELD":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)(?:\\s*-\\s*(?:Mind\\sField\\s(?:S\\d+\\s)?)\\(Ep\\.?\\s*(?<episode>\\d+)\\))?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)(?:\\s*-\\s*(?:MIND\\sFIELD\\s(?:S\\d+\\s)?)\\(EP(?:ISODE|\\.)?\\s*(?<episode>\\d+)\\))?$",
                         "Mind Field - S0" + channel.getConfig().getName().charAt(channel.getConfig().getName().length() - 1) + "E0$i - $title");
                 break;
             
@@ -66,8 +66,8 @@ public class ChannelProcesses_Sample {
             //PHYSICS
             
             case "STEVE_MOULD":
-                RenameProcess.format(channel, videoMap, false,
-                        "(?i)^.*(?:fewer|more)\\sthan\\stom.*$",
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
+                        "^.*(?:FEWER|MORE)\\sTHAN\\sTOM.*$",
                         "This Video Has...");
                 break;
             
@@ -94,7 +94,7 @@ public class ChannelProcesses_Sample {
                         "SERIES PREMIERE", "S01E01");
                 RenameProcess.regexReplaceIgnoreCase(channel, videoMap, List.of(
                         Map.entry("^(?:MEDICAL\\sDETECTIVES\\s)?\\(?FORENSIC\\sFILES\\s?\\)?(?:\\s?IN\\sHD)?", "Forensic Files"),
-                        Map.entry("SEASON\\s(\\d+)\\s?,\\sEP(?:ISODE|\\.)?\\s(\\d+)\\s*-", "S$1E$2 -"),
+                        Map.entry("SEASON\\s(\\d+)\\s?,\\sEP(?:ISODE|\\.)?\\s*(\\d+)\\s*-", "S$1E$2 -"),
                         Map.entry("S(\\d)E", "S0$1E"),
                         Map.entry("E(\\d)\\s", "E0$1 ")));
                 break;
@@ -167,8 +167,8 @@ public class ChannelProcesses_Sample {
             //RUNESCAPE
             
             case "BY_RELEASE":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)(?:\\s*-\\s*By\\sRelease\\s*-?\\s#?(?<episode>\\d*))?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)(?:\\s*-\\s*BY\\sRELEASE\\s*-?\\s#?(?<episode>\\d*))?$",
                         "By Release - $i - $title");
                 break;
             
@@ -187,58 +187,58 @@ public class ChannelProcesses_Sample {
                 break;
             
             case "MUDKIP_HCIM":
-                RenameProcess.format(channel, videoMap, false,
-                        "^(?:\\[OSRS]\\s*)?(?:Maxed HCIM\\s)?(?<title>.+?)\\s(?:Maxed HCIM\\s)?(?:-\\s|\\(|)[#\\-]\\s?(?<episode>\\d*\\.?\\d+)\\)?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
+                        "^(?:\\[OSRS]\\s*)?(?:MAXED\\sHCIM\\s)?(?<title>.+?)\\s(?:MAXED\\sHCIM\\s)?(?:-\\s|\\(|)[#\\-]\\s?(?<episode>\\d*\\.?\\d+)\\)?$",
                         "Maxed HCIM - $episode - $title");
-                RenameProcess.format(channel, videoMap, false,
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
                         "^(?:\\[OSRS]\\s*)?(?:HCIM\\s)?#?(?<episode>\\d+)\\s*-\\s*(?<title>.+?)$",
                         "HCIM - $episode - $title");
-                RenameProcess.format(channel, videoMap, false,
-                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:[Ee]p(?:isode|\\.)\\s*)?#?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$",
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
+                        "^(?:\\[OSRS]\\s*)?(?<title>.+?)\\s(?:-\\s|\\(|)HCIM\\s*(?:EP(?:ISODE|\\.)?\\s*)?#?(?<episode>\\d*\\.?\\d+)\\)?\\s*(?<level>(?:\\(\\d+-\\d+\\))?)$",
                         "HCIM - $episode - $title $level");
                 break;
             
             case "MUDKIP_UIM":
-                RenameProcess.format(channel, videoMap, false,
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
                         "^(?<title>.+?)\\s\\((?:UIM\\s)?[#\\-]\\s*(?<episode>\\d+)\\)$",
                         "UIM - $episode - $title");
                 break;
             
             case "SWAMPLETICS":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)\\s\\((?:Swampletics\\s?)?(?:#|-\\s)(?<episode>\\d+)\\)$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)\\s\\((?:SWAMPLETICS\\s?)?(?:#|-\\s)(?<episode>\\d+)\\)$",
                         "Swampletics - $i - $title");
                 break;
             
             case "TILEMAN":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)\\s(?:[|\\-]\\s)?(?:tileman\\s?)?[#\\-]\\s*(?<episode>\\d+)$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)\\s(?:[|\\-]\\s)?(?:TILEMAN\\s?)?[#\\-]\\s*(?<episode>\\d+)$",
                         "Tileman - $i - $title");
                 break;
             
             case "LOWER_THE_BETTER":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)(?:\\s?[:\\-]\\s?Lower\\s[Tt]he\\sBetter\\s?(?:Ep\\.\\s)?(?:[#\\-]\\s?)(?<episode>\\d+))?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)(?:\\s?[:\\-]\\s?LOWER\\sTHE\\sBETTER\\s?(?:EP(?:ISODE|\\.)?\\s*)?(?:[#\\-]\\s?)(?<episode>\\d+))?$",
                         "Lower the Better - $i - $title");
                 break;
             
             case "OSRS_WEEKLY_RECAP":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)!*\\s*(?:[#\\-]\\s*(?:\\d+\\s*\\-\\s*)?)?(?:(?:OSRS\\s)?Weekly\\sRecap[\\s\\d\\-#!]*)?(?:\\[OSRS])?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)!*\\s*(?:[#\\-]\\s*(?:\\d+\\s*\\-\\s*)?)?(?:(?:OSRS\\s)?WEEKLY\\sRECAP[\\s\\d\\-#!]*)?(?:\\[OSRS])?$",
                         "Weekly Recap - $d - $title");
                 break;
             
             case "IRON_MAIN":
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)(\\s*[|\\-]\\s*(?:IronMain\\s*)?[(\\[][#\\-]\\s*(?<episode>\\d+)[)\\]])?$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)(\\s*[|\\-]\\s*(?:IRONMAIN\\s*)?[(\\[][#\\-]\\s*(?<episode>\\d+)[)\\]])?$",
                         "IronMain - $i - $title");
                 break;
             
             case "ONE_KICK_RICK":
                 RenameProcess.replaceIgnoreCase(channel, videoMap,
                         "SERIES TRAILER", "ep.0");
-                RenameProcess.format(channel, videoMap,
-                        "^(?<title>.+?)\\s*-\\s*(?:Lumbridge\\s*-\\s*Draynor\\s(?:Only\\s)?HCIM\\s-\\s)?(?:One\\sKick\\sRick\\s-\\s)?ep\\.(?<episode>\\d+)$",
+                RenameProcess.formatIgnoreCase(channel, videoMap,
+                        "^(?<title>.+?)\\s*-\\s*(?:LUMBRIDGE\\s*-\\s*DRAYNOR\\s(?:ONLY\\s)?HCIM\\s-\\s)?(?:ONE\\sKICK\\sRICK\\s-\\s)?EP(?:ISODE|\\.)?\\s*(?<episode>\\d+)$",
                         "One Kick Rick - $episode - $title");
                 break;
             
@@ -253,7 +253,7 @@ public class ChannelProcesses_Sample {
             case "BARDIFY_COMBAT":
             case "BARDIFY_TAVERN":
                 RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
-                        "\\s*[\\-|]\\s*RPG\\s*[\\-|/]\\s*D[N&]D.*\\sMUSIC\\s*(?:[\\-|]\\s*\\d+\\sHOUR\\s*)?");
+                        "\\s*[\\-|]\\s*(?:RPG\\s*[\\-|/])?\\s*D[N&]D.*\\sMUSIC\\s*(?:[\\-|]\\s*\\d+\\sHOURS?\\s*)?");
                 break;
             
             
@@ -267,13 +267,63 @@ public class ChannelProcesses_Sample {
             
             //MUSIC
             
+            case "THE_COMET_IS_COMING":
+            case "THE_COMET_IS_COMING_2015_PROPHECY_EP":
+            case "THE_COMET_IS_COMING_2016_CHANNEL_THE_SPIRITS":
+            case "THE_COMET_IS_COMING_2017_DEATH_TO_THE_PLANET_EP":
+            case "THE_COMET_IS_COMING_2019_THE_AFTERLIFE_EP":
+            case "THE_COMET_IS_COMING_2019_TRUST_IN_THE_LIFEFORCE_OF_THE_DEEP_MYSTERY":
+            case "THE_COMET_IS_COMING_2022_HYPERDIMENSIONAL_EXPANSION_BEAM":
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap, List.of(
+                        "^THE\\s+COMET\\s+IS\\s+COMING\\s*-\\s*",
+                        "\\((?:AUDIO|VISUALIZER)\\)"));
+                BaseProcess.rename(channel, videoMap, (id, video) ->
+                        Arrays.stream(video.getTitle().split("\\s+(?=\\()", -1))
+                                .map(e -> (!e.startsWith("(") && e.equals(e.toUpperCase())) ? StringUtility.toTitleCase(e.toLowerCase()) : e)
+                                .collect(Collectors.joining(" ")));
+                break;
+            
             case "NEONI":
+            case "NEONI_2021_WARS_IN_A_WONDERLAND":
+            case "NEONI_2021_MACHINE":
+            case "NEONI_2022_ALL_MY_FAVORITE_MONSTERS":
                 RenameProcess.replaceIgnoreCase(channel, videoMap,
-                        "Neoni - HOOLIGAN (Official Lyric Video)", UUID.randomUUID().toString());
-                RenameProcess.regexRemoveIgnoreCase(channel, videoMap,
-                        "\\s*-?\\s*\\(\\s*(?:OFFICIAL)?\\s*(?:MUSIC|LYRICS?|LIVE)?\\s*VIDEOS?\\s*\\)\\s*");
-                RenameProcess.regexReplace(channel, videoMap,
-                        "^NEONI\\s*-\\s*", "Neoni - ");
+                        "Neoni - HOOLIGAN (Official Lyric Video)", ("UUID-" + UUID.randomUUID()));
+                RenameProcess.formatIgnoreCase(channel, videoMap, false,
+                        "^NEONI\\s+X\\s+(?<feat>.*)\\s+-\\s+(?<title>.*)\\s*$",
+                        "$title (feat. $feat)");
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap, List.of(
+                        "^NEONI\\s*-\\s*",
+                        "\\(feat\\.\\s*\\)",
+                        "\\(\\s*(?:OFFICIAL)?\\s*(?:MUSIC|LYRICS?|LIVE)?\\s*VIDEOS?\\s*\\)",
+                        "-\\s+ANIMATION.+$"));
+                RenameProcess.regexReplaceIgnoreCase(channel, videoMap,
+                        "\\(FEAT\\.\\s*(.+?)\\sX\\s(.+?)\\)", "(feat. $1 & $2)");
+                BaseProcess.rename(channel, videoMap, (id, video) ->
+                        Arrays.stream(video.getTitle().split("\\s+(?=\\()", -1))
+                                .map(e -> (!e.startsWith("(") && e.equals(e.toUpperCase())) ? StringUtility.toTitleCase(e.toLowerCase()) : e)
+                                .collect(Collectors.joining(" ")));
+                break;
+            
+            case "MR_KITTY":
+            case "MR_KITTY_2011_DEATH":
+            case "MR_KITTY_2012_ETERNITY":
+            case "MR_KITTY_2014_TIME":
+            case "MR_KITTY_2015_FRAGMENTS":
+            case "MR_KITTY_2017_AI":
+            case "MR_KITTY_2019_EPHEMERAL":
+            case "MR_KITTY_2020_EP":
+                RenameProcess.regexReplaceIgnoreCase(channel, videoMap,
+                        "\\(FEAT\\.\\s*\\+\\s*\\)\\s*\\[(.+?)\\]", "(feat. $1)");
+                RenameProcess.regexRemoveIgnoreCase(channel, videoMap, List.of(
+                        "^MR\\.?\\s?KITTY\\s*-\\s*",
+                        "\\(feat\\.\\s*\\+?\\s*\\)",
+                        "\\(\\s*(?:OFFICIAL)?\\s*(?:MUSIC|LYRICS?|LIVE)?\\s*VIDEOS?\\s*\\)"));
+                BaseProcess.rename(channel, videoMap, (id, video) ->
+                        Arrays.stream(video.getTitle().split("\\s+(?=\\()", -1))
+                                .map(e -> (!e.startsWith("(") && !e.matches("(?i)XI+") && e.equals(e.toUpperCase())) ?
+                                          StringUtility.toTitleCase(e.toLowerCase()) : e)
+                                .collect(Collectors.joining(" ")));
                 break;
             
             
@@ -549,8 +599,11 @@ public class ChannelProcesses_Sample {
             //MUSIC
             
             case "NEONI":
-                FilterProcess.notStartsWithIgnoreCase(channel, videoMap,
-                        "NEONI");
+            case "NEONI_2021_WARS_IN_A_WONDERLAND":
+            case "NEONI_2021_MACHINE":
+            case "NEONI_2022_ALL_MY_FAVORITE_MONSTERS":
+                FilterProcess.startsWithIgnoreCase(channel, videoMap,
+                        "UUID-");
                 FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
                         "PREVIEW",
                         "SNEAK PEEK",
