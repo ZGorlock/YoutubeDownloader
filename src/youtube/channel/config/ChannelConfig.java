@@ -60,7 +60,8 @@ public class ChannelConfig extends ChannelEntry {
         //Values
         
         CHANNEL,
-        PLAYLIST;
+        PLAYLIST,
+        ALBUM;
         
         
         //Static Methods
@@ -74,7 +75,8 @@ public class ChannelConfig extends ChannelEntry {
         public static ChannelType determineType(String playlistId) {
             return StringUtility.isNullOrBlank(playlistId) ? null :
                    playlistId.startsWith("U") ? CHANNEL :
-                   playlistId.startsWith("PL") ? PLAYLIST : null;
+                   playlistId.startsWith("PL") ? PLAYLIST :
+                   playlistId.startsWith("OLAK") ? ALBUM : null;
         }
         
     }
@@ -159,6 +161,15 @@ public class ChannelConfig extends ChannelEntry {
      */
     public boolean isYoutubePlaylist() {
         return (type == ChannelType.PLAYLIST);
+    }
+    
+    /**
+     * Returns whether the Channel references a Youtube album or not.
+     *
+     * @return Whether the Channel references a Youtube album or not.
+     */
+    public boolean isYoutubeAlbum() {
+        return (type == ChannelType.ALBUM);
     }
     
     /**

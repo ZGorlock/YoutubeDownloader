@@ -653,6 +653,7 @@ public abstract class ChannelEntry extends ConfigData {
                         case CHANNEL:
                             return "https://www.youtube.com/channel/" + playlistId.replaceAll("^UU", "UC");
                         case PLAYLIST:
+                        case ALBUM:
                             return "https://www.youtube.com/playlist?list=" + playlistId;
                         default:
                             return null;
