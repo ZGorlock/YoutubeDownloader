@@ -15,8 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,10 +208,11 @@ public class Channels {
     /**
      * Loads the Channels configuration from the channels file.
      */
+    @SuppressWarnings("unchecked")
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
             try {
-                final JSONArray channelListData = (JSONArray) new JSONParser().parse(readChannelConfiguration());
+                final List<Map<String, Object>> channelListData = (List<Map<String, Object>>) new JSONParser().parse(readChannelConfiguration());
                 
                 loadChannelList(channelListData, root);
                 
@@ -233,10 +232,8 @@ public class Channels {
      * @param channelListData The json data of the channel list.
      * @param parent          The parent of the configurations in the channel list.
      */
-    private static void loadChannelList(JSONArray channelListData, ChannelGroup parent) {
-        for (Object channelListEntry : channelListData) {
-            final JSONObject channelEntryData = (JSONObject) channelListEntry;
-            
+    private static void loadChannelList(List<Map<String, Object>> channelListData, ChannelGroup parent) {
+        for (Map<String, Object> channelEntryData : channelListData) {
             loadChannelEntry(channelEntryData, parent);
         }
     }
@@ -248,12 +245,12 @@ public class Channels {
      * @param parent           The parent of the Channel Entry.
      */
     @SuppressWarnings("unchecked")
-    private static void loadChannelEntry(JSONObject channelEntryData, ChannelGroup parent) {
+    private static void loadChannelEntry(Map<String, Object> channelEntryData, ChannelGroup parent) {
         try {
             final ChannelEntry channelEntry = ChannelEntry.load(channelEntryData, parent);
             
             if (channelEntry.isGroup()) {
-                loadChannelList((JSONArray) channelEntryData.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
+                loadChannelList((List<Map<String, Object>>) channelEntryData.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
                 groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
             } else {
                 configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);

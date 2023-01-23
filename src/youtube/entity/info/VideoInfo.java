@@ -127,18 +127,18 @@ public class VideoInfo extends EntityInfo {
         this.videoId = metadata.getEntityId();
         this.url = WebUtils.VIDEO_BASE + videoId;
         
-        this.playlistPosition = integerParser.apply(getData("snippet", "position"));
+        this.playlistPosition = parseLong("snippet", "position").orElse(null);
         
-        this.durationString = getData("contentDetails", "duration");
-        this.duration = durationParser.apply(durationString);
+        this.durationString = parseData("contentDetails", "duration");
+        this.duration = parseDuration(durationString);
         this.chapters = new ChapterList(description, duration);
         
-        this.definition = getData("contentDetails", "definition");
-        this.language = getData("snippet", "defaultLanguage");
-        this.audioLanguage = getData("snippet", "defaultAudioLanguage");
+        this.definition = parseData("contentDetails", "definition");
+        this.language = parseData("snippet", "defaultLanguage");
+        this.audioLanguage = parseData("snippet", "defaultAudioLanguage");
         
-        this.location = new Location(getData("recordingDetails"));
-        this.broadcastType = Optional.ofNullable((String) getData("snippet", "liveBroadcastContent"))
+        this.location = new Location(parseData("recordingDetails"));
+        this.broadcastType = parseString("snippet", "liveBroadcastContent")
                 .orElseGet(() -> Optional.ofNullable(thumbnails).map(EntityDetailSet::getAll).stream().flatMap(Collection::stream)
                                          .map(ThumbnailSet.Thumbnail::getUrl).anyMatch(e -> e.contains("_live.")) ? "live" : "none");
     }

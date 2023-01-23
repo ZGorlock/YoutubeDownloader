@@ -13,16 +13,16 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
-import commons.lambda.function.checked.CheckedFunction;
 import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.config.base.ConfigData;
 
 /**
  * Defines the Entity Data of an Entity.
  */
-public class EntityData {
+public class EntityData extends ConfigData {
     
     //Logger
     
@@ -40,62 +40,6 @@ public class EntityData {
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     
-    //Static Functions
-    
-    /**
-     * Parses a date string from the Entity Data into a date; or null if it could not be parsed.
-     */
-    protected static final CheckedFunction<String, LocalDateTime> dateParser = (String dateString) ->
-            Optional.ofNullable(dateString)
-                    .map(e -> e.replaceAll("(?i)[TZ]", " ")).map(String::strip)
-                    .map(e -> LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
-                    .orElse(null);
-    
-    /**
-     * Parses a duration string from the Entity Data into a duration, in seconds; or null if it could not be parsed.
-     */
-    protected static final CheckedFunction<String, Long> durationParser = (String durationString) ->
-            Optional.ofNullable(durationString)
-                    .map(e -> e.replaceAll("(?i)[PT\\s]", ""))
-                    .map(e -> Arrays.stream(e.split("(?<=\\D)"))
-                            .map(e2 -> Map.entry(
-                                    StringUtility.rSnip(e2, 1).toUpperCase(),
-                                    Long.parseLong(StringUtility.rShear(e2, 1))))
-                            .collect(MapCollectors.toHashMap()))
-                    .map(e -> (((((
-                            e.getOrDefault("D", 0L) * 24) +
-                            e.getOrDefault("H", 0L)) * 60) +
-                            e.getOrDefault("M", 0L)) * 60) +
-                            e.getOrDefault("S", 0L))
-                    .orElse(null);
-    
-    /**
-     * Parses an integer from the Entity Data into a long; or null if it could not be parsed.
-     */
-    protected static final CheckedFunction<Object, Long> integerParser = (Object integerObject) ->
-            Optional.ofNullable(integerObject)
-                    .map(String::valueOf)
-                    .map((CheckedFunction<String, Long>) Long::parseLong)
-                    .orElse(null);
-    
-    /**
-     * Parses a number from the Entity Data into a double; or null if it could not be parsed.
-     */
-    protected static final CheckedFunction<Object, Double> numberParser = (Object numberObject) ->
-            Optional.ofNullable(numberObject)
-                    .map(String::valueOf)
-                    .map((CheckedFunction<String, Double>) Double::parseDouble)
-                    .orElse(null);
-    
-    
-    //Fields
-    
-    /**
-     * The raw json Entity Data.
-     */
-    public Map<String, Object> entityData;
-    
-    
     //Constructors
     
     /**
@@ -104,62 +48,53 @@ public class EntityData {
      * @param entityData The json data of the Entity.
      */
     public EntityData(Map<String, Object> entityData) {
-        this.entityData = entityData;
+        super(entityData);
     }
     
     /**
      * Creates an empty Entity Data.
      */
     public EntityData() {
+        super();
     }
     
     
     //Methods
     
     /**
-     * Fetches a field from the Entity Data.
+     * Parses a date string from the Entity Data into a date.
      *
-     * @param path The path to the requested field.
-     * @param <R>  The type of the requested field.
-     * @return The value of the field; or null if it does not exist.
+     * @param dateString The date string.
+     * @return The date, or null if it could not be parsed.
      */
-    public <R> R getData(String... path) {
-        return getData(getEntityData(), path);
+    protected LocalDateTime parseDate(String dateString) {
+        return Optional.ofNullable(dateString)
+                .map(e -> e.replaceAll("(?i)[TZ]", " ")).map(String::strip)
+                .map(e -> LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .orElse(null);
     }
     
-    
-    //Getters
-    
     /**
-     * Returns the raw json data of the Entity.
+     * Parses a duration string from the Entity Data into a duration.
      *
-     * @return The raw json data of the Entity.
+     * @param durationString The duration string.
+     * @return The duration, in seconds, or null if it could not be parsed.
      */
-    public Map<String, Object> getEntityData() {
-        return entityData;
-    }
-    
-    
-    //Static Methods
-    
-    /**
-     * Fetches a field from a json data map.
-     *
-     * @param data The json data map.
-     * @param path The path to the requested field.
-     * @param <K>  The type of the keys of the map.
-     * @param <V>  The type of the values of the map.
-     * @param <R>  The type of the requested field.
-     * @return The value of the field; or null if it does not exist.
-     */
-    @SuppressWarnings("unchecked")
-    private static <K, V, R extends V> R getData(Map<K, V> data, K... path) {
-        return (data == null) ? null :
-               (path.length == 0) ? (R) data :
-               (path.length == 1) ? (R) data.get(path[0]) :
-               getData(Arrays.stream(path, 0, path.length - 1).sequential()
-                               .reduce(data, EntityData::getData, (p, q) -> null),
-                       path[path.length - 1]);
+    @SuppressWarnings("DataFlowIssue")
+    protected long parseDuration(String durationString) {
+        return Optional.ofNullable(durationString)
+                .map(e -> e.replaceAll("(?i)[PT\\s]", ""))
+                .map(e -> Arrays.stream(e.split("(?<=\\D)"))
+                        .map(e2 -> Map.entry(
+                                StringUtility.rSnip(e2, 1).toUpperCase(),
+                                Long.parseLong(StringUtility.rShear(e2, 1))))
+                        .collect(MapCollectors.toHashMap()))
+                .map(e -> (((((
+                        e.getOrDefault("D", 0L) * 24) +
+                        e.getOrDefault("H", 0L)) * 60) +
+                        e.getOrDefault("M", 0L)) * 60) +
+                        e.getOrDefault("S", 0L))
+                .orElse(null);
     }
     
 }

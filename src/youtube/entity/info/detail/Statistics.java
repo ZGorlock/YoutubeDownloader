@@ -85,7 +85,7 @@ public class Statistics extends EntityDetailSet<Statistics.Stat> {
             super(Map.ofEntries(statData));
             
             this.name = statData.getKey();
-            this.count = integerParser.apply(statData.getValue());
+            this.count = parseLong(statData.getKey()).orElse(null);
         }
         
         /**

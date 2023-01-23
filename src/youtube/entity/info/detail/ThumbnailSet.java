@@ -125,9 +125,9 @@ public class ThumbnailSet extends EntityDetailSet<ThumbnailSet.Thumbnail> {
             super(Map.ofEntries(thumbnailData));
             
             this.quality = Quality.valueOf(thumbnailData.getKey().toUpperCase());
-            this.url = getData(thumbnailData.getKey(), "url");
-            this.width = integerParser.apply(getData(thumbnailData.getKey(), "width"));
-            this.height = integerParser.apply(getData(thumbnailData.getKey(), "height"));
+            this.url = parseData(thumbnailData.getKey(), "url");
+            this.width = parseLong(thumbnailData.getKey(), "width").orElse(null);
+            this.height = parseLong(thumbnailData.getKey(), "height").orElse(null);
         }
         
         /**

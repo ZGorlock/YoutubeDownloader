@@ -115,9 +115,9 @@ public class ChannelConfig extends ChannelEntry {
     public ChannelConfig(Map<String, Object> configData, ChannelGroup parent) throws Exception {
         super(configData, parent);
         
-        this.name = stringFieldGetter.apply("name").map(identifierFormatter).orElseGet(() -> StringUtility.toPascalCase(key));
+        this.name = parseString("name").map(this::formatIdentifier).orElseGet(() -> StringUtility.toPascalCase(key));
         
-        this.playlistFilePath = stringFieldGetter.apply("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("playlistFilePath").orElse(null));
+        this.playlistFilePath = parseString("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> parseData("playlistFilePath"));
         this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
         
         this.type = ChannelType.determineType(playlistId);

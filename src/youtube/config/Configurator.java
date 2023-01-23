@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import commons.object.collection.MapUtility;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,12 +135,13 @@ public class Configurator {
      *
      * @param project The project.
      */
+    @SuppressWarnings("unchecked")
     public static void loadSettings(Utils.Project project) {
         if (loaded.compareAndSet(false, true)) {
             activeProject = project;
             
             try {
-                final JSONObject settingsData = (JSONObject) new JSONParser().parse(readConfiguration());
+                final Map<String, Object> settingsData = (Map<String, Object>) new JSONParser().parse(readConfiguration());
                 
                 loadSettingSection(settingsData, activeProject.getTitle());
                 loadSettingSection(settingsData, "sponsorBlock");
@@ -162,8 +162,9 @@ public class Configurator {
      * @param settingsData The json data of the settings.
      * @param section      The config section.
      */
-    private static void loadSettingSection(JSONObject settingsData, String section) {
-        final JSONObject settingSectionData = (JSONObject) settingsData.get(section);
+    @SuppressWarnings("unchecked")
+    private static void loadSettingSection(Map<String, Object> settingsData, String section) {
+        final Map<String, Object> settingSectionData = (Map<String, Object>) settingsData.get(section);
         
         if (settingSectionData != null) {
             if (section.equals("sponsorBlock") && (SponsorBlocker.globalConfig == null)) {
@@ -180,11 +181,8 @@ public class Configurator {
      * @param section            The config section.
      * @param prefix             The name prefix of the setting configurations in the section.
      */
-    @SuppressWarnings("unchecked")
-    private static void loadSettingSection(JSONObject settingSectionData, String section, String prefix) {
-        for (Object settingsSectionEntry : settingSectionData.entrySet()) {
-            final Map.Entry<String, Object> settingEntryData = (Map.Entry<String, Object>) settingsSectionEntry;
-            
+    private static void loadSettingSection(Map<String, Object> settingSectionData, String section, String prefix) {
+        for (Map.Entry<String, Object> settingEntryData : settingSectionData.entrySet()) {
             loadSettingEntry(settingEntryData, section, prefix);
         }
     }
@@ -196,12 +194,13 @@ public class Configurator {
      * @param section          The config section of the setting.
      * @param prefix           The name prefix of the setting.
      */
+    @SuppressWarnings("unchecked")
     private static void loadSettingEntry(Map.Entry<String, Object> settingEntryData, String section, String prefix) {
-        if ((settingEntryData.getValue() != null) && (settingEntryData.getValue() instanceof JSONObject)) {
+        if ((settingEntryData.getValue() != null) && (settingEntryData.getValue() instanceof Map)) {
             if (settingEntryData.getKey().equals("sponsorBlock")) {
-                SponsorBlocker.loadGlobalConfig(((JSONObject) settingEntryData.getValue()));
+                SponsorBlocker.loadGlobalConfig(((Map<String, Object>) settingEntryData.getValue()));
             }
-            loadSettingSection(((JSONObject) settingEntryData.getValue()), section, (prefix + settingEntryData.getKey() + '.'));
+            loadSettingSection(((Map<String, Object>) settingEntryData.getValue()), section, (prefix + settingEntryData.getKey() + '.'));
         } else {
             settings.putIfAbsent(section, new HashMap<>());
             settings.get(section).put((prefix + settingEntryData.getKey()), settingEntryData.getValue());

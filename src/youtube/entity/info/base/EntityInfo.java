@@ -121,22 +121,22 @@ public abstract class EntityInfo extends EntityData {
         super(entityData);
         this.metadata = new EntityMetadata(entityData);
         
-        this.rawTitle = getData("snippet", "title");
+        this.rawTitle = parseData("snippet", "title");
         this.title = Utils.cleanVideoTitle(rawTitle);
         
-        this.description = getData("snippet", "description");
-        this.status = getData("status", "privacyStatus");
+        this.description = parseData("snippet", "description");
+        this.status = parseData("status", "privacyStatus");
         
-        this.dateString = getData("snippet", "publishedAt");
-        this.date = dateParser.apply(dateString);
+        this.dateString = parseData("snippet", "publishedAt");
+        this.date = parseDate(dateString);
         
-        this.tags = new TagList(getData("snippet", "tags"));
-        this.topics = new TopicList(getData("topicDetails", "topicCategories"));
+        this.tags = new TagList(parseData("snippet", "tags"));
+        this.topics = new TopicList(parseData("topicDetails", "topicCategories"));
         
-        this.stats = new Statistics(getData("statistics"));
+        this.stats = new Statistics(parseData("statistics"));
         
-        this.thumbnails = new ThumbnailSet(getData("snippet", "thumbnails"));
-        this.embeddedPlayer = getData("player", "embedHtml");
+        this.thumbnails = new ThumbnailSet(parseData("snippet", "thumbnails"));
+        this.embeddedPlayer = parseData("player", "embedHtml");
     }
     
     /**

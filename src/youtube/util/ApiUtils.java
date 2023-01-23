@@ -38,7 +38,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -786,6 +785,7 @@ public final class ApiUtils {
          * @return The Entity data.
          * @throws Exception When there is an error.
          */
+        @SuppressWarnings("unchecked")
         private static String callApi(Endpoint endpoint, Map<String, String> parameters, ChannelState channelState) throws Exception {
             final AtomicReference<String> response = new AtomicReference<>(null);
             final AtomicBoolean error = new AtomicBoolean(false);
@@ -808,7 +808,7 @@ public final class ApiUtils {
                     }
                     
                     if (!error.get()) {
-                        parameters.put("pageToken", (String) ((JSONObject) new JSONParser().parse(response.get())).get("nextPageToken"));
+                        parameters.put("pageToken", (String) ((Map<String, Object>) new JSONParser().parse(response.get())).get("nextPageToken"));
                         return response.get();
                     }
                 }

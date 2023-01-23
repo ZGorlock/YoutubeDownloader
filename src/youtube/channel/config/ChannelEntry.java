@@ -15,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,12 +23,12 @@ import commons.console.Console;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.SponsorBlocker;
+import youtube.config.base.ConfigData;
 import youtube.state.KeyStore;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -38,7 +36,7 @@ import youtube.util.Utils;
 /**
  * Defines a Channel Entry configuration of the Youtube Channel Downloader.
  */
-public abstract class ChannelEntry {
+public abstract class ChannelEntry extends ConfigData {
     
     //Logger
     
@@ -159,45 +157,9 @@ public abstract class ChannelEntry {
     public SponsorBlocker.SponsorBlockConfig sponsorBlockConfig;
     
     /**
-     * The json data of the Channel Entry configuration.
-     */
-    public JSONObject channelEntryJson;
-    
-    /**
      * The parent of the Channel Entry.
      */
     public ChannelGroup parent = null;
-    
-    
-    //Functions
-    
-    /**
-     * Reads a field from the configuration of the Channel Entry.
-     */
-    protected final Function<String, Optional<Object>> fieldGetter = (String name) ->
-            Optional.ofNullable(channelEntryJson.get(name));
-    
-    /**
-     * Reads a string field from the configuration of the Channel Entry.
-     */
-    protected final Function<String, Optional<String>> stringFieldGetter = (String name) ->
-            Optional.ofNullable((String) fieldGetter.apply(name).orElse(null));
-    
-    /**
-     * Reads a boolean field from the configuration of the Channel Entry.
-     */
-    protected final Function<String, Optional<Boolean>> booleanFieldGetter = (String name) ->
-            Optional.ofNullable((Boolean) fieldGetter.apply(name).orElse(null));
-    
-    /**
-     * Formats an identifier string of the Channel Entry.
-     */
-    protected final UnaryOperator<String> identifierFormatter = (String identifier) ->
-            Optional.ofNullable(identifier)
-                    .map(e -> e.replace(".", ""))
-                    .map(e -> e.replace(KeyStore.KEYSTORE_SEPARATOR, ""))
-                    .map(e -> e.replaceAll("\\s+", "_"))
-                    .orElse(null);
     
     
     //Constructors
@@ -210,39 +172,38 @@ public abstract class ChannelEntry {
      * @throws RuntimeException When the configuration data does not contain all of the required fields.
      */
     protected ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
+        super(configData);
+        
         Optional.ofNullable(parent).filter(e -> (e.getKey() != null)).ifPresent(e -> {
             this.parent = e;
             e.children.add(this);
         });
         
-        this.channelEntryJson = new JSONObject(configData);
-        
-        this.key = stringFieldGetter.apply("key").map(identifierFormatter)
+        this.key = parseString("key").map(this::formatIdentifier)
                 .orElseThrow(() -> {
                     System.out.println(Color.bad("Configuration missing required field: ") + Color.link("key"));
                     return new RuntimeException();
                 });
         
-        this.playlistId = stringFieldGetter.apply("playlistId").map(e -> e.replaceAll("^UC", "UU")).orElse(null);
+        this.playlistId = parseString("playlistId").map(e -> e.replaceAll("^UC", "UU")).orElse(null);
         this.channelId = Optional.ofNullable(playlistId).filter(e -> e.startsWith("UU")).map(e -> e.replaceAll("^UU", "UC")).orElse(null);
-        this.url = stringFieldGetter.apply("url").orElseGet(() -> determineUrl(playlistId));
+        this.url = parseString("url").orElseGet(() -> determineUrl(playlistId));
         
-        this.group = stringFieldGetter.apply("group").map(e -> e.replaceAll(".+\\.", "")).orElse(null);
+        this.group = parseString("group").map(e -> e.replaceAll(".+\\.", "")).orElse(null);
         
-        this.active = booleanFieldGetter.apply("active").orElse(null);
-        this.saveAsMp3 = booleanFieldGetter.apply("saveAsMp3").orElse(null);
-        this.savePlaylist = booleanFieldGetter.apply("savePlaylist").orElse(null);
-        this.reversePlaylist = booleanFieldGetter.apply("reversePlaylist").orElse(null);
-        this.keepClean = booleanFieldGetter.apply("keepClean").orElse(null);
+        this.active = parseData("active");
+        this.saveAsMp3 = parseData("saveAsMp3");
+        this.savePlaylist = parseData("savePlaylist");
+        this.reversePlaylist = parseData("reversePlaylist");
+        this.keepClean = parseData("keepClean");
         
-        this.ignoreGlobalLocations = booleanFieldGetter.apply("ignoreGlobalLocations").orElse(null);
+        this.ignoreGlobalLocations = parseData("ignoreGlobalLocations");
         this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsMp3() ? Channels.musicDir : Channels.videoDir)) : null;
         
-        this.outputFolderPath = stringFieldGetter.apply("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> stringFieldGetter.apply("outputFolderPath").orElse(null));
+        this.outputFolderPath = parseString("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> parseData("outputFolderPath"));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
         
-        this.sponsorBlockConfig = Optional.ofNullable((JSONObject) configData.get("sponsorBlock"))
-                .map(SponsorBlocker::loadConfig)
+        this.sponsorBlockConfig = parseMap("sponsorBlock").map(SponsorBlocker::loadConfig)
                 .map(Mappers.forEach(e -> e.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL))
                 .orElse(null);
     }
@@ -261,10 +222,25 @@ public abstract class ChannelEntry {
      * Creates an empty Channel Entry.
      */
     protected ChannelEntry() {
+        super();
     }
     
     
     //Methods
+    
+    /**
+     * Formats an identifier of the Channel Entry.
+     *
+     * @param identifier The identifier.
+     * @return The formatted identifier.
+     */
+    protected String formatIdentifier(String identifier) {
+        return Optional.ofNullable(identifier)
+                .map(e -> e.replace(".", ""))
+                .map(e -> e.replace(KeyStore.KEYSTORE_SEPARATOR, ""))
+                .map(e -> e.replaceAll("\\s+", "_"))
+                .orElse(null);
+    }
     
     /**
      * Returns whether the Channel Entry is a Channel Config.
@@ -280,9 +256,8 @@ public abstract class ChannelEntry {
      *
      * @return Whether the Channel Entry is a Channel Group.
      */
-    @SuppressWarnings("unchecked")
     public boolean isGroup() {
-        return isGroupConfiguration(channelEntryJson);
+        return isGroupConfiguration(getConfigData());
     }
     
     /**

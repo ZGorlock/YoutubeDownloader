@@ -62,10 +62,10 @@ public class Location extends EntityDetail {
     public Location(Map<String, Object> locationData) {
         super(locationData);
         
-        this.description = getData("locationDescription");
-        this.latitude = numberParser.apply(getData("location", "latitude"));
-        this.longitude = numberParser.apply(getData("location", "longitude"));
-        this.altitude = numberParser.apply(getData("location", "altitude"));
+        this.description = parseData("locationDescription");
+        this.latitude = parseDouble("location", "latitude").orElse(null);
+        this.longitude = parseDouble("location", "longitude").orElse(null);
+        this.altitude = parseDouble("location", "altitude").orElse(null);
     }
     
     /**

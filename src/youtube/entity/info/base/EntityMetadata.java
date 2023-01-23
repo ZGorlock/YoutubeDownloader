@@ -89,15 +89,15 @@ public class EntityMetadata extends EntityData {
     public EntityMetadata(Map<String, Object> entityData) {
         super(entityData);
         
-        this.kind = getData("kind");
-        this.eTag = getData("etag");
-        this.itemId = getData("id");
+        this.kind = parseData("kind");
+        this.eTag = parseData("etag");
+        this.itemId = parseData("id");
         
-        this.channelId = getData("snippet", "channelId");
-        this.channelTitle = getData("snippet", "channelTitle");
+        this.channelId = parseData("snippet", "channelId");
+        this.channelTitle = parseData("snippet", "channelTitle");
         this.channel = ApiUtils.fetchChannel(channelId);
         
-        this.playlistId = getData("snippet", "playlistId");
+        this.playlistId = parseData("snippet", "playlistId");
         this.playlist = ApiUtils.fetchPlaylist(playlistId);
         
         this.entityId = itemId;
