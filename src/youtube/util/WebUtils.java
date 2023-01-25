@@ -65,7 +65,12 @@ public final class WebUtils {
     /**
      * The base url for Youtube channels.
      */
-    public static final String CHANNEL_BASE = YOUTUBE_BASE + "/c/";
+    public static final String CHANNEL_BASE = YOUTUBE_BASE + "/channel/";
+    
+    /**
+     * The base custom url for Youtube channels.
+     */
+    public static final String CHANNEL_CUSTOM_BASE = YOUTUBE_BASE + "/@";
     
     /**
      * The regex pattern for a Youtube video url.

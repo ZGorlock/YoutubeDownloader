@@ -32,6 +32,7 @@ import youtube.config.base.ConfigData;
 import youtube.state.KeyStore;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
+import youtube.util.WebUtils;
 
 /**
  * Defines a Channel Entry configuration of the Youtube Channel Downloader.
@@ -647,14 +648,15 @@ public abstract class ChannelEntry extends ConfigData {
      * @return The url corresponding to the playlist id.
      */
     protected static String determineUrl(String playlistId) {
-        return Optional.ofNullable(ChannelConfig.ChannelType.determineType(playlistId))
+        return Optional.ofNullable(playlistId)
+                .map(ChannelConfig.ChannelType::determineType)
                 .map(type -> {
                     switch (type) {
                         case CHANNEL:
-                            return "https://www.youtube.com/channel/" + playlistId.replaceAll("^UU", "UC");
+                            return WebUtils.CHANNEL_BASE + playlistId.replaceAll("^UU", "UC");
                         case PLAYLIST:
                         case ALBUM:
-                            return "https://www.youtube.com/playlist?list=" + playlistId;
+                            return WebUtils.PLAYLIST_BASE + playlistId;
                         default:
                             return null;
                     }

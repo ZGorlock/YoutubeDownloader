@@ -66,7 +66,7 @@ public class ChannelInfo extends EntityInfo {
         this.url = WebUtils.CHANNEL_BASE + channelId;
         
         this.customUrlKey = parseData("snippet", "customUrl");
-        this.customUrl = Optional.ofNullable(customUrlKey).map(e -> e.replaceAll("^@*", WebUtils.CHANNEL_BASE)).orElse(url);
+        this.customUrl = Optional.ofNullable(customUrlKey).map(e -> e.replaceAll("^@*", WebUtils.CHANNEL_CUSTOM_BASE)).orElse(url);
         
         this.videoCount = Optional.ofNullable(getStats()).map(e -> e.get("videoCount")).map(Statistics.Stat::getCount).orElse(null);
     }
