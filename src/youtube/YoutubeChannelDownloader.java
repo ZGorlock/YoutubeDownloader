@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
+import youtube.channel.config.ChannelConfig;
 import youtube.channel.process.ChannelProcesses;
 import youtube.config.Color;
 import youtube.config.Configurator;
@@ -95,11 +96,11 @@ public class YoutubeChannelDownloader {
             boolean skip = (Configurator.Config.startAt != null);
             boolean stop = (Configurator.Config.stopAt != null);
             
-            if (!((skip && stop) && (Channels.channelIndex(Configurator.Config.stopAt) < Channels.channelIndex(Configurator.Config.startAt)))) {
-                for (Channel currentChannel : Channels.getChannels()) {
-                    if (!(skip &= !currentChannel.getConfig().getKey().equals(Configurator.Config.startAt)) && currentChannel.getConfig().isMemberOfGroup(Configurator.Config.group)) {
-                        processChannel(currentChannel.getConfig().getKey());
-                        if (stop && currentChannel.getConfig().getKey().equals(Configurator.Config.stopAt)) {
+            if (!((skip && stop) && (Channels.configIndex(Configurator.Config.stopAt) < Channels.configIndex(Configurator.Config.startAt)))) {
+                for (ChannelConfig config : Channels.getConfigs()) {
+                    if (!(skip &= !config.getKey().equals(Configurator.Config.startAt)) && config.isMemberOfGroup(Configurator.Config.group)) {
+                        processChannel(config.getKey());
+                        if (stop && config.getKey().equals(Configurator.Config.stopAt)) {
                             break;
                         }
                     }

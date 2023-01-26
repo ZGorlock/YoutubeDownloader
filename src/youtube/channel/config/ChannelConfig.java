@@ -85,11 +85,6 @@ public class ChannelConfig extends ChannelEntry {
     //Fields
     
     /**
-     * The name of the Channel.
-     */
-    public String name;
-    
-    /**
      * The playlist file to add files downloaded by the Channel to.
      */
     public File playlistFile;
@@ -112,12 +107,10 @@ public class ChannelConfig extends ChannelEntry {
      *
      * @param configData The json data of the Channel Config.
      * @param parent     The parent of the Channel Config.
-     * @throws Exception When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
-    public ChannelConfig(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+    public ChannelConfig(Map<String, Object> configData, ChannelGroup parent) {
         super(configData, parent);
-        
-        this.name = parseString("name").map(this::formatIdentifier).orElseGet(() -> StringUtility.toPascalCase(key));
         
         this.playlistFilePath = parseString("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> parseData("playlistFilePath"));
         this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
@@ -129,9 +122,9 @@ public class ChannelConfig extends ChannelEntry {
      * Creates a Channel Config.
      *
      * @param configData The json data of the Channel Config.
-     * @throws Exception When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
-    public ChannelConfig(Map<String, Object> configData) throws Exception {
+    public ChannelConfig(Map<String, Object> configData) {
         this(configData, null);
     }
     
@@ -180,7 +173,6 @@ public class ChannelConfig extends ChannelEntry {
     @Override
     public Map<String, Object> getConfig() {
         final Map<String, Object> fields = super.getConfig();
-        fields.put("name", Optional.ofNullable(name).map(String::strip).orElse(null));
         fields.put("playlistFile", Optional.ofNullable(playlistFilePath).orElse(Optional.ofNullable(playlistFile).map(File::getAbsolutePath).orElse(null)));
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
@@ -197,7 +189,6 @@ public class ChannelConfig extends ChannelEntry {
     @Override
     public Map<String, Object> getEffectiveConfig() {
         final Map<String, Object> fields = super.getEffectiveConfig();
-        fields.put("name", getName());
         fields.put("playlistFile", getPlaylistFile());
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
@@ -218,15 +209,6 @@ public class ChannelConfig extends ChannelEntry {
     
     
     //Getters
-    
-    /**
-     * Returns the name of the Channel Config.
-     *
-     * @return The name of the Channel Config.
-     */
-    public String getName() {
-        return name;
-    }
     
     /**
      * Returns the display name of the Channel Config.

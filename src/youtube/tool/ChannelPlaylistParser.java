@@ -52,7 +52,7 @@ public class ChannelPlaylistParser {
     /**
      * The list of fields to forcefully exclude from playlist configurations.
      */
-    private static final List<String> FORCE_EXCLUDE_FIELDS = List.of("name", "url");
+    private static final List<String> FORCE_EXCLUDE_FIELDS = List.of("name", "url", "savePlaylist");
     
     /**
      * The number of leading indentations in the final output.

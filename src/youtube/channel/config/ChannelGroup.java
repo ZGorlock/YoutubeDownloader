@@ -34,12 +34,7 @@ public class ChannelGroup extends ChannelEntry {
     /**
      * A list of all fields in the configuration of a Channel Group.
      */
-    public static final List<String> ALL_FIELDS = List.of("key", "active", "group", "url", "playlistId", "outputFolder", "saveAsMp3", "reversePlaylist", "ignoreGlobalLocations", "keepClean", "channels");
-    
-    /**
-     * The name of the field in the configuration of a Channel Group that contains the list of children.
-     */
-    public static final String CHILD_CONFIGURATION_KEY = "channels";
+    public static final List<String> ALL_FIELDS = List.of("key", "active", "name", "group", "url", "playlistId", "outputFolder", "saveAsMp3", "savePlaylist", "reversePlaylist", "ignoreGlobalLocations", "keepClean", "channels");
     
     
     //Fields
@@ -57,9 +52,9 @@ public class ChannelGroup extends ChannelEntry {
      *
      * @param configData The json data of the Channel Group.
      * @param parent     The parent of the Channel Group.
-     * @throws Exception When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
-    public ChannelGroup(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+    public ChannelGroup(Map<String, Object> configData, ChannelGroup parent) {
         super(configData, parent);
     }
     
@@ -67,9 +62,9 @@ public class ChannelGroup extends ChannelEntry {
      * Creates a Channel Group.
      *
      * @param configData The json data of the Channel Group.
-     * @throws Exception When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
-    public ChannelGroup(Map<String, Object> configData) throws Exception {
+    public ChannelGroup(Map<String, Object> configData) {
         this(configData, null);
     }
     
@@ -106,7 +101,7 @@ public class ChannelGroup extends ChannelEntry {
     @Override
     public Map<String, Object> getConfig() {
         final Map<String, Object> fields = super.getConfig();
-        fields.put(CHILD_CONFIGURATION_KEY, children);
+        fields.put("channels", children);
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
             throw new UnsupportedOperationException();
@@ -122,7 +117,7 @@ public class ChannelGroup extends ChannelEntry {
     @Override
     public Map<String, Object> getEffectiveConfig() {
         final Map<String, Object> fields = super.getEffectiveConfig();
-        fields.put(CHILD_CONFIGURATION_KEY, getChildren());
+        fields.put("channels", getChildren());
         
         if (!ALL_FIELDS.stream().allMatch(fields::containsKey)) {
             throw new UnsupportedOperationException();

@@ -14,8 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,6 +48,16 @@ public abstract class ChannelEntry extends ConfigData {
     
     
     //Constants
+    
+    /**
+     * The list of valid delimiters in a Channel Entry group setting.
+     */
+    public static final String MULTI_GROUP_DELIMITERS = ".,;:+&|";
+    
+    /**
+     * The separator used in a canonical key.
+     */
+    public static final String CANONICAL_KEY_SEPARATOR = ".";
     
     /**
      * The default value of the flag indicating whether a Channel Entry is enabled or not.
@@ -91,6 +101,11 @@ public abstract class ChannelEntry extends ConfigData {
      * A flag indicating whether the Channel Entry is enabled or not.
      */
     public Boolean active;
+    
+    /**
+     * The name of the Channel Entry.
+     */
+    public String name;
     
     /**
      * The group of the Channel Entry.
@@ -160,7 +175,7 @@ public abstract class ChannelEntry extends ConfigData {
     /**
      * The parent of the Channel Entry.
      */
-    public ChannelGroup parent = null;
+    public ChannelGroup parent;
     
     
     //Constructors
@@ -170,7 +185,7 @@ public abstract class ChannelEntry extends ConfigData {
      *
      * @param configData The json data of the Channel Entry.
      * @param parent     The parent of the Channel Entry.
-     * @throws RuntimeException When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
     protected ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
         super(configData);
@@ -190,7 +205,8 @@ public abstract class ChannelEntry extends ConfigData {
         this.channelId = Optional.ofNullable(playlistId).filter(e -> e.startsWith("UU")).map(e -> e.replaceAll("^UU", "UC")).orElse(null);
         this.url = parseString("url").orElseGet(() -> determineUrl(playlistId));
         
-        this.group = parseString("group").map(e -> e.replaceAll(".+\\.", "")).orElse(null);
+        this.name = parseString("name").map(this::formatIdentifier).orElseGet(() -> StringUtility.toPascalCase(key));
+        this.group = parseData("group");
         
         this.active = parseData("active");
         this.saveAsMp3 = parseData("saveAsMp3");
@@ -213,7 +229,7 @@ public abstract class ChannelEntry extends ConfigData {
      * Creates a Channel Entry.
      *
      * @param configData The json data of the Channel Entry.
-     * @throws RuntimeException When the configuration data does not contain all of the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
     protected ChannelEntry(Map<String, Object> configData) {
         this(configData, null);
@@ -230,26 +246,12 @@ public abstract class ChannelEntry extends ConfigData {
     //Methods
     
     /**
-     * Formats an identifier of the Channel Entry.
-     *
-     * @param identifier The identifier.
-     * @return The formatted identifier.
-     */
-    protected String formatIdentifier(String identifier) {
-        return Optional.ofNullable(identifier)
-                .map(e -> e.replace(".", ""))
-                .map(e -> e.replace(KeyStore.KEYSTORE_SEPARATOR, ""))
-                .map(e -> e.replaceAll("\\s+", "_"))
-                .orElse(null);
-    }
-    
-    /**
      * Returns whether the Channel Entry is a Channel Config.
      *
      * @return Whether the Channel Entry is a Channel Config.
      */
     public boolean isChannel() {
-        return !isGroup();
+        return this instanceof ChannelConfig;
     }
     
     /**
@@ -258,7 +260,7 @@ public abstract class ChannelEntry extends ConfigData {
      * @return Whether the Channel Entry is a Channel Group.
      */
     public boolean isGroup() {
-        return isGroupConfiguration(getConfigData());
+        return this instanceof ChannelGroup;
     }
     
     /**
@@ -310,32 +312,28 @@ public abstract class ChannelEntry extends ConfigData {
      */
     public List<String> getAllGroups() {
         return Stream.of(
-                        Stream.of(isGroup() ? key : null),
-                        Optional.ofNullable(group).stream().flatMap(e -> Arrays.stream(e.split("\\s*[,|]\\s*"))),
+                        Optional.of(this).filter(ChannelEntry::isGroup).stream().flatMap(e -> Stream.of(key, name)),
+                        Optional.ofNullable(group).stream().flatMap(e -> Arrays.stream(e.split("\\s*[" + Pattern.quote(MULTI_GROUP_DELIMITERS) + "]+\\s*"))),
                         Optional.ofNullable(parent).map(ChannelEntry::getAllGroups).stream().flatMap(Collection::stream))
                 .flatMap(e -> e)
                 .filter(e -> !StringUtility.isNullOrBlank(e))
+                .map(String::toUpperCase).distinct()
                 .collect(Collectors.toList());
     }
     
     /**
      * Returns whether the Channel Entry is a member of a specific group.
      *
-     * @param groupKeyOrName The key or name of the group.
+     * @param group The key or name of the group.
      * @return Whether the Channel Entry is a member of the specified group.
      */
-    public boolean isMemberOfGroup(String groupKeyOrName) {
-        final BiPredicate<String, String> groupEquals = (String test, String target) ->
-                (Stream.of(test, target)
-                        .map(String::toLowerCase)
-                        .map(e -> e.replaceAll("[^a-z\\d]", ""))
-                        .map(e -> e.replaceAll("s$", ""))
-                        .distinct().count() == 1);
-        
-        return StringUtility.isNullOrBlank(groupKeyOrName) ||
-                Optional.ofNullable(key).map(key -> groupEquals.test(key, groupKeyOrName)).orElse(false) ||
-                Optional.ofNullable(group).map(group -> groupEquals.test(group, groupKeyOrName)).orElse(false) ||
-                Optional.ofNullable(parent).map(parent -> parent.isMemberOfGroup(groupKeyOrName)).orElse(false);
+    public boolean isMemberOfGroup(String group) {
+        return Optional.ofNullable(group)
+                .map(this::formatSearchIdentifier).filter(e -> !e.isEmpty())
+                .map(search -> getAllGroups().stream()
+                        .map(this::formatSearchIdentifier).filter(e -> !StringUtility.isNullOrEmpty(e))
+                        .anyMatch(target -> StringUtility.equals(target, search)))
+                .orElse(true);
     }
     
     /**
@@ -347,6 +345,7 @@ public abstract class ChannelEntry extends ConfigData {
         final Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("key", Optional.ofNullable(key).map(String::strip).orElse(null));
         fields.put("active", active);
+        fields.put("name", Optional.ofNullable(name).map(String::strip).orElse(null));
         fields.put("group", Optional.ofNullable(group).map(String::strip).orElse(null));
         fields.put("url", Optional.ofNullable(url).map(String::strip).orElse(null));
         fields.put("playlistId", Optional.ofNullable(playlistId).map(String::strip).orElse(null));
@@ -368,6 +367,7 @@ public abstract class ChannelEntry extends ConfigData {
         final Map<String, Object> fields = new LinkedHashMap<>();
         fields.put("key", getKey());
         fields.put("active", isActive());
+        fields.put("name", getName());
         fields.put("group", getGroup());
         fields.put("url", getUrl());
         fields.put("playlistId", getPlaylistId());
@@ -378,6 +378,38 @@ public abstract class ChannelEntry extends ConfigData {
         fields.put("ignoreGlobalLocations", isIgnoreGlobalLocations());
         fields.put("keepClean", isKeepClean());
         return fields;
+    }
+    
+    /**
+     * Formats an identifier of the Channel Entry.
+     *
+     * @param identifier The identifier.
+     * @return The formatted identifier.
+     */
+    protected String formatIdentifier(String identifier) {
+        return Optional.ofNullable(identifier)
+                .map(String::strip)
+                .map(e -> e.replaceAll("\\s+", "_"))
+                .map(e -> e.replaceAll(Stream.of(
+                                MULTI_GROUP_DELIMITERS,
+                                CANONICAL_KEY_SEPARATOR,
+                                KeyStore.KEYSTORE_SEPARATOR)
+                        .map(Pattern::quote)
+                        .collect(Collectors.joining("", "[", "]")), ""))
+                .orElse(null);
+    }
+    
+    /**
+     * Formats a identifier of the Channel Entry to be used in a search.
+     *
+     * @param identifier The identifier.
+     * @return The formatted group identifier.
+     */
+    protected String formatSearchIdentifier(String identifier) {
+        return Optional.ofNullable(identifier)
+                .map(String::strip).map(String::toUpperCase)
+                .map(e -> e.replaceAll("(?i)[^A-Z\\d]", ""))
+                .orElse(null);
     }
     
     /**
@@ -435,13 +467,21 @@ public abstract class ChannelEntry extends ConfigData {
     }
     
     /**
+     * Returns the name of the Channel Entry.
+     *
+     * @return The name of the Channel Entry.
+     */
+    public String getName() {
+        return name;
+    }
+    
+    /**
      * Returns the group of the Channel Entry.
      *
      * @return The group of the Channel Entry.
      */
     public String getGroup() {
-        return Optional.ofNullable(group).orElseGet(() ->
-                Optional.ofNullable(parent).map(ChannelEntry::getGroup).orElse(null));
+        return group;
     }
     
     /**
@@ -582,15 +622,15 @@ public abstract class ChannelEntry extends ConfigData {
      * @param configData The json data of the Channel Entry configuration.
      * @param parent     The parent of the Channel Entry.
      * @return The Channel Entry.
-     * @throws Exception When the configuration data does not contain all the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
     @SuppressWarnings("unchecked")
     public static <T extends ChannelEntry> T load(Map<String, Object> configData, ChannelGroup parent) throws Exception {
-        final T channelEntry = isGroupConfiguration(configData) ?
-                               (T) new ChannelGroup(configData, parent) :
-                               (T) new ChannelConfig(configData, parent);
+        final ChannelEntry channelEntry = hasChildren(configData) ?
+                                          new ChannelGroup(configData, parent) :
+                                          new ChannelConfig(configData, parent);
         validateRequiredFields(channelEntry.getEffectiveConfig());
-        return channelEntry;
+        return (T) channelEntry;
     }
     
     /**
@@ -598,20 +638,22 @@ public abstract class ChannelEntry extends ConfigData {
      *
      * @param configData The json data of the Channel Entry configuration.
      * @return The Channel Entry.
-     * @throws Exception When the configuration data does not contain all the required fields.
+     * @throws Exception When the configuration data does not contain the required fields.
      */
     public static <T extends ChannelEntry> T load(Map<String, Object> configData) throws Exception {
         return load(configData, null);
     }
     
     /**
-     * Determines whether the json data of a Channel Entry represents a Channel Group.
+     * Determines whether the json data of a Channel Entry contains child configurations.
      *
-     * @param configData The json data of the Channel Entry.
-     * @return Whether the json data represents a Channel Group.
+     * @param configData The json data of the Channel Entry configuration.
+     * @return Whether the configuration data contains child configurations.
      */
-    protected static boolean isGroupConfiguration(Map<String, Object> configData) {
-        return configData.containsKey(ChannelGroup.CHILD_CONFIGURATION_KEY);
+    protected static boolean hasChildren(Map<String, Object> configData) {
+        return Optional.ofNullable(configData)
+                .map(e -> e.containsKey("channels"))
+                .orElse(false);
     }
     
     /**
@@ -667,15 +709,15 @@ public abstract class ChannelEntry extends ConfigData {
      * Validates that the json data of a Channel Entry contains all the required fields.
      *
      * @param configData The json data of the Channel Entry.
-     * @throws RuntimeException When the configuration data does not contain all the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
     protected static void validateRequiredFields(Map<String, Object> configData) {
-        Optional.of((isGroupConfiguration(configData) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
+        Optional.of((hasChildren(configData) ? ChannelGroup.REQUIRED_FIELDS : ChannelConfig.REQUIRED_FIELDS).stream()
                         .filter(e -> (MapUtility.getOrNull(configData, e) == null))
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())
                 .ifPresent(missingFields -> {
-                    System.out.println(Color.bad("Channel" + (ChannelEntry.isGroupConfiguration(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
+                    System.out.println(Color.bad("Channel" + (hasChildren(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
                             Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
                             missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
                     throw new RuntimeException();

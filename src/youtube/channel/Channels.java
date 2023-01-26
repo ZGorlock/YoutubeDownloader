@@ -250,7 +250,7 @@ public class Channels {
             final ChannelEntry channelEntry = ChannelEntry.load(channelEntryData, parent);
             
             if (channelEntry.isGroup()) {
-                loadChannelList((List<Map<String, Object>>) channelEntryData.get(ChannelGroup.CHILD_CONFIGURATION_KEY), (ChannelGroup) channelEntry);
+                loadChannelList((List<Map<String, Object>>) channelEntryData.get("channels"), (ChannelGroup) channelEntry);
                 groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
             } else {
                 configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
