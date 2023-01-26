@@ -9,9 +9,11 @@ package youtube.channel;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -90,6 +92,26 @@ public class Channels {
      * A flag indicating whether the Channels configuration has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
+    
+    /**
+     * A list of registered Channel Config keys.
+     */
+    private static final Set<String> channelKeys = new HashSet<>();
+    
+    /**
+     * A list of registered Channel Config keys.
+     */
+    private static final Set<String> channelNames = new HashSet<>();
+    
+    /**
+     * A list of registered Channel Group keys.
+     */
+    private static final Set<String> groupKeys = new HashSet<>();
+    
+    /**
+     * A list of registered Channel Group names.
+     */
+    private static final Set<String> groupNames = new HashSet<>();
     
     /**
      * The drive to use for storage of downloaded files.
@@ -249,12 +271,11 @@ public class Channels {
         try {
             final ChannelEntry channelEntry = ChannelEntry.load(channelEntryData, parent);
             
-            if (channelEntry.isGroup()) {
-                loadChannelList((List<Map<String, Object>>) channelEntryData.get("channels"), (ChannelGroup) channelEntry);
-                groups.put(channelEntry.getKey(), (ChannelGroup) channelEntry);
+            if (channelEntry.isChannel()) {
+                registerChannelConfig((ChannelConfig) channelEntry);
             } else {
-                configs.put(channelEntry.getKey(), (ChannelConfig) channelEntry);
-                channels.put(channelEntry.getKey(), new Channel((ChannelConfig) channelEntry));
+                registerChannelGroup((ChannelGroup) channelEntry);
+                loadChannelList((List<Map<String, Object>>) channelEntryData.get("channels"), (ChannelGroup) channelEntry);
             }
             
         } catch (Exception e) {
@@ -263,6 +284,43 @@ public class Channels {
                 System.out.println(Utils.INDENT + Color.bad(e.getMessage()));
             }
         }
+    }
+    
+    /**
+     * Registers a Channel Config.
+     *
+     * @param channelConfig The Channel Config.
+     */
+    public static void registerChannelConfig(ChannelConfig channelConfig) {
+        if (!channelKeys.add(channelConfig.getKey())) {
+            System.out.println(Color.bad("A Channel with the key: ") + Color.channel(channelConfig.getKey()) + Color.bad(" has already been registered"));
+            throw new RuntimeException();
+        }
+        if (!channelNames.add(channelConfig.getName())) {
+            System.out.println(Color.bad("A Channel with the name: ") + Color.channel(channelConfig.getName()) + Color.bad(" has already been registered"));
+            throw new RuntimeException();
+        }
+        
+        configs.put(channelConfig.getKey(), channelConfig);
+        channels.put(channelConfig.getKey(), new Channel(channelConfig));
+    }
+    
+    /**
+     * Registers a Channel Group.
+     *
+     * @param channelGroup The Channel Group.
+     */
+    public static void registerChannelGroup(ChannelGroup channelGroup) {
+        if (!groupKeys.add(channelGroup.getKey())) {
+            System.out.println(Color.bad("A Channel Group with the key: ") + Color.channel(channelGroup.getKey()) + Color.bad(" has already been registered"));
+            throw new RuntimeException();
+        }
+        if (!groupNames.add(channelGroup.getName())) {
+            System.out.println(Color.bad("A Channel Group with the name: ") + Color.channel(channelGroup.getName()) + Color.bad(" has already been registered"));
+            throw new RuntimeException();
+        }
+        
+        groups.put(channelGroup.getKey(), channelGroup);
     }
     
     /**
