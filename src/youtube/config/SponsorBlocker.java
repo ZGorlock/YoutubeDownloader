@@ -179,6 +179,56 @@ public class SponsorBlocker {
             CHANNEL
         }
         
+        /**
+         * An enumeration of SponsorBlock Categories.
+         */
+        public enum Category {
+            
+            //Values
+            
+            ALL("all"),
+            SPONSOR("sponsor"),
+            INTRO("intro"),
+            OUTRO("outro"),
+            SELF_PROMO("selfpromo"),
+            PREVIEW("preview"),
+            INTERACTION("interaction"),
+            MUSIC_OFF_TOPIC("music_offtopic");
+            
+            
+            //Fields
+            
+            /**
+             * The key of the SponsorBlock Category.
+             */
+            public final String key;
+            
+            
+            //Constructors
+            
+            /**
+             * Constructs a SponsorBlock Category.
+             *
+             * @param key The key of the SponsorBlock Category.
+             */
+            Category(String key) {
+                this.key = key;
+            }
+            
+            
+            //Getters
+            
+            /**
+             * Returns the key of the SponsorBlock Category.
+             *
+             * @return The key of the SponsorBlock Category.
+             */
+            public String getKey() {
+                return key;
+            }
+            
+        }
+        
         
         //Fields
         
@@ -292,16 +342,16 @@ public class SponsorBlocker {
          * @return The list of categories enabled in the SponsorBlock Config.
          */
         public List<String> getCategories() {
-            return isSkipAll() ? List.of("all") :
+            return isSkipAll() ? List.of(Category.ALL.getKey()) :
                    Stream.of(
-                           (isSkipSponsor() ? "sponsor" : null),
-                           (isSkipIntro() ? "intro" : null),
-                           (isSkipOutro() ? "outro" : null),
-                           (isSkipSelfPromo() ? "selfpromo" : null),
-                           (isSkipPreview() ? "preview" : null),
-                           (isSkipInteraction() ? "interaction" : null),
-                           (isSkipMusicOffTopic() ? "music_offtopic" : null)
-                   ).filter(Objects::nonNull).collect(Collectors.toList());
+                           (isSkipSponsor() ? Category.SPONSOR : null),
+                           (isSkipIntro() ? Category.INTRO : null),
+                           (isSkipOutro() ? Category.OUTRO : null),
+                           (isSkipSelfPromo() ? Category.SELF_PROMO : null),
+                           (isSkipPreview() ? Category.PREVIEW : null),
+                           (isSkipInteraction() ? Category.INTERACTION : null),
+                           (isSkipMusicOffTopic() ? Category.MUSIC_OFF_TOPIC : null)
+                   ).filter(Objects::nonNull).map(Category::getKey).collect(Collectors.toList());
         }
         
         
