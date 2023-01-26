@@ -54,15 +54,15 @@ public class SponsorBlocker {
      * @return The SponsorBlock command for the SponsorBlock Config, or an empty string if the selected Executable is not yt-dlp.
      */
     public static String getCommand(SponsorBlockConfig config) {
-        final boolean configValid = (config != null) && config.enabled;
-        final boolean globalConfigValid = (globalConfig != null) && globalConfig.enabled;
+        final boolean configValid = (config != null) && config.isEnabled();
+        final boolean globalConfigValid = (globalConfig != null) && globalConfig.isEnabled();
         
         if ((!configValid && !globalConfigValid) ||
                 (ExecutableUtils.EXECUTABLE != ExecutableUtils.Executable.YT_DLP)) {
             return "";
         }
         
-        final boolean useGlobalConfig = globalConfigValid && (!configValid || (globalConfig.forceGlobally && !config.overrideGlobal));
+        final boolean useGlobalConfig = globalConfigValid && (!configValid || (globalConfig.isForceGlobally() && !config.isOverrideGlobal()));
         final SponsorBlockConfig conf = useGlobalConfig ? globalConfig : config;
         
         return !conf.isActive() ? "" :
@@ -77,6 +77,18 @@ public class SponsorBlocker {
      */
     public static SponsorBlockConfig loadConfig(Map<String, Object> configData) {
         return new SponsorBlockConfig(configData);
+    }
+    
+    /**
+     * Loads a Channel SponsorBlock Config.
+     *
+     * @param configData The json data of the Channel SponsorBlock Config.
+     * @return The SponsorBlock Config.
+     */
+    public static SponsorBlockConfig loadChannelConfig(Map<String, Object> configData) {
+        final SponsorBlockConfig config = loadConfig(configData);
+        config.type = SponsorBlockConfig.Type.CHANNEL;
+        return config;
     }
     
     /**
@@ -176,57 +188,57 @@ public class SponsorBlocker {
         public Type type;
         
         /**
-         * A flag indicating whether or not SponsorBlock is enabled.
+         * A flag indicating whether SponsorBlock is enabled.
          */
         public boolean enabled;
         
         /**
-         * A flag indicating whether or not this global SponsorBlock configuration should be applied globally and take precedence over standard Channel SponsorBlock configurations.
+         * A flag indicating whether this global SponsorBlock configuration should be applied globally and take precedence over standard Channel SponsorBlock configurations.
          */
         public boolean forceGlobally;
         
         /**
-         * A flag indicating whether or not this Channel SponsorBlock configuration should override a forced Global SponsorBlock configuration.
+         * A flag indicating whether this Channel SponsorBlock configuration should override a forced Global SponsorBlock configuration.
          */
         public boolean overrideGlobal;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip all segments.
+         * A flag indicating whether SponsorBlock should skip all segments.
          */
         public boolean skipAll;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'sponsor' segments.
+         * A flag indicating whether SponsorBlock should skip 'sponsor' segments.
          */
         public boolean skipSponsor;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'intro' segments.
+         * A flag indicating whether SponsorBlock should skip 'intro' segments.
          */
         public boolean skipIntro;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'outro' segments.
+         * A flag indicating whether SponsorBlock should skip 'outro' segments.
          */
         public boolean skipOutro;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'self promo' segments.
+         * A flag indicating whether SponsorBlock should skip 'self promo' segments.
          */
         public boolean skipSelfPromo;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'preview' segments.
+         * A flag indicating whether SponsorBlock should skip 'preview' segments.
          */
         public boolean skipPreview;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'interaction' segments.
+         * A flag indicating whether SponsorBlock should skip 'interaction' segments.
          */
         public boolean skipInteraction;
         
         /**
-         * A flag indicating whether or not SponsorBlock should skip 'music off topic' segments.
+         * A flag indicating whether SponsorBlock should skip 'music off topic' segments.
          */
         public boolean skipMusicOffTopic;
         
@@ -270,8 +282,8 @@ public class SponsorBlocker {
          * @return Whether this SponsorBlock Config is active and has enabled categories.
          */
         public boolean isActive() {
-            return enabled && (skipAll || skipSponsor || skipIntro || skipOutro ||
-                    skipSelfPromo || skipPreview || skipInteraction || skipMusicOffTopic);
+            return isEnabled() && (isSkipAll() || isSkipSponsor() || isSkipIntro() || isSkipOutro() ||
+                    isSkipSelfPromo() || isSkipPreview() || isSkipInteraction() || isSkipMusicOffTopic());
         }
         
         /**
@@ -280,17 +292,127 @@ public class SponsorBlocker {
          * @return The list of categories enabled in the SponsorBlock Config.
          */
         public List<String> getCategories() {
-            return skipAll ? List.of("all") :
+            return isSkipAll() ? List.of("all") :
                    Stream.of(
-                           (skipSponsor ? "sponsor" : null),
-                           (skipIntro ? "intro" : null),
-                           (skipOutro ? "outro" : null),
-                           (skipSelfPromo ? "selfpromo" : null),
-                           (skipPreview ? "preview" : null),
-                           (skipInteraction ? "interaction" : null),
-                           (skipMusicOffTopic ? "music_offtopic" : null)
+                           (isSkipSponsor() ? "sponsor" : null),
+                           (isSkipIntro() ? "intro" : null),
+                           (isSkipOutro() ? "outro" : null),
+                           (isSkipSelfPromo() ? "selfpromo" : null),
+                           (isSkipPreview() ? "preview" : null),
+                           (isSkipInteraction() ? "interaction" : null),
+                           (isSkipMusicOffTopic() ? "music_offtopic" : null)
                    ).filter(Objects::nonNull).collect(Collectors.toList());
-            
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the type of the SponsorBlock Config.
+         *
+         * @return The type of the SponsorBlock Config.
+         */
+        public Type getType() {
+            return type;
+        }
+        
+        /**
+         * Returns whether SponsorBlock is enabled.
+         *
+         * @return Whether SponsorBlock is enabled.
+         */
+        public boolean isEnabled() {
+            return enabled;
+        }
+        
+        /**
+         * Returns whether this global SponsorBlock configuration should be applied globally and take precedence over standard Channel SponsorBlock configurations.
+         *
+         * @return Whether this global SponsorBlock configuration should be applied globally and take precedence over standard Channel SponsorBlock configurations.
+         */
+        public boolean isForceGlobally() {
+            return forceGlobally;
+        }
+        
+        /**
+         * Returns whether this Channel SponsorBlock configuration should override a forced Global SponsorBlock configuration.
+         *
+         * @return Whether this Channel SponsorBlock configuration should override a forced Global SponsorBlock configuration.
+         */
+        public boolean isOverrideGlobal() {
+            return overrideGlobal;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip all segments.
+         *
+         * @return Whether SponsorBlock should skip all segments.
+         */
+        public boolean isSkipAll() {
+            return skipAll;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'sponsor' segments.
+         *
+         * @return Whether SponsorBlock should skip 'sponsor' segments.
+         */
+        public boolean isSkipSponsor() {
+            return skipSponsor;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'intro' segments.
+         *
+         * @return Whether SponsorBlock should skip 'intro' segments.
+         */
+        public boolean isSkipIntro() {
+            return skipIntro;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'outro' segments.
+         *
+         * @return Whether SponsorBlock should skip 'outro' segments.
+         */
+        public boolean isSkipOutro() {
+            return skipOutro;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'self promo' segments.
+         *
+         * @return Whether SponsorBlock should skip 'self promo' segments.
+         */
+        public boolean isSkipSelfPromo() {
+            return skipSelfPromo;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'preview' segments.
+         *
+         * @return Whether SponsorBlock should skip 'preview' segments.
+         */
+        public boolean isSkipPreview() {
+            return skipPreview;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'interaction' segments.
+         *
+         * @return Whether SponsorBlock should skip 'interaction' segments.
+         */
+        public boolean isSkipInteraction() {
+            return skipInteraction;
+        }
+        
+        /**
+         * Returns whether SponsorBlock should skip 'music off topic' segments.
+         *
+         * @return Whether SponsorBlock should skip 'music off topic' segments.
+         */
+        public boolean isSkipMusicOffTopic() {
+            return skipMusicOffTopic;
         }
         
     }

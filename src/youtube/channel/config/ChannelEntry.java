@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.console.Console;
-import commons.lambda.stream.mapper.Mappers;
 import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -220,9 +219,7 @@ public abstract class ChannelEntry extends ConfigData {
         this.outputFolderPath = parseString("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> parseData("outputFolderPath"));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
         
-        this.sponsorBlockConfig = parseMap("sponsorBlock").map(SponsorBlocker::loadConfig)
-                .map(Mappers.forEach(e -> e.type = SponsorBlocker.SponsorBlockConfig.Type.CHANNEL))
-                .orElse(null);
+        this.sponsorBlockConfig = parseMap("sponsorBlock").map(SponsorBlocker::loadChannelConfig).orElse(null);
     }
     
     /**
