@@ -95,7 +95,8 @@ public final class DownloadUtils {
             "giving up after 10",
             "urlopen error",
             "sign in to",
-            "please install or provide the path"
+            "please install or provide the path",
+            "check back later"
     };
     
     /**
