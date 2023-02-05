@@ -51,7 +51,7 @@ public abstract class ChannelEntry extends ConfigData {
     /**
      * The list of valid delimiters in a Channel Entry group setting.
      */
-    public static final String MULTI_GROUP_DELIMITERS = ".,;:+&|";
+    public static final String MULTI_GROUP_DELIMITERS = ".,;:+&";
     
     /**
      * The separator used in a canonical key.
