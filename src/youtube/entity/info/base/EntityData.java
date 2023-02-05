@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
+import commons.lambda.function.checked.CheckedFunction;
 import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -69,8 +70,10 @@ public class EntityData extends ConfigData {
      */
     protected LocalDateTime parseDate(String dateString) {
         return Optional.ofNullable(dateString)
-                .map(e -> e.replaceAll("(?i)[TZ]", " ")).map(String::strip)
-                .map(e -> LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
+                .map(String::toUpperCase).map(String::strip)
+                .map(e -> e.replace("T", " ")).map(e -> e.replaceAll("(?:\\.\\d+)?Z", ""))
+                .map((CheckedFunction<String, LocalDateTime>) e ->
+                        LocalDateTime.parse(e, DateTimeFormatter.ofPattern(DATE_FORMAT)))
                 .orElse(null);
     }
     
