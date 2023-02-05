@@ -8,6 +8,7 @@
 package youtube.entity;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +43,11 @@ public class Channel extends Entity<ChannelInfo> {
      * The Channel State of the Channel.
      */
     protected final ChannelState state;
+    
+    /**
+     * A flag indicating whether or not an attempt to lazily fetch the Channel Info associated with the Channel has been made.
+     */
+    private final AtomicBoolean fetchedInfo = new AtomicBoolean(false);
     
     
     //Constructors
@@ -96,7 +102,8 @@ public class Channel extends Entity<ChannelInfo> {
     @Override
     public ChannelInfo getInfo() {
         return Optional.ofNullable(info)
-                .orElseGet(() -> (info = ApiUtils.fetchChannel(this)));
+                .orElseGet(() -> fetchedInfo.compareAndSet(false, true) ?
+                                 (info = ApiUtils.fetchChannel(this)) : null);
     }
     
     /**

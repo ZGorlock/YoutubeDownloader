@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.entity.info.ChannelInfo;
@@ -78,12 +79,12 @@ public class EntityFetcher {
      * @return The json data of the Video and the Video Info.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> videoData = ApiUtils.fetchVideoData(videoId);
         final VideoInfo video = ApiUtils.fetchVideo(videoId);
         
         result.add(video);
-        return Map.entry(video, videoData);
+        return new ImmutablePair<>(video, videoData);
     }
     
     /**
@@ -94,12 +95,12 @@ public class EntityFetcher {
      * @return The json data of the Playlist and the Playlist Info.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> playlistData = ApiUtils.fetchPlaylistData(playlistId);
         final PlaylistInfo playlist = ApiUtils.fetchPlaylist(playlistId);
         
         result.add(playlist);
-        return Map.entry(playlist, playlistData);
+        return new ImmutablePair<>(playlist, playlistData);
     }
     
     /**
@@ -110,12 +111,12 @@ public class EntityFetcher {
      * @return The json data of the Channel and the Channel Info.
      * @throws Exception When there is an error.
      */
-    private static Map.Entry<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
         final Map<String, Object> channelData = ApiUtils.fetchChannelData(channelId);
         final ChannelInfo channel = ApiUtils.fetchChannel(channelId);
         
         result.add(channel);
-        return Map.entry(channel, channelData);
+        return new ImmutablePair<>(channel, channelData);
     }
     
     /**
@@ -126,13 +127,13 @@ public class EntityFetcher {
      * @return The json data of the Playlists and the list of Playlist Info.
      * @throws Exception When there is an error.
      */
-    private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) throws Exception {
+    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) throws Exception {
         final List<Map<String, Object>> channelPlaylistsData = ApiUtils.fetchChannelPlaylistsData(channelId);
         final List<PlaylistInfo> channelPlaylists = ApiUtils.fetchChannelPlaylists(channelId);
         
         result.addAll(channelPlaylists);
         return IntStream.range(0, channelPlaylists.size())
-                .mapToObj(i -> Map.entry((EntityInfo) channelPlaylists.get(i), channelPlaylistsData.get(i)))
+                .mapToObj(i -> new ImmutablePair<>((EntityInfo) channelPlaylists.get(i), channelPlaylistsData.get(i)))
                 .collect(Collectors.toList());
     }
     
@@ -144,13 +145,13 @@ public class EntityFetcher {
      * @return The json data of the Videos and the list of Video Info.
      * @throws Exception When there is an error.
      */
-    private static List<Map.Entry<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) throws Exception {
+    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) throws Exception {
         final List<Map<String, Object>> playlistVideosData = ApiUtils.fetchPlaylistVideosData(playlistId);
         final List<VideoInfo> playlistVideos = ApiUtils.fetchPlaylistVideos(playlistId);
         
         result.addAll(playlistVideos);
         return IntStream.range(0, playlistVideos.size())
-                .mapToObj(i -> Map.entry((EntityInfo) playlistVideos.get(i), playlistVideosData.get(i)))
+                .mapToObj(i -> new ImmutablePair<>((EntityInfo) playlistVideos.get(i), playlistVideosData.get(i)))
                 .collect(Collectors.toList());
     }
     

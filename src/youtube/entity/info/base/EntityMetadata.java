@@ -9,6 +9,7 @@ package youtube.entity.info.base;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -95,10 +96,10 @@ public class EntityMetadata extends EntityData {
         
         this.channelId = parseData("snippet", "channelId");
         this.channelTitle = parseData("snippet", "channelTitle");
-        this.channel = ApiUtils.fetchChannel(channelId);
+        this.channel = Optional.ofNullable(channelId).map(ApiUtils::fetchChannel).orElse(null);
         
         this.playlistId = parseData("snippet", "playlistId");
-        this.playlist = ApiUtils.fetchPlaylist(playlistId);
+        this.playlist = Optional.ofNullable(playlistId).map(ApiUtils::fetchPlaylist).orElse(null);
         
         this.entityId = itemId;
     }
