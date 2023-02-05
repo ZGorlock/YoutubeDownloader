@@ -8,6 +8,7 @@
 package youtube.util;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyException;
@@ -23,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedBiFunction;
 import commons.lambda.function.checked.CheckedConsumer;
@@ -105,6 +107,11 @@ public final class ApiUtils {
      * The maximum number of results to request per page.
      */
     private static final int MAX_RESULTS_PER_PAGE = 50;
+    
+    /**
+     * The file containing the API call log history.
+     */
+    public static final File CALL_LOG_FILE = new File(PathUtils.DATA_DIR, ("callLog" + '.' + Utils.LOG_FILE_FORMAT));
     
     
     //Enums
@@ -1000,15 +1007,7 @@ public final class ApiUtils {
                     response.set(EntityUtils.toString(httpResponse.getEntity()).strip());
                     error.set(httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
                     
-                    Stats.totalApiCalls.incrementAndGet();
-                    Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
-                    Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
-                    Stats.totalApiFailures.addAndGet(error.get() ? 1 : 0);
-                    if (channelState != null) {
-                        FileUtils.writeStringToFile(channelState.getCallLogFile(),
-                                (StringUtility.padLeft(String.valueOf(response.get().length()), 8) + " bytes " +
-                                        (error.get() ? "=XXX=" : "=====") + ' ' + request.getURI() + System.lineSeparator()), true);
-                    }
+                    logApiCall(endpoint, request.getURI(), response.get(), error.get(), channelState);
                     
                     if (!error.get()) {
                         parameters.put("pageToken", (String) ((Map<String, Object>) new JSONParser().parse(response.get())).get("nextPageToken"));
@@ -1017,6 +1016,28 @@ public final class ApiUtils {
                 }
             }
             return handleResponse(response.get(), channelState);
+        }
+        
+        /**
+         * Logs a call to the Youtube Data API.
+         *
+         * @param endpoint     The API Endpoint.
+         * @param request      The uri of the API request.
+         * @param response     The API response.
+         * @param error        Whether the API response was an error.
+         * @param channelState The Channel State of the calling Channel.
+         */
+        private static void logApiCall(Endpoint endpoint, URI request, String response, boolean error, ChannelState channelState) {
+            Stats.totalApiCalls.incrementAndGet();
+            Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
+            Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
+            Stats.totalApiFailures.addAndGet(error ? 1 : 0);
+            
+            final String callLog = String.format("%-19s  %15s  %8d bytes  %s  %s", Utils.currentTimestamp(), endpoint.getName(),
+                    response.length(), (error ? "=XXX=" : "====="), request);
+            Stream.of(CALL_LOG_FILE, (Optional.ofNullable(channelState).map(ChannelState::getCallLogFile).orElse(null)))
+                    .filter(Objects::nonNull).forEach((CheckedConsumer<File>) logFile ->
+                            FileUtils.writeStringToFile(logFile, (callLog + System.lineSeparator()), true));
         }
         
         /**

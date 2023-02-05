@@ -244,7 +244,7 @@ public class ChannelState {
      */
     public void cleanupData() throws Exception {
         if (!Configurator.Config.preventChannelFetch) {
-            Stream.of(getDataFiles(), List.of(getCallLogFile())).flatMap(Collection::stream)
+            Stream.of(getDataFiles()).flatMap(Collection::stream)
                     .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
         }
     }

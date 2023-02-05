@@ -9,6 +9,8 @@ package youtube.util;
 
 import java.io.File;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -131,6 +133,11 @@ public final class Utils {
      * The character used in a video title in place of non-ascii characters.
      */
     public static final String TITLE_NON_ASCII_CHAR = "+";
+    
+    /**
+     * The date format used for timestamps.
+     */
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     /**
      * The newline string.
@@ -282,6 +289,15 @@ public final class Utils {
      */
     public static String formatUnderscoredString(String string) {
         return StringUtility.toTitleCase(string.toLowerCase().replace("_", " "));
+    }
+    
+    /**
+     * Returns a string representing the current timestamp.
+     *
+     * @return A string representing the current timestamp.
+     */
+    public static String currentTimestamp() {
+        return new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
     }
     
 }
