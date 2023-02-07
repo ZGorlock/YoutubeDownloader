@@ -7,6 +7,7 @@
 
 package youtube.util;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import commons.lambda.function.checked.CheckedFunction;
+import commons.lambda.function.checked.CheckedSupplier;
 
 /**
  * Provides file utility methods for the Youtube Downloader.
@@ -32,6 +34,14 @@ public final class FileUtils {
      * The charset to use when reading and writing files.
      */
     public static final Charset FILE_CHARSET = StandardCharsets.UTF_8;
+    
+    
+    //Static Fields
+    
+    /**
+     * The handle to the desktop.
+     */
+    private static java.awt.Desktop desktop = CheckedSupplier.invoke(java.awt.Desktop::getDesktop);
     
     
     //Static Methods
@@ -201,6 +211,39 @@ public final class FileUtils {
      */
     public static void deleteFileOnExit(File file) throws IOException {
         org.apache.commons.io.FileUtils.forceDeleteOnExit(file);
+    }
+    
+    /**
+     * Recycles a file.
+     *
+     * @param file The file to recycle.
+     * @param safe A flag indicating whether to fail if recycling is not available, instead of deleting the file instead.
+     * @throws IOException                   When there is an error recycling the file.
+     * @throws UnsupportedOperationException When safe mode is enabled and recycling is not supported on the system.
+     * @see Desktop#moveToTrash(File)
+     */
+    public static void recycleFile(File file, boolean safe) throws IOException {
+        if (desktop != null) {
+            desktop.moveToTrash(file);
+        } else {
+            if (safe) {
+                throw new UnsupportedOperationException("Unable to recycle file");
+            } else {
+                deleteFile(file);
+            }
+        }
+    }
+    
+    /**
+     * Recycles a file.
+     *
+     * @param file The file to recycle.
+     * @throws IOException                   When there is an error recycling the file.
+     * @throws UnsupportedOperationException When safe mode is enabled and recycling is not supported on the system.
+     * @see #recycleFile(File, boolean)
+     */
+    public static void recycleFile(File file) throws IOException {
+        recycleFile(file, true);
     }
     
     /**

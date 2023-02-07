@@ -29,6 +29,7 @@
             "preventChannelFetch": false,
             "preventExeAutoUpdate": false,
             "preventExeVersionCheck": false,
+            "deleteToRecyclingBin": true,
             "neverUseBrowserCookies": false,
             "retryPreviousFailures": false
         }

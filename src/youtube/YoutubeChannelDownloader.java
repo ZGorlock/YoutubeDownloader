@@ -407,7 +407,11 @@ public class YoutubeChannelDownloader {
                     if (!Configurator.Config.preventDeletion) {
                         System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
                         try {
-                            FileUtils.deleteFile(video);
+                            if (Configurator.Config.deleteToRecyclingBin) {
+                                FileUtils.recycleFile(video);
+                            } else {
+                                FileUtils.deleteFile(video);
+                            }
                         } catch (IOException ignored) {
                             System.out.println(Color.bad("Failed to delete: ") + Color.quoted(printedFile));
                         }

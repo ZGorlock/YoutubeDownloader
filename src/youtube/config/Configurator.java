@@ -254,6 +254,11 @@ public class Configurator {
         public static final boolean DEFAULT_SAFE_MODE = false;
         
         /**
+         * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
+         */
+        public static final boolean DEFAULT_DELETE_TO_RECYCLING_BIN = false;
+        
+        /**
          * The default value of the flag indicating whether to disable downloading content or not.
          */
         public static final boolean DEFAULT_PREVENT_DOWNLOAD = false;
@@ -393,6 +398,11 @@ public class Configurator {
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
         public static final boolean preventExeVersionCheck = safeMode || Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
+    
+        /**
+         * A flag indicating whether to move files to the recycling bin instead of deleting them.
+         */
+        public static final boolean deleteToRecyclingBin = Configurator.getSetting("flag.deleteToRecyclingBin", DEFAULT_DELETE_TO_RECYCLING_BIN);
         
         /**
          * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
