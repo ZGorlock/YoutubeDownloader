@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import commons.lambda.function.unchecked.UncheckedConsumer;
-import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -75,9 +74,8 @@ public class YoutubeDownloader {
      * The main method for the Youtube Downloader.
      *
      * @param args The arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if (!Utils.startup(Utils.Project.YOUTUBE_DOWNLOADER)) {
             return;
         }
@@ -93,7 +91,7 @@ public class YoutubeDownloader {
         try (Scanner in = new Scanner(System.in)) {
             
             do {
-                download.forEach((UncheckedConsumer<String>) url -> {
+                download.forEach(url -> {
                     download(url);
                     System.out.println(Utils.NEWLINE);
                 });
@@ -116,7 +114,7 @@ public class YoutubeDownloader {
         return Optional.ofNullable(url)
                 .map(YoutubeDownloader::getVideoDetails)
                 .filter(YoutubeDownloader::allowDownload)
-                .map((UncheckedFunction<Video, DownloadUtils.DownloadResponse>) DownloadUtils::downloadYoutubeVideo)
+                .map(DownloadUtils::downloadYoutubeVideo)
                 .map(Mappers.forEach(e -> System.out.println(Utils.INDENT + e.printedResponse())))
                 .orElse(null);
     }
@@ -187,6 +185,8 @@ public class YoutubeDownloader {
     
     /**
      * Loads the download queue from file.
+     *
+     * @throws RuntimeException When the download queue could not be loaded.
      */
     private static void loadDownloadQueue() {
         Optional.of(download).ifPresent((UncheckedConsumer<List<String>>) download ->
@@ -197,6 +197,8 @@ public class YoutubeDownloader {
     
     /**
      * Saves the download queue to file.
+     *
+     * @throws RuntimeException When the download queue could not be saved.
      */
     private static void saveDownloadQueue() {
         Optional.of(download).ifPresent((UncheckedConsumer<List<String>>) download ->

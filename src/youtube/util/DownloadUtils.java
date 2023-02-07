@@ -114,9 +114,8 @@ public final class DownloadUtils {
      *
      * @param video The Video.
      * @return A download response indicating the result of the download attempt.
-     * @throws Exception When there is an error downloading the video.
      */
-    public static DownloadResponse downloadYoutubeVideo(Video video) throws Exception {
+    public static DownloadResponse downloadYoutubeVideo(Video video) {
         return downloadYoutubeVideo(video, false);
     }
     
@@ -126,9 +125,8 @@ public final class DownloadUtils {
      * @param video   The Video.
      * @param isRetry Whether this download attempt is a retry or not.
      * @return A download response indicating the result of the download attempt.
-     * @throws Exception When there is an error downloading the video.
      */
-    private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) throws Exception {
+    private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) {
         final boolean ytDlp = (ExecutableUtils.EXECUTABLE == ExecutableUtils.Executable.YT_DLP);
         final boolean asMp3 = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);

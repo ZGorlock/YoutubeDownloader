@@ -224,6 +224,7 @@ public final class WebUtils {
      * Checks and attempts to automatically fetch the playlist id for a Channel if needed.
      *
      * @param channel The Channel Config.
+     * @throws RuntimeException When the Channel Config does not have a <i>playlistId</i> defined.
      */
     public static void checkPlaylistId(ChannelConfig channel) {
         if (StringUtility.isNullOrBlank(channel.getPlaylistId())) {

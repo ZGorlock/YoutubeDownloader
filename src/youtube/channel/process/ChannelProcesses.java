@@ -36,9 +36,8 @@ public class ChannelProcesses {
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
-     * @throws Exception When there is an error.
      */
-    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPreConditions(Channel channel, Map<String, Video> videoMap) {
         switch (channel.getConfig().getKey()) {
             
         }
@@ -50,9 +49,8 @@ public class ChannelProcesses {
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
-     * @throws Exception When there is an error.
      */
-    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) throws Exception {
+    public static void performSpecialPostConditions(Channel channel, Map<String, Video> videoMap) {
         switch (channel.getConfig().getKey()) {
             
         }

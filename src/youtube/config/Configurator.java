@@ -134,6 +134,7 @@ public class Configurator {
      * Loads the settings configuration from the configuration file.
      *
      * @param project The project.
+     * @throws RuntimeException When the settings configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
     public static void loadSettings(Utils.Project project) {

@@ -66,6 +66,8 @@ public class KeyStore {
     
     /**
      * Loads the map of video keys and their current saved file names.
+     *
+     * @throws RuntimeException When the keystore map could not be loaded.
      */
     public static void load() {
         try {
@@ -87,6 +89,8 @@ public class KeyStore {
     
     /**
      * Saves the map of video keys and their current saved file names.
+     *
+     * @throws RuntimeException When the keystore map could not be saved.
      */
     public static void save() {
         try {

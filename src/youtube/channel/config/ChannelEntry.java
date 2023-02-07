@@ -622,7 +622,7 @@ public abstract class ChannelEntry extends ConfigData {
      * @throws RuntimeException When the configuration data does not contain the required fields.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends ChannelEntry> T load(Map<String, Object> configData, ChannelGroup parent) throws Exception {
+    public static <T extends ChannelEntry> T load(Map<String, Object> configData, ChannelGroup parent) {
         final ChannelEntry channelEntry = hasChildren(configData) ?
                                           new ChannelGroup(configData, parent) :
                                           new ChannelConfig(configData, parent);
@@ -635,9 +635,9 @@ public abstract class ChannelEntry extends ConfigData {
      *
      * @param configData The json data of the Channel Entry configuration.
      * @return The Channel Entry.
-     * @throws Exception When the configuration data does not contain the required fields.
+     * @throws RuntimeException When the configuration data does not contain the required fields.
      */
-    public static <T extends ChannelEntry> T load(Map<String, Object> configData) throws Exception {
+    public static <T extends ChannelEntry> T load(Map<String, Object> configData) {
         return load(configData, null);
     }
     

@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.lambda.function.checked.CheckedConsumer;
-import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -279,7 +278,7 @@ public class ChannelState {
                 });
         Stream.of(getDataFile(), getCallLogFile())
                 .map(e -> e.getName().replaceAll("\\..+$", ""))
-                .map((UncheckedFunction<String, List<File>>) e -> FileUtils.getFiles(getStateLocation()).stream()
+                .map(e -> getStateFiles().stream()
                         .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith('.' + Utils.LIST_FILE_FORMAT))
                         .collect(Collectors.toList()))
                 .flatMap(Collection::stream)

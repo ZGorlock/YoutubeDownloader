@@ -42,9 +42,8 @@ public class EntityFetcher {
      * Runs the Entity Fetcher.
      *
      * @param args Arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final Map<String, List<EntityInfo>> results = new LinkedHashMap<>();
         List<EntityInfo> resultEntities;
         
@@ -77,9 +76,8 @@ public class EntityFetcher {
      * @param videoId The id of the Video.
      * @param result  The list to store the Video in.
      * @return The json data of the Video and the Video Info.
-     * @throws Exception When there is an error.
      */
-    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchVideo(String videoId, List<EntityInfo> result) {
         final Map<String, Object> videoData = ApiUtils.fetchVideoData(videoId);
         final VideoInfo video = ApiUtils.fetchVideo(videoId);
         
@@ -93,9 +91,8 @@ public class EntityFetcher {
      * @param playlistId The id of the Playlist.
      * @param result     The list to store the Playlist in.
      * @return The json data of the Playlist and the Playlist Info.
-     * @throws Exception When there is an error.
      */
-    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchPlaylist(String playlistId, List<EntityInfo> result) {
         final Map<String, Object> playlistData = ApiUtils.fetchPlaylistData(playlistId);
         final PlaylistInfo playlist = ApiUtils.fetchPlaylist(playlistId);
         
@@ -109,9 +106,8 @@ public class EntityFetcher {
      * @param channelId The id of the channel.
      * @param result    The list to store the Channel in.
      * @return The json data of the Channel and the Channel Info.
-     * @throws Exception When there is an error.
      */
-    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) throws Exception {
+    private static ImmutablePair<EntityInfo, Map<String, Object>> fetchChannel(String channelId, List<EntityInfo> result) {
         final Map<String, Object> channelData = ApiUtils.fetchChannelData(channelId);
         final ChannelInfo channel = ApiUtils.fetchChannel(channelId);
         
@@ -125,9 +121,8 @@ public class EntityFetcher {
      * @param channelId The id of the Channel.
      * @param result    The list to store the Playlists in.
      * @return The json data of the Playlists and the list of Playlist Info.
-     * @throws Exception When there is an error.
      */
-    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) throws Exception {
+    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchChannelPlaylists(String channelId, List<EntityInfo> result) {
         final List<Map<String, Object>> channelPlaylistsData = ApiUtils.fetchChannelPlaylistsData(channelId);
         final List<PlaylistInfo> channelPlaylists = ApiUtils.fetchChannelPlaylists(channelId);
         
@@ -143,9 +138,8 @@ public class EntityFetcher {
      * @param playlistId The id of the Playlist.
      * @param result     The list to store the Videos in.
      * @return The json data of the Videos and the list of Video Info.
-     * @throws Exception When there is an error.
      */
-    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) throws Exception {
+    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchPlaylistVideos(String playlistId, List<EntityInfo> result) {
         final List<Map<String, Object>> playlistVideosData = ApiUtils.fetchPlaylistVideosData(playlistId);
         final List<VideoInfo> playlistVideos = ApiUtils.fetchPlaylistVideos(playlistId);
         

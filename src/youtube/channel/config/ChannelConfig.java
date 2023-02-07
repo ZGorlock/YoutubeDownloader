@@ -169,6 +169,7 @@ public class ChannelConfig extends ChannelEntry {
      * Returns the configuration data of the Channel Config.
      *
      * @return The configuration data of the Channel Config.
+     * @throws UnsupportedOperationException When the produced configuration data does not contain all fields.
      */
     @Override
     public Map<String, Object> getConfig() {
@@ -185,6 +186,7 @@ public class ChannelConfig extends ChannelEntry {
      * Returns the effective configuration data of the Channel Config.
      *
      * @return The effective configuration data of the Channel Config.
+     * @throws UnsupportedOperationException When the produced effective configuration data does not contain all fields.
      */
     @Override
     public Map<String, Object> getEffectiveConfig() {

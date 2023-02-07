@@ -229,6 +229,8 @@ public class Channels {
     
     /**
      * Loads the Channels configuration from the channels file.
+     *
+     * @throws RuntimeException When the Channels configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
     public static void loadChannels() {
@@ -290,6 +292,7 @@ public class Channels {
      * Registers a Channel Config.
      *
      * @param channelConfig The Channel Config.
+     * @throws RuntimeException When a Channel Config with the same <i>key</i> or <i>name</i> has already been registered.
      */
     public static void registerChannelConfig(ChannelConfig channelConfig) {
         if (!channelKeys.add(channelConfig.getKey())) {
@@ -309,6 +312,7 @@ public class Channels {
      * Registers a Channel Group.
      *
      * @param channelGroup The Channel Group.
+     * @throws RuntimeException When a Channel Group with the same <i>key</i> or <i>name</i> has already been registered.
      */
     public static void registerChannelGroup(ChannelGroup channelGroup) {
         if (!groupKeys.add(channelGroup.getKey())) {

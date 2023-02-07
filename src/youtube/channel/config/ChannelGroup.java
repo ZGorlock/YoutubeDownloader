@@ -97,6 +97,7 @@ public class ChannelGroup extends ChannelEntry {
      * Returns the configuration data of the Channel Group.
      *
      * @return The configuration data of the Channel Group.
+     * @throws UnsupportedOperationException When the produced configuration data does not contain all fields.
      */
     @Override
     public Map<String, Object> getConfig() {
@@ -113,6 +114,7 @@ public class ChannelGroup extends ChannelEntry {
      * Returns the effective configuration data of the Channel Group.
      *
      * @return The effective configuration data of the Channel Group.
+     * @throws UnsupportedOperationException When the produced effective configuration data does not contain all fields.
      */
     @Override
     public Map<String, Object> getEffectiveConfig() {

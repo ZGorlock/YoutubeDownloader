@@ -8,6 +8,7 @@
 package youtube;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -70,9 +71,8 @@ public class YoutubeChannelDownloader {
      * The main method for the Youtube Channel Downloader.
      *
      * @param args The arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if (!Utils.startup(Utils.Project.YOUTUBE_CHANNEL_DOWNLOADER)) {
             return;
         }
@@ -85,10 +85,8 @@ public class YoutubeChannelDownloader {
     
     /**
      * Processes Channels.
-     *
-     * @throws Exception When there is an error.
      */
-    private static void run() throws Exception {
+    private static void run() {
         Channels.loadChannels();
         KeyStore.load();
         
@@ -120,9 +118,8 @@ public class YoutubeChannelDownloader {
      *
      * @param channelKey The key of the Channel.
      * @return Whether the Channel was successfully processed or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean processChannel(String channelKey) throws Exception {
+    private static boolean processChannel(String channelKey) {
         channel = Channels.getChannel(channelKey);
         return processChannel();
     }
@@ -131,9 +128,8 @@ public class YoutubeChannelDownloader {
      * Processes the active Channel.
      *
      * @return Whether the Channel was successfully processed or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean processChannel() throws Exception {
+    private static boolean processChannel() {
         if ((channel == null) || !channel.getConfig().isActive()) {
             return false;
         }
@@ -157,9 +153,8 @@ public class YoutubeChannelDownloader {
      * Initializes the active Channel.
      *
      * @return Whether the Channel was successfully initialized or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean initChannel() throws Exception {
+    private static boolean initChannel() {
         try {
             videoMap.clear();
             
@@ -181,7 +176,7 @@ public class YoutubeChannelDownloader {
      *
      * @return Whether the Channel data was successfully loaded or not.
      */
-    private static boolean loadChannelData() throws Exception {
+    private static boolean loadChannelData() {
         try {
             final Set<String> videoTitles = new HashSet<>();
             ApiUtils.fetchPlaylistVideos(channel).stream()
@@ -199,10 +194,9 @@ public class YoutubeChannelDownloader {
      * Produces the queue of videos to download from the active Channel.
      *
      * @return Whether the queue was successfully produced or not.
-     * @throws Exception When there is an error.
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private static boolean produceQueue() throws Exception {
+    private static boolean produceQueue() {
         if (videoMap.isEmpty()) {
             System.out.println(Color.bad("Must populate video map before producing the queue"));
             return false;
@@ -276,9 +270,8 @@ public class YoutubeChannelDownloader {
      * Downloads the queued videos from the active Channel.
      *
      * @return Whether the queued videos were successfully downloaded or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean downloadVideos() throws Exception {
+    private static boolean downloadVideos() {
         if (videoMap.isEmpty()) {
             System.out.println(Color.bad("Must populate video map before downloading videos"));
             return false;
@@ -337,9 +330,8 @@ public class YoutubeChannelDownloader {
      * Creates a playlist of the videos from the active Channel.
      *
      * @return Whether the playlist was successfully created or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean createPlaylist() throws Exception {
+    private static boolean createPlaylist() {
         if (videoMap.isEmpty()) {
             System.out.println(Color.bad("Must populate video map before creating a playlist"));
             return false;
@@ -348,7 +340,16 @@ public class YoutubeChannelDownloader {
         if (channel.getConfig().getPlaylistFile() == null) {
             return false;
         }
-        List<String> existingPlaylist = FileUtils.readLines(channel.getConfig().getPlaylistFile());
+        
+        List<String> existingPlaylist = new ArrayList<>();
+        if (channel.getConfig().getPlaylistFile().exists()) {
+            try {
+                existingPlaylist = FileUtils.readLines(channel.getConfig().getPlaylistFile());
+            } catch (IOException ignored) {
+                return false;
+            }
+        }
+        
         String playlistPath = PathUtils.localPath(true, channel.getConfig().getPlaylistFile().getParentFile());
         
         List<String> playlist = new ArrayList<>();
@@ -365,7 +366,12 @@ public class YoutubeChannelDownloader {
         if (!channel.getState().getErrorFlag().get() && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
                 System.out.println(Color.base("Updating playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()));
-                FileUtils.writeLines(channel.getConfig().getPlaylistFile(), playlist);
+                try {
+                    FileUtils.writeLines(channel.getConfig().getPlaylistFile(), playlist);
+                } catch (IOException ignored) {
+                    System.out.println(Color.bad("Failed to update playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()));
+                    return false;
+                }
             } else {
                 System.out.println(Color.bad("Would have updated playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()) + Color.bad(" but playlist modification is disabled"));
             }
@@ -377,9 +383,8 @@ public class YoutubeChannelDownloader {
      * Cleans the output directory of the active Channel.
      *
      * @return Whether the output directory was successfully cleaned or not.
-     * @throws Exception When there is an error.
      */
-    private static boolean cleanChannel() throws Exception {
+    private static boolean cleanChannel() {
         if (videoMap.isEmpty()) {
             System.out.println(Color.bad("Must populate video map before cleaning the channel directory"));
             return false;
@@ -401,7 +406,11 @@ public class YoutubeChannelDownloader {
                     
                     if (!Configurator.Config.preventDeletion) {
                         System.out.println(Color.base("Deleting: ") + Color.quoted(printedFile));
-                        FileUtils.deleteFile(video);
+                        try {
+                            FileUtils.deleteFile(video);
+                        } catch (IOException ignored) {
+                            System.out.println(Color.bad("Failed to delete: ") + Color.quoted(printedFile));
+                        }
                         
                         if (!isPartFile) {
                             if (channel.getConfig().isSaveAsMp3()) {

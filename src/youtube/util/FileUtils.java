@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import commons.lambda.function.unchecked.UncheckedFunction;
+import commons.lambda.function.checked.CheckedFunction;
 
 /**
  * Provides file utility methods for the Youtube Downloader.
@@ -223,7 +223,7 @@ public final class FileUtils {
      */
     public static File getCanonicalFile(File file) {
         return Optional.ofNullable(file)
-                .map((UncheckedFunction<File, File>) File::getCanonicalFile)
+                .map((CheckedFunction<File, File>) File::getCanonicalFile)
                 .orElse(file);
     }
     

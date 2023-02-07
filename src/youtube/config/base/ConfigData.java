@@ -93,7 +93,7 @@ public class ConfigData {
      * Parses a boolean field from the Config Data.
      *
      * @param path The path to the requested field.
-     * @return The optional containing the boolean value of the field.
+     * @return The optional containing the boolean value of the field, or null if it could not be parsed.
      */
     protected Optional<Boolean> parseBoolean(String... path) {
         return parseString(path)
@@ -104,7 +104,7 @@ public class ConfigData {
      * Parses an integer field from the Config Data.
      *
      * @param path The path to the requested field.
-     * @return The optional containing the integer value of the field.
+     * @return The optional containing the integer value of the field, or null if it could not be parsed.
      */
     protected Optional<Integer> parseInteger(String... path) {
         return parseString(path)
@@ -115,7 +115,7 @@ public class ConfigData {
      * Parses a long field from the Config Data.
      *
      * @param path The path to the requested field.
-     * @return The optional containing the long value of the field.
+     * @return The optional containing the long value of the field, or null if it could not be parsed.
      */
     protected Optional<Long> parseLong(String... path) {
         return parseString(path)
@@ -126,7 +126,7 @@ public class ConfigData {
      * Parses a double field from the Config Data.
      *
      * @param path The path to the requested field.
-     * @return The optional containing the double value of the field.
+     * @return The optional containing the double value of the field, or null if it could not be parsed.
      */
     protected Optional<Double> parseDouble(String... path) {
         return parseString(path)
@@ -137,7 +137,7 @@ public class ConfigData {
      * Parses a float field from the Config Data.
      *
      * @param path The path to the requested field.
-     * @return The optional containing the float value of the field.
+     * @return The optional containing the float value of the field, or null if it could not be parsed.
      */
     protected Optional<Float> parseFloat(String... path) {
         return parseString(path)

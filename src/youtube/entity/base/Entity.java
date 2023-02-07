@@ -108,6 +108,7 @@ public abstract class Entity<T extends EntityInfo> implements EntityInterface<T>
      * Returns the Entity Info associated with the Entity.
      *
      * @return The Entity Info.
+     * @throws NullPointerException When the Entity Info is null.
      */
     @Override
     public T getInfo() {

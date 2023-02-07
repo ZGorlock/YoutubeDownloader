@@ -876,6 +876,7 @@ public final class ApiUtils {
          * @param parameters   A map of parameters.
          * @param channelState The Channel State of the calling Channel.
          * @return The json data of the Entity.
+         * @throws RuntimeException When there is an error fetching or parsing the Entity.
          */
         private static Map<String, Object> fetchEntityData(ApiEntity entityType, String entityId, Map<String, String> parameters, ChannelState channelState) {
             return EntityHandler.loadEntityData(entityType, entityId, channelState,
@@ -894,6 +895,7 @@ public final class ApiUtils {
          * @param entityId     The id of the Entity.
          * @param channelState The Channel State of the calling Channel.
          * @return The json data of the Entity.
+         * @throws RuntimeException When there is an error fetching or parsing the Entity.
          */
         private static Map<String, Object> fetchEntityData(ApiEntity entityType, String entityId, ChannelState channelState) {
             return fetchEntityData(entityType, entityId, new HashMap<>(Map.of("id", entityId)), channelState);
@@ -909,6 +911,7 @@ public final class ApiUtils {
          * @param idExtractor       The function that extracts the id from a response data element.
          * @param entityDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
          * @return The json data of the list of Entities.
+         * @throws RuntimeException When there is an error fetching or parsing the list of Entities.
          */
         public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, String entityId, ChannelState channelState, Map<String, String> parameters,
                 UncheckedFunction<Map<String, Object>, String> idExtractor,
@@ -945,6 +948,7 @@ public final class ApiUtils {
          * @param idExtractor       The function that extracts the id from a response data element.
          * @param entityDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
          * @return The json data of the list of Entities.
+         * @throws RuntimeException When there is an error fetching or parsing the list of Entities.
          */
         public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, String entityId, ChannelState channelState,
                 UncheckedFunction<Map<String, Object>, String> idExtractor,
@@ -993,7 +997,7 @@ public final class ApiUtils {
          * @param parameters   A map of parameters.
          * @param channelState The Channel State of the calling Channel.
          * @return The response from the API call.
-         * @throws Exception When there is an error.
+         * @throws Exception When there is an error calling the API.
          */
         @SuppressWarnings("unchecked")
         public static String callApi(Endpoint endpoint, Map<String, String> parameters, ChannelState channelState) throws Exception {
@@ -1089,7 +1093,7 @@ public final class ApiUtils {
          * @param response     The response.
          * @param channelState The Channel State of the calling Channel.
          * @return The response.
-         * @throws RuntimeException If the response has an error.
+         * @throws RuntimeException If the response is an error.
          */
         private static String handleResponse(String response, ChannelState channelState) {
             return Optional.ofNullable(response)
@@ -1112,7 +1116,7 @@ public final class ApiUtils {
                                 break;
                             default:
                                 System.out.println(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
-                                        ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channel(channelState) + Color.bad("; Skipping this run")) : ""));
+                                        ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channel(channelState)) : ""));
                                 break;
                         }
                         if (channelState != null) {
@@ -1130,6 +1134,7 @@ public final class ApiUtils {
          * @param response     The response.
          * @param channelState The Channel State of the calling Channel.
          * @return The parsed data from the response.
+         * @throws RuntimeException When the response could not be parsed.
          */
         @SuppressWarnings("unchecked")
         private static List<Map<String, Object>> parseResponse(String response, ChannelState channelState) {
@@ -1139,7 +1144,7 @@ public final class ApiUtils {
                     .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
                     .orElseThrow(() -> {
                         if ((channelState != null) && channelState.getErrorFlag().compareAndSet(false, true)) {
-                            System.out.println(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState) + Color.bad("; Skipping this run"));
+                            System.out.println(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState));
                         }
                         throw new RuntimeException("Youtube Data API responded with invalid data");
                     });

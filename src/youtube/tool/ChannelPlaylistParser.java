@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
@@ -90,9 +89,8 @@ public class ChannelPlaylistParser {
      * Runs the Channel Playlist Parser.
      *
      * @param args Arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Configurator.loadSettings(Utils.Project.YOUTUBE_CHANNEL_DOWNLOADER);
         Channels.loadChannels();
         
@@ -117,9 +115,8 @@ public class ChannelPlaylistParser {
      *
      * @param channel The Channel.
      * @return The list of Playlists.
-     * @throws Exception When there is an error.
      */
-    private static List<Playlist> fetchPlaylists(Channel channel) throws Exception {
+    private static List<Playlist> fetchPlaylists(Channel channel) {
         return ApiUtils.fetchChannelPlaylists(channel).stream()
                 .map(playlistInfo -> new Playlist(playlistInfo, channel))
                 .collect(Collectors.toList());
@@ -130,14 +127,13 @@ public class ChannelPlaylistParser {
      *
      * @param playlists The list of Playlists.
      * @return The list of playlist Channel Configs.
-     * @throws Exception When there is an error.
      */
-    private static List<ChannelConfig> makePlaylistChannels(List<Playlist> playlists) throws Exception {
+    private static List<ChannelConfig> makePlaylistChannels(List<Playlist> playlists) {
         return playlists.stream()
                 .filter(Objects::nonNull)
                 .filter(playlist -> Optional.ofNullable(playlist.getInfo()).map(PlaylistInfo::getTitle)
                         .map(e -> skipPlaylists.stream().noneMatch(e::equalsIgnoreCase)).orElse(false))
-                .map((UncheckedFunction<Playlist, ChannelConfig>) playlist ->
+                .map(playlist ->
                         new ChannelConfig(MapUtility.mapOf(List.of(
                                 new ImmutablePair<>("key", (playlist.getConfig().getKey() + "_P")),
                                 new ImmutablePair<>("playlistId", playlist.getInfo().getPlaylistId()),
@@ -160,10 +156,9 @@ public class ChannelPlaylistParser {
      *
      * @param playlistChannelConfigs The list of Playlist Channel Configs.
      * @return The json configuration.
-     * @throws Exception When there is an error.
      */
     @SuppressWarnings("PointlessArithmeticExpression")
-    private static String formatPlaylistChannels(List<ChannelConfig> playlistChannelConfigs) throws Exception {
+    private static String formatPlaylistChannels(List<ChannelConfig> playlistChannelConfigs) {
         return playlistChannelConfigs.stream()
                 .map(playlistChannelConfig -> StringUtility.splitLines(
                                 ChannelJsonFormatter.toMinJsonString(playlistChannelConfig, FORCE_INCLUDE_FIELDS, FORCE_EXCLUDE_FIELDS)).stream()
