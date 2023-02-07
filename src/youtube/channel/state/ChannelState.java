@@ -235,6 +235,7 @@ public class ChannelState {
      */
     public File getDataFile(String type) {
         return getStateFile(getDataFile().getName()
+                .replaceAll((getChannelName() + "-"), "")
                 .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type)));
     }
     
