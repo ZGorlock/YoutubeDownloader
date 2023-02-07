@@ -528,6 +528,13 @@
                     "url": "https://www.youtube.com/c/ZackFreedman",
                     "playlistId": "UUUW49KGPezggFi0PGyDvcvg",
                     "outputFolder": "~/Zack Freedman"
+                  },
+                  {
+                    "key": "NAKED_SCIENCE_TOY_STORIES",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLpWCFDSTg8duWFbSmSh9RXokx3lD3aoJY",
+                    "playlistId": "PLpWCFDSTg8duWFbSmSh9RXokx3lD3aoJY",
+                    "outputFolder": "~/Naked Science - Toy Stories"
                   }
                 ]
               },
@@ -862,6 +869,13 @@
                     "url": "https://www.youtube.com/c/InstituteofHumanAnatomy",
                     "playlistId": "UUgBg0aacyJnw4qUnb1FlfEQ",
                     "outputFolder": "~/Institute of Human Anatomy"
+                  },
+                  {
+                    "key": "HEALTHY_GAMER",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/HealthyGamerGG",
+                    "playlistId": "UUlHVl2N3jPEbkNJVx-ItQIQ",
+                    "outputFolder": "~/Healthy Gamer"
                   },
                   {
                     "key": "POPPING",
@@ -1392,7 +1406,7 @@
                         "active": true,
                         "name": "DwDocumentary",
                         "playlistId": "UUW39zufHfsuGgpLviKh297Q",
-                        "keepClean": true
+                        "keepClean": false
                       },
                       {
                         "key": "DW_DOCUMENTARY_P01",
@@ -2173,6 +2187,7 @@
                     "outputFolder": "${D}/Documents/DnD/Music/Bardify",
                     "saveAsMp3": true,
                     "ignoreGlobalLocations": true,
+                    "keepClean": false,
                     "channels": [
                       {
                         "key": "BARDIFY",
@@ -2607,6 +2622,7 @@
                 "key": "CUBE",
                 "active": true,
                 "outputFolder": "~/Best Cube",
+                "keepClean": false,
                 "channels": [
                   {
                     "key": "BEST_CUBE",
@@ -2688,11 +2704,12 @@
                 "outputFolder": "~/Trippy",
                 "channels": [
                   {
-                    "key": "FELIX_COSGRAVE",
+                    "key": "FELIX_COLGRAVE",
                     "active": true,
                     "url": "https://www.youtube.com/c/FelixColgrave",
                     "playlistId": "UUO7fujFV_MuxTM0TuZrnE6Q",
-                    "outputFolder": "~/Felix Cosgrave"
+                    "outputFolder": "~/Felix Colgrave",
+                    "keepClean": false
                   },
                   {
                     "key": "MICHAEL_CUSACK",
@@ -2715,6 +2732,7 @@
           {
             "key": "MUSIC",
             "active": true,
+            "keepClean": false,
             "channels": [
               {
                 "key": "THE_COMET_IS_COMING",
@@ -2865,6 +2883,7 @@
             "key": "BEAT",
             "active": true,
             "reversePlaylist": true,
+            "keepClean": false,
             "channels": [
               {
                 "key": "LOFI",
@@ -3114,14 +3133,12 @@
                     "url": "https://www.youtube.com/c/MrMoM",
                     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
                     "outputFolder": "~/Mr Mom Music",
-                    "keepClean": false,
                     "channels": [
                       {
                         "key": "MR_MOM_MUSIC",
                         "active": true,
                         "name": "MrMomMusic",
-                        "playlistFile": "~ - All.m3u",
-                        "keepClean": true
+                        "playlistFile": "~ - All.m3u"
                       },
                       {
                         "key": "MR_MOM_MUSIC_NEW",
