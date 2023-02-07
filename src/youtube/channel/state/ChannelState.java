@@ -138,11 +138,11 @@ public class ChannelState {
         this.keyStore = KeyStore.get(channelName);
         
         this.stateLocation = new File(CHANNEL_DATA_DIR, channelName);
-        this.dataFile = new File(this.stateLocation, (channelName + "-data" + '.' + Utils.DATA_FILE_FORMAT));
-        this.callLogFile = new File(this.stateLocation, (channelName + "-callLog" + '.' + Utils.LOG_FILE_FORMAT));
-        this.saveFile = new File(this.stateLocation, (channelName + "-save" + '.' + Utils.LIST_FILE_FORMAT));
-        this.queueFile = new File(this.stateLocation, (channelName + "-queue" + '.' + Utils.LIST_FILE_FORMAT));
-        this.blockFile = new File(this.stateLocation, (channelName + "-blocked" + '.' + Utils.LIST_FILE_FORMAT));
+        this.dataFile = getStateFile("data" + '.' + Utils.DATA_FILE_FORMAT);
+        this.callLogFile = getStateFile("callLog" + '.' + Utils.LOG_FILE_FORMAT);
+        this.saveFile = getStateFile("save" + '.' + Utils.LIST_FILE_FORMAT);
+        this.queueFile = getStateFile("queue" + '.' + Utils.LIST_FILE_FORMAT);
+        this.blockFile = getStateFile("blocked" + '.' + Utils.LIST_FILE_FORMAT);
         
         this.errorFlag = new AtomicBoolean(false);
         
@@ -200,17 +200,32 @@ public class ChannelState {
     }
     
     /**
+     * Returns the list of state files.
+     *
+     * @return The list of state files.
+     */
+    public List<File> getStateFiles() {
+        return FileUtils.getFiles(getStateLocation());
+    }
+    
+    /**
+     * Returns the list of state files.
+     *
+     * @return The list of state files.
+     */
+    public File getStateFile(String fileName) {
+        return new File(getStateLocation(), (getChannelName() + '-' + fileName));
+    }
+    
+    /**
      * Returns the list of data files.
      *
      * @return The list of data files.
      */
     public List<File> getDataFiles() {
-        return Optional.ofNullable(getStateLocation())
-                .map((UncheckedFunction<File, List<File>>) FileUtils::getFiles)
-                .map(e -> e.stream()
-                        .filter(e2 -> e2.getName().startsWith(getDataFile().getName().replace(('.' + Utils.DATA_FILE_FORMAT), "")))
-                        .collect(Collectors.toList()))
-                .orElse(new ArrayList<>());
+        return getStateFiles().stream()
+                .filter(e -> e.getName().startsWith(getDataFile().getName().replaceAll("\\..+$", "")))
+                .collect(Collectors.toList());
     }
     
     /**
@@ -220,7 +235,7 @@ public class ChannelState {
      * @return The data file.
      */
     public File getDataFile(String type) {
-        return new File(getStateLocation(), getDataFile().getName()
+        return getStateFile(getDataFile().getName()
                 .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type)));
     }
     
@@ -239,10 +254,8 @@ public class ChannelState {
     
     /**
      * Clears the saved data files.
-     *
-     * @throws Exception When there is an error clearing the saved data files.
      */
-    public void cleanupData() throws Exception {
+    public void cleanupData() {
         if (!Configurator.Config.preventChannelFetch) {
             Stream.of(getDataFiles()).flatMap(Collection::stream)
                     .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
