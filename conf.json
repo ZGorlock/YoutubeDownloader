@@ -15,22 +15,6 @@
             "group": null,
             "startAt": null,
             "stopAt": null
-        },
-        "log": {
-            "printStats": true,
-            "printChannels": false
-        },
-        "flag": {
-            "safeMode": false,
-            "preventDownload": false,
-            "preventDeletion": false,
-            "preventRenaming": false,
-            "preventPlaylistEdit": false,
-            "preventChannelFetch": false,
-            "preventExeAutoUpdate": false,
-            "preventExeVersionCheck": false,
-            "neverUseBrowserCookies": false,
-            "retryPreviousFailures": false
         }
     },
     
@@ -43,14 +27,6 @@
         "format": {
             "asMp3": false,
             "preMerged": true
-        },
-        "flag": {
-            "safeMode": false,
-            "preventDownload": false,
-            "preventVideoFetch": false,
-            "preventExeAutoUpdate": false,
-            "preventExeVersionCheck": false,
-            "neverUseBrowserCookies": false
         }
     },
     
