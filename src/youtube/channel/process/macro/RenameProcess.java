@@ -51,7 +51,7 @@ public class RenameProcess {
     //Static Methods
     
     /**
-     * Replaces a set of search strings with corresponding replacement strings in the title of each video in the video map.
+     * Replaces a set of search strings with corresponding replacement strings in the title of each Video in the Video map.
      *
      * @param channel      The Channel.
      * @param videoMap     The Video map.
@@ -70,7 +70,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of search strings with corresponding replacement strings in the title of each video in the video map.
+     * Replaces a set of search strings with corresponding replacement strings in the title of each Video in the Video map.
      *
      * @param channel      The Channel.
      * @param videoMap     The Video map.
@@ -82,7 +82,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of search strings with corresponding replacement strings in the title of each video in the video map.
+     * Replaces a set of search strings with corresponding replacement strings in the title of each Video in the Video map.
      *
      * @param channel      The Channel.
      * @param videoMap     The Video map.
@@ -93,7 +93,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a search string with a replacement string in the title of each video in the video map.
+     * Replaces a search string with a replacement string in the title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -106,7 +106,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a search string with a replacement string in the title of each video in the video map.
+     * Replaces a search string with a replacement string in the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -118,7 +118,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of search strings with corresponding replacement strings in the title of each video in the video map, regardless of case.
+     * Replaces a set of search strings with corresponding replacement strings in the title of each Video in the Video map, regardless of case.
      *
      * @param channel      The Channel.
      * @param videoMap     The Video map.
@@ -129,7 +129,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of search strings with corresponding replacement strings in the title of each video in the video map, regardless of case.
+     * Replaces a set of search strings with corresponding replacement strings in the title of each Video in the Video map, regardless of case.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -141,7 +141,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of regex search strings with corresponding replacement strings in the title of each video in the video map.
+     * Replaces a set of regex search strings with corresponding replacement strings in the title of each Video in the Video map.
      *
      * @param channel           The Channel.
      * @param videoMap          The Video map.
@@ -153,7 +153,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of regex search strings with corresponding replacement strings in the title of each video in the video map.
+     * Replaces a set of regex search strings with corresponding replacement strings in the title of each Video in the Video map.
      *
      * @param channel           The Channel.
      * @param videoMap          The Video map.
@@ -164,7 +164,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a regex search string with a replacement strings in the title of each video in the video map.
+     * Replaces a regex search string with a replacement strings in the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -177,7 +177,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a regex search string with a replacement strings in the title of each video in the video map.
+     * Replaces a regex search string with a replacement strings in the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -189,7 +189,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of regex search strings with corresponding replacement strings in the title of each video in the video map, regardless of case.
+     * Replaces a set of regex search strings with corresponding replacement strings in the title of each Video in the Video map, regardless of case.
      *
      * @param channel           The Channel.
      * @param videoMap          The Video map.
@@ -200,7 +200,7 @@ public class RenameProcess {
     }
     
     /**
-     * Replaces a set of regex search strings with corresponding replacement strings in the title of each video in the video map, regardless of case.
+     * Replaces a set of regex search strings with corresponding replacement strings in the title of each Video in the Video map, regardless of case.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -212,7 +212,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of search strings from the title of each video in the video map.
+     * Removes a set of search strings from the title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -225,7 +225,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of search strings from the title of each video in the video map.
+     * Removes a set of search strings from the title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -237,7 +237,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of search strings from the title of each video in the video map.
+     * Removes a set of search strings from the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -248,7 +248,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a search strings from the title of each video in the video map.
+     * Removes a search strings from the title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -260,7 +260,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a search strings from the title of each video in the video map.
+     * Removes a search strings from the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -271,7 +271,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of search strings from the title of each video in the video map, regardless of case.
+     * Removes a set of search strings from the title of each Video in the Video map, regardless of case.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -282,7 +282,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of search strings from the title of each video in the video map, regardless of case.
+     * Removes a set of search strings from the title of each Video in the Video map, regardless of case.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -293,7 +293,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of regex search strings from the title of each video in the video map.
+     * Removes a set of regex search strings from the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -305,7 +305,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of regex search strings from the title of each video in the video map.
+     * Removes a set of regex search strings from the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -316,7 +316,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a regex search string from the title of each video in the video map.
+     * Removes a regex search string from the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -328,7 +328,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a regex search string from the title of each video in the video map.
+     * Removes a regex search string from the title of each Video in the Video map.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -339,7 +339,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of regex search strings from the title of each video in the video map, regardless of case.
+     * Removes a set of regex search strings from the title of each Video in the Video map, regardless of case.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -350,7 +350,7 @@ public class RenameProcess {
     }
     
     /**
-     * Removes a set of regex search strings from the title of each video in the video map, regardless of case.
+     * Removes a set of regex search strings from the title of each Video in the Video map, regardless of case.
      *
      * @param channel     The Channel.
      * @param videoMap    The Video map.
@@ -361,7 +361,7 @@ public class RenameProcess {
     }
     
     /**
-     * Appends a string to the end of the title of each video in the video map.
+     * Appends a string to the end of the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -372,7 +372,7 @@ public class RenameProcess {
     }
     
     /**
-     * Prepends a string to the beginning of the title of each video in the video map.
+     * Prepends a string to the beginning of the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -383,7 +383,7 @@ public class RenameProcess {
     }
     
     /**
-     * Appends the upload date to the end of the title of each video in the video map.
+     * Appends the upload date to the end of the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -394,7 +394,7 @@ public class RenameProcess {
     }
     
     /**
-     * Prepends the upload date to the beginning of the title of each video in the video map.
+     * Prepends the upload date to the beginning of the title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -405,7 +405,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -414,6 +414,7 @@ public class RenameProcess {
      * @param ignoreCase Whether to ignore the case of the regex pattern.
      * @param result     The resulting title pattern.
      * @param dateFormat The date format.
+     * @throws RuntimeException When strict mode is enabled and the title of a Video in the Video map does not match the specified pattern.
      */
     public static void format(Channel channel, Map<String, Video> videoMap, boolean strict, String pattern, boolean ignoreCase, String result, String dateFormat) {
         final AtomicInteger index = new AtomicInteger(0);
@@ -442,7 +443,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -456,7 +457,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -470,7 +471,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -483,7 +484,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -497,7 +498,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -510,7 +511,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -523,7 +524,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -535,7 +536,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map, regardless of case.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map, regardless of case.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -549,7 +550,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map, regardless of case.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map, regardless of case.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -562,7 +563,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map, regardless of case.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map, regardless of case.
      *
      * @param channel    The Channel.
      * @param videoMap   The Video map.
@@ -575,7 +576,7 @@ public class RenameProcess {
     }
     
     /**
-     * Matches a regex pattern and constructs the new title of each video in the video map, regardless of case.
+     * Matches a regex pattern and constructs the new title of each Video in the Video map, regardless of case.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.

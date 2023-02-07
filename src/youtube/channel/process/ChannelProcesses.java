@@ -32,7 +32,7 @@ public class ChannelProcesses {
     
     /**
      * Performs special checks specific to a Channel before producing the download queue.<br/>
-     * Typically used for renaming videos in the video map.
+     * Typically used for renaming Videos in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.
@@ -45,7 +45,7 @@ public class ChannelProcesses {
     
     /**
      * Performs special checks specific to a Channel after producing the queue.<br/>
-     * Typically used for filtering; Do not use this to rename videos in the video map.
+     * Typically used for filtering; Do not use this to rename Videos in the Video map.
      *
      * @param channel  The Channel.
      * @param videoMap The Video map.

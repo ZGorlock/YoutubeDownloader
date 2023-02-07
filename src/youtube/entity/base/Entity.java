@@ -2,6 +2,7 @@
  * File:    Entity.java
  * Package: youtube.entity.base
  * Author:  Zachary Gill
+ * Repo:    https://github.com/ZGorlock/YoutubeDownloader
  */
 
 package youtube.entity.base;
