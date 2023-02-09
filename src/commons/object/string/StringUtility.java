@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import commons.math.BoundUtility;
+import commons.math.number.BoundUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

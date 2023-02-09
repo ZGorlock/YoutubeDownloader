@@ -15,8 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
-import commons.console.Console;
-import commons.console.ProgressBar;
+import commons.io.console.Console;
+import commons.io.console.ProgressBar;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

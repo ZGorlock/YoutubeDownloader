@@ -26,6 +26,7 @@
         <!-- COMMONS -->
         <commons-io.version>2.7</commons-io.version>
         <commons-codec.version>1.12</commons-codec.version>
+        <commons-text.version>1.10.0</commons-text.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         
         <!-- LOGGING -->
@@ -54,6 +55,11 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>${commons-text.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

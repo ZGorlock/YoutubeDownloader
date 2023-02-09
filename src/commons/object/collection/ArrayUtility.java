@@ -17,8 +17,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import commons.math.BoundUtility;
 import commons.math.MathUtility;
+import commons.math.number.BoundUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

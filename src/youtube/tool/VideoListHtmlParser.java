@@ -14,12 +14,12 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import commons.access.Project;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.YoutubeDownloader;
 import youtube.util.FileUtils;
-import youtube.util.PathUtils;
 import youtube.util.WebUtils;
 
 /**
@@ -46,7 +46,7 @@ public class VideoListHtmlParser {
      * 5.   Right click that line and and select Copy / Copy Element<br/>
      * 6.   Paste the copied html to 'data/videoList.html'
      */
-    public static final File VIDEO_LIST_HTML_FILE = new File(PathUtils.DATA_DIR, "videoList.html");
+    public static final File VIDEO_LIST_HTML_FILE = new File(Project.DATA_DIR, "videoList.html");
     
     
     //Static Fields

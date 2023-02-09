@@ -11,8 +11,8 @@ import java.io.File;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import commons.console.Console;
-import commons.console.ProgressBar;
+import commons.io.console.Console;
+import commons.io.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelConfig;

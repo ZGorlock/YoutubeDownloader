@@ -1,14 +1,15 @@
 /*
  * File:    StringMathUtility.java
- * Package: commons.math
+ * Package: commons.math.string
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.math;
+package commons.math.string;
 
 import java.math.BigDecimal;
 
+import commons.math.big.BigMathUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

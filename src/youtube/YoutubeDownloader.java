@@ -15,6 +15,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import commons.access.Project;
 import commons.lambda.function.unchecked.UncheckedConsumer;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.string.StringUtility;
@@ -47,7 +48,7 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    public static final File DOWNLOAD_QUEUE = new File(PathUtils.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
+    public static final File DOWNLOAD_QUEUE = new File(Project.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
      * The default output location.

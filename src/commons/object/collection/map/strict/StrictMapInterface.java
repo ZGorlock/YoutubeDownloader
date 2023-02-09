@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
  */
 public interface StrictMapInterface<K, V> {
     
+    //Methods
+    
     /**
      * Gets a mutable entry set of the map.
      *

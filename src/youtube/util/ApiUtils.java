@@ -26,6 +26,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import commons.access.Project;
 import commons.lambda.function.checked.CheckedBiFunction;
 import commons.lambda.function.checked.CheckedConsumer;
 import commons.lambda.function.checked.CheckedFunction;
@@ -111,7 +112,7 @@ public final class ApiUtils {
     /**
      * The file containing the API call log history.
      */
-    public static final File CALL_LOG_FILE = new File(PathUtils.DATA_DIR, ("callLog" + '.' + Utils.LOG_FILE_FORMAT));
+    public static final File CALL_LOG_FILE = new File(Project.DATA_DIR, ("callLog" + '.' + Utils.LOG_FILE_FORMAT));
     
     
     //Enums

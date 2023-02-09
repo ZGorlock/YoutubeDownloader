@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import commons.access.Project;
 import commons.lambda.stream.collector.MapCollectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class KeyStore {
     /**
      * The store of video keys and their current saved file name.
      */
-    public static final File KEY_STORE_FILE = new File(PathUtils.DATA_DIR, ("keyStore" + '.' + Utils.LIST_FILE_FORMAT));
+    public static final File KEY_STORE_FILE = new File(Project.DATA_DIR, ("keyStore" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
      * The backup file of the keystore.

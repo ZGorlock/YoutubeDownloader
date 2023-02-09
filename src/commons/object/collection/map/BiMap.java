@@ -94,7 +94,7 @@ public class BiMap<K, V> extends StrictHashMap<K, V> {
      *
      * @return An inverse entry set.
      */
-    public synchronized Set<Entry<V, K>> inverseEntrySet() {
+    public synchronized Set<Map.Entry<V, K>> inverseEntrySet() {
         return inverseMap.entrySet();
     }
     

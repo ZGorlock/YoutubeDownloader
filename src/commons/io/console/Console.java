@@ -1,11 +1,11 @@
 /*
  * File:    Console.java
- * Package: commons.console
+ * Package: commons.io.console
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.console;
+package commons.io.console;
 
 import java.util.ArrayList;
 import java.util.Arrays;

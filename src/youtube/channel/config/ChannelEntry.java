@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import commons.console.Console;
+import commons.io.console.Console;
 import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;

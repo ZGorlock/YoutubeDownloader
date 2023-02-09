@@ -84,7 +84,7 @@ public class EntityData extends ConfigData {
      * @return The duration, in milliseconds, or null if it could not be parsed.
      */
     @SuppressWarnings("DataFlowIssue")
-    protected long parseDuration(String durationString) {
+    protected Long parseDuration(String durationString) {
         return Optional.ofNullable(durationString)
                 .map(e -> e.replaceAll("(?i)[PT\\s]", ""))
                 .map(e -> Arrays.stream(e.split("(?<=\\D)"))

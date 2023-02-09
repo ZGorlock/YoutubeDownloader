@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.access.CmdLine;
+import commons.access.Internet;
 import commons.access.OperatingSystem;
 import commons.object.string.StringUtility;
 import org.jsoup.Jsoup;
@@ -273,11 +274,11 @@ public final class ExecutableUtils {
         switch (EXECUTABLE) {
             case YOUTUBE_DL:
                 //https://www.youtube-dl.org/downloads/latest/youtube-dl.exe
-                return WebUtils.downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+                return Internet.downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
             
             case YT_DLP:
                 //https://github.com/yt-dlp/yt-dlp/releases/download/2021.08.10/yt-dlp.exe
-                return WebUtils.downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+                return Internet.downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
             
             default:
                 return null;

@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import commons.access.Internet;
+import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,7 @@ public final class Utils {
     
     //Set logback configuration file
     static {
-        System.setProperty("logback.configurationFile", new File(PathUtils.RESOURCES_DIR, "logback.xml").getAbsolutePath());
+        System.setProperty("logback.configurationFile", new File(commons.access.Project.RESOURCES_DIR, "logback.xml").getAbsolutePath());
     }
     
     
@@ -161,7 +163,7 @@ public final class Utils {
     public static boolean startup(Project project) {
         Configurator.loadSettings(project);
         
-        if (!WebUtils.isOnline()) {
+        if (!Internet.isOnline()) {
             System.out.println(NEWLINE);
             System.out.println(Color.bad("Internet access is required"));
             return false;
@@ -198,7 +200,7 @@ public final class Utils {
      * @return Whether the file format from the file name is an audio format.
      */
     public static boolean isAudioFormat(String fileName) {
-        return AUDIO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(fileName));
+        return ListUtility.containsIgnoreCase(AUDIO_FORMATS_OPTIONS, FileUtils.getFileFormat(fileName));
     }
     
     /**
@@ -208,7 +210,7 @@ public final class Utils {
      * @return Whether the file format from the file name is an video format.
      */
     public static boolean isVideoFormat(String fileName) {
-        return VIDEO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(fileName));
+        return ListUtility.containsIgnoreCase(VIDEO_FORMATS_OPTIONS, FileUtils.getFileFormat(fileName));
     }
     
     /**

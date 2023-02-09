@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import commons.math.NumberStringUtility;
+import commons.math.string.NumberNameUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,14 +208,14 @@ public final class DateTimeUtility {
      * @param day The index of a day.
      * @return The day of month string.
      * @see #validDay(int)
-     * @see NumberStringUtility#reciprocalAppendix(Number)
+     * @see NumberNameUtility#reciprocalAppendix(Number)
      */
     public static String dayToDayOfMonthString(int day) {
         if (!validDay(day)) {
             return "";
         }
         
-        return day + NumberStringUtility.reciprocalAppendix(day);
+        return day + NumberNameUtility.reciprocalAppendix(day);
     }
     
     /**

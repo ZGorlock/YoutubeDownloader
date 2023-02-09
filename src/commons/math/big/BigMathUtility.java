@@ -1,11 +1,11 @@
 /*
  * File:    BigMathUtility.java
- * Package: commons.math
+ * Package: commons.math.big
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.math;
+package commons.math.big;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

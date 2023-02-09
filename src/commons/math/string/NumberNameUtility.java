@@ -1,11 +1,11 @@
 /*
  * File:    NumberStringUtility.java
- * Package: commons.math
+ * Package: commons.math.string
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.math;
+package commons.math.string;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,6 +23,10 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import commons.math.MathUtility;
+import commons.math.big.BigMathUtility;
+import commons.math.number.BoundUtility;
+import commons.math.number.NumberUtility;
 import commons.object.collection.ArrayUtility;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
@@ -30,16 +34,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A resource class that provides additional number string functionality.
+ * A resource class that provides additional number name functionality.
  */
-public final class NumberStringUtility {
+public final class NumberNameUtility {
     
     //Logger
     
     /**
      * The logger.
      */
-    private static final Logger logger = LoggerFactory.getLogger(NumberStringUtility.class);
+    private static final Logger logger = LoggerFactory.getLogger(NumberNameUtility.class);
     
     
     //Constants

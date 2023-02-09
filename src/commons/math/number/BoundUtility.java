@@ -1,11 +1,11 @@
 /*
  * File:    BoundUtility.java
- * Package: commons.math
+ * Package: commons.math.number
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.math;
+package commons.math.number;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A resource class that provides additional bound functionality.
+ * A resource class that provides additional number bounding functionality.
  */
 public final class BoundUtility {
     

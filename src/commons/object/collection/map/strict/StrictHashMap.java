@@ -60,7 +60,7 @@ public class StrictHashMap<K, V> extends HashMap<K, V> implements StrictMapInter
      * @see HashMap#entrySet()
      */
     @Override
-    public Set<Entry<K, V>> exposedEntrySet() {
+    public Set<Map.Entry<K, V>> exposedEntrySet() {
         return super.entrySet();
     }
     
@@ -71,7 +71,7 @@ public class StrictHashMap<K, V> extends HashMap<K, V> implements StrictMapInter
      * @see #immutableEntrySet()
      */
     @Override
-    public Set<Entry<K, V>> entrySet() {
+    public Set<Map.Entry<K, V>> entrySet() {
         return immutableEntrySet();
     }
     

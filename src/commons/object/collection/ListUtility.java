@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import commons.lambda.stream.mapper.Mappers;
-import commons.math.BoundUtility;
 import commons.math.MathUtility;
+import commons.math.number.BoundUtility;
 import commons.object.string.EntityStringUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -532,7 +532,8 @@ public final class ListUtility {
      * @return The list built from the array.
      * @see #toList(Object[], Class)
      */
-    public static <T> List<T> toList(T[] array) {
+    @SafeVarargs
+    public static <T> List<T> toList(T... array) {
         return toList(array, DEFAULT_LIST_CLASS);
     }
     

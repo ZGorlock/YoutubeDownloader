@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import commons.access.Internet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
@@ -137,7 +138,7 @@ public class YoutubeChannelDownloader {
         System.out.println(Utils.NEWLINE);
         System.out.println(Color.base("Processing Channel: ") + Color.channel(channel.getConfig().getDisplayName()));
         
-        boolean success = WebUtils.isOnline() &&
+        boolean success = Internet.isOnline() &&
                 initChannel() &&
                 loadChannelData() &&
                 produceQueue() &&

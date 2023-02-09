@@ -10,6 +10,7 @@ package youtube.entity;
 import java.io.File;
 import java.util.Optional;
 
+import commons.access.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelEntry;
@@ -18,7 +19,6 @@ import youtube.entity.base.Entity;
 import youtube.entity.base.EntityType;
 import youtube.entity.info.VideoInfo;
 import youtube.util.FileUtils;
-import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
@@ -164,7 +164,7 @@ public class Video extends Entity<VideoInfo> {
                 .map(File::getParentFile)
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                         .map(ChannelEntry::getOutputFolder)
-                        .orElse(PathUtils.TMP_DIR));
+                        .orElse(Project.TMP_DIR));
     }
     
     /**

@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import commons.access.Project;
 import commons.lambda.function.checked.CheckedConsumer;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
@@ -28,7 +29,6 @@ import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.state.KeyStore;
 import youtube.util.FileUtils;
-import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
@@ -49,7 +49,7 @@ public class ChannelState {
     /**
      * The Channel data directory.
      */
-    public static final File CHANNEL_DATA_DIR = new File(PathUtils.DATA_DIR, "channel");
+    public static final File CHANNEL_DATA_DIR = new File(Project.DATA_DIR, "channel");
     
     /**
      * The default Channel data file type.

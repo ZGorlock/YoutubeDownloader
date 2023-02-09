@@ -1,11 +1,11 @@
 /*
  * File:    NumberUtility.java
- * Package: commons.math
+ * Package: commons.math.number
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
-package commons.math;
+package commons.math.number;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

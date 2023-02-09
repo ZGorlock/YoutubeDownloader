@@ -26,21 +26,6 @@ public final class PathUtils {
     public static final File WORKING_DIR = new File("").getAbsoluteFile();
     
     /**
-     * The data directory.
-     */
-    public static final File DATA_DIR = new File("data");
-    
-    /**
-     * The resources directory.
-     */
-    public static final File RESOURCES_DIR = new File("resources");
-    
-    /**
-     * The temporary directory.
-     */
-    public static final File TMP_DIR = new File("tmp");
-    
-    /**
      * The Unix path separator.
      */
     public static final String SEPARATOR = "/";
