@@ -109,11 +109,6 @@ public final class ApiUtils {
      */
     private static final int MAX_RESULTS_PER_PAGE = 50;
     
-    /**
-     * The file containing the API call log history.
-     */
-    public static final File CALL_LOG_FILE = new File(Project.DATA_DIR, ("callLog" + '.' + Utils.LOG_FILE_FORMAT));
-    
     
     //Enums
     
@@ -1040,9 +1035,20 @@ public final class ApiUtils {
             
             final String callLog = String.format("%-19s  %15s  %8d bytes  %s  %s", Utils.currentTimestamp(), endpoint.getName(),
                     response.length(), (error ? "=XXX=" : "====="), request);
-            Stream.of(CALL_LOG_FILE, (Optional.ofNullable(channelState).map(ChannelState::getCallLogFile).orElse(null)))
+            Stream.of(getCallLogFile(), (Optional.ofNullable(channelState).map(ChannelState::getCallLogFile).orElse(null)))
                     .filter(Objects::nonNull).forEach((CheckedConsumer<File>) logFile ->
                             FileUtils.writeStringToFile(logFile, (callLog + System.lineSeparator()), true));
+        }
+        
+        /**
+         * Returns the current API call log file.
+         *
+         * @return The current API call log file.
+         */
+        private static File getCallLogFile() {
+            return new File(Project.LOG_DIR, (String.join("-",
+                    Utils.PROJECT_TITLE, Utils.currentDatestamp(), "callLog") +
+                    '.' + Utils.LOG_FILE_FORMAT));
         }
         
         /**

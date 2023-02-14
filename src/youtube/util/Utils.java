@@ -72,6 +72,11 @@ public final class Utils {
     //Constants
     
     /**
+     * The title of the project.
+     */
+    public static final String PROJECT_TITLE = "YoutubeDownloader";
+    
+    /**
      * A list of possible video formats.
      */
     public static final List<String> VIDEO_FORMATS_OPTIONS = List.of("3gp", "flv", "mp4", "webm");
@@ -140,6 +145,11 @@ public final class Utils {
      * The date format used for timestamps.
      */
     public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    /**
+     * The date format used for file timestamps.
+     */
+    public static final String DATESTAMP_FORMAT = "yyyy-MM-dd";
     
     /**
      * The newline string.
@@ -300,6 +310,15 @@ public final class Utils {
      */
     public static String currentTimestamp() {
         return new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
+    }
+    
+    /**
+     * Returns a string representing the current datestamp.
+     *
+     * @return A string representing the current datestamp.
+     */
+    public static String currentDatestamp() {
+        return new SimpleDateFormat(DATESTAMP_FORMAT).format(new Date());
     }
     
 }
