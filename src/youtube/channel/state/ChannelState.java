@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -82,7 +81,7 @@ public class ChannelState {
     /**
      * The key store of the Channel.
      */
-    private final Map<String, String> keyStore;
+    private final KeyStore.ChannelKeyStore keyStore;
     
     /**
      * The internal directory to store the Channel State.
@@ -340,7 +339,7 @@ public class ChannelState {
      *
      * @return The key store of the Channel.
      */
-    public Map<String, String> getKeyStore() {
+    public KeyStore.ChannelKeyStore getKeyStore() {
         return keyStore;
     }
     

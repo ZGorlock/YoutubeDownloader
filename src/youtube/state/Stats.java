@@ -143,9 +143,10 @@ public final class Stats {
     private static void calculateData() {
         Channels.getChannels().stream()
                 .flatMap(channel -> channel.getState().getSaved().stream()
-                        .map(saved -> channel.getState().getKeyStore().get(saved)))
-                .filter(Objects::nonNull).distinct()
-                .map(File::new).filter(File::exists)
+                        .map(saved -> channel.getState().getKeyStore().get(saved))
+                        .filter(Objects::nonNull))
+                .map(KeyStore.KeyStoreEntry::getLocalFile).distinct()
+                .filter(Objects::nonNull).filter(File::exists)
                 .forEach(file -> {
                     if (Utils.VIDEO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(file.getName()).toLowerCase())) {
                         Stats.totalVideo.incrementAndGet();

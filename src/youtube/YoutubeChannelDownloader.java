@@ -220,10 +220,11 @@ public class YoutubeChannelDownloader {
             if (video.getOutput().exists() && FileUtils.getCanonicalFile(video.getOutput()).getAbsolutePath().equals(video.getOutput().getAbsolutePath())) {
                 channel.getState().getSaved().add(videoId);
                 channel.getState().getBlocked().remove(videoId);
-                channel.getState().getKeyStore().put(videoId, PathUtils.localPath(video.getOutput()));
+                channel.getState().getKeyStore().put(video);
                 
             } else if (!channel.getState().getBlocked().contains(videoId)) {
                 File oldOutput = Optional.ofNullable(channel.getState().getKeyStore().get(videoId))
+                        .map(KeyStore.KeyStoreEntry::getLocalPath)
                         .map(File::new).filter(File::exists)
                         .map(FileUtils::getCanonicalFile).filter(File::exists)
                         .orElseGet(() -> Utils.findVideoFile(video.getOutput()));
@@ -256,7 +257,7 @@ public class YoutubeChannelDownloader {
                     }
                     
                     channel.getState().getSaved().add(videoId);
-                    channel.getState().getKeyStore().replace(videoId, PathUtils.localPath(video.getOutput()));
+                    channel.getState().getKeyStore().put(video);
                 }
             }
         });
@@ -298,7 +299,7 @@ public class YoutubeChannelDownloader {
             switch (response.status) {
                 case SUCCESS:
                     channel.getState().getSaved().add(videoId);
-                    channel.getState().getKeyStore().put(videoId, PathUtils.localPath(video.getOutput()));
+                    channel.getState().getKeyStore().put(video);
                     
                     if (channel.getConfig().isSaveAsMp3()) {
                         Stats.totalAudioDownloads.incrementAndGet();
@@ -394,7 +395,7 @@ public class YoutubeChannelDownloader {
         List<String> saved = Channels.getChannels().stream()
                 .filter(e -> e.getConfig().getKey().matches(channel.getConfig().getKey() + "(?:_P\\d+)?"))
                 .flatMap(e -> e.getState().getSaved().stream().map(save -> e.getState().getKeyStore().get(save)))
-                .map(PathUtils::localPath)
+                .map(KeyStore.KeyStoreEntry::getLocalPath)
                 .distinct().collect(Collectors.toList());
         
         if (!channel.getState().getErrorFlag().get() && channel.getConfig().isKeepClean()) {

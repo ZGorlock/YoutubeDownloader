@@ -390,7 +390,7 @@ public abstract class ChannelEntry extends ConfigData {
                 .map(e -> e.replaceAll(Stream.of(
                                 MULTI_GROUP_DELIMITERS,
                                 CANONICAL_KEY_SEPARATOR,
-                                KeyStore.KEYSTORE_SEPARATOR)
+                                KeyStore.SEPARATOR)
                         .map(Pattern::quote)
                         .collect(Collectors.joining("", "[", "]")), ""))
                 .orElse(null);

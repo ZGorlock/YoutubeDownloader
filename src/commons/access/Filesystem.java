@@ -1590,13 +1590,13 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
             }
-            return new ArrayList<>();
+            return null;
         }
         if (file.isDirectory()) {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read lines from directories: {}", StringUtility.fileString(file));
             }
-            return new ArrayList<>();
+            return null;
         }
         
         try {
@@ -1605,7 +1605,7 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read lines from file: {}", StringUtility.fileString(file));
             }
-            return new ArrayList<>();
+            return null;
         }
     }
     
