@@ -74,7 +74,7 @@ public class YoutubeChannelDownloader {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        if (!Utils.startup(Utils.Project.YOUTUBE_CHANNEL_DOWNLOADER)) {
+        if (!Utils.startup(Utils.Program.YOUTUBE_CHANNEL_DOWNLOADER)) {
             return;
         }
         
