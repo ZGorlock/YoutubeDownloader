@@ -116,7 +116,7 @@ public class Color {
     
     //Ensure config is loaded prior to using colors
     static {
-        if (Configurator.activeProject == null) {
+        if (Configurator.activeProgram == null) {
             System.out.println(Utils.NEWLINE);
             System.out.println(Color.bad("Attempted to load colors before the config was initialized"));
             throw new RuntimeException();

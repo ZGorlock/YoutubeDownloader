@@ -46,9 +46,9 @@ public class Configurator {
     //Static Fields
     
     /**
-     * The current active project.
+     * The current active program.
      */
-    public static Utils.Project activeProject = null;
+    public static Utils.Program activeProgram = null;
     
     /**
      * A cache of configuration settings from the configuration file.
@@ -76,13 +76,13 @@ public class Configurator {
     }
     
     /**
-     * Fetches the configuration settings of the active project.
+     * Fetches the configuration settings of the active program.
      *
      * @return The configuration settings.
      */
     public static Map<String, Object> getSettings() {
-        return Optional.ofNullable(activeProject)
-                .map(Utils.Project::getTitle)
+        return Optional.ofNullable(activeProgram)
+                .map(Utils.Program::getTitle)
                 .map(Configurator::getSettings)
                 .orElseGet(MapUtility::emptyMap);
     }
@@ -105,7 +105,7 @@ public class Configurator {
     }
     
     /**
-     * Fetches a configuration setting of the active project.
+     * Fetches a configuration setting of the active program.
      *
      * @param name The name of the configuration setting.
      * @param def  The default value to return if the configuration setting does not exist.
@@ -113,14 +113,14 @@ public class Configurator {
      * @return The value of the configuration setting, or the default value if it does not exist.
      */
     public static <T> T getSetting(String name, T def) {
-        return Optional.ofNullable(activeProject)
-                .map(Utils.Project::getTitle)
+        return Optional.ofNullable(activeProgram)
+                .map(Utils.Program::getTitle)
                 .map(e -> getSetting(e, name, def))
                 .orElse(null);
     }
     
     /**
-     * Fetches a configuration setting of the active project.
+     * Fetches a configuration setting of the active program.
      *
      * @param name The name of the configuration setting.
      * @param <T>  The type of the setting.
@@ -133,18 +133,18 @@ public class Configurator {
     /**
      * Loads the settings configuration from the configuration file.
      *
-     * @param project The project.
+     * @param program The program.
      * @throws RuntimeException When the settings configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
-    public static void loadSettings(Utils.Project project) {
+    public static void loadSettings(Utils.Program program) {
         if (loaded.compareAndSet(false, true)) {
-            activeProject = project;
+            activeProgram = program;
             
             try {
                 final Map<String, Object> settingsData = (Map<String, Object>) new JSONParser().parse(readConfiguration());
                 
-                loadSettingSection(settingsData, activeProject.getTitle());
+                loadSettingSection(settingsData, activeProgram.getTitle());
                 loadSettingSection(settingsData, "sponsorBlock");
                 loadSettingSection(settingsData, "color");
                 loadSettingSection(settingsData, "log");
@@ -398,7 +398,7 @@ public class Configurator {
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
         public static final boolean preventExeVersionCheck = safeMode || Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
-    
+        
         /**
          * A flag indicating whether to move files to the recycling bin instead of deleting them.
          */

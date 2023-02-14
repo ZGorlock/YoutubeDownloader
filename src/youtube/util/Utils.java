@@ -45,9 +45,9 @@ public final class Utils {
     //Enums
     
     /**
-     * An enumeration of Youtube Downloader projects.
+     * An enumeration of Programs in the Youtube Downloader project.
      */
-    public enum Project {
+    public enum Program {
         
         //Values
         
@@ -58,9 +58,9 @@ public final class Utils {
         //Methods
         
         /**
-         * Returns the title of the Project.
+         * Returns the title of the Program.
          *
-         * @return The title of the Project.
+         * @return The title of the Program.
          */
         public String getTitle() {
             return formatUnderscoredString(name()).replace(" ", "");
@@ -157,11 +157,11 @@ public final class Utils {
     /**
      * Performs startup operations.
      *
-     * @param project The current active project.
+     * @param program The current active program.
      * @return Whether startup was successful or not.
      */
-    public static boolean startup(Project project) {
-        Configurator.loadSettings(project);
+    public static boolean startup(Program program) {
+        Configurator.loadSettings(program);
         
         if (!Internet.isOnline()) {
             System.out.println(NEWLINE);
