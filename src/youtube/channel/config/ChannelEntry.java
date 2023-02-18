@@ -189,10 +189,10 @@ public abstract class ChannelEntry extends ConfigData {
     protected ChannelEntry(Map<String, Object> configData, ChannelGroup parent) {
         super(configData);
         
-        Optional.ofNullable(parent).filter(e -> (e.getKey() != null)).ifPresent(e -> {
-            this.parent = e;
-            e.children.add(this);
-        });
+        if (parent != null) {
+            this.parent = parent;
+            this.parent.children.add(this);
+        }
         
         this.key = parseString("key").map(this::formatIdentifier)
                 .orElseThrow(() -> {
