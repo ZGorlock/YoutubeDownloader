@@ -150,8 +150,7 @@ public class Configurator {
                 loadSettingSection(settingsData, "log");
                 
             } catch (Exception e) {
-                System.out.println(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE));
-                System.out.println(Utils.INDENT + Color.bad(e));
+                logger.error(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE), e);
                 throw new RuntimeException(e);
             }
         }

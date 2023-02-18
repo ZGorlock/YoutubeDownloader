@@ -144,11 +144,7 @@ public final class DownloadUtils {
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
                 Color.link(video.getInfo().getUrl());
         
-        if (Configurator.Config.logCommand) {
-            System.out.println(Utils.INDENT + Color.base(cmd));
-        }
-        
-        return performDownload(StringUtility.removeConsoleEscapeCharacters(cmd), video, isRetry);
+        return performDownload(cmd, video, isRetry);
     }
     
     /**
@@ -159,14 +155,15 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      */
     private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
-        logger.debug(System.lineSeparator() + StringUtility.repeatString("-", 200) + System.lineSeparator());
-        logger.info(cmd + System.lineSeparator());
+        LogUtils.logDivider(logger, '-');
+        LogUtils.log(logger, (isRetry ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
+                (Configurator.Config.logCommand ? (LogUtils.INDENT + cmd) : StringUtility.removeConsoleEscapeCharacters(cmd)));
         
         final DownloadResponse response = new DownloadResponse();
         final DownloadProgressBar progressBar = new DownloadProgressBar(video, response);
         
         try {
-            final String cmdResponse = CmdLine.executeCmd(cmd, false, progressBar);
+            final String cmdResponse = CmdLine.executeCmd(StringUtility.removeConsoleEscapeCharacters(cmd), false, progressBar);
             
             response.processCmdResponse(cmdResponse);
             progressBar.finishDownload();
@@ -185,6 +182,10 @@ public final class DownloadUtils {
             
             progressBar.finishDownload(e);
         }
+        
+        LogUtils.log(logger, ((response.status.color == Color.BAD) ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
+                (LogUtils.INDENT + response.printedResponse()));
+        LogUtils.logDivider(logger, '-');
         
         return response;
     }
@@ -354,7 +355,7 @@ public final class DownloadUtils {
             this.video = video;
             this.response = response;
             
-            setIndent(StringUtility.removeConsoleEscapeCharacters(Utils.INDENT).length());
+            setIndent(LogUtils.INDENT_WIDTH);
             setColors(Color.PROGRESS_BAR_BASE, Color.PROGRESS_BAR_GOOD, Color.PROGRESS_BAR_BAD);
         }
         
@@ -370,12 +371,9 @@ public final class DownloadUtils {
          */
         @Override
         public synchronized boolean processLog(String log, boolean isError) {
-            logger.trace(log);
+            logger.trace(Configurator.Config.logWork ? Color.log(log) : log);
             
-            if (Configurator.Config.logWork) {
-                System.out.println(Color.log(log));
-                
-            } else if (Configurator.Config.showProgressBar) {
+            if (!Configurator.Config.logWork && Configurator.Config.showProgressBar) {
                 
                 if (getInitialProgress() == 0) {
                     final Matcher resumeMatcher = RESUME_PATTERN.matcher(log);
@@ -436,8 +434,10 @@ public final class DownloadUtils {
                 video.updateOutput(new File(mergeMatcher.group("merge")));
                 
                 if (!isCompleted()) {
-                    complete(true, Color.good("Merging Formats" +
-                            (Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "..."));
+                    final String completionMessage = Color.good("Merging Formats" +
+                            (Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "...");
+                    logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
+                    complete(true, completionMessage);
                 }
                 
                 response.message = null;
@@ -449,7 +449,9 @@ public final class DownloadUtils {
                 video.updateOutput(new File(extractAudioMatcher.group("audio")));
                 
                 if (!isCompleted()) {
-                    complete(true, Color.good("Extracting Audio..."));
+                    final String completionMessage = Color.good("Extracting Audio...");
+                    logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
+                    complete(true, completionMessage);
                 }
                 
                 response.message = null;
@@ -468,15 +470,23 @@ public final class DownloadUtils {
             if (DISPLAY_PROGRESS_BAR) {
                 if (!isCompleted()) {
                     if (((exception != null) && (getProgress() > 0)) || (response.error != null)) {
-                        fail(true, Color.bad(response.message));
+                        final String errorMessage = Color.bad(response.message);
+                        if (!errorMessage.isBlank()) {
+                            logger.warn(StringUtility.removeConsoleEscapeCharacters(errorMessage));
+                        }
+                        fail(true, errorMessage);
                     } else {
-                        complete(true, Optional.ofNullable(response.message).map(Color::good).orElse(""));
+                        final String completionMessage = Optional.ofNullable(response.message).map(Color::good).orElse("");
+                        if (!completionMessage.isBlank()) {
+                            logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
+                        }
+                        complete(true, completionMessage);
                     }
                 }
                 response.message = null;
             }
             if (exception != null) {
-                System.out.println(Color.bad(exception.getStackTrace()));
+                logger.warn(Color.bad(exception.getStackTrace()));
             }
         }
         

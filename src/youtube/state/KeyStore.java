@@ -103,7 +103,7 @@ public class KeyStore {
      */
     public static void load() {
         if (!loaded.compareAndSet(false, true)) {
-            System.out.println(Color.bad("The key store has already been loaded"));
+            logger.warn(Color.bad("The key store has already been loaded"));
             return;
         }
         
@@ -112,7 +112,7 @@ public class KeyStore {
                 .filter(file -> (!Filesystem.isEmpty(file) || restoreFromBackup()))
                 .filter(KeyStore::readFromFile)
                 .orElseThrow(() -> {
-                    System.out.println(Color.bad("Could not load or create key store file: ") + Color.filePath(KEY_STORE_FILE));
+                    logger.error(Color.bad("Could not load or create key store file: ") + Color.filePath(KEY_STORE_FILE));
                     throw new RuntimeException();
                 });
     }
@@ -129,7 +129,7 @@ public class KeyStore {
                 .map(keyStore::parse)
                 .map(success -> {
                     if (!success) {
-                        System.out.println(Color.bad("Failed to read key store file: ") + Color.filePath(file));
+                        logger.error(Color.bad("Failed to read key store file: ") + Color.filePath(file));
                         return !EXIT_ON_FAIL_TO_READ_KEYSTORE;
                     }
                     return true;
@@ -148,7 +148,7 @@ public class KeyStore {
                 .map(backup -> Filesystem.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE, true))
                 .map(success -> {
                     if (!success) {
-                        System.out.println(Color.bad("Failed to restore key store file: ") + Color.filePath(KEY_STORE_FILE) +
+                        logger.warn(Color.bad("Failed to restore key store file: ") + Color.filePath(KEY_STORE_FILE) +
                                 Color.bad(" from backup file: ") + Color.filePath(KEY_STORE_BACKUP) +
                                 Color.bad("; Please perform this action manually"));
                         return !EXIT_ON_FAIL_TO_RESTORE_FROM_BACKUP;
@@ -165,7 +165,7 @@ public class KeyStore {
      */
     public static void save() {
         if (!loaded.get()) {
-            System.out.println(Color.bad("The key store has not been loaded"));
+            logger.warn(Color.bad("The key store has not been loaded"));
             return;
         }
         
@@ -174,7 +174,7 @@ public class KeyStore {
                 .filter(file -> (Filesystem.isEmpty(file) || persistToBackup()))
                 .filter(KeyStore::writeToFile)
                 .orElseThrow(() -> {
-                    System.out.println(Color.bad("Could not save or create key store file: ") + Color.filePath(KEY_STORE_FILE));
+                    logger.error(Color.bad("Could not save or create key store file: ") + Color.filePath(KEY_STORE_FILE));
                     throw new RuntimeException();
                 });
     }
@@ -191,7 +191,7 @@ public class KeyStore {
                 .map(keyStoreLines -> Filesystem.safeRewrite(file, keyStoreLines))
                 .map(success -> {
                     if (!success) {
-                        System.out.println(Color.bad("Failed to write key store file: ") + Color.filePath(file));
+                        logger.warn(Color.bad("Failed to write key store file: ") + Color.filePath(file));
                         return !EXIT_ON_FAIL_TO_WRITE_KEYSTORE;
                     }
                     return true;
@@ -209,7 +209,7 @@ public class KeyStore {
                 .map(backup -> Filesystem.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP, true))
                 .map(success -> {
                     if (!success) {
-                        System.out.println(Color.bad("Failed to backup key store file: ") + Color.filePath(KEY_STORE_FILE) +
+                        logger.warn(Color.bad("Failed to backup key store file: ") + Color.filePath(KEY_STORE_FILE) +
                                 Color.bad(" to backup file: ") + Color.filePath(KEY_STORE_BACKUP));
                         return !EXIT_ON_FAIL_TO_PERSIST_TO_BACKUP;
                     }

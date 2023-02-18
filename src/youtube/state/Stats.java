@@ -22,6 +22,7 @@ import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.Utils;
 
 /**
@@ -171,7 +172,7 @@ public final class Stats {
         final AtomicInteger maxDataLength = new AtomicInteger(0);
         
         final BiConsumer<String, Object> statPrinter = (String title, Object value) ->
-                System.out.println(Optional.ofNullable(value)
+                logger.debug(Optional.ofNullable(value)
                         .map(e -> Optional.of(String.valueOf(e))
                                 .filter(e2 -> e2.matches("^[\\d.E]+$"))
                                 .map(e2 -> e2.contains(".") ? decimalFormat.format((double) e / 1048576) : integerFormat.format(e))
@@ -179,14 +180,14 @@ public final class Stats {
                         .map(e -> StringUtility.padLeft(e,
                                 maxDataLength.accumulateAndGet(e.length(), (x, y) -> e.contains(".") ? Math.max(x, y) : 0)))
                         .map(e -> String.join("",
-                                Utils.INDENT, Color.base(title), Color.number(e), (e.contains(".") ? Color.base(" MB") : "")))
+                                LogUtils.INDENT_HARD, Color.base(title), Color.number(e), (e.contains(".") ? Color.base(" MB") : "")))
                         .orElseGet(() -> Color.link(Utils.formatUnderscoredString(title))));
         
         calculateData();
         
-        System.out.println(Utils.NEWLINE);
-        System.out.println(Utils.NEWLINE);
-        System.out.println(Color.number("--- Stats ---"));
+        logger.trace(LogUtils.NEWLINE);
+        logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.number("--- Stats ---"));
         
         statPrinter.accept("CHANNEL:", null);
         statPrinter.accept("Processed: ............ ", totalChannelsProcessed.get());
@@ -223,7 +224,7 @@ public final class Stats {
         statPrinter.accept("    Video: ............ ", (double) totalVideoData.get());
         statPrinter.accept("    Audio: ............ ", (double) totalAudioData.get());
         
-        System.out.println(Utils.NEWLINE);
+        logger.trace(LogUtils.NEWLINE);
     }
     
 }

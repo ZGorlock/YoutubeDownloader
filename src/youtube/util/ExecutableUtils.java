@@ -159,46 +159,46 @@ public final class ExecutableUtils {
         
         if (exists) {
             if (Configurator.Config.printExeVersion) {
-                System.out.println(Utils.NEWLINE);
-                System.out.println(Color.exe(EXECUTABLE.getExe().getName()) + printedCurrentVersion);
-                System.out.println(Utils.NEWLINE);
+                logger.trace(LogUtils.NEWLINE);
+                logger.info(Color.exe(EXECUTABLE.getExe().getName()) + printedCurrentVersion);
+                logger.trace(LogUtils.NEWLINE);
             }
         } else {
-            System.out.println(Utils.NEWLINE);
-            System.out.println(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
-            System.out.println(Utils.NEWLINE);
+            logger.trace(LogUtils.NEWLINE);
+            logger.warn(Color.bad("Requires ") + Color.exe(EXECUTABLE.getName()));
+            logger.trace(LogUtils.NEWLINE);
         }
         
         if (exists && (currentVersion.isEmpty() || latestVersion.isEmpty())) {
             if (Configurator.Config.printExeVersion) {
-                System.out.println(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
-                System.out.println(Utils.NEWLINE);
+                logger.warn(Color.bad("Unable to check for updates for ") + Color.exe(EXECUTABLE.getName()));
+                logger.trace(LogUtils.NEWLINE);
             }
             
         } else if (!exists || !currentVersion.equals(latestVersion)) {
             if (exists) {
                 if (Configurator.Config.printExeVersion) {
-                    System.out.println(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);
+                    logger.info(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);
                 } else {
-                    System.out.println(Utils.NEWLINE);
+                    logger.trace(LogUtils.NEWLINE);
                 }
             }
             
             if (!Configurator.Config.preventExeAutoUpdate) {
                 latestVersion = latestVersion.equals("?") ? getLatestExecutableVersion() : latestVersion;
                 
-                System.out.println(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
+                logger.info(Color.base("Downloading ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
                 File executable = downloadLatestExecutable(latestVersion);
                 
                 if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
-                    System.out.println(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exe(EXECUTABLE.getName()));
+                    logger.warn(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exe(EXECUTABLE.getName()));
                 } else {
-                    System.out.println(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
+                    logger.info(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion);
                 }
             } else {
-                System.out.println(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
+                logger.info(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exe(EXECUTABLE.getName()) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
             }
-            System.out.println(Utils.NEWLINE);
+            logger.trace(LogUtils.NEWLINE);
         }
         
         return EXECUTABLE.getExe().exists();

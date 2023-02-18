@@ -20,11 +20,21 @@ import java.util.stream.Collectors;
 import commons.access.Desktop;
 import commons.access.Internet;
 import commons.lambda.function.checked.CheckedFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides file utility methods for the Youtube Downloader.
  */
 public final class FileUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
+    
     
     //Constants
     

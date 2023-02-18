@@ -29,6 +29,7 @@ import youtube.config.Color;
 import youtube.config.SponsorBlocker;
 import youtube.config.base.ConfigData;
 import youtube.state.KeyStore;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
@@ -196,7 +197,7 @@ public abstract class ChannelEntry extends ConfigData {
         
         this.key = parseString("key").map(this::formatIdentifier)
                 .orElseThrow(() -> {
-                    System.out.println(Color.bad("Configuration missing required field: ") + Color.link("key"));
+                    logger.warn(Color.bad("Configuration missing required field: ") + Color.link("key"));
                     return new RuntimeException();
                 });
         
@@ -419,8 +420,7 @@ public abstract class ChannelEntry extends ConfigData {
                 .map(key -> (key + (isGroup() ? ":" : ""))).map(Utils::formatUnderscoredString)
                 .ifPresent(key -> {
                     final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.LINK : Color.CHANNEL) : (active ? Color.LOG : Color.BAD);
-                    System.out.println(StringUtility.repeatString(Utils.INDENT, indent) +
-                            Color.apply(color, key));
+                    logger.debug(StringUtility.repeatString(LogUtils.INDENT_HARD, indent) + Color.apply(color, key));
                 });
     }
     
@@ -714,7 +714,7 @@ public abstract class ChannelEntry extends ConfigData {
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())
                 .ifPresent(missingFields -> {
-                    System.out.println(Color.bad("Channel" + (hasChildren(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
+                    logger.warn(Color.bad("Channel" + (hasChildren(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
                             Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
                             missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
                     throw new RuntimeException();

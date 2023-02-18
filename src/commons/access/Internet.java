@@ -222,7 +222,7 @@ public final class Internet {
      * @return Whether internet logging is enabled or not.
      */
     public static boolean logInternet() {
-        return false;
+        return true;
     }
     
 }

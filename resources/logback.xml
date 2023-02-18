@@ -5,17 +5,59 @@
     
     <property scope="context" name="logroot" value="log/"/>
     <property scope="context" name="log" value="YoutubeDownloader"/>
+    <property scope="context" name="downloadLog" value="download"/>
+    <property scope="context" name="apiLog" value="api"/>
     
     
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${logroot}%d{yyyy-MM-dd}/${log}.log</file>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
         
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${logroot}/${log}-%d{yyyy-MM-dd}.log</fileNamePattern>
-        </rollingPolicy>
+        <filter class="youtube.state.log.ConsoleLogFilter"/>
         
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %5level - %message%n</pattern>
+            <pattern>%message%n</pattern>
+        </encoder>
+    </appender>
+    
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logroot}/%d{yyyy-MM-dd}/${log}.log</file>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        
+        <encoder class="youtube.state.log.FileLogEncoder">
+            <pattern>%d{HH:mm:ss.SSS} %-5level %32logger{32} - %message%n</pattern>
+        </encoder>
+        
+        <append>true</append>
+        <prudent>true</prudent>
+    </appender>
+    
+    <appender name="FILE-DOWNLOAD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logroot}/%d{yyyy-MM-dd}/${log}-${downloadLog}.log</file>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}-${downloadLog}.log</fileNamePattern>
+        </rollingPolicy>
+        
+        <encoder class="youtube.state.log.FileLogEncoder">
+            <pattern>%d{HH:mm:ss.SSS} %-5level - %message%n</pattern>
+        </encoder>
+        
+        <append>true</append>
+        <prudent>true</prudent>
+    </appender>
+    
+    <appender name="FILE-API" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logroot}/%d{yyyy-MM-dd}/${log}-${apiLog}.log</file>
+        
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}-${apiLog}.log</fileNamePattern>
+        </rollingPolicy>
+        
+        <encoder class="youtube.state.log.FileLogEncoder">
+            <pattern>%d{HH:mm:ss.SSS} %-5level - %message%n</pattern>
         </encoder>
         
         <append>true</append>
@@ -24,7 +66,16 @@
     
     
     <root level="trace">
+        <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+    
+    <logger name="youtube.util.DownloadUtils" level="trace">
+        <appender-ref ref="FILE-DOWNLOAD"/>
+    </logger>
+    
+    <logger name="youtube.util.ApiUtils" level="trace">
+        <appender-ref ref="FILE-API"/>
+    </logger>
 
 </configuration>

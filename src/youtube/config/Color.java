@@ -16,8 +16,8 @@ import commons.io.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelConfig;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Handles coloring of console output.
@@ -117,8 +117,8 @@ public class Color {
     //Ensure config is loaded prior to using colors
     static {
         if (Configurator.activeProgram == null) {
-            System.out.println(Utils.NEWLINE);
-            System.out.println(Color.bad("Attempted to load colors before the config was initialized"));
+            logger.trace(LogUtils.NEWLINE);
+            logger.error(Color.bad("Attempted to load colors before the config was initialized"));
             throw new RuntimeException();
         }
     }
@@ -135,7 +135,7 @@ public class Color {
                        confColor.toUpperCase().replace(" ", "_");
         
         if (!AVAILABLE_COLORS.contains(color)) {
-            System.out.println(Color.apply(Console.ConsoleEffect.RED, (confColor + " is not a valid color")));
+            logger.warn(Color.apply(Console.ConsoleEffect.RED, (confColor + " is not a valid color")));
             color = def;
         }
         return Console.ConsoleEffect.valueOf(color);

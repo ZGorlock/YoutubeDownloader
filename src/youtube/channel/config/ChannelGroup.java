@@ -14,10 +14,21 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Defines a Channel Group of the Youtube Channel Downloader.
  */
 public class ChannelGroup extends ChannelEntry {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(ChannelGroup.class);
+    
     
     //Constants
     

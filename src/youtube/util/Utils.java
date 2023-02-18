@@ -9,8 +9,6 @@ package youtube.util;
 
 import java.io.File;
 import java.text.Normalizer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -35,11 +33,6 @@ public final class Utils {
      * The logger.
      */
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
-    
-    //Set logback configuration file
-    static {
-        System.setProperty("logback.configurationFile", new File(commons.access.Project.RESOURCES_DIR, "logback.xml").getAbsolutePath());
-    }
     
     
     //Enums
@@ -112,6 +105,11 @@ public final class Utils {
     public static final String DATA_FILE_FORMAT = "json";
     
     /**
+     * The xml file format.
+     */
+    public static final String XML_FILE_FORMAT = "xml";
+    
+    /**
      * The list file format.
      */
     public static final String LIST_FILE_FORMAT = "txt";
@@ -141,26 +139,6 @@ public final class Utils {
      */
     public static final String TITLE_NON_ASCII_CHAR = "+";
     
-    /**
-     * The date format used for timestamps.
-     */
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
-    /**
-     * The date format used for file timestamps.
-     */
-    public static final String DATESTAMP_FORMAT = "yyyy-MM-dd";
-    
-    /**
-     * The newline string.
-     */
-    public static final String NEWLINE = "";
-    
-    /**
-     * The indentation string.
-     */
-    public static final String INDENT = StringUtility.spaces(5);
-    
     
     //Static Methods
     
@@ -172,10 +150,11 @@ public final class Utils {
      */
     public static boolean startup(Program program) {
         Configurator.loadSettings(program);
+        LogUtils.initLogging();
         
         if (!Internet.isOnline()) {
-            System.out.println(NEWLINE);
-            System.out.println(Color.bad("Internet access is required"));
+            logger.trace(LogUtils.NEWLINE);
+            logger.warn(Color.bad("Internet access is required"));
             return false;
         }
         
@@ -301,24 +280,6 @@ public final class Utils {
      */
     public static String formatUnderscoredString(String string) {
         return StringUtility.toTitleCase(string.toLowerCase().replace("_", " "));
-    }
-    
-    /**
-     * Returns a string representing the current timestamp.
-     *
-     * @return A string representing the current timestamp.
-     */
-    public static String currentTimestamp() {
-        return new SimpleDateFormat(TIMESTAMP_FORMAT).format(new Date());
-    }
-    
-    /**
-     * Returns a string representing the current datestamp.
-     *
-     * @return A string representing the current datestamp.
-     */
-    public static String currentDatestamp() {
-        return new SimpleDateFormat(DATESTAMP_FORMAT).format(new Date());
     }
     
 }

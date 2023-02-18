@@ -19,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.YoutubeDownloader;
+import youtube.config.Color;
 import youtube.util.FileUtils;
 import youtube.util.WebUtils;
 
@@ -77,7 +78,7 @@ public class VideoListHtmlParser {
                 .map(e -> e.group("video"))
                 .collect(Collectors.toList());
         
-        videoIdList.forEach(System.out::println);
+        videoIdList.stream().map(Color::log).forEach(logger::debug);
         if (OUTPUT_TO_DOWNLOAD_QUEUE) {
             FileUtils.writeLines(YoutubeDownloader.DOWNLOAD_QUEUE, videoIdList, true);
         }

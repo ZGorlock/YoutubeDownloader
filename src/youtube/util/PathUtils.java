@@ -12,11 +12,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import commons.access.OperatingSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides path utility methods for the Youtube Downloader.
  */
 public final class PathUtils {
+    
+    //Logger
+    
+    /**
+     * The logger.
+     */
+    private static final Logger logger = LoggerFactory.getLogger(PathUtils.class);
+    
     
     //Constants
     

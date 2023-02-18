@@ -165,7 +165,7 @@ public class ChannelState {
             getBlocked().addAll(FileUtils.readLines(getBlockFile()));
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to load the state of Channel: ") + Color.channel(getChannelName()));
+            logger.error(Color.bad("Failed to load the state of Channel: ") + Color.channel(getChannelName()), e);
             throw new RuntimeException(e);
         }
     }
@@ -192,7 +192,7 @@ public class ChannelState {
             FileUtils.writeLines(getBlockFile(), getBlocked());
             
         } catch (IOException e) {
-            System.out.println(Color.bad("Failed to save the state of Channel: ") + Color.channel(getChannelName()));
+            logger.error(Color.bad("Failed to save the state of Channel: ") + Color.channel(getChannelName()), e);
             throw new RuntimeException(e);
         }
     }
@@ -256,7 +256,7 @@ public class ChannelState {
      */
     public void cleanupData() {
         if (!Configurator.Config.preventChannelFetch) {
-            Stream.of(getDataFiles()).flatMap(Collection::stream)
+            Stream.of(getDataFiles(), List.of(getCallLogFile())).flatMap(Collection::stream)
                     .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
         }
     }

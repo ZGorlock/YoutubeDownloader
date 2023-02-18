@@ -26,6 +26,7 @@ import youtube.config.Configurator;
 import youtube.entity.Video;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
@@ -83,10 +84,10 @@ public class YoutubeDownloader {
         
         outputDir = getOutputDir();
         if (!outputDir.exists() && !outputDir.mkdirs()) {
-            System.out.println(Color.bad("Unable to create output directory: ") + Color.filePath(outputDir));
+            logger.error(Color.bad("Unable to create output directory: ") + Color.filePath(outputDir));
             return;
         }
-        System.out.println(Utils.NEWLINE);
+        logger.trace(LogUtils.NEWLINE);
         
         loadDownloadQueue();
         try (Scanner in = new Scanner(System.in)) {
@@ -94,7 +95,7 @@ public class YoutubeDownloader {
             do {
                 download.forEach(url -> {
                     download(url);
-                    System.out.println(Utils.NEWLINE);
+                    logger.trace(LogUtils.NEWLINE);
                 });
                 download.clear();
                 
@@ -116,7 +117,6 @@ public class YoutubeDownloader {
                 .map(YoutubeDownloader::getVideoDetails)
                 .filter(YoutubeDownloader::allowDownload)
                 .map(DownloadUtils::downloadYoutubeVideo)
-                .map(Mappers.forEach(e -> System.out.println(Utils.INDENT + e.printedResponse())))
                 .orElse(null);
     }
     
@@ -129,9 +129,9 @@ public class YoutubeDownloader {
     private static boolean allowDownload(Video video) {
         return Optional.of(Configurator.Config.preventDownload).map(e -> !e)
                 .filter(e -> e).map(Mappers.forEach(e ->
-                        System.out.println(Color.base("Downloading: ") + Color.video(video.getTitle()))))
+                        logger.info(Color.base("Downloading: ") + Color.video(video.getTitle()))))
                 .orElseGet(() -> {
-                    System.out.println(Color.bad("Would have downloaded: ") + Color.videoName(video.getTitle()) + Color.bad(" but downloading is disabled"));
+                    logger.info(Color.bad("Would have downloaded: ") + Color.videoName(video.getTitle()) + Color.bad(" but downloading is disabled"));
                     return false;
                 });
     }
@@ -148,7 +148,7 @@ public class YoutubeDownloader {
                 .map(WebUtils::fetchVideo)
                 .map(Mappers.forEach(e -> e.updateOutputDir(outputDir)))
                 .orElseGet(() -> {
-                    System.out.println(Color.bad("Failed to fetch the video details from: ") + Color.link(url));
+                    logger.warn(Color.bad("Failed to fetch the video details from: ") + Color.link(url));
                     return null;
                 });
     }
@@ -163,7 +163,7 @@ public class YoutubeDownloader {
         return Optional.ofNullable(url)
                 .map(WebUtils.VIDEO_URL_PATTERN::matcher).filter(Matcher::matches).map(Matcher::group)
                 .orElseGet(() -> {
-                    System.out.println(Color.bad("The URL: ") + Color.link(url) + Color.bad(" is not a Youtube video"));
+                    logger.warn(Color.bad("The URL: ") + Color.link(url) + Color.bad(" is not a Youtube video"));
                     return null;
                 });
     }

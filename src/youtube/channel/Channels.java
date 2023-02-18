@@ -27,6 +27,7 @@ import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.entity.Channel;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -241,8 +242,7 @@ public class Channels {
                 loadChannelList(channelListData, root);
                 
             } catch (Exception e) {
-                System.out.println(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE));
-                System.out.println(Utils.INDENT + Color.bad(e));
+                logger.error(Color.bad("Could not load channels from: ") + Color.filePath(CHANNELS_FILE), e);
                 throw new RuntimeException(e);
             }
         }
@@ -281,10 +281,7 @@ public class Channels {
             }
             
         } catch (Exception e) {
-            System.out.println(Color.bad("Could not load: ") + Color.channel(channelEntryData.getOrDefault("key", "null")));
-            if ((e.getMessage() != null) && !e.getMessage().isEmpty()) {
-                System.out.println(Utils.INDENT + Color.bad(e.getMessage()));
-            }
+            logger.error(Color.bad("Could not load: ") + Color.channel(channelEntryData.getOrDefault("key", "null")), e);
         }
     }
     
@@ -296,11 +293,11 @@ public class Channels {
      */
     public static void registerChannelConfig(ChannelConfig channelConfig) {
         if (!channelKeys.add(channelConfig.getKey())) {
-            System.out.println(Color.bad("A Channel with the key: ") + Color.channel(channelConfig.getKey()) + Color.bad(" has already been registered"));
+            logger.warn(Color.bad("A Channel with the key: ") + Color.channel(channelConfig.getKey()) + Color.bad(" has already been registered"));
             throw new RuntimeException();
         }
         if (!channelNames.add(channelConfig.getName())) {
-            System.out.println(Color.bad("A Channel with the name: ") + Color.channel(channelConfig.getName()) + Color.bad(" has already been registered"));
+            logger.warn(Color.bad("A Channel with the name: ") + Color.channel(channelConfig.getName()) + Color.bad(" has already been registered"));
             throw new RuntimeException();
         }
         
@@ -316,11 +313,11 @@ public class Channels {
      */
     public static void registerChannelGroup(ChannelGroup channelGroup) {
         if (!groupKeys.add(channelGroup.getKey())) {
-            System.out.println(Color.bad("A Channel Group with the key: ") + Color.channel(channelGroup.getKey()) + Color.bad(" has already been registered"));
+            logger.warn(Color.bad("A Channel Group with the key: ") + Color.channel(channelGroup.getKey()) + Color.bad(" has already been registered"));
             throw new RuntimeException();
         }
         if (!groupNames.add(channelGroup.getName())) {
-            System.out.println(Color.bad("A Channel Group with the name: ") + Color.channel(channelGroup.getName()) + Color.bad(" has already been registered"));
+            logger.warn(Color.bad("A Channel Group with the name: ") + Color.channel(channelGroup.getName()) + Color.bad(" has already been registered"));
             throw new RuntimeException();
         }
         
@@ -347,12 +344,12 @@ public class Channels {
             return;
         }
         
-        System.out.println(Utils.NEWLINE);
-        System.out.println(Color.number("--- Channels ---"));
+        logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.number("--- Channels ---"));
         
         root.print();
         
-        System.out.println(Utils.NEWLINE);
+        logger.trace(LogUtils.NEWLINE);
     }
     
 }

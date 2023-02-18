@@ -24,9 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import commons.access.Project;
 import commons.lambda.function.checked.CheckedBiFunction;
 import commons.lambda.function.checked.CheckedConsumer;
 import commons.lambda.function.checked.CheckedFunction;
@@ -88,8 +86,8 @@ public final class ApiUtils {
                 throw new KeyException();
             }
         } catch (Exception e) {
-            System.out.println(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
-            System.out.println(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
+            logger.warn(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
+            logger.warn(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
             throw new RuntimeException(e);
         }
     }
@@ -1028,27 +1026,21 @@ public final class ApiUtils {
          * @param channelState The Channel State of the calling Channel.
          */
         private static void logApiCall(Endpoint endpoint, URI request, String response, boolean error, ChannelState channelState) {
+            final String baseLog = String.format("%-15s  %7d B  %s  %s",
+                    endpoint.getName(), response.length(), (error ? "-X" : "->"), request);
+            
+            LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG),
+                    (Optional.ofNullable(channelState).map(ChannelState::getChannelName).orElse("~") + "  ::  " + baseLog));
+            
+            Optional.ofNullable(channelState).map(ChannelState::getCallLogFile)
+                    .ifPresent((CheckedConsumer<File>) callLog ->
+                            FileUtils.writeStringToFile(callLog,
+                                    (LogUtils.timestamp() + " - " + baseLog + System.lineSeparator()), true));
+            
             Stats.totalApiCalls.incrementAndGet();
             Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
             Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
             Stats.totalApiFailures.addAndGet(error ? 1 : 0);
-            
-            final String callLog = String.format("%-19s  %15s  %8d bytes  %s  %s", Utils.currentTimestamp(), endpoint.getName(),
-                    response.length(), (error ? "=XXX=" : "====="), request);
-            Stream.of(getCallLogFile(), (Optional.ofNullable(channelState).map(ChannelState::getCallLogFile).orElse(null)))
-                    .filter(Objects::nonNull).forEach((CheckedConsumer<File>) logFile ->
-                            FileUtils.writeStringToFile(logFile, (callLog + System.lineSeparator()), true));
-        }
-        
-        /**
-         * Returns the current API call log file.
-         *
-         * @return The current API call log file.
-         */
-        private static File getCallLogFile() {
-            return new File(Project.LOG_DIR, (String.join("-",
-                    Utils.PROJECT_TITLE, Utils.currentDatestamp(), "callLog") +
-                    '.' + Utils.LOG_FILE_FORMAT));
         }
         
         /**
@@ -1111,26 +1103,27 @@ public final class ApiUtils {
                     .filter(errorCode -> {
                         switch (errorCode) {
                             case "404":
-                                System.out.println(Color.bad("The Youtube source") +
+                                logger.warn(Color.bad("The Youtube source") +
                                         ((channelState != null) ? (Color.bad(" referenced by Channel: ") + Color.channel(channelState)) : "") +
                                         Color.bad(" does not exist"));
                                 break;
                             case "403":
-                                System.out.println(Color.bad("Your API Key is not authorized or has exceeded its quota"));
+                                logger.warn(Color.bad("Your API Key is not authorized or has exceeded its quota"));
                                 break;
                             case "400":
-                                System.out.println(Color.bad("The API call that was made does not Your API Key is not authorized or has exceeded its quota"));
+                                logger.warn(Color.bad("The API call that was made does not Your API Key is not authorized or has exceeded its quota"));
                                 break;
                             default:
-                                System.out.println(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
+                                logger.warn(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
                                         ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channel(channelState)) : ""));
                                 break;
                         }
                         if (channelState != null) {
                             channelState.getErrorFlag().set(true);
                         }
-                        throw new RuntimeException("Youtube Data API responded with error code: " + errorCode +
-                                (response.contains("\"reason\":") ? (" (" + response.replaceAll("(?s)^.*\"reason\": \"([^\"]+)\",.*$", "$1") + ")") : ""));
+                        logger.error(Color.bad("Youtube Data API responded with error code: ") + Color.number(errorCode) +
+                                (response.contains("\"reason\":") ? (Color.bad(" (" + response.replaceAll("(?s)^.*\"reason\": \"([^\"]+)\",.*$", "$1") + ")")) : ""));
+                        throw new RuntimeException();
                     })
                     .orElse(response);
         }
@@ -1151,9 +1144,10 @@ public final class ApiUtils {
                     .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
                     .orElseThrow(() -> {
                         if ((channelState != null) && channelState.getErrorFlag().compareAndSet(false, true)) {
-                            System.out.println(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState));
+                            logger.warn(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState));
                         }
-                        throw new RuntimeException("Youtube Data API responded with invalid data");
+                        logger.error(Color.bad("Youtube Data API responded with invalid data"));
+                        throw new RuntimeException();
                     });
         }
         

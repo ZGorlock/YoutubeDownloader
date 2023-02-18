@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.channel.config.ChannelConfig;
 import youtube.channel.util.ChannelJsonFormatter;
+import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.entity.Channel;
 import youtube.entity.Playlist;
@@ -104,7 +105,7 @@ public class ChannelPlaylistParser {
         final List<ChannelConfig> playlistChannels = makePlaylistChannels(playlists);
         
         final String playlistChannelsJson = formatPlaylistChannels(playlistChannels);
-        System.out.println(playlistChannelsJson);
+        logger.debug(Color.log(playlistChannelsJson));
     }
     
     

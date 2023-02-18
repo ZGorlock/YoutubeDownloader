@@ -1755,7 +1755,7 @@ public final class Filesystem {
     public static boolean safeReplace(File newFile, File originalFile) {
         if (!newFile.exists()) {
             if (logFilesystem()) {
-                logger.trace("The file: {} does not exist", newFile.getAbsolutePath());
+                logger.trace("The file: {} does not exist", StringUtility.fileString(newFile));
             }
             return false;
         }
@@ -1763,18 +1763,18 @@ public final class Filesystem {
         File backup = new File(originalFile.getParentFile(), originalFile.getName() + ".bak");
         if (backup.exists()) {
             if (logFilesystem()) {
-                logger.trace("A backup file: {} already exists, this could be data preserved from a failure; Will not continue", backup.getAbsolutePath());
+                logger.trace("A backup file: {} already exists, this could be data preserved from a failure; Will not continue", StringUtility.fileString(backup));
             }
             return false;
         }
         
         if (originalFile.exists()) {
             if (logFilesystem()) {
-                logger.trace("Creating a backup file: {}", backup.getAbsolutePath());
+                logger.trace("Creating a backup file: {}", StringUtility.fileString(backup));
             }
             if (!copyFile(originalFile, backup) || (checksum(backup) != checksum(originalFile)) || !deleteFile(originalFile)) {
                 if (logFilesystem()) {
-                    logger.trace("Failed to create backup file: {}", backup.getAbsolutePath());
+                    logger.trace("Failed to create backup file: {}", StringUtility.fileString(backup));
                 }
                 if (!originalFile.exists() && backup.exists()) {
                     move(backup, originalFile);
@@ -1785,11 +1785,11 @@ public final class Filesystem {
         }
         
         if (logFilesystem()) {
-            logger.trace("Replacing: {} with: {}", originalFile.getAbsolutePath(), newFile.getAbsolutePath());
+            logger.trace("Replacing: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
         }
         if (!copy(newFile, originalFile, true) || (checksum(originalFile) != checksum(newFile)) || !deleteFile(newFile)) {
             if (logFilesystem()) {
-                logger.trace("Failed to replace: {} with: {}", originalFile.getAbsolutePath(), newFile.getAbsolutePath());
+                logger.trace("Failed to replace: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
             }
             if (backup.exists()) {
                 move(backup, originalFile);
@@ -1799,7 +1799,7 @@ public final class Filesystem {
         
         deleteFile(backup);
         if (logFilesystem()) {
-            logger.trace("Successfully replaced: {} with: {}", originalFile.getAbsolutePath(), newFile.getAbsolutePath());
+            logger.trace("Successfully replaced: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
         }
         return true;
     }
@@ -1816,17 +1816,17 @@ public final class Filesystem {
         File tmp = new File(file.getParentFile(), file.getName() + ".tmp");
         if (tmp.exists()) {
             if (logFilesystem()) {
-                logger.trace("A temporary file: {} already exists, this could be data preserved from a failure; Will not continue", tmp.getAbsolutePath());
+                logger.trace("A temporary file: {} already exists, this could be data preserved from a failure; Will not continue", StringUtility.fileString(tmp));
             }
             return false;
         }
         
         if (logFilesystem()) {
-            logger.trace("Rewriting: {}", file.getAbsolutePath());
+            logger.trace("Rewriting: {}", StringUtility.fileString(file));
         }
         if (!writeStringToFile(tmp, data) || !safeReplace(tmp, file)) {
             if (logFilesystem()) {
-                logger.trace("Failed to rewrite: {}", file.getAbsolutePath());
+                logger.trace("Failed to rewrite: {}", StringUtility.fileString(file));
             }
             deleteFile(tmp);
             return false;
@@ -1834,7 +1834,7 @@ public final class Filesystem {
         
         deleteFile(tmp);
         if (logFilesystem()) {
-            logger.trace("Successfully rewrote: {}", file.getAbsolutePath());
+            logger.trace("Successfully rewrote: {}", StringUtility.fileString(file));
         }
         return true;
     }
@@ -2241,7 +2241,7 @@ public final class Filesystem {
      * @return Whether filesystem logging is enabled or not.
      */
     public static boolean logFilesystem() {
-        return false;
+        return true;
     }
     
 }
