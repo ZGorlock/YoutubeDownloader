@@ -29,6 +29,7 @@ import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.config.Color;
+import youtube.config.Configurator;
 
 /**
  * Provides log utility methods for the Youtube Downloader.
@@ -167,7 +168,17 @@ public final class LogUtils {
         if (loaded.compareAndSet(false, true)) {
             System.setProperty("logback.configurationFile", LogUtils.LOGBACK_CONFIG_FILE.getAbsolutePath());
             
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> logDivider('=', 3)));
+            Runtime.getRuntime().addShutdownHook(new Thread(LogUtils::shutdownLogging));
+        }
+    }
+    
+    /**
+     * Shuts down the logging configuration.
+     */
+    private static void shutdownLogging() {
+        if (loaded.get()) {
+            cleanupOldLogs();
+            logDivider('=', 3);
         }
     }
     
@@ -449,6 +460,21 @@ public final class LogUtils {
      */
     public static List<File> fetchAllLogsOlderThan(int days) {
         return fetchAllLogsOnOrBefore(new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(days)));
+    }
+    
+    /**
+     * Purges old log files.
+     */
+    private static void cleanupOldLogs() {
+        if (Optional.ofNullable(Configurator.Config.daysToKeepLogs).orElse(-1L) < 0) {
+            return;
+        }
+        fetchAllLogsOlderThan(Configurator.Config.daysToKeepLogs.intValue())
+                .forEach(Filesystem::deleteFile);
+        
+        Filesystem.getDirs(LOG_DIR).stream()
+                .filter(Filesystem::directoryIsEmpty)
+                .forEach(Filesystem::deleteDirectory);
     }
     
     /**

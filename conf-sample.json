@@ -91,6 +91,7 @@
         "printExeVersion": true,
         "logCommand": true,
         "logWork": false,
-        "showProgressBar": true
+        "showProgressBar": true,
+        "daysToKeepLogs": 30
     }
 }

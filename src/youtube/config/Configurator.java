@@ -327,6 +327,11 @@ public class Configurator {
          */
         public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
         
+        /**
+         * The default value of the setting indicating the number of days to retain log files before deleting them.
+         */
+        public static final long DEFAULT_DAYS_TO_KEEP_LOGS = 30;
+        
         
         //Static Fields
         
@@ -437,6 +442,11 @@ public class Configurator {
          */
         public static final boolean showProgressBar = Configurator.getSetting("flag.showProgressBar",
                 Configurator.getSetting("log", "showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
+        
+        /**
+         * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
+         */
+        public static final Long daysToKeepLogs = Configurator.getSetting("log", "daysToKeepLogs", DEFAULT_DAYS_TO_KEEP_LOGS);
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
