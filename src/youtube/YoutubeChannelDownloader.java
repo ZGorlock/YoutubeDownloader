@@ -297,7 +297,7 @@ public class YoutubeChannelDownloader {
             }
             
             DownloadUtils.DownloadResponse response = DownloadUtils.downloadYoutubeVideo(video);
-            switch (response.status) {
+            switch (response.getStatus()) {
                 case SUCCESS:
                     channel.getState().getSaved().add(videoId);
                     channel.getState().getKeyStore().put(video);

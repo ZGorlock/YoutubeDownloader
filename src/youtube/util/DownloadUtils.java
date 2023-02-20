@@ -48,9 +48,9 @@ public final class DownloadUtils {
         
         //Values
         
-        SUCCESS("Succeeded", Color.GOOD),
-        FAILURE("Failed", Color.BAD),
-        ERROR("Error", Color.BAD);
+        SUCCESS("Succeeded", false, Color.GOOD),
+        FAILURE("Failed", true, Color.BAD),
+        ERROR("Error", true, Color.BAD);
         
         
         //Fields
@@ -59,6 +59,11 @@ public final class DownloadUtils {
          * The message associated with the Status.
          */
         public final String message;
+        
+        /**
+         * Whether the Status is bad or not.
+         */
+        public final boolean bad;
         
         /**
          * The color of the Status.
@@ -72,10 +77,43 @@ public final class DownloadUtils {
          * Constructs a Download Response Status.
          *
          * @param message The message associated with the Status.
+         * @param bad     Whether the Status is bad or not.
+         * @param color   The color of the Status.
          */
-        DownloadResponseStatus(String message, Console.ConsoleEffect color) {
+        DownloadResponseStatus(String message, boolean bad, Console.ConsoleEffect color) {
             this.message = message;
+            this.bad = bad;
             this.color = color;
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the message associated with the Status.
+         *
+         * @return The message associated with the Status.
+         */
+        public String getMessage() {
+            return message;
+        }
+        
+        /**
+         * Returns whether the Status is bad or not.
+         *
+         * @return Whether the Status is bad or not.
+         */
+        public boolean isBad() {
+            return bad;
+        }
+        
+        /**
+         * Returns the color of the Status.
+         *
+         * @return The color of the Status.
+         */
+        public Console.ConsoleEffect getColor() {
+            return color;
         }
         
     }
@@ -168,7 +206,7 @@ public final class DownloadUtils {
             response.processCmdResponse(cmdResponse);
             progressBar.finishDownload();
             
-            if (!isRetry && StringUtility.containsAnyIgnoreCase(response.error, RETRY_WITH_COOKIES_ERRORS)) {
+            if (!isRetry && StringUtility.containsAnyIgnoreCase(response.getError(), RETRY_WITH_COOKIES_ERRORS)) {
                 final DownloadResponse retryResponse = downloadYoutubeVideo(video, true);
                 if (retryResponse != null) {
                     return retryResponse;
@@ -176,14 +214,14 @@ public final class DownloadUtils {
             }
             
         } catch (Exception e) {
-            response.error = "Unknown Error";
-            response.message = response.error;
-            response.status = DownloadResponseStatus.ERROR;
+            response.setError("Unknown Error");
+            response.setMessage(response.getError());
+            response.setStatus(DownloadResponseStatus.ERROR);
             
             progressBar.finishDownload(e);
         }
         
-        LogUtils.log(logger, ((response.status.color == Color.BAD) ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
+        LogUtils.log(logger, (response.getStatus().isBad() ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
                 (LogUtils.INDENT + response.printedResponse()));
         LogUtils.logDivider(logger, '-');
         
@@ -203,22 +241,22 @@ public final class DownloadUtils {
         /**
          * The download status.
          */
-        public DownloadResponseStatus status;
+        private DownloadResponseStatus status;
         
         /**
          * The download message.
          */
-        public String message;
+        private String message;
         
         /**
          * The download error.
          */
-        public String error;
+        private String error;
         
         /**
          * The download log.
          */
-        public String log;
+        private String log;
         
         
         //Methods
@@ -229,18 +267,18 @@ public final class DownloadUtils {
          * @param cmdResponse The command response.
          */
         protected void processCmdResponse(String cmdResponse) {
-            log = Optional.ofNullable(cmdResponse).map(String::strip).orElse("");
-            error = (!log.contains("ERROR: ") && !log.contains(".exe: error: ")) ? null :
-                    log.substring(Math.max(log.lastIndexOf("ERROR: "), log.lastIndexOf(".exe: error: ")))
-                            .replaceAll("\r?\n", " - ").replaceAll("^\\.exe:\\s*", "");
-            message = (error == null) ? message : error
+            setLog(Optional.ofNullable(cmdResponse).map(String::strip).orElse(""));
+            setError((!getLog().contains("ERROR: ") && !getLog().contains(".exe: error: ")) ? null :
+                     getLog().substring(Math.max(getLog().lastIndexOf("ERROR: "), getLog().lastIndexOf(".exe: error: ")))
+                             .replaceAll("\r?\n", " - ").replaceAll("^\\.exe:\\s*", ""));
+            setMessage((getError() == null) ? getMessage() : getError()
                     .replaceAll("(?i)^ERROR:\\s*(?:-\\s*)?", "")
                     .replaceAll("^\\[[^\\\\]+]\\s*[^:]+:\\s*", "")
                     .replaceAll(":\\s*<[^>]+>\\s*\\(caused\\sby.+\\)+$", "")
-                    .trim();
-            status = (error == null) ? DownloadResponseStatus.SUCCESS :
-                     StringUtility.containsAnyIgnoreCase(error, NON_CRITICAL_ERRORS) ?
-                     DownloadResponseStatus.FAILURE : DownloadResponseStatus.ERROR;
+                    .trim());
+            setStatus((getError() == null) ? DownloadResponseStatus.SUCCESS :
+                      StringUtility.containsAnyIgnoreCase(getError(), NON_CRITICAL_ERRORS) ?
+                      DownloadResponseStatus.FAILURE : DownloadResponseStatus.ERROR);
         }
         
         /**
@@ -249,7 +287,7 @@ public final class DownloadUtils {
          * @return The simple string representing the Response.
          */
         public String simpleResponse() {
-            return "Download " + status.message;
+            return "Download " + getStatus().getMessage();
         }
         
         /**
@@ -258,7 +296,8 @@ public final class DownloadUtils {
          * @return The string representing the Response.
          */
         public String response() {
-            return simpleResponse() + (((message == null) || message.isEmpty()) ? "" : (" - " + message));
+            return simpleResponse() + Optional.ofNullable(getMessage())
+                    .filter(e -> !e.isEmpty()).map(e -> (" - " + e)).orElse("");
         }
         
         /**
@@ -267,7 +306,7 @@ public final class DownloadUtils {
          * @return The printable simple string representing the Response.
          */
         public String printedSimpleResponse() {
-            return Color.apply(status.color, simpleResponse());
+            return Color.apply(getStatus().getColor(), simpleResponse());
         }
         
         /**
@@ -276,7 +315,85 @@ public final class DownloadUtils {
          * @return The printable string representing the Response.
          */
         public String printedResponse() {
-            return Color.apply(status.color, response());
+            return Color.apply(getStatus().getColor(), response());
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the download status.
+         *
+         * @return The download status.
+         */
+        public DownloadResponseStatus getStatus() {
+            return status;
+        }
+        
+        /**
+         * Returns the download message.
+         *
+         * @return The download message.
+         */
+        public String getMessage() {
+            return message;
+        }
+        
+        /**
+         * Returns the download error.
+         *
+         * @return The download error.
+         */
+        public String getError() {
+            return error;
+        }
+        
+        /**
+         * Returns the download log.
+         *
+         * @return The download log.
+         */
+        public String getLog() {
+            return log;
+        }
+        
+        
+        //Setters
+        
+        /**
+         * Sets the download status.
+         *
+         * @param status The download status.
+         */
+        public void setStatus(DownloadResponseStatus status) {
+            this.status = status;
+        }
+        
+        /**
+         * Sets the download message.
+         *
+         * @param message The download message.
+         */
+        public void setMessage(String message) {
+            this.message = message;
+        }
+        
+        /**
+         * Sets the download error.
+         *
+         * @param error The download error.
+         */
+        public void setError(String error) {
+            this.error = error;
+        }
+        
+        /**
+         * Sets the download log.
+         *
+         * @param log The download log.
+         */
+        public void setLog(String log) {
+            this.log = log;
         }
         
     }
@@ -334,12 +451,12 @@ public final class DownloadUtils {
         /**
          * A flag indicating whether a new file part is being downloaded.
          */
-        private AtomicBoolean newPart = new AtomicBoolean(false);
+        private final AtomicBoolean newPart = new AtomicBoolean(false);
         
         /**
          * A counter storing the saved progress of the download.
          */
-        private AtomicLong saveProgress = new AtomicLong(0L);
+        private final AtomicLong saveProgress = new AtomicLong(0L);
         
         
         //Constructors
@@ -352,6 +469,7 @@ public final class DownloadUtils {
          */
         public DownloadProgressBar(Video video, DownloadResponse response) {
             super("", 0L, 32, "KB", DISPLAY_PROGRESS_BAR);
+            
             this.video = video;
             this.response = response;
             
@@ -401,52 +519,52 @@ public final class DownloadUtils {
                         default:
                     }
                     
-                    if (newPart.compareAndSet(true, false)) {
+                    if (getNewPart().compareAndSet(true, false)) {
                         updateTotal(total * scale);
-                        saveProgress.set(getProgress());
+                        getSaveProgress().set(getProgress());
                     }
                     
-                    final long progress = ((long) (percentage * total * scale)) + saveProgress.get();
+                    final long progress = ((long) (percentage * total * scale)) + getSaveProgress().get();
                     return update(progress);
                 }
             }
             
             final Matcher existsMatcher = EXISTS_PATTERN.matcher(log);
             if (existsMatcher.matches()) {
-                video.updateOutput(new File(existsMatcher.group("output")));
+                getVideo().updateOutput(new File(existsMatcher.group("output")));
                 
-                final long size = video.getOutput().length() / 1024;
+                final long size = getVideo().getOutput().length() / 1024;
                 updateTotal(size);
                 defineInitialProgress(size);
                 
-                response.message = "Already downloaded";
+                getResponse().setMessage("Already downloaded");
                 return true;
             }
             
             final Matcher destinationMatcher = DESTINATION_PATTERN.matcher(log);
             if (destinationMatcher.matches()) {
-                video.updateOutput(new File(destinationMatcher.group("destination")));
-                return newPart.compareAndSet(false, true);
+                getVideo().updateOutput(new File(destinationMatcher.group("destination")));
+                return getNewPart().compareAndSet(false, true);
             }
             
             final Matcher mergeMatcher = MERGE_PATTERN.matcher(log);
             if (mergeMatcher.matches()) {
-                video.updateOutput(new File(mergeMatcher.group("merge")));
+                getVideo().updateOutput(new File(mergeMatcher.group("merge")));
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Merging Formats" +
-                            (Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "...");
+                            (Optional.ofNullable(getVideo().getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "...");
                     logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
                     complete(true, completionMessage);
                 }
                 
-                response.message = null;
+                getResponse().setMessage(null);
                 return true;
             }
             
             final Matcher extractAudioMatcher = EXTRACT_AUDIO_PATTERN.matcher(log);
             if (extractAudioMatcher.matches()) {
-                video.updateOutput(new File(extractAudioMatcher.group("audio")));
+                getVideo().updateOutput(new File(extractAudioMatcher.group("audio")));
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Extracting Audio...");
@@ -454,7 +572,7 @@ public final class DownloadUtils {
                     complete(true, completionMessage);
                 }
                 
-                response.message = null;
+                getResponse().setMessage(null);
                 return true;
             }
             
@@ -469,21 +587,21 @@ public final class DownloadUtils {
         protected synchronized void finishDownload(Exception exception) {
             if (DISPLAY_PROGRESS_BAR) {
                 if (!isCompleted()) {
-                    if (((exception != null) && (getProgress() > 0)) || (response.error != null)) {
-                        final String errorMessage = Color.bad(response.message);
+                    if (((exception != null) && (getProgress() > 0)) || (getResponse().getError() != null)) {
+                        final String errorMessage = Color.bad(getResponse().getMessage());
                         if (!errorMessage.isBlank()) {
                             logger.warn(StringUtility.removeConsoleEscapeCharacters(errorMessage));
                         }
                         fail(true, errorMessage);
                     } else {
-                        final String completionMessage = Optional.ofNullable(response.message).map(Color::good).orElse("");
+                        final String completionMessage = Optional.ofNullable(getResponse().getMessage()).map(Color::good).orElse("");
                         if (!completionMessage.isBlank()) {
                             logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
                         }
                         complete(true, completionMessage);
                     }
                 }
-                response.message = null;
+                getResponse().setMessage(null);
             }
             if (exception != null) {
                 logger.warn(Color.bad(exception.getStackTrace()));
@@ -503,6 +621,45 @@ public final class DownloadUtils {
         @Override
         @SuppressWarnings("EmptyMethod")
         public synchronized void complete() {
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the Video being downloaded.
+         *
+         * @return The Video being downloaded.
+         */
+        protected Video getVideo() {
+            return video;
+        }
+        
+        /**
+         * Returns the Download Response.
+         *
+         * @return The Download Response.
+         */
+        protected DownloadResponse getResponse() {
+            return response;
+        }
+        
+        /**
+         * Returns a flag indicating whether a new file part is being downloaded.
+         *
+         * @return A flag indicating whether a new file part is being downloaded.
+         */
+        protected AtomicBoolean getNewPart() {
+            return newPart;
+        }
+        
+        /**
+         * Returns a counter storing the saved progress of the download.
+         *
+         * @return A counter storing the saved progress of the download.
+         */
+        protected AtomicLong getSaveProgress() {
+            return saveProgress;
         }
         
     }
