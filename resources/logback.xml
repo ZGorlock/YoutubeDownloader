@@ -65,16 +65,20 @@
     </appender>
     
     
-    <root level="trace">
+    <root level="trace" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
     
-    <logger name="youtube.util.DownloadUtils" level="trace">
+    <logger name="youtube.util.DownloadUtils" level="trace" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
         <appender-ref ref="FILE-DOWNLOAD"/>
     </logger>
     
-    <logger name="youtube.util.ApiUtils" level="trace">
+    <logger name="youtube.util.ApiUtils" level="trace" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
         <appender-ref ref="FILE-API"/>
     </logger>
 
