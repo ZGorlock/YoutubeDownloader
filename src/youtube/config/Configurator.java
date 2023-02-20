@@ -43,12 +43,39 @@ public class Configurator {
     public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, ("conf" + '.' + Utils.CONFIG_FILE_FORMAT));
     
     
+    //Enums
+    
+    /**
+     * An enumeration of Programs in the Youtube Downloader project.
+     */
+    public enum Program {
+        
+        //Values
+        
+        YOUTUBE_CHANNEL_DOWNLOADER,
+        YOUTUBE_DOWNLOADER;
+        
+        
+        //Methods
+        
+        /**
+         * Returns the title of the Program.
+         *
+         * @return The title of the Program.
+         */
+        public String getTitle() {
+            return Utils.formatUnderscoredString(name()).replace(" ", "");
+        }
+        
+    }
+    
+    
     //Static Fields
     
     /**
-     * The current active program.
+     * The active program.
      */
-    public static Utils.Program activeProgram = null;
+    public static Program activeProgram = null;
     
     /**
      * A cache of configuration settings from the configuration file.
@@ -82,7 +109,7 @@ public class Configurator {
      */
     public static Map<String, Object> getSettings() {
         return Optional.ofNullable(activeProgram)
-                .map(Utils.Program::getTitle)
+                .map(Program::getTitle)
                 .map(Configurator::getSettings)
                 .orElseGet(MapUtility::emptyMap);
     }
@@ -114,7 +141,7 @@ public class Configurator {
      */
     public static <T> T getSetting(String name, T def) {
         return Optional.ofNullable(activeProgram)
-                .map(Utils.Program::getTitle)
+                .map(Program::getTitle)
                 .map(e -> getSetting(e, name, def))
                 .orElse(null);
     }
@@ -137,7 +164,7 @@ public class Configurator {
      * @throws RuntimeException When the settings configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
-    public static void loadSettings(Utils.Program program) {
+    public static void loadSettings(Program program) {
         if (loaded.compareAndSet(false, true)) {
             activeProgram = program;
             

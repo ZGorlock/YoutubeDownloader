@@ -35,33 +35,6 @@ public final class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
     
     
-    //Enums
-    
-    /**
-     * An enumeration of Programs in the Youtube Downloader project.
-     */
-    public enum Program {
-        
-        //Values
-        
-        YOUTUBE_CHANNEL_DOWNLOADER,
-        YOUTUBE_DOWNLOADER;
-        
-        
-        //Methods
-        
-        /**
-         * Returns the title of the Program.
-         *
-         * @return The title of the Program.
-         */
-        public String getTitle() {
-            return formatUnderscoredString(name()).replace(" ", "");
-        }
-        
-    }
-    
-    
     //Constants
     
     /**
@@ -148,7 +121,7 @@ public final class Utils {
      * @param program The current active program.
      * @return Whether startup was successful or not.
      */
-    public static boolean startup(Program program) {
+    public static boolean startup(Configurator.Program program) {
         Configurator.loadSettings(program);
         LogUtils.initLogging();
         
