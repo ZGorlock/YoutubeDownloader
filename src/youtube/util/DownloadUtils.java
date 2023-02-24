@@ -134,7 +134,8 @@ public final class DownloadUtils {
             "urlopen error",
             "sign in to",
             "please install or provide the path",
-            "check back later"
+            "check back later",
+            "requested format is not available"
     };
     
     /**
