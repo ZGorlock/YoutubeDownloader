@@ -435,7 +435,7 @@ public class RenameProcess {
                                         video.getInfo(), index.get(), dateFormat))))
                         .orElseGet(() -> {
                             if (strict) {
-                                logger.warn(Color.bad("The video: ") + Color.videoName(video.getTitle()) + Color.bad(" does not match the pattern: ") + Color.quoted(Color.base(pattern)));
+                                logger.warn(Color.bad("The video: ") + Color.quoteVideoTitle(video) + Color.bad(" does not match the pattern: ") + Color.quoted(Color.base(pattern), true));
                                 throw new RuntimeException();
                             }
                             return video.getTitle();

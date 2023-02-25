@@ -86,7 +86,7 @@ public final class ApiUtils {
                 throw new KeyException();
             }
         } catch (Exception e) {
-            logger.warn(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.filePath(API_KEY_FILE));
+            logger.warn(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.quoteFilePath(API_KEY_FILE));
             logger.warn(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
             throw new RuntimeException(e);
         }
@@ -1104,7 +1104,7 @@ public final class ApiUtils {
                         switch (errorCode) {
                             case "404":
                                 logger.warn(Color.bad("The Youtube source") +
-                                        ((channelState != null) ? (Color.bad(" referenced by Channel: ") + Color.channel(channelState)) : "") +
+                                        ((channelState != null) ? (Color.bad(" referenced by Channel: ") + Color.channelName(channelState)) : "") +
                                         Color.bad(" does not exist"));
                                 break;
                             case "403":
@@ -1115,7 +1115,7 @@ public final class ApiUtils {
                                 break;
                             default:
                                 logger.warn(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
-                                        ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channel(channelState)) : ""));
+                                        ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channelName(channelState)) : ""));
                                 break;
                         }
                         if (channelState != null) {
@@ -1144,7 +1144,7 @@ public final class ApiUtils {
                     .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
                     .orElseThrow(() -> {
                         if ((channelState != null) && channelState.getErrorFlag().compareAndSet(false, true)) {
-                            logger.warn(Color.bad("Error parsing API data for Channel: ") + Color.channel(channelState));
+                            logger.warn(Color.bad("Error parsing API data for Channel: ") + Color.channelName(channelState));
                         }
                         logger.error(Color.bad("Youtube Data API responded with invalid data"));
                         throw new RuntimeException();

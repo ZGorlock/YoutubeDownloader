@@ -84,7 +84,7 @@ public class YoutubeDownloader {
         
         outputDir = getOutputDir();
         if (!outputDir.exists() && !outputDir.mkdirs()) {
-            logger.error(Color.bad("Unable to create output directory: ") + Color.filePath(outputDir));
+            logger.error(Color.bad("Unable to create output directory: ") + Color.quoteFilePath(outputDir));
             return;
         }
         logger.trace(LogUtils.NEWLINE);
@@ -129,9 +129,9 @@ public class YoutubeDownloader {
     private static boolean allowDownload(Video video) {
         return Optional.of(Configurator.Config.preventDownload).map(e -> !e)
                 .filter(e -> e).map(Mappers.forEach(e ->
-                        logger.info(Color.base("Downloading: ") + Color.video(video.getTitle()))))
+                        logger.info(Color.base("Downloading: ") + Color.videoTitle(video))))
                 .orElseGet(() -> {
-                    logger.info(Color.bad("Would have downloaded: ") + Color.videoName(video.getTitle()) + Color.bad(" but downloading is disabled"));
+                    logger.info(Color.bad("Would have downloaded: ") + Color.quoteVideoTitle(video) + Color.bad(" but downloading is disabled"));
                     return false;
                 });
     }

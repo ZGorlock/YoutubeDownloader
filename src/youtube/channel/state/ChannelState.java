@@ -165,7 +165,7 @@ public class ChannelState {
             getBlocked().addAll(FileUtils.readLines(getBlockFile()));
             
         } catch (IOException e) {
-            logger.error(Color.bad("Failed to load the state of Channel: ") + Color.channel(getChannelName()), e);
+            logger.error(Color.bad("Failed to load the state of Channel: ") + Color.channelName(this), e);
             throw new RuntimeException(e);
         }
     }
@@ -192,7 +192,7 @@ public class ChannelState {
             FileUtils.writeLines(getBlockFile(), getBlocked());
             
         } catch (IOException e) {
-            logger.error(Color.bad("Failed to save the state of Channel: ") + Color.channel(getChannelName()), e);
+            logger.error(Color.bad("Failed to save the state of Channel: ") + Color.channelName(this), e);
             throw new RuntimeException(e);
         }
     }

@@ -714,7 +714,7 @@ public abstract class ChannelEntry extends ConfigData {
                         .collect(Collectors.toList()))
                 .filter(e -> !e.isEmpty())
                 .ifPresent(missingFields -> {
-                    logger.warn(Color.bad("Channel" + (hasChildren(configData) ? " Group" : "") + ": ") + Color.channel(MapUtility.getOrNull(configData, "key")) +
+                    logger.warn(Color.bad("Channel" + (hasChildren(configData) ? " Group" : "") + ": ") + Color.channelKey((String) MapUtility.getOrNull(configData, "key")) +
                             Color.bad(" configuration missing ") + Color.number(missingFields.size()) + Color.bad(" required field" + ((missingFields.size() != 1) ? "s" : "") + ": ") +
                             missingFields.stream().map(Color::link).collect(Collectors.joining(Color.bad(", "))));
                     throw new RuntimeException();

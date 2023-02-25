@@ -137,7 +137,7 @@ public class YoutubeChannelDownloader {
         }
         
         logger.trace(LogUtils.NEWLINE);
-        logger.info(Color.base("Processing Channel: ") + Color.channel(channel.getConfig().getDisplayName()));
+        logger.info(Color.base("Processing Channel: ") + Color.channelDisplayName(channel));
         
         boolean success = Internet.isOnline() &&
                 initChannel() &&
@@ -213,7 +213,7 @@ public class YoutubeChannelDownloader {
         
         videoMap.values().stream().collect(Collectors.groupingBy(Video::getTitle)).entrySet()
                 .stream().filter(e -> (e.getValue().size() > 1)).forEach(e ->
-                        logger.warn(Color.bad("The title: ") + Color.videoName(e.getValue().get(0).getTitle()) + Color.bad(" appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
+                        logger.warn(Color.bad("The title: ") + Color.quoteVideoTitle(e.getValue().get(0)) + Color.bad(" appears ") + Color.number(e.getValue().size()) + Color.bad(" times")));
         
         videoMap.forEach((videoId, video) -> {
             channel.getState().getSaved().remove(videoId);
@@ -241,7 +241,7 @@ public class YoutubeChannelDownloader {
                         video.updateOutput(newOutput);
                         
                     } else if (!Configurator.Config.preventRenaming) {
-                        logger.info(Color.base("Renaming: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()));
+                        logger.info(Color.base("Renaming: ") + Color.quoteVideoFileName(oldOutput) + Color.log(" to: ") + Color.quoteVideoFileName(newOutput));
                         
                         oldOutput.renameTo(newOutput);
                         video.updateOutput(newOutput);
@@ -253,7 +253,7 @@ public class YoutubeChannelDownloader {
                         }
                         
                     } else {
-                        logger.info(Color.bad("Would have renamed: ") + Color.videoRename(oldOutput.getName(), newOutput.getName()) + Color.bad(" but renaming is disabled"));
+                        logger.info(Color.bad("Would have renamed: ") + Color.quoteVideoFileName(oldOutput) + Color.log(" to: ") + Color.quoteVideoFileName(newOutput) + Color.bad(" but renaming is disabled"));
                         video.updateOutput(oldOutput);
                     }
                     
@@ -290,9 +290,9 @@ public class YoutubeChannelDownloader {
             Video video = videoMap.get(videoId);
             
             if (!Configurator.Config.preventDownload) {
-                logger.info(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.videoName(video.getTitle(), false));
+                logger.info(Color.base("Downloading (") + Color.number(i + 1) + Color.base("/") + Color.number(working.size()) + Color.base("): ") + Color.videoTitle(video));
             } else {
-                logger.info(Color.bad("Would have downloaded: ") + Color.videoName(video.getTitle()) + Color.bad(" but downloading is disabled"));
+                logger.info(Color.bad("Would have downloaded: ") + Color.quoteVideoTitle(video) + Color.bad(" but downloading is disabled"));
                 continue;
             }
             
@@ -348,7 +348,7 @@ public class YoutubeChannelDownloader {
             try {
                 existingPlaylist = FileUtils.readLines(channel.getConfig().getPlaylistFile());
             } catch (IOException e) {
-                logger.error(Color.bad("Failed to read existing playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()), e);
+                logger.error(Color.bad("Failed to read existing playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()), e);
                 return false;
             }
         }
@@ -368,15 +368,15 @@ public class YoutubeChannelDownloader {
         
         if (!channel.getState().getErrorFlag().get() && !playlist.equals(existingPlaylist)) {
             if (!Configurator.Config.preventPlaylistEdit) {
-                logger.info(Color.base("Updating playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()));
+                logger.info(Color.base("Updating playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()));
                 try {
                     FileUtils.writeLines(channel.getConfig().getPlaylistFile(), playlist);
                 } catch (IOException e) {
-                    logger.error(Color.bad("Failed to update playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()), e);
+                    logger.error(Color.bad("Failed to update playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()), e);
                     return false;
                 }
             } else {
-                logger.info(Color.bad("Would have updated playlist: ") + Color.filePath(channel.getConfig().getPlaylistFile()) + Color.bad(" but playlist modification is disabled"));
+                logger.info(Color.bad("Would have updated playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()) + Color.bad(" but playlist modification is disabled"));
             }
         }
         return true;
@@ -404,11 +404,9 @@ public class YoutubeChannelDownloader {
             List<File> videos = FileUtils.getFiles(channel.getConfig().getOutputFolder());
             for (File video : videos) {
                 if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
-                    boolean isPartFile = video.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT);
-                    String printedFile = Color.apply((isPartFile ? Color.FILE : Color.VIDEO), video.getName());
                     
                     if (!Configurator.Config.preventDeletion) {
-                        logger.info(Color.base("Deleting: ") + Color.quoted(printedFile));
+                        logger.info(Color.base("Deleting: ") + Color.quoteVideoFileName(video));
                         try {
                             if (Configurator.Config.deleteToRecyclingBin) {
                                 FileUtils.recycleFile(video);
@@ -416,10 +414,10 @@ public class YoutubeChannelDownloader {
                                 FileUtils.deleteFile(video);
                             }
                         } catch (IOException e) {
-                            logger.error(Color.bad("Failed to delete: ") + Color.quoted(printedFile), e);
+                            logger.error(Color.bad("Failed to delete: ") + Color.quoteVideoFileName(video), e);
                         }
                         
-                        if (!isPartFile) {
+                        if (!video.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT)) {
                             if (channel.getConfig().isSaveAsMp3()) {
                                 Stats.totalAudioDeletions.incrementAndGet();
                             } else {
@@ -428,7 +426,7 @@ public class YoutubeChannelDownloader {
                         }
                         
                     } else {
-                        logger.info(Color.bad("Would have deleted: ") + Color.quoted(printedFile) + Color.bad(" but deletion is disabled"));
+                        logger.info(Color.bad("Would have deleted: ") + Color.quoteVideoFileName(video) + Color.bad(" but deletion is disabled"));
                     }
                 }
             }

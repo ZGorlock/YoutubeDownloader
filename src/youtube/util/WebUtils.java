@@ -177,8 +177,8 @@ public final class WebUtils {
             if (channel.getPlaylistId().isEmpty()) {
                 throw new RuntimeException();
             }
-            logger.debug(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.EXE.apply(channel.getPlaylistId()));
-            logger.debug(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.filePath(Channels.CHANNELS_FILE));
+            logger.debug(Color.bad("I was able to fetch it automatically based on the defined url: ") + Color.channelKey(channel.getPlaylistId()));
+            logger.debug(Color.bad("Automatically fetching it every time is slow though, it is better to add it to ") + Color.quoteFilePath(Channels.CHANNELS_FILE));
         }
     }
     

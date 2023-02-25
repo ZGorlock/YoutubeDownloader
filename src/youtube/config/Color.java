@@ -16,8 +16,16 @@ import commons.io.console.ProgressBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelConfig;
+import youtube.channel.config.ChannelEntry;
+import youtube.channel.state.ChannelState;
+import youtube.entity.Channel;
+import youtube.entity.Video;
+import youtube.entity.info.ChannelInfo;
+import youtube.entity.info.VideoInfo;
+import youtube.util.ExecutableUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
+import youtube.util.Utils;
 
 /**
  * Handles coloring of console output.
@@ -230,7 +238,7 @@ public class Color {
     }
     
     /**
-     * Colors "base" output.
+     * Colors "base" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -240,7 +248,7 @@ public class Color {
     }
     
     /**
-     * Colors "good" output.
+     * Colors "good" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -250,7 +258,7 @@ public class Color {
     }
     
     /**
-     * Colors "bad" output.
+     * Colors "bad" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -260,7 +268,7 @@ public class Color {
     }
     
     /**
-     * Colors "log" output.
+     * Colors "log" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -270,7 +278,7 @@ public class Color {
     }
     
     /**
-     * Colors "channel" output.
+     * Colors "channel" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -280,7 +288,7 @@ public class Color {
     }
     
     /**
-     * Colors "video" output.
+     * Colors "video" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -290,7 +298,7 @@ public class Color {
     }
     
     /**
-     * Colors "number" output.
+     * Colors "number" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -300,7 +308,7 @@ public class Color {
     }
     
     /**
-     * Colors "file" output.
+     * Colors "file" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -310,7 +318,7 @@ public class Color {
     }
     
     /**
-     * Colors "exe" output.
+     * Colors "exe" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -320,7 +328,7 @@ public class Color {
     }
     
     /**
-     * Colors "link" output.
+     * Colors "link" output to be displayed on the console.
      *
      * @param o The output.
      * @return The colored output.
@@ -330,155 +338,1265 @@ public class Color {
     }
     
     /**
-     * Adds colored quotes around output.
+     * Adds colored quotes around output to be displayed on the console.
+     *
+     * @param output      The output.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The quoted output.
+     */
+    public static String quoted(String output, boolean doubleQuote) {
+        final String quote = Color.log(doubleQuote ? '\"' : '\'');
+        return quote + output + quote;
+    }
+    
+    /**
+     * Adds colored quotes around output to be displayed on the console.
      *
      * @param output The output.
      * @return The quoted output.
      */
     public static String quoted(String output) {
-        final String quote = Color.log("'");
-        return quote + output + quote;
+        return quoted(output, false);
     }
     
     /**
-     * Colors the output indicating a file path.
+     * Colors and formats a file path to be displayed on the console.
      *
      * @param filePath The file path.
-     * @param quote    Whether to quote the file path or not.
-     * @return The colored output.
-     */
-    public static String filePath(String filePath, boolean quote) {
-        final String filePathOutput = Color.file(PathUtils.path(filePath));
-        return quote ? quoted(filePathOutput) : filePathOutput;
-    }
-    
-    /**
-     * Colors the output indicating a file path.
-     *
-     * @param filePath The file path.
-     * @return The colored output.
+     * @return The prepared console output.
      */
     public static String filePath(String filePath) {
-        return filePath(filePath, true);
+        return file(PathUtils.path(filePath));
     }
     
     /**
-     * Colors the output indicating a file path.
-     *
-     * @param file  The file.
-     * @param quote Whether to quote the file path or not.
-     * @return The colored output.
-     */
-    public static String filePath(File file, boolean quote) {
-        return filePath(file.getAbsolutePath(), quote);
-    }
-    
-    /**
-     * Colors the output indicating a file path.
+     * Colors and formats a file path to be displayed on the console.
      *
      * @param file The file.
-     * @return The colored output.
+     * @return The prepared console output.
      */
     public static String filePath(File file) {
-        return filePath(file, true);
+        return filePath(file.getAbsolutePath());
     }
     
     /**
-     * Colors the output indicating a file name.
+     * Colors and formats a quoted file path to be displayed on the console.
      *
-     * @param fileName The file name.
-     * @param quote    Whether to quote the file name or not.
-     * @return The colored output.
+     * @param filePath    The file path.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
      */
-    public static String fileName(String fileName, boolean quote) {
-        final String fileNameOutput = Color.file(fileName);
-        return quote ? quoted(fileNameOutput) : fileNameOutput;
+    public static String quoteFilePath(String filePath, boolean doubleQuote) {
+        return quoted(filePath(filePath), doubleQuote);
     }
     
     /**
-     * Colors the output indicating a file name.
+     * Colors and formats a quoted file path to be displayed on the console.
      *
-     * @param fileName The file name.
-     * @return The colored output.
+     * @param filePath The file path.
+     * @return The prepared console output.
      */
-    public static String fileName(String fileName) {
-        return fileName(fileName, true);
+    public static String quoteFilePath(String filePath) {
+        return quoteFilePath(filePath, false);
     }
     
     /**
-     * Colors the output indicating a file name.
+     * Colors and formats a quoted file path to be displayed on the console.
      *
-     * @param file  The file.
-     * @param quote Whether to quote the file name or not.
-     * @return The colored output.
+     * @param file        The file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
      */
-    public static String fileName(File file, boolean quote) {
-        return fileName(file.getName(), quote);
+    public static String quoteFilePath(File file, boolean doubleQuote) {
+        return quoteFilePath(file.getAbsolutePath(), doubleQuote);
     }
     
     /**
-     * Colors the output indicating a file name.
+     * Colors and formats a quoted file path to be displayed on the console.
      *
      * @param file The file.
-     * @return The colored output.
+     * @return The prepared console output.
+     */
+    public static String quoteFilePath(File file) {
+        return quoteFilePath(file, false);
+    }
+    
+    /**
+     * Colors and formats a file name to be displayed on the console.
+     *
+     * @param fileName The file name.
+     * @return The prepared console output.
+     */
+    public static String fileName(String fileName) {
+        return file(fileName);
+    }
+    
+    /**
+     * Colors and formats a file name to be displayed on the console.
+     *
+     * @param file The file.
+     * @return The prepared console output.
      */
     public static String fileName(File file) {
-        return fileName(file, true);
+        return fileName(file.getName());
     }
     
     /**
-     * Colors the output indicating a video.
+     * Colors and formats a quoted file name to be displayed on the console.
      *
-     * @param title The video title.
-     * @param quote Whether to quote the title or not.
-     * @return The colored output.
+     * @param fileName    The file name.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
      */
-    public static String videoName(String title, boolean quote) {
-        final String videoNameOutput = Color.video(title);
-        return quote ? quoted(videoNameOutput) : videoNameOutput;
+    public static String quoteFileName(String fileName, boolean doubleQuote) {
+        return quoted(fileName(fileName), doubleQuote);
     }
     
     /**
-     * Colors the output indicating a video.
+     * Colors and formats a quoted file name to be displayed on the console.
      *
-     * @param title The video title.
-     * @return The colored output.
+     * @param fileName The file name.
+     * @return The prepared console output.
      */
-    public static String videoName(String title) {
-        return videoName(title, true);
+    public static String quoteFileName(String fileName) {
+        return quoteFileName(fileName, false);
     }
     
     /**
-     * Colors the output indicating a video rename.
+     * Colors and formats a quoted file name to be displayed on the console.
      *
-     * @param originalTitle The video title.
-     * @param renamedTitle  The renamed video title.
-     * @return The colored output.
+     * @param file        The file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
      */
-    public static String videoRename(String originalTitle, String renamedTitle) {
-        return quoted(Color.video(originalTitle)) + Color.log(" to: ") + quoted(Color.video(renamedTitle));
+    public static String quoteFileName(File file, boolean doubleQuote) {
+        return quoteFileName(file.getName(), doubleQuote);
     }
     
     /**
-     * Colors the output indicating a Channel range.
+     * Colors and formats a quoted file name to be displayed on the console.
      *
-     * @param startChannelKey The key of the starting Channel.
-     * @param endChannelKey   The key of the ending Channel.
-     * @return The colored output.
+     * @param file The file.
+     * @return The prepared console output.
      */
-    public static String channelRange(String startChannelKey, String endChannelKey) {
-        return Color.number("[ ") + Color.channel(startChannelKey) + Color.number(", ") + Color.channel(endChannelKey) + Color.number(" ]");
+    public static String quoteFileName(File file) {
+        return quoteFileName(file, false);
     }
     
     /**
-     * Colors the output indicating a Channel range.
+     * Colors and formats a Video title to be displayed on the console.
      *
-     * @param startChannel The starting Channel.
-     * @param endChannel   The ending Channel.
-     * @return The colored output.
+     * @param videoTitle The Video title.
+     * @return The prepared console output.
      */
-    public static String channelRange(ChannelConfig startChannel, ChannelConfig endChannel) {
-        return channelRange(startChannel.getKey(), endChannel.getKey());
+    public static String videoTitle(String videoTitle) {
+        return video(videoTitle);
+    }
+    
+    /**
+     * Colors and formats a Video title to be displayed on the console.
+     *
+     * @param videoInfo The Video Info.
+     * @return The prepared console output.
+     */
+    public static String videoTitle(VideoInfo videoInfo) {
+        return videoTitle(videoInfo.getTitle());
+    }
+    
+    /**
+     * Colors and formats a Video title to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String videoTitle(Video video) {
+        return videoTitle(video.getTitle());
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param videoTitle  The Video title.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(String videoTitle, boolean doubleQuote) {
+        return quoted(videoTitle(videoTitle), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param videoTitle The Video title.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(String videoTitle) {
+        return quoteVideoTitle(videoTitle, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param videoInfo   The Video Info.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(VideoInfo videoInfo, boolean doubleQuote) {
+        return quoteVideoTitle(videoInfo.getTitle(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param videoInfo The Video Info.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(VideoInfo videoInfo) {
+        return quoteVideoTitle(videoInfo, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param video       The Video.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(Video video, boolean doubleQuote) {
+        return quoteVideoTitle(video.getTitle(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video title to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoTitle(Video video) {
+        return quoteVideoTitle(video, false);
+    }
+    
+    /**
+     * Colors and formats a Video file path to be displayed on the console.
+     *
+     * @param videoFilePath The Video file path.
+     * @return The prepared console output.
+     */
+    public static String videoFilePath(String videoFilePath) {
+        return videoFilePath.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(videoFilePath) : video(videoFilePath);
+    }
+    
+    /**
+     * Colors and formats a Video file path to be displayed on the console.
+     *
+     * @param videoFile The Video file.
+     * @return The prepared console output.
+     */
+    public static String videoFilePath(File videoFile) {
+        return videoFilePath(videoFile.getAbsolutePath());
+    }
+    
+    /**
+     * Colors and formats a Video file path to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String videoFilePath(Video video) {
+        return videoFilePath(video.getOutput());
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param videoFilePath The Video file path.
+     * @param doubleQuote   Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(String videoFilePath, boolean doubleQuote) {
+        return quoted(videoFilePath(videoFilePath), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param videoFilePath The Video file path.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(String videoFilePath) {
+        return quoteVideoFilePath(videoFilePath, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param videoFile   The Video file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(File videoFile, boolean doubleQuote) {
+        return quoteVideoFilePath(videoFile.getAbsolutePath(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param videoFile The Video file.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(File videoFile) {
+        return quoteVideoFilePath(videoFile, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param video       The Video.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(Video video, boolean doubleQuote) {
+        return quoteVideoFilePath(video.getOutput(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file path to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFilePath(Video video) {
+        return quoteVideoFilePath(video, false);
+    }
+    
+    /**
+     * Colors and formats a Video file name to be displayed on the console.
+     *
+     * @param videoFileName The Video file name.
+     * @return The prepared console output.
+     */
+    public static String videoFileName(String videoFileName) {
+        return videoFileName.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(videoFileName) : video(videoFileName);
+    }
+    
+    /**
+     * Colors and formats a Video file name to be displayed on the console.
+     *
+     * @param videoFile The Video file.
+     * @return The prepared console output.
+     */
+    public static String videoFileName(File videoFile) {
+        return videoFileName(videoFile.getName());
+    }
+    
+    /**
+     * Colors and formats a Video file name to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String videoFileName(Video video) {
+        return videoFileName(video.getOutput());
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param videoFileName The Video file name.
+     * @param doubleQuote   Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(String videoFileName, boolean doubleQuote) {
+        return quoted(videoFileName(videoFileName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param videoFileName The Video file name.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(String videoFileName) {
+        return quoteVideoFileName(videoFileName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param videoFile   The Video file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(File videoFile, boolean doubleQuote) {
+        return quoteVideoFileName(videoFile.getName(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param videoFile The Video file.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(File videoFile) {
+        return quoteVideoFileName(videoFile, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param video       The Video.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(Video video, boolean doubleQuote) {
+        return quoteVideoFileName(video.getOutput(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Video file name to be displayed on the console.
+     *
+     * @param video The Video.
+     * @return The prepared console output.
+     */
+    public static String quoteVideoFileName(Video video) {
+        return quoteVideoFileName(video, false);
+    }
+    
+    /**
+     * Colors and formats a Channel name to be displayed on the console.
+     *
+     * @param channelName The Channel name.
+     * @return The prepared console output.
+     */
+    public static String channelName(String channelName) {
+        return channel(channelName);
+    }
+    
+    /**
+     * Colors and formats a Channel name to be displayed on the console.
+     *
+     * @param channelState The Channel State.
+     * @return The prepared console output.
+     */
+    public static String channelName(ChannelState channelState) {
+        return channelName(channelState.getChannelName());
+    }
+    
+    /**
+     * Colors and formats a Channel name to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @return The prepared console output.
+     */
+    public static String channelName(ChannelEntry channelEntry) {
+        return channelName(channelEntry.getName());
+    }
+    
+    /**
+     * Colors and formats a Channel name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelName(Channel channel) {
+        return channelName(channel.getConfig());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelName The Channel name.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(String channelName, boolean doubleQuote) {
+        return quoted(channelName(channelName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelName The Channel name.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(String channelName) {
+        return quoteChannelName(channelName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelState The Channel State.
+     * @param doubleQuote  Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(ChannelState channelState, boolean doubleQuote) {
+        return quoteChannelName(channelState.getChannelName(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelState The Channel State.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(ChannelState channelState) {
+        return quoteChannelName(channelState, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @param doubleQuote  Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(ChannelEntry channelEntry, boolean doubleQuote) {
+        return quoteChannelName(channelEntry.getName(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(ChannelEntry channelEntry) {
+        return quoteChannelName(channelEntry, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(Channel channel, boolean doubleQuote) {
+        return quoteChannelName(channel.getConfig(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelName(Channel channel) {
+        return quoteChannelName(channel, false);
+    }
+    
+    /**
+     * Colors and formats a Channel display name to be displayed on the console.
+     *
+     * @param channelDisplayName The Channel display name.
+     * @return The prepared console output.
+     */
+    public static String channelDisplayName(String channelDisplayName) {
+        return channel(channelDisplayName);
+    }
+    
+    /**
+     * Colors and formats a Channel display name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String channelDisplayName(ChannelConfig channelConfig) {
+        return channelDisplayName(channelConfig.getDisplayName());
+    }
+    
+    /**
+     * Colors and formats a Channel display name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelDisplayName(Channel channel) {
+        return channelDisplayName(channel.getConfig());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channelDisplayName The Channel display name.
+     * @param doubleQuote        Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(String channelDisplayName, boolean doubleQuote) {
+        return quoted(channelDisplayName(channelDisplayName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channelDisplayName The Channel display name.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(String channelDisplayName) {
+        return quoteChannelDisplayName(channelDisplayName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @param doubleQuote   Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(ChannelConfig channelConfig, boolean doubleQuote) {
+        return quoteChannelDisplayName(channelConfig.getDisplayName(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(ChannelConfig channelConfig) {
+        return quoteChannelDisplayName(channelConfig, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(Channel channel, boolean doubleQuote) {
+        return quoteChannelDisplayName(channel.getConfig(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel display name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelDisplayName(Channel channel) {
+        return quoteChannelDisplayName(channel, false);
+    }
+    
+    /**
+     * Colors and formats a Channel key to be displayed on the console.
+     *
+     * @param channelKey The Channel key.
+     * @return The prepared console output.
+     */
+    public static String channelKey(String channelKey) {
+        return channel(channelKey);
+    }
+    
+    /**
+     * Colors and formats a Channel key to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @return The prepared console output.
+     */
+    public static String channelKey(ChannelEntry channelEntry) {
+        return channelKey(channelEntry.getKey());
+    }
+    
+    /**
+     * Colors and formats a Channel key to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelKey(Channel channel) {
+        return channelKey(channel.getConfig());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channelKey  The Channel key.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(String channelKey, boolean doubleQuote) {
+        return quoted(channelKey(channelKey), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channelKey The Channel key.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(String channelKey) {
+        return quoteChannelKey(channelKey, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @param doubleQuote  Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(ChannelEntry channelEntry, boolean doubleQuote) {
+        return quoteChannelKey(channelEntry.getKey(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channelEntry The Channel Entry.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(ChannelEntry channelEntry) {
+        return quoteChannelKey(channelEntry, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(Channel channel, boolean doubleQuote) {
+        return quoteChannelKey(channel.getConfig().getKey(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel key to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelKey(Channel channel) {
+        return quoteChannelKey(channel, false);
+    }
+    
+    /**
+     * Colors and formats a Channel title to be displayed on the console.
+     *
+     * @param channelTitle The Channel title.
+     * @return The prepared console output.
+     */
+    public static String channelTitle(String channelTitle) {
+        return channel(channelTitle);
+    }
+    
+    /**
+     * Colors and formats a Channel title to be displayed on the console.
+     *
+     * @param channelInfo The Channel Info.
+     * @return The prepared console output.
+     */
+    public static String channelTitle(ChannelInfo channelInfo) {
+        return channelTitle(channelInfo.getTitle());
+    }
+    
+    /**
+     * Colors and formats a Channel title to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelTitle(Channel channel) {
+        return channelTitle(channel.getInfo());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channelTitle The Channel title.
+     * @param doubleQuote  Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(String channelTitle, boolean doubleQuote) {
+        return quoted(channelTitle(channelTitle), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channelTitle The Channel title.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(String channelTitle) {
+        return quoteChannelTitle(channelTitle, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channelInfo The Channel Info.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(ChannelInfo channelInfo, boolean doubleQuote) {
+        return quoteChannelTitle(channelInfo.getTitle(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channelInfo The Channel Info.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(ChannelInfo channelInfo) {
+        return quoteChannelTitle(channelInfo, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(Channel channel, boolean doubleQuote) {
+        return quoteChannelTitle(channel.getInfo(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel title to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelTitle(Channel channel) {
+        return quoteChannelTitle(channel, false);
+    }
+    
+    /**
+     * Colors and formats a Channel file path to be displayed on the console.
+     *
+     * @param channelFilePath The Channel file path.
+     * @return The prepared console output.
+     */
+    public static String channelFilePath(String channelFilePath) {
+        return channelFilePath.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(channelFilePath) : channel(channelFilePath);
+    }
+    
+    /**
+     * Colors and formats a Channel file path to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @return The prepared console output.
+     */
+    public static String channelFilePath(File channelFile) {
+        return channelFilePath(channelFile.getAbsolutePath());
+    }
+    
+    /**
+     * Colors and formats a Channel file path to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String channelFilePath(ChannelConfig channelConfig) {
+        return channelFilePath(channelConfig.getOutputFolder());
+    }
+    
+    /**
+     * Colors and formats a Channel file path to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelFilePath(Channel channel) {
+        return channelFilePath(channel.getConfig());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelFilePath The Channel file path.
+     * @param doubleQuote     Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(String channelFilePath, boolean doubleQuote) {
+        return quoted(channelFilePath(channelFilePath), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelFilePath The Channel file path.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(String channelFilePath) {
+        return quoteChannelFilePath(channelFilePath, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(File channelFile, boolean doubleQuote) {
+        return quoteChannelFilePath(channelFile.getAbsolutePath(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(File channelFile) {
+        return quoteChannelFilePath(channelFile, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @param doubleQuote   Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(ChannelConfig channelConfig, boolean doubleQuote) {
+        return quoteChannelFilePath(channelConfig.getOutputFolder(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(ChannelConfig channelConfig) {
+        return quoteChannelFilePath(channelConfig, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(Channel channel, boolean doubleQuote) {
+        return quoteChannelFilePath(channel.getConfig(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file path to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFilePath(Channel channel) {
+        return quoteChannelFilePath(channel, false);
+    }
+    
+    /**
+     * Colors and formats a Channel file name to be displayed on the console.
+     *
+     * @param channelFileName The Channel file name.
+     * @return The prepared console output.
+     */
+    public static String channelFileName(String channelFileName) {
+        return channelFileName.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(channelFileName) : channel(channelFileName);
+    }
+    
+    /**
+     * Colors and formats a Channel file name to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @return The prepared console output.
+     */
+    public static String channelFileName(File channelFile) {
+        return channelFileName(channelFile.getName());
+    }
+    
+    /**
+     * Colors and formats a Channel file name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String channelFileName(ChannelConfig channelConfig) {
+        return channelFileName(channelConfig.getOutputFolder());
+    }
+    
+    /**
+     * Colors and formats a Channel file name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String channelFileName(Channel channel) {
+        return channelFileName(channel.getConfig());
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelFileName The Channel file name.
+     * @param doubleQuote     Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(String channelFileName, boolean doubleQuote) {
+        return quoted(channelFileName(channelFileName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelFileName The Channel file name.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(String channelFileName) {
+        return quoteChannelFileName(channelFileName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(File channelFile, boolean doubleQuote) {
+        return quoteChannelFileName(channelFile.getName(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelFile The Channel file.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(File channelFile) {
+        return quoteChannelFileName(channelFile, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @param doubleQuote   Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(ChannelConfig channelConfig, boolean doubleQuote) {
+        return quoteChannelFileName(channelConfig.getOutputFolder(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channelConfig The Channel Config.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(ChannelConfig channelConfig) {
+        return quoteChannelFileName(channelConfig, false);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channel     The Channel.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(Channel channel, boolean doubleQuote) {
+        return quoteChannelFileName(channel.getConfig(), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted Channel file name to be displayed on the console.
+     *
+     * @param channel The Channel.
+     * @return The prepared console output.
+     */
+    public static String quoteChannelFileName(Channel channel) {
+        return quoteChannelFileName(channel, false);
+    }
+    
+    /**
+     * Colors and formats an executable name to be displayed on the console.
+     *
+     * @param executableName The executable name.
+     * @return The prepared console output.
+     */
+    public static String exeName(String executableName) {
+        return exe(executableName);
+    }
+    
+    /**
+     * Colors and formats an executable name to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String exeName(ExecutableUtils.Executable executable) {
+        return exeName(executable.getName());
+    }
+    
+    /**
+     * Colors and formats a quoted executable name to be displayed on the console.
+     *
+     * @param executableName The executable name.
+     * @param doubleQuote    Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeName(String executableName, boolean doubleQuote) {
+        return quoted(exeName(executableName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable name to be displayed on the console.
+     *
+     * @param executableName The executable name.
+     * @return The prepared console output.
+     */
+    public static String quoteExeName(String executableName) {
+        return quoteExeName(executableName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted executable name to be displayed on the console.
+     *
+     * @param executable  The executable.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeName(ExecutableUtils.Executable executable, boolean doubleQuote) {
+        return quoted(exeName(executable), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable name to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String quoteExeName(ExecutableUtils.Executable executable) {
+        return quoteExeName(executable, false);
+    }
+    
+    /**
+     * Colors and formats an executable file path to be displayed on the console.
+     *
+     * @param executableFilePath The executable file path.
+     * @return The prepared console output.
+     */
+    public static String exeFilePath(String executableFilePath) {
+        return exe(executableFilePath);
+    }
+    
+    /**
+     * Colors and formats an executable file path to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String exeFilePath(ExecutableUtils.Executable executable) {
+        return exeFilePath(executable.getExe().getAbsolutePath());
+    }
+    
+    /**
+     * Colors and formats a quoted executable file path to be displayed on the console.
+     *
+     * @param executableFilePath The executable file path.
+     * @param doubleQuote        Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFilePath(String executableFilePath, boolean doubleQuote) {
+        return quoted(exeFilePath(executableFilePath), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file path to be displayed on the console.
+     *
+     * @param executableFilePath The executable file path.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFilePath(String executableFilePath) {
+        return quoteExeFilePath(executableFilePath, false);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file path to be displayed on the console.
+     *
+     * @param executable  The executable.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFilePath(ExecutableUtils.Executable executable, boolean doubleQuote) {
+        return quoted(exeFilePath(executable), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file path to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFilePath(ExecutableUtils.Executable executable) {
+        return quoteExeFilePath(executable, false);
+    }
+    
+    /**
+     * Colors and formats an executable file name to be displayed on the console.
+     *
+     * @param executableFileName The executable file name.
+     * @return The prepared console output.
+     */
+    public static String exeFileName(String executableFileName) {
+        return exe(executableFileName);
+    }
+    
+    /**
+     * Colors and formats an executable file name to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String exeFileName(ExecutableUtils.Executable executable) {
+        return exeFileName(executable.getExe().getName());
+    }
+    
+    /**
+     * Colors and formats a quoted executable file name to be displayed on the console.
+     *
+     * @param executableFileName The executable file name.
+     * @param doubleQuote        Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFileName(String executableFileName, boolean doubleQuote) {
+        return quoted(exeFileName(executableFileName), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file name to be displayed on the console.
+     *
+     * @param executableFileName The executable file name.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFileName(String executableFileName) {
+        return quoteExeFileName(executableFileName, false);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file name to be displayed on the console.
+     *
+     * @param executable  The executable.
+     * @param doubleQuote Whether to use double quotes.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFileName(ExecutableUtils.Executable executable, boolean doubleQuote) {
+        return quoted(exeFileName(executable), doubleQuote);
+    }
+    
+    /**
+     * Colors and formats a quoted executable file name to be displayed on the console.
+     *
+     * @param executable The executable.
+     * @return The prepared console output.
+     */
+    public static String quoteExeFileName(ExecutableUtils.Executable executable) {
+        return quoteExeFileName(executable, false);
     }
     
 }

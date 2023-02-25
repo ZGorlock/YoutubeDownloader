@@ -177,7 +177,7 @@ public class Configurator {
                 loadSettingSection(settingsData, "log");
                 
             } catch (Exception e) {
-                logger.error(Color.bad("Could not load settings from: ") + Color.filePath(CONF_FILE), e);
+                logger.error(Color.bad("Could not load settings from: ") + Color.quoteFilePath(CONF_FILE), e);
                 throw new RuntimeException(e);
             }
         }
