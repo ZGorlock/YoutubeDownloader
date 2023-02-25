@@ -395,8 +395,11 @@ public class YoutubeChannelDownloader {
         
         List<String> saved = Channels.getChannels().stream()
                 .filter(e -> e.getConfig().getKey().matches(channel.getConfig().getKey() + "(?:_P\\d+)?"))
-                .flatMap(e -> e.getState().getSaved().stream().map(save -> e.getState().getKeyStore().get(save)))
+                .flatMap(e -> e.getState().getSaved().stream()
+                        .map(save -> e.getState().getKeyStore().get(save)))
+                .filter(Objects::nonNull)
                 .map(KeyStore.KeyStoreEntry::getLocalPath)
+                .filter(Objects::nonNull)
                 .distinct().collect(Collectors.toList());
         
         if (!channel.getState().getErrorFlag().get() && channel.getConfig().isKeepClean()) {
