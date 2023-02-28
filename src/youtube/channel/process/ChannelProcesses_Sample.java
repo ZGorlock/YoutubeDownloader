@@ -647,6 +647,14 @@ public class ChannelProcesses_Sample {
                 break;
             
             
+            //PHONK
+            
+            case "MIX_SNAKE":
+                FilterProcess.notContainsIgnoreCase(channel, videoMap,
+                        "PHONK");
+                break;
+            
+            
             //PSYTRANCE
             
             case "SPEEDSOUND":

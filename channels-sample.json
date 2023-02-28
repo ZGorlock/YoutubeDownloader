@@ -152,6 +152,13 @@
                     "url": "https://www.youtube.com/c/DomainofScience",
                     "playlistId": "UUxqAWLTk1CmBvZFPzeZMd9A",
                     "outputFolder": "~/Domain of Science"
+                  },
+                  {
+                    "key": "LEX_FRIDMAN",
+                    "active": true,
+                    "url": "https://www.youtube.com/@lexfridman",
+                    "playlistId": "UUSHZKyawb77ixDdsGog4iWA",
+                    "outputFolder": "~/Lex Fridman"
                   }
                 ]
               },
@@ -1206,114 +1213,115 @@
                   {
                     "key": "FORENSIC_FILES",
                     "active": false,
-                    "outputFolder": "~/Forensic Files",
+                    "outputFolder": "${V}/Shows/Forensic Files",
+                    "savePlaylist": true,
                     "keepClean": false,
                     "channels": [
                       {
                         "key": "FORENSIC_FILES",
-                        "active": true,
+                        "active": false,
                         "name": "ForensicFiles",
                         "url": "https://www.youtube.com/user/MedicalDetectivesTV",
                         "playlistId": "UUVBTlb6_rQkWY99ZKi2oBMw",
-                        "keepClean": true
+                        "outputFolder": "~/All"
                       },
                       {
                         "key": "FORENSIC_FILES_S01",
                         "active": true,
                         "name": "ForensicFilesS01",
                         "playlistId": "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_",
-                        "playlistFile": "~ - Season 1.m3u"
+                        "outputFolder": "~/Season 1"
                       },
                       {
                         "key": "FORENSIC_FILES_S02",
                         "active": true,
                         "name": "ForensicFilesS02",
                         "playlistId": "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt",
-                        "playlistFile": "~ - Season 2.m3u"
+                        "outputFolder": "~/Season 2"
                       },
                       {
                         "key": "FORENSIC_FILES_S03",
                         "active": true,
                         "name": "ForensicFilesS03",
                         "playlistId": "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7",
-                        "playlistFile": "~ - Season 3.m3u"
+                        "outputFolder": "~/Season 3"
                       },
                       {
                         "key": "FORENSIC_FILES_S04",
                         "active": true,
                         "name": "ForensicFilesS04",
                         "playlistId": "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU",
-                        "playlistFile": "~ - Season 4.m3u"
+                        "outputFolder": "~/Season 4"
                       },
                       {
                         "key": "FORENSIC_FILES_S05",
                         "active": true,
                         "name": "ForensicFilesS05",
                         "playlistId": "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T",
-                        "playlistFile": "~ - Season 5.m3u"
+                        "outputFolder": "~/Season 5"
                       },
                       {
                         "key": "FORENSIC_FILES_S06",
                         "active": true,
                         "name": "ForensicFilesS06",
                         "playlistId": "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3",
-                        "playlistFile": "~ - Season 6.m3u"
+                        "outputFolder": "~/Season 6"
                       },
                       {
                         "key": "FORENSIC_FILES_S07",
                         "active": true,
                         "name": "ForensicFilesS07",
                         "playlistId": "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr",
-                        "playlistFile": "~ - Season 7.m3u"
+                        "outputFolder": "~/Season 7"
                       },
                       {
                         "key": "FORENSIC_FILES_S08",
                         "active": true,
                         "name": "ForensicFilesS08",
                         "playlistId": "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx",
-                        "playlistFile": "~ - Season 8.m3u"
+                        "outputFolder": "~/Season 8"
                       },
                       {
                         "key": "FORENSIC_FILES_S09",
                         "active": true,
                         "name": "ForensicFilesS09",
                         "playlistId": "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1",
-                        "playlistFile": "~ - Season 9.m3u"
+                        "outputFolder": "~/Season 9"
                       },
                       {
                         "key": "FORENSIC_FILES_S10",
                         "active": true,
                         "name": "ForensicFilesS10",
                         "playlistId": "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y",
-                        "playlistFile": "~ - Season 10.m3u"
+                        "outputFolder": "~/Season 10"
                       },
                       {
                         "key": "FORENSIC_FILES_S11",
                         "active": true,
                         "name": "ForensicFilesS11",
                         "playlistId": "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd",
-                        "playlistFile": "~ - Season 11.m3u"
+                        "outputFolder": "~/Season 11"
                       },
                       {
                         "key": "FORENSIC_FILES_S12",
                         "active": true,
                         "name": "ForensicFilesS12",
                         "playlistId": "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN",
-                        "playlistFile": "~ - Season 12.m3u"
+                        "outputFolder": "~/Season 12"
                       },
                       {
                         "key": "FORENSIC_FILES_S13",
                         "active": true,
                         "name": "ForensicFilesS13",
                         "playlistId": "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_",
-                        "playlistFile": "~ - Season 13.m3u"
+                        "outputFolder": "~/Season 13"
                       },
                       {
                         "key": "FORENSIC_FILES_S14",
                         "active": true,
                         "name": "ForensicFilesS14",
                         "playlistId": "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k",
-                        "playlistFile": "~ - Season 14.m3u"
+                        "outputFolder": "~/Season 14"
                       }
                     ]
                   },
@@ -1386,6 +1394,48 @@
                     "url": "https://www.youtube.com/c/rivermonsters",
                     "playlistId": "UUomwL29zYKujb1JhkB0EcGA",
                     "outputFolder": "~/River Monsters"
+                  },
+                  {
+                    "key": "WALKING_WITH_DINOSAURS",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLudu8CfJSv7ohOLqrCeFKgUPCyu5mi7QP",
+                    "playlistId": "PLudu8CfJSv7ohOLqrCeFKgUPCyu5mi7QP",
+                    "outputFolder": "~/Walking with Dinosaurs"
+                  }
+                ]
+              },
+              {
+                "key": "CONSPIRACY",
+                "active": true,
+                "outputFolder": "~/Conspiracy",
+                "channels": [
+                  {
+                    "key": "WENDIGOON",
+                    "active": true,
+                    "url": "https://www.youtube.com/@Wendigoon",
+                    "playlistId": "UU3cpN6gcJQqcCM6mxRUo_dA",
+                    "outputFolder": "~/Wendigoon"
+                  },
+                  {
+                    "key": "SOUP_EMPORIUM",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/SoupEmporiums-Emporium-Of-Regrettable-Choices",
+                    "playlistId": "UU60sV1b2e_EQRDnueRxgiIQ",
+                    "outputFolder": "~/Soup Emporium"
+                  },
+                  {
+                    "key": "DOWN_THE_RABBIT_HOLE",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
+                    "playlistId": "PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
+                    "outputFolder": "~/Down The Rabbit Hole"
+                  },
+                  {
+                    "key": "PHILON",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/Philion",
+                    "playlistId": "UUgKJPhVzv8w0VaZFnS_VmaA",
+                    "outputFolder": "~/Philon"
                   }
                 ]
               },
@@ -1968,27 +2018,6 @@
                         "playlistFile": "~ - Game Changers.m3u"
                       }
                     ]
-                  },
-                  {
-                    "key": "SOUP_EMPORIUM",
-                    "active": true,
-                    "url": "https://www.youtube.com/c/SoupEmporiums-Emporium-Of-Regrettable-Choices",
-                    "playlistId": "UU60sV1b2e_EQRDnueRxgiIQ",
-                    "outputFolder": "~/Soup Emporium"
-                  },
-                  {
-                    "key": "DOWN_THE_RABBIT_HOLE",
-                    "active": true,
-                    "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
-                    "playlistId": "PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
-                    "outputFolder": "~/Down The Rabbit Hole"
-                  },
-                  {
-                    "key": "PHILON",
-                    "active": true,
-                    "url": "https://www.youtube.com/c/Philion",
-                    "playlistId": "UUgKJPhVzv8w0VaZFnS_VmaA",
-                    "outputFolder": "~/Philon"
                   }
                 ]
               }
@@ -2637,11 +2666,19 @@
                         "outputFolder": "~/Best Cube"
                       },
                       {
+                        "key": "BEST_CUBE_2_OLD",
+                        "active": false,
+                        "name": "BestCube2Old",
+                        "url": "https://www.youtube.com/channel/UC0s-sfNvOloiNBkCBYlfmUw",
+                        "playlistId": "UU0s-sfNvOloiNBkCBYlfmUw",
+                        "outputFolder": "~/Best Cube 2 - Old"
+                      },
+                      {
                         "key": "BEST_CUBE_2",
                         "active": true,
                         "name": "BestCube2",
-                        "url": "https://www.youtube.com/channel/UC0s-sfNvOloiNBkCBYlfmUw",
-                        "playlistId": "UU0s-sfNvOloiNBkCBYlfmUw",
+                        "url": "https://www.youtube.com/@bestcube2.0compilation",
+                        "playlistId": "UCFME_plYkldL0IN7QwkLGmg",
                         "outputFolder": "~/Best Cube 2"
                       }
                     ]
@@ -3227,11 +3264,26 @@
                 "outputFolder": "~/Phonk",
                 "channels": [
                   {
+                    "key": "PHONK_FAVORITES",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlkFoIpUgwiL617Wd7ujCuj",
+                    "playlistId": "PLjSkQXDlBqvlkFoIpUgwiL617Wd7ujCuj",
+                    "outputFolder": "~/Youtube Phonk Favorites",
+                    "reversePlaylist": false
+                  },
+                  {
                     "key": "FULL_CHILL_MUSIC",
                     "active": true,
                     "url": "https://www.youtube.com/@fullchillmusic",
                     "playlistId": "UUhDLK20w8Z3VFWIotsKCpTw",
                     "outputFolder": "~/Full Chill Music"
+                  },
+                  {
+                    "key": "MIX_SNAKE",
+                    "active": true,
+                    "url": "https://www.youtube.com/@mixsnake2496",
+                    "playlistId": "UUqcyx9RQuv8etAGErJKmsvg",
+                    "outputFolder": "~/MIXsnake"
                   }
                 ]
               },
