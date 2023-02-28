@@ -148,7 +148,7 @@ public final class LogUtils {
     /**
      * The hard indentation string.
      */
-    public static final String INDENT_HARD = Color.base(" ".repeat(INDENT_WIDTH));
+    public static final String INDENT_HARD = Color.log(" ".repeat(INDENT_WIDTH));
     
     
     //Static Fields

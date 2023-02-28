@@ -9,7 +9,6 @@ package youtube.state.log;
 
 import java.lang.reflect.Field;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -17,6 +16,7 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.LogUtils;
 
 /**
  * Encodes file logging.
@@ -37,11 +37,6 @@ public class FileLogEncoder extends PatternLayoutEncoder {
      * The default log pattern.
      */
     public static final String DEFAULT_PATTERN = "%d{HH:mm:ss.SSS} %-5level %32logger{32} - %message%n";
-    
-    /**
-     * A regex pattern matching one or more leading indentations.
-     */
-    public static final Pattern LEADING_INDENT_PATTERN = Pattern.compile("^(?:\u001B\\[\\d+m +\u001B\\[0m)+");
     
     
     //Fields
@@ -78,8 +73,8 @@ public class FileLogEncoder extends PatternLayoutEncoder {
             field.setAccessible(true);
             field.set(event, Optional.ofNullable(event)
                     .map(ILoggingEvent::getFormattedMessage)
-                    .map(e -> e.replaceAll(LEADING_INDENT_PATTERN.pattern(), ""))
-                    .map(e -> e.replace(" ", " "))
+                    .map(e -> e.replace(LogUtils.INDENT, ""))
+                    .map(e -> e.replace(LogUtils.INDENT_HARD, LogUtils.INDENT))
                     .map(StringUtility::removeConsoleEscapeCharacters)
                     .orElse(""));
         } catch (NoSuchFieldException | IllegalAccessException ignored) {
