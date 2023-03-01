@@ -166,7 +166,7 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      */
     private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) {
-        final boolean ytDlp = (ExecutableUtils.executable == ExecutableUtils.Executable.YT_DLP);
+        final boolean newExe = !ExecutableUtils.executable.isDeprecated();
         final boolean asMp3 = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
@@ -179,8 +179,8 @@ public final class DownloadUtils {
                 Color.log("--geo-bypass --rm-cache-dir " +
                         (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
                 Color.log((asMp3 ? ("--extract-audio --audio-format " + Utils.DEFAULT_AUDIO_FORMAT + " ") :
-                           ((ytDlp && !Configurator.Config.preMerged) ? "" : "--format best ")) +
-                        (ytDlp ? "-f b " : "")) +
+                           ((newExe && !Configurator.Config.preMerged) ? "" : "--format best ")) +
+                        (newExe ? "-f b " : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
                 Color.link(video.getInfo().getUrl());
         

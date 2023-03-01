@@ -9,6 +9,8 @@ package youtube.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,6 +44,11 @@ public final class ExecutableUtils {
      */
     public static final File EXECUTABLE_DIR = PathUtils.WORKING_DIR;
     
+    /**
+     * The default Youtube Downloader executable.
+     */
+    public static final Executable DEFAULT_EXECUTABLE = Executable.YT_DLP;
+    
     
     //Enums
     
@@ -52,7 +59,7 @@ public final class ExecutableUtils {
         
         //Values
         
-        YOUTUBE_DL("youtube-dl", "https://www.youtube-dl.org/"),
+        YOUTUBE_DL("youtube-dl", "https://www.youtube-dl.org/", true),
         YT_DLP("yt-dlp", "https://github.com/yt-dlp/yt-dlp/");
         
         
@@ -78,6 +85,11 @@ public final class ExecutableUtils {
          */
         private final String website;
         
+        /**
+         * A flag indicating whether the Executable is deprecated.
+         */
+        private final boolean deprecated;
+        
         
         //Constructors
         
@@ -86,13 +98,25 @@ public final class ExecutableUtils {
          *
          * @param executableName The name of the Executable.
          * @param website        The website of the Executable.
+         * @param deprecated     Whether the Executable is deprecated.
          */
-        Executable(String executableName, String website) {
+        Executable(String executableName, String website, boolean deprecated) {
             this.name = executableName;
             this.exe = new File(EXECUTABLE_DIR, (name + (OperatingSystem.isWindows() ? ('.' + Utils.EXECUTABLE_FILE_FORMAT) : "")));
             this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(exe.getAbsolutePath()) :
                         ((OperatingSystem.isWindows() ? "" : ('.' + PathUtils.SEPARATOR)) + exe.getName());
             this.website = website;
+            this.deprecated = deprecated;
+        }
+        
+        /**
+         * Constructs an Executable.
+         *
+         * @param executableName The name of the Executable.
+         * @param website        The website of the Executable.
+         */
+        Executable(String executableName, String website) {
+            this(executableName, website, false);
         }
         
         
@@ -134,6 +158,32 @@ public final class ExecutableUtils {
             return website;
         }
         
+        /**
+         * Returns whether the Executable is deprecated.
+         *
+         * @return Whether the Executable is deprecated.
+         */
+        public boolean isDeprecated() {
+            return deprecated;
+        }
+        
+        
+        //Static Methods
+        
+        /**
+         * Returns the Executable with a specific name.
+         *
+         * @param name The name of the Executable.
+         * @return The optional containing the Executable with the specified name, if it exists.
+         */
+        private static Optional<Executable> ofName(String name) {
+            return Optional.ofNullable(name)
+                    .map(searchName -> searchName.replaceAll("[\\W_]", "-"))
+                    .flatMap(searchName -> Arrays.stream(values())
+                            .filter(executable -> executable.getName().equalsIgnoreCase(searchName))
+                            .findFirst());
+        }
+        
     }
     
     
@@ -142,8 +192,13 @@ public final class ExecutableUtils {
     /**
      * The Youtube Downloader executable to use.
      */
-    public static final Executable executable = Executable.valueOf(
-            Configurator.getSetting("executable", Executable.YT_DLP.getName()).toUpperCase().replace("-", "_"));
+    public static final Executable executable = Executable.ofName(
+                    Configurator.getSetting("executable", DEFAULT_EXECUTABLE.getName()))
+            .orElseGet(() -> {
+                logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName((String) Configurator.getSetting("executable")) + Color.bad(" is not valid"));
+                logger.warn(Color.bad("Using to the default executable: ") + Color.quoteExeName(DEFAULT_EXECUTABLE) + Color.bad(" instead"));
+                return DEFAULT_EXECUTABLE;
+            });
     
     
     //Static Methods
@@ -208,13 +263,24 @@ public final class ExecutableUtils {
     }
     
     /**
+     * Auto updates to the latest executable version.
+     *
+     * @return The command response from the auto update attempt, or null if an auto update can not be performed.
+     */
+    private static String autoUpdateExe() {
+        return (!executable.getExe().exists() || executable.isDeprecated()) ? null :
+               CmdLine.executeCmd(executable.getCall() + " --update");
+    }
+    
+    /**
      * Returns the current executable version.
      *
      * @return The current executable version, or an empty string if there was an error.
      */
     private static String getCurrentExecutableVersion() {
-        return executable.getExe().exists() ? CmdLine.executeCmd(executable.getCall() + " --version")
-                .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
+        return !executable.getExe().exists() ? "" :
+               CmdLine.executeCmd(executable.getCall() + " --version")
+                       .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim();
     }
     
     /**
