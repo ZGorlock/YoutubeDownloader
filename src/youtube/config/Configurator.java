@@ -9,8 +9,11 @@ package youtube.config;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -243,6 +246,34 @@ public class Configurator {
      */
     public static <T> T getSetting(String key) {
         return getSetting(key, null);
+    }
+    
+    /**
+     * Fetches an active configuration setting.
+     *
+     * @param keyOptions The list of options for the key of the configuration setting, in order of precedence.
+     * @param def        The default value to return if the configuration setting does not exist.
+     * @param <T>        The type of the setting.
+     * @return The value of the configuration setting, or the default value if it does not exist.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getSetting(List<String> keyOptions, T def) {
+        return (T) Optional.ofNullable(keyOptions)
+                .stream().flatMap(Collection::stream)
+                .map(Configurator::getSetting)
+                .filter(Objects::nonNull)
+                .findFirst().orElse(def);
+    }
+    
+    /**
+     * Fetches an active configuration setting.
+     *
+     * @param keyOptions The list of options for the key of the configuration setting, in order of precedence.
+     * @param <T>        The type of the setting.
+     * @return The value of the configuration setting, or null if it does not exist.
+     */
+    public static <T> T getSetting(List<String> keyOptions) {
+        return getSetting(keyOptions, null);
     }
     
     /**
