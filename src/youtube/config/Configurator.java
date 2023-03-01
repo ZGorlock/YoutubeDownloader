@@ -8,9 +8,11 @@
 package youtube.config;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -52,19 +54,131 @@ public class Configurator {
         
         //Values
         
-        YOUTUBE_CHANNEL_DOWNLOADER,
-        YOUTUBE_DOWNLOADER;
+        YOUTUBE_CHANNEL_DOWNLOADER(ConfigSection.YOUTUBE_CHANNEL_DOWNLOADER),
+        YOUTUBE_DOWNLOADER(ConfigSection.YOUTUBE_DOWNLOADER);
+        
+        
+        //Fields
+        
+        /**
+         * The root Config Section for the Program.
+         */
+        private final ConfigSection configRoot;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs a Program.
+         *
+         * @param configRoot The root Config Section for the Program.
+         */
+        Program(ConfigSection configRoot) {
+            this.configRoot = configRoot;
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the root Config Section for the Program.
+         *
+         * @return The root Config Section for the Program.
+         */
+        private ConfigSection getConfigRoot() {
+            return configRoot;
+        }
+        
+    }
+    
+    /**
+     * An enumeration of defined Config Sections in the configuration file.
+     */
+    public enum ConfigSection {
+        
+        //Values
+        
+        YOUTUBE_CHANNEL_DOWNLOADER("YoutubeChannelDownloader", true),
+        YOUTUBE_DOWNLOADER("YoutubeDownloader", true),
+        SPONSOR_BLOCK("sponsorBlock", false),
+        COLOR("color", false),
+        LOG("log", false);
+        
+        
+        //Fields
+        
+        /**
+         * The key of the Config Section.
+         */
+        public final String key;
+        
+        /**
+         * A flag indicating whether the Config Section is a root Section.
+         */
+        public final boolean root;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs a Config Section.
+         *
+         * @param key  The key of the Config Section.
+         * @param root Whether the Config Section is a root Section.
+         */
+        ConfigSection(String key, boolean root) {
+            this.key = key;
+            this.root = root;
+        }
         
         
         //Methods
         
         /**
-         * Returns the title of the Program.
+         * Returns the key of a configuration setting that is a member of the Config Section.
          *
-         * @return The title of the Program.
+         * @param subKey The sub key of the configuration setting.
+         * @return The key of the configuration setting.
          */
-        public String getTitle() {
-            return Utils.formatUnderscoredString(name()).replace(" ", "");
+        public String getSettingKey(String subKey) {
+            return getKey() + '.' + subKey;
+        }
+        
+        
+        //Getters
+        
+        /**
+         * Returns the key of the Config Section.
+         *
+         * @return The key of the Config Section.
+         */
+        public String getKey() {
+            return key;
+        }
+        
+        /**
+         * Returns whether the Config Section is a root Section.
+         *
+         * @return Whether the Config Section is a root Section.
+         */
+        public boolean isRoot() {
+            return root;
+        }
+        
+        
+        //Static Methods
+        
+        /**
+         * Determines whether the key of a Config Section represents a root Section or not.
+         *
+         * @param key The key of the Config Section.
+         * @return Whether the key represents a root Section.
+         */
+        public static boolean isRootSection(String key) {
+            return Arrays.stream(values())
+                    .filter(section -> section.getKey().equals(key))
+                    .findFirst().map(ConfigSection::isRoot)
+                    .orElse(false);
         }
         
     }
@@ -83,6 +197,11 @@ public class Configurator {
     private static final Map<String, Map<String, Object>> settings = new HashMap<>();
     
     /**
+     * The active settings.
+     */
+    public static Map<String, Object> activeSettings = new TreeMap<>(String::compareTo);
+    
+    /**
      * A flag indicating whether the configuration settings have been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
@@ -91,70 +210,121 @@ public class Configurator {
     //Static Methods
     
     /**
-     * Fetches the configuration settings of a config section.
+     * Fetches the active configuration settings.
      *
-     * @param section The config section.
-     * @return The configuration settings.
+     * @return The active configuration settings.
      */
-    public static Map<String, Object> getSettings(String section) {
+    public static Map<String, Object> getSettings() {
+        return Optional.ofNullable(activeSettings)
+                .orElseGet(MapUtility::emptyMap);
+    }
+    
+    /**
+     * Fetches an active configuration setting.
+     *
+     * @param key The key of the configuration setting.
+     * @param def The default value to return if the configuration setting does not exist.
+     * @param <T> The type of the setting.
+     * @return The value of the configuration setting, or the default value if it does not exist.
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T getSetting(String key, T def) {
+        return (T) Optional.ofNullable(getSettings())
+                .map(e -> e.getOrDefault(key, def))
+                .orElse(null);
+    }
+    
+    /**
+     * Fetches an active configuration setting.
+     *
+     * @param key The key of the configuration setting.
+     * @param <T> The type of the setting.
+     * @return The value of the configuration setting, or null if it does not exist.
+     */
+    public static <T> T getSetting(String key) {
+        return getSetting(key, null);
+    }
+    
+    /**
+     * Returns the configuration settings defined in a section of the configuration file.
+     *
+     * @param section The key of the Config Section.
+     * @return The configuration settings defined in the Config Section.
+     */
+    public static Map<String, Object> getDefinedSettings(String section) {
         return Optional.ofNullable(section)
                 .map(settings::get).map(MapUtility::clone)
                 .orElseGet(MapUtility::emptyMap);
     }
     
     /**
-     * Fetches the configuration settings of the active program.
+     * Returns the configuration settings defined in a section of the configuration file.
      *
-     * @return The configuration settings.
+     * @param section The Config Section.
+     * @return The configuration settings defined in the Config Section.
      */
-    public static Map<String, Object> getSettings() {
-        return Optional.ofNullable(activeProgram)
-                .map(Program::getTitle)
-                .map(Configurator::getSettings)
+    public static Map<String, Object> getDefinedSettings(ConfigSection section) {
+        return Optional.ofNullable(section)
+                .map(ConfigSection::getKey)
+                .map(Configurator::getDefinedSettings)
                 .orElseGet(MapUtility::emptyMap);
     }
     
     /**
-     * Fetches a configuration setting of a config section.
+     * Returns a configuration setting defined in the configuration file.
      *
-     * @param section The config section.
-     * @param name    The name of the configuration setting.
+     * @param section The key of the Config Section.
+     * @param subKey  The sub key of the configuration setting.
      * @param def     The default value to return if the configuration setting does not exist.
      * @param <T>     The type of the setting.
-     * @return The value of the configuration setting, or the default value if it does not exist.
+     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getSetting(String section, String name, T def) {
+    public static <T> T getDefinedSetting(String section, String subKey, T def) {
         return (T) Optional.of(section)
-                .map(Configurator::getSettings)
-                .map(e -> e.getOrDefault(name, def))
+                .map(Configurator::getDefinedSettings)
+                .map(e -> e.getOrDefault(subKey, def))
                 .orElse(null);
     }
     
     /**
-     * Fetches a configuration setting of the active program.
+     * Returns a configuration setting defined in the configuration file.
      *
-     * @param name The name of the configuration setting.
-     * @param def  The default value to return if the configuration setting does not exist.
-     * @param <T>  The type of the setting.
-     * @return The value of the configuration setting, or the default value if it does not exist.
+     * @param section The key of the Config Section.
+     * @param subKey  The sub key of the configuration setting.
+     * @param <T>     The type of the setting.
+     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
      */
-    public static <T> T getSetting(String name, T def) {
-        return Optional.ofNullable(activeProgram)
-                .map(Program::getTitle)
-                .map(e -> getSetting(e, name, def))
+    public static <T> T getDefinedSetting(String section, String subKey) {
+        return getDefinedSetting(section, subKey, null);
+    }
+    
+    /**
+     * Returns a configuration setting defined in the configuration file.
+     *
+     * @param section The Config Section.
+     * @param subKey  The sub key of the configuration setting.
+     * @param def     The default value to return if the configuration setting does not exist.
+     * @param <T>     The type of the setting.
+     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
+     */
+    public static <T> T getDefinedSetting(ConfigSection section, String subKey, T def) {
+        return Optional.of(section)
+                .map(ConfigSection::getKey)
+                .map(sectionKey -> getDefinedSetting(sectionKey, subKey, def))
                 .orElse(null);
     }
     
     /**
-     * Fetches a configuration setting of the active program.
+     * Returns a configuration setting defined in the configuration file.
      *
-     * @param name The name of the configuration setting.
-     * @param <T>  The type of the setting.
-     * @return The value of the configuration setting, or null if it does not exist.
+     * @param section The Config Section.
+     * @param subKey  The sub key of the configuration setting.
+     * @param <T>     The type of the setting.
+     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
      */
-    public static <T> T getSetting(String name) {
-        return getSetting(name, null);
+    public static <T> T getDefinedSetting(ConfigSection section, String subKey) {
+        return getDefinedSetting(section, subKey, null);
     }
     
     /**
@@ -170,11 +340,14 @@ public class Configurator {
             
             try {
                 final Map<String, Object> settingsData = (Map<String, Object>) new JSONParser().parse(readConfiguration());
+                settingsData.keySet().forEach(section ->
+                        loadSettingSection(settingsData, section));
                 
-                loadSettingSection(settingsData, activeProgram.getTitle());
-                loadSettingSection(settingsData, "sponsorBlock");
-                loadSettingSection(settingsData, "color");
-                loadSettingSection(settingsData, "log");
+                activeSettings.putAll(getDefinedSettings(activeProgram.getConfigRoot()));
+                settings.entrySet().stream()
+                        .filter(section -> !ConfigSection.isRootSection(section.getKey()))
+                        .forEach(section -> section.getValue().forEach((settingKey, settingValue) ->
+                                activeSettings.putIfAbsent((section.getKey() + '.' + settingKey), settingValue)));
                 
             } catch (Exception e) {
                 logger.error(Color.bad("Could not load settings from: ") + Color.quoteFilePath(CONF_FILE), e);
@@ -229,7 +402,7 @@ public class Configurator {
             }
             loadSettingSection(((Map<String, Object>) settingEntryData.getValue()), section, (prefix + settingEntryData.getKey() + '.'));
         } else {
-            settings.putIfAbsent(section, new HashMap<>());
+            settings.putIfAbsent(section, new TreeMap<>(String::compareTo));
             settings.get(section).put((prefix + settingEntryData.getKey()), settingEntryData.getValue());
         }
         
@@ -450,30 +623,30 @@ public class Configurator {
          * A flag indicating whether to print the executable version at the beginning of the run or not.
          */
         public static final boolean printExeVersion = Configurator.getSetting("output.printExeVersion",
-                Configurator.getSetting("log", "printExeVersion", DEFAULT_PRINT_EXE_VERSION));
+                Configurator.getSetting("log.printExeVersion", DEFAULT_PRINT_EXE_VERSION));
         
         /**
          * A flag indicating whether to log the download command or not.
          */
         public static final boolean logCommand = Configurator.getSetting("flag.logCommand",
-                Configurator.getSetting("log", "logCommand", DEFAULT_LOG_COMMAND));
+                Configurator.getSetting("log.logCommand", DEFAULT_LOG_COMMAND));
         
         /**
          * A flag indicating whether to log the download work or not.
          */
         public static final boolean logWork = Configurator.getSetting("flag.logWork",
-                Configurator.getSetting("log", "logWork", DEFAULT_LOG_WORK));
+                Configurator.getSetting("log.logWork", DEFAULT_LOG_WORK));
         
         /**
          * A flag indicating whether to print a progress bar for downloads or not.
          */
         public static final boolean showProgressBar = Configurator.getSetting("flag.showProgressBar",
-                Configurator.getSetting("log", "showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
+                Configurator.getSetting("log.showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
         
         /**
          * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
          */
-        public static final Long daysToKeepLogs = Configurator.getSetting("log", "daysToKeepLogs", DEFAULT_DAYS_TO_KEEP_LOGS);
+        public static final Long daysToKeepLogs = Configurator.getSetting("log.daysToKeepLogs", DEFAULT_DAYS_TO_KEEP_LOGS);
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
