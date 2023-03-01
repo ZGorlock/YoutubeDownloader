@@ -160,67 +160,67 @@ public class Color {
     /**
      * The color to use for "base" text.
      */
-    public static final Console.ConsoleEffect BASE = colorSettingLoader.apply("base", DEFAULT_COLOR_BASE);
+    public static final Console.ConsoleEffect base = colorSettingLoader.apply("base", DEFAULT_COLOR_BASE);
     
     /**
      * The color to use for "good" text.
      */
-    public static final Console.ConsoleEffect GOOD = colorSettingLoader.apply("good", DEFAULT_COLOR_GOOD);
+    public static final Console.ConsoleEffect good = colorSettingLoader.apply("good", DEFAULT_COLOR_GOOD);
     
     /**
      * The color to use for "bad" text.
      */
-    public static final Console.ConsoleEffect BAD = colorSettingLoader.apply("bad", DEFAULT_COLOR_BAD);
+    public static final Console.ConsoleEffect bad = colorSettingLoader.apply("bad", DEFAULT_COLOR_BAD);
     
     /**
      * The color to use for "log" text.
      */
-    public static final Console.ConsoleEffect LOG = colorSettingLoader.apply("log", DEFAULT_COLOR_LOG);
+    public static final Console.ConsoleEffect log = colorSettingLoader.apply("log", DEFAULT_COLOR_LOG);
     
     /**
      * The color to use for "channel" text.
      */
-    public static final Console.ConsoleEffect CHANNEL = colorSettingLoader.apply("channel", DEFAULT_COLOR_CHANNEL);
+    public static final Console.ConsoleEffect channel = colorSettingLoader.apply("channel", DEFAULT_COLOR_CHANNEL);
     
     /**
      * The color to use for "video" text.
      */
-    public static final Console.ConsoleEffect VIDEO = colorSettingLoader.apply("video", DEFAULT_COLOR_VIDEO);
+    public static final Console.ConsoleEffect video = colorSettingLoader.apply("video", DEFAULT_COLOR_VIDEO);
     
     /**
      * The color to use for "number" text.
      */
-    public static final Console.ConsoleEffect NUMBER = colorSettingLoader.apply("number", DEFAULT_COLOR_NUMBER);
+    public static final Console.ConsoleEffect number = colorSettingLoader.apply("number", DEFAULT_COLOR_NUMBER);
     
     /**
      * The color to use for "file" text.
      */
-    public static final Console.ConsoleEffect FILE = colorSettingLoader.apply("file", DEFAULT_COLOR_FILE);
+    public static final Console.ConsoleEffect file = colorSettingLoader.apply("file", DEFAULT_COLOR_FILE);
     
     /**
      * The color to use for "exe" text.
      */
-    public static final Console.ConsoleEffect EXE = colorSettingLoader.apply("exe", DEFAULT_COLOR_EXE);
+    public static final Console.ConsoleEffect exe = colorSettingLoader.apply("exe", DEFAULT_COLOR_EXE);
     
     /**
      * The color to use for "link" text.
      */
-    public static final Console.ConsoleEffect LINK = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
+    public static final Console.ConsoleEffect link = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
     
     /**
      * The color to use for Progress Bar "base" text.
      */
-    public static final Console.ConsoleEffect PROGRESS_BAR_BASE = colorSettingLoader.apply("progressBar.base", DEFAULT_COLOR_PROGRESS_BAR_BASE);
+    public static final Console.ConsoleEffect progressBarBase = colorSettingLoader.apply("progressBar.base", DEFAULT_COLOR_PROGRESS_BAR_BASE);
     
     /**
      * The color to use for Progress Bar "good" text.
      */
-    public static final Console.ConsoleEffect PROGRESS_BAR_GOOD = colorSettingLoader.apply("progressBar.good", DEFAULT_COLOR_PROGRESS_BAR_GOOD);
+    public static final Console.ConsoleEffect progressBarGood = colorSettingLoader.apply("progressBar.good", DEFAULT_COLOR_PROGRESS_BAR_GOOD);
     
     /**
      * The color to use for Progress Bar "bad" text.
      */
-    public static final Console.ConsoleEffect PROGRESS_BAR_BAD = colorSettingLoader.apply("progressBar.bad", DEFAULT_COLOR_PROGRESS_BAR_BAD);
+    public static final Console.ConsoleEffect progressBarBad = colorSettingLoader.apply("progressBar.bad", DEFAULT_COLOR_PROGRESS_BAR_BAD);
     
     
     //Static Methods
@@ -244,7 +244,7 @@ public class Color {
      * @return The colored output.
      */
     public static String base(Object o) {
-        return apply(BASE, o);
+        return apply(base, o);
     }
     
     /**
@@ -254,7 +254,7 @@ public class Color {
      * @return The colored output.
      */
     public static String good(Object o) {
-        return apply(GOOD, o);
+        return apply(good, o);
     }
     
     /**
@@ -264,7 +264,7 @@ public class Color {
      * @return The colored output.
      */
     public static String bad(Object o) {
-        return apply(BAD, o);
+        return apply(bad, o);
     }
     
     /**
@@ -274,7 +274,7 @@ public class Color {
      * @return The colored output.
      */
     public static String log(Object o) {
-        return apply(LOG, o);
+        return apply(log, o);
     }
     
     /**
@@ -284,7 +284,7 @@ public class Color {
      * @return The colored output.
      */
     public static String channel(Object o) {
-        return apply(CHANNEL, o);
+        return apply(channel, o);
     }
     
     /**
@@ -294,7 +294,7 @@ public class Color {
      * @return The colored output.
      */
     public static String video(Object o) {
-        return apply(VIDEO, o);
+        return apply(video, o);
     }
     
     /**
@@ -304,7 +304,7 @@ public class Color {
      * @return The colored output.
      */
     public static String number(Object o) {
-        return apply(NUMBER, o);
+        return apply(number, o);
     }
     
     /**
@@ -314,7 +314,7 @@ public class Color {
      * @return The colored output.
      */
     public static String file(Object o) {
-        return apply(FILE, o);
+        return apply(file, o);
     }
     
     /**
@@ -324,7 +324,7 @@ public class Color {
      * @return The colored output.
      */
     public static String exe(Object o) {
-        return apply(EXE, o);
+        return apply(exe, o);
     }
     
     /**
@@ -334,7 +334,7 @@ public class Color {
      * @return The colored output.
      */
     public static String link(Object o) {
-        return apply(LINK, o);
+        return apply(link, o);
     }
     
     /**

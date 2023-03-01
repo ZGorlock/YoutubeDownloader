@@ -419,7 +419,7 @@ public abstract class ChannelEntry extends ConfigData {
         Optional.ofNullable(key)
                 .map(key -> (key + (isGroup() ? ":" : ""))).map(Utils::formatUnderscoredString)
                 .ifPresent(key -> {
-                    final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.LINK : Color.CHANNEL) : (active ? Color.LOG : Color.BAD);
+                    final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.link : Color.channel) : (active ? Color.log : Color.bad);
                     logger.debug(StringUtility.repeatString(LogUtils.INDENT_HARD, indent) + Color.apply(color, key));
                 });
     }

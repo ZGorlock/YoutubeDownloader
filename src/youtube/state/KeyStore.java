@@ -712,9 +712,6 @@ public class KeyStore {
             this.channelName = channelName;
             this.videoId = videoId;
             this.localPath = Optional.ofNullable(path).map(PathUtils::localPath).orElse(null);
-            if (localPath == null) {
-                int g = 4;
-            }
             this.localFile = Optional.ofNullable(localPath).map(File::new).map(FileUtils::getCanonicalFile).orElse(null);
         }
         

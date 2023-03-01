@@ -44,6 +44,54 @@ public final class LogUtils {
     private static final Logger logger = LoggerFactory.getLogger(LogUtils.class);
     
     
+    //Constants
+    
+    /**
+     * The logback configuration file.
+     */
+    public static final File LOGBACK_CONFIG_FILE = new File(Project.RESOURCES_DIR, ("logback" + '.' + Utils.XML_FILE_FORMAT));
+    
+    /**
+     * The log directory.
+     */
+    public static final File LOG_DIR = Project.LOG_DIR;
+    
+    /**
+     * The stamp format used for timestamps.
+     */
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    /**
+     * The stamp format used for datestamps.
+     */
+    public static final String DATESTAMP_FORMAT = "yyyy-MM-dd";
+    
+    /**
+     * The newline string.
+     */
+    public static final String NEWLINE = Color.base("");
+    
+    /**
+     * The width of a divider.
+     */
+    public static final int DIVIDER_WIDTH = 200;
+    
+    /**
+     * The width of an indentation.
+     */
+    public static final int INDENT_WIDTH = 5;
+    
+    /**
+     * The indentation string.
+     */
+    public static final String INDENT = Color.base(" ".repeat(INDENT_WIDTH));
+    
+    /**
+     * The hard indentation string.
+     */
+    public static final String INDENT_HARD = Color.log(" ".repeat(INDENT_WIDTH));
+    
+    
     //Enums
     
     /**
@@ -101,54 +149,6 @@ public final class LogUtils {
         }
         
     }
-    
-    
-    //Constants
-    
-    /**
-     * The logback configuration file.
-     */
-    public static final File LOGBACK_CONFIG_FILE = new File(Project.RESOURCES_DIR, ("logback" + '.' + Utils.XML_FILE_FORMAT));
-    
-    /**
-     * The log directory.
-     */
-    public static final File LOG_DIR = Project.LOG_DIR;
-    
-    /**
-     * The stamp format used for timestamps.
-     */
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
-    /**
-     * The stamp format used for datestamps.
-     */
-    public static final String DATESTAMP_FORMAT = "yyyy-MM-dd";
-    
-    /**
-     * The newline string.
-     */
-    public static final String NEWLINE = Color.base("");
-    
-    /**
-     * The width of a divider.
-     */
-    public static final int DIVIDER_WIDTH = 200;
-    
-    /**
-     * The width of an indentation.
-     */
-    public static final int INDENT_WIDTH = 5;
-    
-    /**
-     * The indentation string.
-     */
-    public static final String INDENT = Color.base(" ".repeat(INDENT_WIDTH));
-    
-    /**
-     * The hard indentation string.
-     */
-    public static final String INDENT_HARD = Color.log(" ".repeat(INDENT_WIDTH));
     
     
     //Static Fields

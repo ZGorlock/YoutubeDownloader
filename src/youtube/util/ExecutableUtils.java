@@ -42,12 +42,6 @@ public final class ExecutableUtils {
      */
     public static final File EXECUTABLE_DIR = PathUtils.WORKING_DIR;
     
-    /**
-     * The Youtube Downloader executable to use.
-     */
-    public static final Executable EXECUTABLE = Executable.valueOf(
-            Configurator.getSetting("executable", Executable.YT_DLP.getName()).toUpperCase().replace("-", "_"));
-    
     
     //Enums
     
@@ -143,6 +137,15 @@ public final class ExecutableUtils {
     }
     
     
+    //Static Fields
+    
+    /**
+     * The Youtube Downloader executable to use.
+     */
+    public static final Executable executable = Executable.valueOf(
+            Configurator.getSetting("executable", Executable.YT_DLP.getName()).toUpperCase().replace("-", "_"));
+    
+    
     //Static Methods
     
     /**
@@ -151,7 +154,7 @@ public final class ExecutableUtils {
      * @return Whether the exe exists.
      */
     public static boolean checkExe() {
-        boolean exists = EXECUTABLE.getExe().exists();
+        boolean exists = executable.getExe().exists();
         String currentVersion = Configurator.Config.preventExeVersionCheck ? "?" : getCurrentExecutableVersion();
         String latestVersion = Configurator.Config.preventExeVersionCheck ? "?" : getLatestExecutableVersion();
         String printedCurrentVersion = currentVersion.equals("?") ? "" : Color.number(" v" + currentVersion);
@@ -160,18 +163,18 @@ public final class ExecutableUtils {
         if (exists) {
             if (Configurator.Config.printExeVersion) {
                 logger.trace(LogUtils.NEWLINE);
-                logger.info(Color.exeFileName(EXECUTABLE) + printedCurrentVersion);
+                logger.info(Color.exeFileName(executable) + printedCurrentVersion);
                 logger.trace(LogUtils.NEWLINE);
             }
         } else {
             logger.trace(LogUtils.NEWLINE);
-            logger.warn(Color.bad("Requires ") + Color.exeName(EXECUTABLE));
+            logger.warn(Color.bad("Requires ") + Color.exeName(executable));
             logger.trace(LogUtils.NEWLINE);
         }
         
         if (exists && (currentVersion.isEmpty() || latestVersion.isEmpty())) {
             if (Configurator.Config.printExeVersion) {
-                logger.warn(Color.bad("Unable to check for updates for ") + Color.exeName(EXECUTABLE));
+                logger.warn(Color.bad("Unable to check for updates for ") + Color.exeName(executable));
                 logger.trace(LogUtils.NEWLINE);
             }
             
@@ -187,21 +190,21 @@ public final class ExecutableUtils {
             if (!Configurator.Config.preventExeAutoUpdate) {
                 latestVersion = latestVersion.equals("?") ? getLatestExecutableVersion() : latestVersion;
                 
-                logger.info(Color.base("Downloading ") + Color.exeName(EXECUTABLE) + printedLatestVersion);
-                File executable = downloadLatestExecutable(latestVersion);
+                logger.info(Color.base("Downloading ") + Color.exeName(executable) + printedLatestVersion);
+                File exeFile = downloadLatestExecutable(latestVersion);
                 
-                if ((executable == null) || !EXECUTABLE.getExe().exists() || !executable.getName().equals(EXECUTABLE.getExe().getName())) {
-                    logger.warn(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exeName(EXECUTABLE));
+                if ((exeFile == null) || !executable.getExe().exists() || !exeFile.getName().equals(executable.getExe().getName())) {
+                    logger.warn(Color.bad("Unable to " + (exists ? "update" : "download") + " ") + Color.exeName(executable));
                 } else {
-                    logger.info(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exeName(EXECUTABLE) + printedLatestVersion);
+                    logger.info(Color.base("Successfully " + (exists ? "updated to" : "downloaded") + " ") + Color.exeName(executable) + printedLatestVersion);
                 }
             } else {
-                logger.info(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exeName(EXECUTABLE) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
+                logger.info(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exeName(executable) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
             }
             logger.trace(LogUtils.NEWLINE);
         }
         
-        return EXECUTABLE.getExe().exists();
+        return executable.getExe().exists();
     }
     
     /**
@@ -210,7 +213,7 @@ public final class ExecutableUtils {
      * @return The current executable version, or an empty string if there was an error.
      */
     private static String getCurrentExecutableVersion() {
-        return EXECUTABLE.getExe().exists() ? CmdLine.executeCmd(EXECUTABLE.getCall() + " --version")
+        return executable.getExe().exists() ? CmdLine.executeCmd(executable.getCall() + " --version")
                 .replaceAll("\r?\n", "").replaceAll("\\[\\*].*$", "").trim() : "";
     }
     
@@ -223,14 +226,14 @@ public final class ExecutableUtils {
         String url;
         String versionPatternRegex;
         
-        switch (EXECUTABLE) {
+        switch (executable) {
             case YOUTUBE_DL:
-                url = EXECUTABLE.getWebsite();
+                url = executable.getWebsite();
                 versionPatternRegex = "<a\\shref=\"latest\">Latest</a>\\s\\(v(?<version>[\\d.]+)\\)\\sdownloads:";
                 break;
             
             case YT_DLP:
-                url = EXECUTABLE.getWebsite() + "releases/";
+                url = executable.getWebsite() + "releases/";
                 versionPatternRegex = "<a\\shref=\"/yt-dlp/yt-dlp/releases/tag/(?<version>[\\d.]+)\"";
                 break;
             
@@ -271,14 +274,14 @@ public final class ExecutableUtils {
      * @return The downloaded executable, or null if there was an error.
      */
     private static File downloadLatestExecutable(String latestVersion) {
-        switch (EXECUTABLE) {
+        switch (executable) {
             case YOUTUBE_DL:
                 //https://www.youtube-dl.org/downloads/latest/youtube-dl.exe
-                return Internet.downloadFile(EXECUTABLE.getWebsite() + "downloads/latest/" + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+                return Internet.downloadFile(executable.getWebsite() + "downloads/latest/" + executable.getExe().getName(), executable.getExe());
             
             case YT_DLP:
                 //https://github.com/yt-dlp/yt-dlp/releases/download/2021.08.10/yt-dlp.exe
-                return Internet.downloadFile(EXECUTABLE.getWebsite() + "releases/download/" + latestVersion + '/' + EXECUTABLE.getExe().getName(), EXECUTABLE.getExe());
+                return Internet.downloadFile(executable.getWebsite() + "releases/download/" + latestVersion + '/' + executable.getExe().getName(), executable.getExe());
             
             default:
                 return null;

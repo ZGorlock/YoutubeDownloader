@@ -39,6 +39,33 @@ public final class DownloadUtils {
     private static final Logger logger = LoggerFactory.getLogger(DownloadUtils.class);
     
     
+    //Constants
+    
+    /**
+     * A flag indicating whether to display a progress bar or not.
+     */
+    public static final boolean DISPLAY_PROGRESS_BAR = Configurator.Config.showProgressBar && !Configurator.Config.logWork;
+    
+    /**
+     * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
+     */
+    private static final String[] NON_CRITICAL_ERRORS = new String[] {
+            "giving up after 10",
+            "urlopen error",
+            "sign in to",
+            "please install or provide the path",
+            "check back later",
+            "requested format is not available"
+    };
+    
+    /**
+     * A list of error responses that will trigger a retry attempt using browser cookies, if configured.
+     */
+    private static final String[] RETRY_WITH_COOKIES_ERRORS = new String[] {
+            "sign in to"
+    };
+    
+    
     //Enums
     
     /**
@@ -48,9 +75,9 @@ public final class DownloadUtils {
         
         //Values
         
-        SUCCESS("Succeeded", false, Color.GOOD),
-        FAILURE("Failed", true, Color.BAD),
-        ERROR("Error", true, Color.BAD);
+        SUCCESS("Succeeded", false, Color.good),
+        FAILURE("Failed", true, Color.bad),
+        ERROR("Error", true, Color.bad);
         
         
         //Fields
@@ -119,33 +146,6 @@ public final class DownloadUtils {
     }
     
     
-    //Constants
-    
-    /**
-     * A flag indicating whether to display a progress bar or not.
-     */
-    public static final boolean DISPLAY_PROGRESS_BAR = Configurator.Config.showProgressBar && !Configurator.Config.logWork;
-    
-    /**
-     * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
-     */
-    private static final String[] NON_CRITICAL_ERRORS = new String[] {
-            "giving up after 10",
-            "urlopen error",
-            "sign in to",
-            "please install or provide the path",
-            "check back later",
-            "requested format is not available"
-    };
-    
-    /**
-     * A list of error responses that will trigger a retry attempt using browser cookies, if configured.
-     */
-    private static final String[] RETRY_WITH_COOKIES_ERRORS = new String[] {
-            "sign in to"
-    };
-    
-    
     //Static Methods
     
     /**
@@ -166,7 +166,7 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      */
     private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) {
-        final boolean ytDlp = (ExecutableUtils.EXECUTABLE == ExecutableUtils.Executable.YT_DLP);
+        final boolean ytDlp = (ExecutableUtils.executable == ExecutableUtils.Executable.YT_DLP);
         final boolean asMp3 = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
@@ -174,7 +174,7 @@ public final class DownloadUtils {
             return null;
         }
         
-        final String cmd = Color.exe(ExecutableUtils.EXECUTABLE.getCall()) + Color.log(" ") +
+        final String cmd = Color.exe(ExecutableUtils.executable.getCall()) + Color.log(" ") +
                 Color.log("--output ") + Color.quoteFilePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), true) + Color.log(" ") +
                 Color.log("--geo-bypass --rm-cache-dir " +
                         (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
@@ -476,7 +476,7 @@ public final class DownloadUtils {
             this.response = response;
             
             setIndent(LogUtils.INDENT_WIDTH);
-            setColors(Color.PROGRESS_BAR_BASE, Color.PROGRESS_BAR_GOOD, Color.PROGRESS_BAR_BAD);
+            setColors(Color.progressBarBase, Color.progressBarGood, Color.progressBarBad);
         }
         
         
