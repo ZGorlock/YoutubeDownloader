@@ -52,9 +52,9 @@ public class YoutubeDownloader {
     public static final File DOWNLOAD_QUEUE = new File(Project.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
     
     /**
-     * The default output location.
+     * The default output directory to store downloaded files in.
      */
-    public static final String DEFAULT_OUTPUT_LOCATION = PathUtils.path(PathUtils.getUserHomePath(), "Youtube");
+    public static final String DEFAULT_OUTPUT_DIR = PathUtils.path(PathUtils.getUserHomePath(), "Youtube");
     
     
     //Static Fields
@@ -65,7 +65,7 @@ public class YoutubeDownloader {
     private static final List<String> download = new ArrayList<>();
     
     /**
-     * The output directory.
+     * The output directory to store downloaded files in.
      */
     private static File outputDir;
     
@@ -209,12 +209,16 @@ public class YoutubeDownloader {
     }
     
     /**
-     * Returns the output directory.
+     * Returns the output directory to store downloaded files in.
      *
-     * @return The output directory.
+     * @return The output directory to store downloaded files in.
      */
     private static File getOutputDir() {
-        return new File(Configurator.getSetting("location.output", DEFAULT_OUTPUT_LOCATION));
+        return new File(Configurator.getSetting(List.of(
+                        "outputDir",
+                        "location.outputDir",
+                        "location.output"),
+                DEFAULT_OUTPUT_DIR));
     }
     
 }

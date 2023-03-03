@@ -44,7 +44,7 @@ public final class DownloadUtils {
     /**
      * A flag indicating whether to display a progress bar or not.
      */
-    public static final boolean DISPLAY_PROGRESS_BAR = Configurator.Config.showProgressBar && !Configurator.Config.logWork;
+    public static final boolean DISPLAY_PROGRESS_BAR = Configurator.Config.showProgressBar && !Configurator.Config.showWork;
     
     /**
      * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
@@ -197,7 +197,7 @@ public final class DownloadUtils {
     private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
         LogUtils.logDivider(logger, '-');
         LogUtils.log(logger, (isRetry ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
-                (Configurator.Config.logCommand ? (LogUtils.INDENT + cmd) : StringUtility.removeConsoleEscapeCharacters(cmd)));
+                (Configurator.Config.showCommand ? (LogUtils.INDENT + cmd) : StringUtility.removeConsoleEscapeCharacters(cmd)));
         
         final DownloadResponse response = new DownloadResponse();
         final DownloadProgressBar progressBar = new DownloadProgressBar(video, response);
@@ -491,9 +491,9 @@ public final class DownloadUtils {
          */
         @Override
         public synchronized boolean processLog(String log, boolean isError) {
-            logger.trace(Configurator.Config.logWork ? Color.log(log) : log);
+            logger.trace(Configurator.Config.showWork ? Color.log(log) : log);
             
-            if (!Configurator.Config.logWork && Configurator.Config.showProgressBar) {
+            if (!Configurator.Config.showWork && Configurator.Config.showProgressBar) {
                 
                 if (getInitialProgress() == 0) {
                     final Matcher resumeMatcher = RESUME_PATTERN.matcher(log);

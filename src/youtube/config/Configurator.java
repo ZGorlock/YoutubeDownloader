@@ -469,6 +469,21 @@ public class Configurator {
         public static final boolean DEFAULT_AS_MP3 = false;
         
         /**
+         * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
+         */
+        public static final boolean DEFAULT_DELETE_TO_RECYCLING_BIN = false;
+        
+        /**
+         * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
+         */
+        public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
+        
+        /**
+         * The default value of the flag indicating whether to retry previously failed videos or not.
+         */
+        public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
+        
+        /**
          * The default value of the flag indicating whether to run in safe mode or not.
          */
         public static final boolean DEFAULT_SAFE_MODE = false;
@@ -514,21 +529,6 @@ public class Configurator {
         public static final boolean DEFAULT_PREVENT_EXE_VERSION_CHECK = false;
         
         /**
-         * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
-         */
-        public static final boolean DEFAULT_DELETE_TO_RECYCLING_BIN = false;
-        
-        /**
-         * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
-         */
-        public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
-        
-        /**
-         * The default value of the flag indicating whether to retry previously failed videos or not.
-         */
-        public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
-        
-        /**
          * The default value of the flag indicating whether to print statistics at the end of the run or not.
          */
         public static final boolean DEFAULT_PRINT_STATS = true;
@@ -544,17 +544,17 @@ public class Configurator {
         public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
         
         /**
-         * The default value of the flag indicating whether to log the download command or not.
+         * The default value of the flag indicating whether to print the command sent to the executable during a download or not.
          */
-        public static final boolean DEFAULT_LOG_COMMAND = true;
+        public static final boolean DEFAULT_SHOW_COMMAND = true;
         
         /**
-         * The default value of the flag indicating whether to log the download work or not.
+         * The default value of the flag indicating whether to print the output produced by the executable during a download or not.
          */
-        public static final boolean DEFAULT_LOG_WORK = false;
+        public static final boolean DEFAULT_SHOW_WORK = false;
         
         /**
-         * The default value of the flag indicating whether to print a progress bar for downloads or not.
+         * The default value of the flag indicating whether to display a progress bar in the terminal during a download or not.
          */
         public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
         
@@ -583,78 +583,6 @@ public class Configurator {
                 DEFAULT_AS_MP3);
         
         /**
-         * A flag indicating whether to run in safe mode or not.
-         */
-        public static final boolean safeMode = getSetting(List.of(
-                        "safeMode",
-                        "flag.safeMode"),
-                DEFAULT_SAFE_MODE);
-        
-        /**
-         * A flag indicating whether to disable downloading content or not.
-         */
-        public static final boolean preventDownload = safeMode || getSetting(List.of(
-                        "preventDownload",
-                        "flag.preventDownload"),
-                DEFAULT_PREVENT_DOWNLOAD);
-        
-        /**
-         * A flag indicating whether to globally prevent any media deletion or not.
-         */
-        public static final boolean preventDeletion = safeMode || getSetting(List.of(
-                        "preventDeletion",
-                        "flag.preventDeletion"),
-                DEFAULT_PREVENT_DELETION);
-        
-        /**
-         * A flag indicating whether to globally prevent any media renaming or not.
-         */
-        public static final boolean preventRenaming = safeMode || getSetting(List.of(
-                        "preventRenaming",
-                        "flag.preventRenaming"),
-                DEFAULT_PREVENT_RENAMING);
-        
-        /**
-         * A flag indicating whether to disable playlist modification or not.
-         */
-        public static final boolean preventPlaylistEdit = safeMode || getSetting(List.of(
-                        "preventPlaylistEdit",
-                        "flag.preventPlaylistEdit"),
-                DEFAULT_PREVENT_PLAYLIST_EDIT);
-        
-        /**
-         * A flag indicating whether to disable fetching the latest data for Channels or not.
-         */
-        public static final boolean preventChannelFetch = safeMode || getSetting(List.of(
-                        "preventChannelFetch",
-                        "flag.preventChannelFetch"),
-                DEFAULT_PREVENT_CHANNEL_FETCH);
-        
-        /**
-         * A flag indicating whether to disable fetching the info for Videos or not.
-         */
-        public static final boolean preventVideoFetch = safeMode || getSetting(List.of(
-                        "preventVideoFetch",
-                        "flag.preventVideoFetch"),
-                DEFAULT_PREVENT_VIDEO_FETCH);
-        
-        /**
-         * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
-         */
-        public static final boolean preventExeAutoUpdate = safeMode || getSetting(List.of(
-                        "preventExeAutoUpdate",
-                        "flag.preventExeAutoUpdate"),
-                DEFAULT_PREVENT_EXE_AUTO_UPDATE);
-        
-        /**
-         * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
-         */
-        public static final boolean preventExeVersionCheck = safeMode || getSetting(List.of(
-                        "preventExeVersionCheck",
-                        "flag.preventExeVersionCheck"),
-                DEFAULT_PREVENT_EXE_VERSION_CHECK);
-        
-        /**
          * A flag indicating whether to move files to the recycling bin instead of deleting them.
          */
         public static final boolean deleteToRecyclingBin = getSetting(List.of(
@@ -678,6 +606,96 @@ public class Configurator {
                         "flag.retryPreviousFailures",
                         "flag.retryFailed"),
                 DEFAULT_RETRY_PREVIOUS_FAILURES);
+        
+        /**
+         * A flag indicating whether to run in safe mode or not.
+         */
+        public static final boolean safeMode = getSetting(List.of(
+                        "safeMode",
+                        "test.safeMode",
+                        "flag.test.safeMode",
+                        "flag.safeMode"),
+                DEFAULT_SAFE_MODE);
+        
+        /**
+         * A flag indicating whether to disable downloading content or not.
+         */
+        public static final boolean preventDownload = safeMode || getSetting(List.of(
+                        "preventDownload",
+                        "test.preventDownload",
+                        "flag.test.preventDownload",
+                        "flag.preventDownload"),
+                DEFAULT_PREVENT_DOWNLOAD);
+        
+        /**
+         * A flag indicating whether to globally prevent any media deletion or not.
+         */
+        public static final boolean preventDeletion = safeMode || getSetting(List.of(
+                        "preventDeletion",
+                        "test.preventDeletion",
+                        "flag.test.preventDeletion",
+                        "flag.preventDeletion"),
+                DEFAULT_PREVENT_DELETION);
+        
+        /**
+         * A flag indicating whether to globally prevent any media renaming or not.
+         */
+        public static final boolean preventRenaming = safeMode || getSetting(List.of(
+                        "preventRenaming",
+                        "test.preventRenaming",
+                        "flag.test.preventRenaming",
+                        "flag.preventRenaming"),
+                DEFAULT_PREVENT_RENAMING);
+        
+        /**
+         * A flag indicating whether to disable playlist modification or not.
+         */
+        public static final boolean preventPlaylistEdit = safeMode || getSetting(List.of(
+                        "preventPlaylistEdit",
+                        "test.preventPlaylistEdit",
+                        "flag.test.preventPlaylistEdit",
+                        "flag.preventPlaylistEdit"),
+                DEFAULT_PREVENT_PLAYLIST_EDIT);
+        
+        /**
+         * A flag indicating whether to disable fetching the latest data for Channels or not.
+         */
+        public static final boolean preventChannelFetch = safeMode || getSetting(List.of(
+                        "preventChannelFetch",
+                        "test.preventChannelFetch",
+                        "flag.test.preventChannelFetch",
+                        "flag.preventChannelFetch"),
+                DEFAULT_PREVENT_CHANNEL_FETCH);
+        
+        /**
+         * A flag indicating whether to disable fetching the info for Videos or not.
+         */
+        public static final boolean preventVideoFetch = safeMode || getSetting(List.of(
+                        "preventVideoFetch",
+                        "test.preventVideoFetch",
+                        "flag.test.preventVideoFetch",
+                        "flag.preventVideoFetch"),
+                DEFAULT_PREVENT_VIDEO_FETCH);
+        
+        /**
+         * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean preventExeAutoUpdate = safeMode || getSetting(List.of(
+                        "preventExeAutoUpdate",
+                        "test.preventExeAutoUpdate",
+                        "flag.test.preventExeAutoUpdate",
+                        "flag.preventExeAutoUpdate"),
+                DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+        
+        /**
+         * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
+         */
+        public static final boolean preventExeVersionCheck = safeMode || getSetting(List.of(
+                        "preventExeVersionCheck",
+                        "test.preventExeVersionCheck",
+                        "flag.test.preventExeVersionCheck",
+                        "flag.preventExeVersionCheck"),
+                DEFAULT_PREVENT_EXE_VERSION_CHECK);
         
         /**
          * A flag indicating whether to print statistics at the end of the run or not.
@@ -706,30 +724,45 @@ public class Configurator {
                 DEFAULT_PRINT_EXE_VERSION);
         
         /**
-         * A flag indicating whether to log the download command or not.
+         * A flag indicating whether to print the command sent to the executable during a download or not.
          */
-        public static final boolean logCommand = getSetting(List.of(
+        public static final boolean showCommand = getSetting(List.of(
+                        "showCommand",
                         "logCommand",
+                        "flag.showCommand",
                         "flag.logCommand",
+                        "log.download.showCommand",
+                        "log.download.logCommand",
+                        "log.showCommand",
                         "log.logCommand"),
-                DEFAULT_LOG_COMMAND);
+                DEFAULT_SHOW_COMMAND);
         
         /**
-         * A flag indicating whether to log the download work or not.
+         * A flag indicating whether to print the output produced by the executable during a download or not.
          */
-        public static final boolean logWork = getSetting(List.of(
+        public static final boolean showWork = getSetting(List.of(
+                        "showWork",
                         "logWork",
+                        "flag.showWork",
                         "flag.logWork",
+                        "log.download.showWork",
+                        "log.download.logWork",
+                        "log.showWork",
                         "log.logWork"),
-                DEFAULT_LOG_WORK);
+                DEFAULT_SHOW_WORK);
         
         /**
-         * A flag indicating whether to print a progress bar for downloads or not.
+         * A flag indicating whether to display a progress bar in the terminal during a download or not.
          */
         public static final boolean showProgressBar = getSetting(List.of(
                         "showProgressBar",
+                        "logProgressBar",
                         "flag.showProgressBar",
-                        "log.showProgressBar"),
+                        "flag.logProgressBar",
+                        "log.download.showProgressBar",
+                        "log.download.logProgressBar",
+                        "log.showProgressBar",
+                        "log.logProgressBar"),
                 DEFAULT_SHOW_PROGRESS_BAR);
         
         /**
@@ -738,6 +771,7 @@ public class Configurator {
         public static final Long daysToKeepLogs = getSetting(List.of(
                         "daysToKeepLogs",
                         "flag.daysToKeepLogs",
+                        "log.file.daysToKeepLogs",
                         "log.daysToKeepLogs"),
                 DEFAULT_DAYS_TO_KEEP_LOGS);
         
