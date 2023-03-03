@@ -87,11 +87,20 @@ public class YoutubeDownloader {
             logger.error(Color.bad("Unable to create output directory: ") + Color.quoteFilePath(outputDir));
             return;
         }
-        logger.trace(LogUtils.NEWLINE);
         
+        if (!Configurator.Config.preventRun) {
+            run();
+        }
+    }
+    
+    /**
+     * Runs the Youtube Downloader.
+     */
+    private static void run() {
+        logger.trace(LogUtils.NEWLINE);
         loadDownloadQueue();
+        
         try (Scanner in = new Scanner(System.in)) {
-            
             do {
                 download.forEach(url -> {
                     download(url);

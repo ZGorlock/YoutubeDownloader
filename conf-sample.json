@@ -26,6 +26,8 @@
             "retryPreviousFailures": false,
             "test": {
                 "safeMode": false,
+                "preventRun": false,
+                "preventProcess": false,
                 "preventDownload": false,
                 "preventDeletion": false,
                 "preventRenaming": false,
@@ -51,6 +53,7 @@
             "neverUseBrowserCookies": false,
             "test": {
                 "safeMode": false,
+                "preventRun": false,
                 "preventDownload": false,
                 "preventVideoFetch": false,
                 "preventExeAutoUpdate": false,

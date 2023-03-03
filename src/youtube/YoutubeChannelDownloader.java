@@ -79,7 +79,9 @@ public class YoutubeChannelDownloader {
             return;
         }
         
-        run();
+        if (!Configurator.Config.preventRun) {
+            run();
+        }
     }
     
     
@@ -137,7 +139,12 @@ public class YoutubeChannelDownloader {
         }
         
         logger.trace(LogUtils.NEWLINE);
-        logger.info(Color.base("Processing Channel: ") + Color.channelDisplayName(channel));
+        if (!Configurator.Config.preventProcess) {
+            logger.info(Color.base("Processing Channel: ") + Color.channelDisplayName(channel));
+        } else {
+            logger.info(Color.bad("Would have processed Channel: ") + Color.channelDisplayName(channel) + Color.bad(" but processing is disabled"));
+            return false;
+        }
         
         boolean success = Internet.isOnline() &&
                 initChannel() &&

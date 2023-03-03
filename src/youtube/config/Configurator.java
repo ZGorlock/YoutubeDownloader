@@ -489,6 +489,16 @@ public class Configurator {
         public static final boolean DEFAULT_SAFE_MODE = false;
         
         /**
+         * The default value of the flag indicating whether to disable running the main code or not.
+         */
+        public static final boolean DEFAULT_PREVENT_RUN = false;
+        
+        /**
+         * The default value of the flag indicating whether to disable processing Channels or not.
+         */
+        public static final boolean DEFAULT_PREVENT_PROCESS = false;
+        
+        /**
          * The default value of the flag indicating whether to disable downloading content or not.
          */
         public static final boolean DEFAULT_PREVENT_DOWNLOAD = false;
@@ -616,6 +626,26 @@ public class Configurator {
                         "flag.test.safeMode",
                         "flag.safeMode"),
                 DEFAULT_SAFE_MODE);
+        
+        /**
+         * A flag indicating whether to disable running the main code or not.
+         */
+        public static final boolean preventRun = getSetting(List.of(
+                        "preventRun",
+                        "test.preventRun",
+                        "flag.test.preventRun",
+                        "flag.preventRun"),
+                DEFAULT_PREVENT_RUN);
+        
+        /**
+         * A flag indicating whether to disable processing Channels or not.
+         */
+        public static final boolean preventProcess = getSetting(List.of(
+                        "preventProcess",
+                        "test.preventProcess",
+                        "flag.test.preventProcess",
+                        "flag.preventProcess"),
+                DEFAULT_PREVENT_PROCESS);
         
         /**
          * A flag indicating whether to disable downloading content or not.
