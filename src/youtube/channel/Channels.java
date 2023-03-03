@@ -117,17 +117,26 @@ public class Channels {
     /**
      * The drive to use for storage of downloaded files.
      */
-    public static final File storageDrive = new File(Configurator.getSetting("location.storageDrive", DEFAULT_STORAGE_DRIVE));
+    public static final File storageDrive = new File(Configurator.getSetting(List.of(
+                    "storageDrive",
+                    "location.storageDrive"),
+            DEFAULT_STORAGE_DRIVE));
     
     /**
      * The Music directory in the storage drive.
      */
-    public static final File musicDir = new File(storageDrive, Configurator.getSetting("location.musicDir", DEFAULT_MUSIC_DIR));
+    public static final File musicDir = new File(storageDrive, Configurator.getSetting(List.of(
+                    "musicDir",
+                    "location.musicDir"),
+            DEFAULT_MUSIC_DIR));
     
     /**
      * The Videos directory in the storage drive.
      */
-    public static final File videoDir = new File(storageDrive, Configurator.getSetting("location.videoDir", DEFAULT_VIDEOS_DIR));
+    public static final File videoDir = new File(storageDrive, Configurator.getSetting(List.of(
+                    "videoDir",
+                    "location.videoDir"),
+            DEFAULT_VIDEOS_DIR));
     
     
     //Static Methods

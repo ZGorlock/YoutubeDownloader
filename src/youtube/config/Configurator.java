@@ -195,14 +195,14 @@ public class Configurator {
     public static Program activeProgram = null;
     
     /**
-     * A cache of configuration settings from the configuration file.
-     */
-    private static final Map<String, Map<String, Object>> settings = new HashMap<>();
-    
-    /**
      * The active settings.
      */
     public static Map<String, Object> activeSettings = new TreeMap<>(String::compareTo);
+    
+    /**
+     * A cache of configuration settings from the configuration file.
+     */
+    private static final Map<String, Map<String, Object>> settings = new HashMap<>();
     
     /**
      * A flag indicating whether the configuration settings have been loaded yet or not.
@@ -469,24 +469,9 @@ public class Configurator {
         public static final boolean DEFAULT_AS_MP3 = false;
         
         /**
-         * The default value of the flag indicating whether to print statistics at the end of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_STATS = true;
-        
-        /**
-         * The default value of the flag indicating whether to print the Channel list at the beginning of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_CHANNELS = false;
-        
-        /**
          * The default value of the flag indicating whether to run in safe mode or not.
          */
         public static final boolean DEFAULT_SAFE_MODE = false;
-        
-        /**
-         * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
-         */
-        public static final boolean DEFAULT_DELETE_TO_RECYCLING_BIN = false;
         
         /**
          * The default value of the flag indicating whether to disable downloading content or not.
@@ -529,6 +514,11 @@ public class Configurator {
         public static final boolean DEFAULT_PREVENT_EXE_VERSION_CHECK = false;
         
         /**
+         * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
+         */
+        public static final boolean DEFAULT_DELETE_TO_RECYCLING_BIN = false;
+        
+        /**
          * The default value of the flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
          */
         public static final boolean DEFAULT_NEVER_USE_BROWSER_COOKIES = true;
@@ -537,6 +527,16 @@ public class Configurator {
          * The default value of the flag indicating whether to retry previously failed videos or not.
          */
         public static final boolean DEFAULT_RETRY_PREVIOUS_FAILURES = false;
+        
+        /**
+         * The default value of the flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_STATS = true;
+        
+        /**
+         * The default value of the flag indicating whether to print the Channel list at the beginning of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_CHANNELS = false;
         
         /**
          * The default value of the flag indicating whether to print the executable version at the beginning of the run or not.
@@ -569,140 +569,204 @@ public class Configurator {
         /**
          * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
          */
-        public static final boolean preMerged = Configurator.getSetting("format.preMerged", DEFAULT_PRE_MERGED);
+        public static final boolean preMerged = getSetting(List.of(
+                        "preMerged",
+                        "format.preMerged"),
+                DEFAULT_PRE_MERGED);
         
         /**
          * A flag indicating whether to download the videos as mp3 files or not.
          */
-        public static final boolean asMp3 = Configurator.getSetting("format.asMp3", DEFAULT_AS_MP3) ||
-                Configurator.getSetting("asMp3", DEFAULT_AS_MP3);
-        
-        /**
-         * A flag indicating whether to print statistics at the end of the run or not.
-         */
-        public static final boolean printStats = Configurator.getSetting("log.printStats",
-                Configurator.getSetting("output.printStats", DEFAULT_PRINT_STATS));
-        
-        /**
-         * A flag indicating whether to print the Channel list at the beginning of the run or not.
-         */
-        public static final boolean printChannels = Configurator.getSetting("log.printChannels",
-                Configurator.getSetting("output.printChannels", DEFAULT_PRINT_CHANNELS));
+        public static final boolean asMp3 = getSetting(List.of(
+                        "asMp3",
+                        "format.asMp3"),
+                DEFAULT_AS_MP3);
         
         /**
          * A flag indicating whether to run in safe mode or not.
          */
-        public static final boolean safeMode = Configurator.getSetting("flag.safeMode", DEFAULT_SAFE_MODE);
+        public static final boolean safeMode = getSetting(List.of(
+                        "safeMode",
+                        "flag.safeMode"),
+                DEFAULT_SAFE_MODE);
         
         /**
          * A flag indicating whether to disable downloading content or not.
          */
-        public static final boolean preventDownload = safeMode || Configurator.getSetting("flag.preventDownload", DEFAULT_PREVENT_DOWNLOAD);
+        public static final boolean preventDownload = safeMode || getSetting(List.of(
+                        "preventDownload",
+                        "flag.preventDownload"),
+                DEFAULT_PREVENT_DOWNLOAD);
         
         /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
-        public static final boolean preventDeletion = safeMode || Configurator.getSetting("flag.preventDeletion", DEFAULT_PREVENT_DELETION);
+        public static final boolean preventDeletion = safeMode || getSetting(List.of(
+                        "preventDeletion",
+                        "flag.preventDeletion"),
+                DEFAULT_PREVENT_DELETION);
         
         /**
          * A flag indicating whether to globally prevent any media renaming or not.
          */
-        public static final boolean preventRenaming = safeMode || Configurator.getSetting("flag.preventRenaming", DEFAULT_PREVENT_RENAMING);
+        public static final boolean preventRenaming = safeMode || getSetting(List.of(
+                        "preventRenaming",
+                        "flag.preventRenaming"),
+                DEFAULT_PREVENT_RENAMING);
         
         /**
          * A flag indicating whether to disable playlist modification or not.
          */
-        public static final boolean preventPlaylistEdit = safeMode || Configurator.getSetting("flag.preventPlaylistEdit", DEFAULT_PREVENT_PLAYLIST_EDIT);
+        public static final boolean preventPlaylistEdit = safeMode || getSetting(List.of(
+                        "preventPlaylistEdit",
+                        "flag.preventPlaylistEdit"),
+                DEFAULT_PREVENT_PLAYLIST_EDIT);
         
         /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
-        public static final boolean preventChannelFetch = safeMode || Configurator.getSetting("flag.preventChannelFetch", DEFAULT_PREVENT_CHANNEL_FETCH);
+        public static final boolean preventChannelFetch = safeMode || getSetting(List.of(
+                        "preventChannelFetch",
+                        "flag.preventChannelFetch"),
+                DEFAULT_PREVENT_CHANNEL_FETCH);
         
         /**
          * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean preventVideoFetch = safeMode || Configurator.getSetting("flag.preventVideoFetch", DEFAULT_PREVENT_VIDEO_FETCH);
+        public static final boolean preventVideoFetch = safeMode || getSetting(List.of(
+                        "preventVideoFetch",
+                        "flag.preventVideoFetch"),
+                DEFAULT_PREVENT_VIDEO_FETCH);
         
         /**
          * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeAutoUpdate = safeMode || Configurator.getSetting("flag.preventExeAutoUpdate", DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+        public static final boolean preventExeAutoUpdate = safeMode || getSetting(List.of(
+                        "preventExeAutoUpdate",
+                        "flag.preventExeAutoUpdate"),
+                DEFAULT_PREVENT_EXE_AUTO_UPDATE);
         
         /**
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeVersionCheck = safeMode || Configurator.getSetting("flag.preventExeVersionCheck", DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        public static final boolean preventExeVersionCheck = safeMode || getSetting(List.of(
+                        "preventExeVersionCheck",
+                        "flag.preventExeVersionCheck"),
+                DEFAULT_PREVENT_EXE_VERSION_CHECK);
         
         /**
          * A flag indicating whether to move files to the recycling bin instead of deleting them.
          */
-        public static final boolean deleteToRecyclingBin = Configurator.getSetting("flag.deleteToRecyclingBin", DEFAULT_DELETE_TO_RECYCLING_BIN);
+        public static final boolean deleteToRecyclingBin = getSetting(List.of(
+                        "deleteToRecyclingBin",
+                        "flag.deleteToRecyclingBin"),
+                DEFAULT_DELETE_TO_RECYCLING_BIN);
         
         /**
          * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
          */
-        public static final boolean neverUseBrowserCookies = Configurator.getSetting("flag.neverUseBrowserCookies", DEFAULT_NEVER_USE_BROWSER_COOKIES);
+        public static final boolean neverUseBrowserCookies = getSetting(List.of(
+                        "neverUseBrowserCookies",
+                        "flag.neverUseBrowserCookies"),
+                DEFAULT_NEVER_USE_BROWSER_COOKIES);
         
         /**
          * A flag indicating whether to retry previously failed videos or not.
          */
-        public static final boolean retryPreviousFailures = Configurator.getSetting("flag.retryPreviousFailures",
-                Configurator.getSetting("flag.retryFailed", DEFAULT_RETRY_PREVIOUS_FAILURES));
+        public static final boolean retryPreviousFailures = getSetting(List.of(
+                        "retryPreviousFailures",
+                        "flag.retryPreviousFailures",
+                        "flag.retryFailed"),
+                DEFAULT_RETRY_PREVIOUS_FAILURES);
+        
+        /**
+         * A flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static final boolean printStats = getSetting(List.of(
+                        "printStats",
+                        "log.printStats",
+                        "output.printStats"),
+                DEFAULT_PRINT_STATS);
+        
+        /**
+         * A flag indicating whether to print the Channel list at the beginning of the run or not.
+         */
+        public static final boolean printChannels = getSetting(List.of(
+                        "log.printChannels",
+                        "output.printChannels"),
+                DEFAULT_PRINT_CHANNELS);
         
         /**
          * A flag indicating whether to print the executable version at the beginning of the run or not.
          */
-        public static final boolean printExeVersion = Configurator.getSetting("output.printExeVersion",
-                Configurator.getSetting("log.printExeVersion", DEFAULT_PRINT_EXE_VERSION));
+        public static final boolean printExeVersion = getSetting(List.of(
+                        "printExeVersion",
+                        "log.printExeVersion",
+                        "output.printExeVersion"),
+                DEFAULT_PRINT_EXE_VERSION);
         
         /**
          * A flag indicating whether to log the download command or not.
          */
-        public static final boolean logCommand = Configurator.getSetting("flag.logCommand",
-                Configurator.getSetting("log.logCommand", DEFAULT_LOG_COMMAND));
+        public static final boolean logCommand = getSetting(List.of(
+                        "logCommand",
+                        "flag.logCommand",
+                        "log.logCommand"),
+                DEFAULT_LOG_COMMAND);
         
         /**
          * A flag indicating whether to log the download work or not.
          */
-        public static final boolean logWork = Configurator.getSetting("flag.logWork",
-                Configurator.getSetting("log.logWork", DEFAULT_LOG_WORK));
+        public static final boolean logWork = getSetting(List.of(
+                        "logWork",
+                        "flag.logWork",
+                        "log.logWork"),
+                DEFAULT_LOG_WORK);
         
         /**
          * A flag indicating whether to print a progress bar for downloads or not.
          */
-        public static final boolean showProgressBar = Configurator.getSetting("flag.showProgressBar",
-                Configurator.getSetting("log.showProgressBar", DEFAULT_SHOW_PROGRESS_BAR));
+        public static final boolean showProgressBar = getSetting(List.of(
+                        "showProgressBar",
+                        "flag.showProgressBar",
+                        "log.showProgressBar"),
+                DEFAULT_SHOW_PROGRESS_BAR);
         
         /**
          * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
          */
-        public static final Long daysToKeepLogs = Configurator.getSetting("log.daysToKeepLogs", DEFAULT_DAYS_TO_KEEP_LOGS);
+        public static final Long daysToKeepLogs = getSetting(List.of(
+                        "daysToKeepLogs",
+                        "flag.daysToKeepLogs",
+                        "log.daysToKeepLogs"),
+                DEFAULT_DAYS_TO_KEEP_LOGS);
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
          */
-        public static final String browser = Configurator.getSetting("location.browser");
+        public static final String browser = getSetting(List.of(
+                "browser",
+                "location.browser"));
         
         /**
          * The Channel to process, or null if all Channels should be processed.
          */
-        public static final String channel = Configurator.getSetting("filter.channel");
+        public static final String channel = getSetting("filter.channel");
         
         /**
          * The group to process, or null if all groups should be processed.
          */
-        public static final String group = Configurator.getSetting("filter.group");
+        public static final String group = getSetting("filter.group");
         
         /**
          * The Channel to start processing from, if processing all Channels.
          */
-        public static final String startAt = Configurator.getSetting("filter.startAt");
+        public static final String startAt = getSetting("filter.startAt");
         
         /**
          * The Channel to stop processing at, if processing all Channels.
          */
-        public static final String stopAt = Configurator.getSetting("filter.stopAt");
+        public static final String stopAt = getSetting("filter.stopAt");
         
     }
     

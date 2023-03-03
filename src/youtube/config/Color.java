@@ -155,7 +155,11 @@ public class Color {
     /**
      * A flag indicating whether to enable colors or not.
      */
-    public static final boolean enableColors = Configurator.getSetting("color.enableColors", DEFAULT_ENABLE_COLORS);
+    public static final boolean enableColors = Configurator.getSetting(List.of(
+                    "enableColors",
+                    "color.enableColors",
+                    "color.enable"),
+            DEFAULT_ENABLE_COLORS);
     
     /**
      * The color to use for "base" text.
