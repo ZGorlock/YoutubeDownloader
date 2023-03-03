@@ -26,6 +26,8 @@
             <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}.log</fileNamePattern>
         </rollingPolicy>
         
+        <filter class="youtube.state.log.FileLogFilter"/>
+        
         <encoder class="youtube.state.log.FileLogEncoder">
             <pattern>%d{HH:mm:ss.SSS} %-5level %32logger{32} - %message%n</pattern>
         </encoder>
@@ -41,6 +43,8 @@
             <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}-${downloadLog}.log</fileNamePattern>
         </rollingPolicy>
         
+        <filter class="youtube.state.log.FileDownloadLogFilter"/>
+        
         <encoder class="youtube.state.log.FileLogEncoder">
             <pattern>%d{HH:mm:ss.SSS} %-5level - %message%n</pattern>
         </encoder>
@@ -55,6 +59,8 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${logroot}/%d{yyyy-MM-dd}/${log}-%d{yyyy-MM-dd}-${apiLog}.log</fileNamePattern>
         </rollingPolicy>
+        
+        <filter class="youtube.state.log.FileApiLogFilter"/>
         
         <encoder class="youtube.state.log.FileLogEncoder">
             <pattern>%d{HH:mm:ss.SSS} %-5level - %message%n</pattern>

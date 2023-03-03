@@ -569,9 +569,29 @@ public class Configurator {
         public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
         
         /**
+         * The default value of the setting indicating whether to permit log files in the log directory to be written or not.
+         */
+        public static final boolean DEFAULT_ALLOW_FILE_LOGGING = true;
+    
+        /**
          * The default value of the setting indicating the number of days to retain log files before deleting them.
          */
         public static final long DEFAULT_DAYS_TO_KEEP_LOGS = 30;
+        
+        /**
+         * The default value of the setting indicating whether to permit the main log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_MAIN_LOG = true;
+        
+        /**
+         * The default value of the setting indicating whether to permit the download log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_DOWNLOAD_LOG = true;
+        
+        /**
+         * The default value of the setting indicating whether to permit the api log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_API_LOG = true;
         
         
         //Static Fields
@@ -796,6 +816,16 @@ public class Configurator {
                 DEFAULT_SHOW_PROGRESS_BAR);
         
         /**
+         * A flag indicating whether to permit log files in the log directory to be written or not.
+         */
+        public static final boolean allowFileLogging = getSetting(List.of(
+                        "allowFileLogging",
+                        "flag.allowFileLogging",
+                        "log.file.allowFileLogging",
+                        "log.file.allow"),
+                DEFAULT_ALLOW_FILE_LOGGING);
+    
+        /**
          * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
          */
         public static final Long daysToKeepLogs = getSetting(List.of(
@@ -804,6 +834,33 @@ public class Configurator {
                         "log.file.daysToKeepLogs",
                         "log.daysToKeepLogs"),
                 DEFAULT_DAYS_TO_KEEP_LOGS);
+        
+        /**
+         * A flag indicating whether to permit the main log file to be written or not.
+         */
+        public static final boolean writeMainLog = getSetting(List.of(
+                        "writeMainLog",
+                        "flag.writeMainLog",
+                        "log.file.writeMainLog"),
+                DEFAULT_WRITE_MAIN_LOG);
+        
+        /**
+         * A flag indicating whether to permit the download log file to be written or not.
+         */
+        public static final boolean writeDownloadLog = getSetting(List.of(
+                        "writeDownloadLog",
+                        "flag.writeDownloadLog",
+                        "log.file.writeDownloadLog"),
+                DEFAULT_WRITE_DOWNLOAD_LOG);
+        
+        /**
+         * A flag indicating whether to permit the api log file to be written or not.
+         */
+        public static final boolean writeApiLog = getSetting(List.of(
+                        "writeApiLog",
+                        "flag.writeApiLog",
+                        "log.file.writeApiLog"),
+                DEFAULT_WRITE_API_LOG);
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.

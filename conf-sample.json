@@ -102,7 +102,11 @@
             "showProgressBar": true
         },
         "file": {
-            "daysToKeepLogs": 30
+            "allowFileLogging": true,
+            "daysToKeepLogs": 30,
+            "writeMainLog": true,
+            "writeDownloadLog": true,
+            "writeApiLog": true
         }
     }
 }
