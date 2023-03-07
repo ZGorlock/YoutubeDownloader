@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.config.Color;
-import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.Utils;
 
@@ -134,30 +133,60 @@ public final class Stats {
      */
     public static final AtomicLong totalAudioData = new AtomicLong(0L);
     
+    /**
+     * A counter of the total number of video files saved from Youtube, considering only the Channels that were processed this run.
+     */
+    public static final AtomicInteger totalFilteredVideo = new AtomicInteger(0);
+    
+    /**
+     * A counter of the total number of audio files saved from Youtube, considering only the Channels that were processed this run.
+     */
+    public static final AtomicInteger totalFilteredAudio = new AtomicInteger(0);
+    
+    /**
+     * A counter of the total video data saved from Youtube, in bytes, considering only the Channels that were processed this run.
+     */
+    public static final AtomicLong totalFilteredVideoData = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total audio data saved from Youtube, in bytes, considering only the Channels that were processed this run.
+     */
+    public static final AtomicLong totalFilteredAudioData = new AtomicLong(0L);
+    
     
     //Static Methods
     
     /**
      * Calculates the total data saved from Youtube.
+     *
+     * @param filtered Whether to calculate data from only Channels that were processed this run.
      */
-    private static void calculateData() {
-        logger.debug(Color.log("Calculating Stats..."));
+    private static void calculateData(boolean filtered) {
+        logger.debug(Color.log("Calculating " + (filtered ? "Filtered " : "") + "Stats..."));
         
         Channels.getChannels().stream()
+                .filter(channel -> (!filtered || Channels.getFiltered().contains(channel.getConfig().getKey())))
                 .flatMap(channel -> channel.getState().getSaved().stream()
                         .map(saved -> channel.getState().getKeyStore().get(saved))
                         .filter(Objects::nonNull))
                 .map(KeyStore.KeyStoreEntry::getLocalFile).distinct()
                 .filter(Objects::nonNull).filter(File::exists)
                 .forEach(file -> {
-                    if (Utils.VIDEO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(file.getName()).toLowerCase())) {
-                        Stats.totalVideo.incrementAndGet();
-                        Stats.totalVideoData.addAndGet(file.length());
-                    } else if (Utils.AUDIO_FORMATS_OPTIONS.contains(FileUtils.getFileFormat(file.getName()).toLowerCase())) {
-                        Stats.totalAudio.incrementAndGet();
-                        Stats.totalAudioData.addAndGet(file.length());
+                    if (Utils.isVideoFormat(file.getName())) {
+                        (filtered ? totalFilteredVideo : totalVideo).incrementAndGet();
+                        (filtered ? totalFilteredVideoData : totalVideoData).addAndGet(file.length());
+                    } else if (Utils.isAudioFormat(file.getName())) {
+                        (filtered ? totalFilteredAudio : totalAudio).incrementAndGet();
+                        (filtered ? totalFilteredAudioData : totalAudioData).addAndGet(file.length());
                     }
                 });
+    }
+    
+    /**
+     * Calculates the total data saved from Youtube.
+     */
+    private static void calculateData() {
+        calculateData(false);
     }
     
     /**
@@ -171,6 +200,7 @@ public final class Stats {
         final DecimalFormat integerFormat = new DecimalFormat("#,##0");
         final DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
         final AtomicInteger maxDataLength = new AtomicInteger(0);
+        final boolean filtered = (Channels.getFiltered().size() != Channels.getChannels().size());
         
         final BiConsumer<String, Object> statPrinter = (String title, Object value) ->
                 logger.debug(Optional.ofNullable(value)
@@ -185,6 +215,9 @@ public final class Stats {
                         .orElseGet(() -> Color.link(Utils.formatUnderscoredString(title))));
         
         calculateData();
+        if (filtered) {
+            calculateData(true);
+        }
         
         logger.trace(LogUtils.NEWLINE);
         logger.debug(Color.number("--- Stats ---"));
@@ -223,6 +256,16 @@ public final class Stats {
         statPrinter.accept("Data: ................. ", (double) (totalVideoData.get() + totalAudioData.get()));
         statPrinter.accept("    Video: ............ ", (double) totalVideoData.get());
         statPrinter.accept("    Audio: ............ ", (double) totalAudioData.get());
+        
+        if (filtered) {
+            statPrinter.accept("FILTERED:", null);
+            statPrinter.accept("Downloads: ............ ", (totalFilteredVideo.get() + totalFilteredAudio.get()));
+            statPrinter.accept("    Video: ............ ", totalFilteredVideo.get());
+            statPrinter.accept("    Audio: ............ ", totalFilteredAudio.get());
+            statPrinter.accept("Data: ................. ", (double) (totalFilteredVideoData.get() + totalFilteredAudioData.get()));
+            statPrinter.accept("    Video: ............ ", (double) totalFilteredVideoData.get());
+            statPrinter.accept("    Audio: ............ ", (double) totalFilteredAudioData.get());
+        }
         
         logger.trace(LogUtils.NEWLINE);
     }
