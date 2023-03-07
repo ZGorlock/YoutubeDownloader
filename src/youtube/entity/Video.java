@@ -14,10 +14,10 @@ import commons.access.Project;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelEntry;
-import youtube.config.Configurator;
 import youtube.entity.base.Entity;
 import youtube.entity.base.EntityType;
 import youtube.entity.info.VideoInfo;
+import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
 import youtube.util.Utils;
 
@@ -178,7 +178,7 @@ public class Video extends Entity<VideoInfo> {
                 .map(FileUtils::getFileFormat)
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                                          .map(ChannelEntry::isSaveAsMp3)
-                                         .orElse(Configurator.Config.asMp3)
+                                         .orElse(DownloadUtils.Config.asMp3)
                                  ? Utils.DEFAULT_AUDIO_FORMAT : Utils.DEFAULT_VIDEO_FORMAT);
     }
     

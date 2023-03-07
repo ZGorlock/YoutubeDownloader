@@ -104,10 +104,10 @@
         },
         "file": {
             "allowFileLogging": true,
-            "daysToKeepLogs": 30,
             "writeMainLog": true,
             "writeDownloadLog": true,
-            "writeApiLog": true
+            "writeApiLog": true,
+            "daysToKeepLogs": 30
         }
     }
 }

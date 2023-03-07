@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiFunction;
 
 import commons.io.console.Console;
@@ -26,7 +27,6 @@ import youtube.entity.Video;
 import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.util.ExecutableUtils;
-import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -55,182 +55,27 @@ public class Color {
             "DARK_GREEN", "GREEN", "TEAL", "CYAN",
             "DARK_BLUE", "BLUE", "PURPLE", "MAGENTA");
     
-    /**
-     * The default value of the flag indicating whether to enable colors or not.
-     */
-    public static final boolean DEFAULT_ENABLE_COLORS = true;
-    
-    /**
-     * The default color to use for "base" text.
-     */
-    public static final String DEFAULT_COLOR_BASE = "GREEN";
-    
-    /**
-     * The default color to use for "good" text.
-     */
-    public static final String DEFAULT_COLOR_GOOD = "CYAN";
-    
-    /**
-     * The default color to use for "bad" text.
-     */
-    public static final String DEFAULT_COLOR_BAD = "RED";
-    
-    /**
-     * The default color to use for "log" text.
-     */
-    public static final String DEFAULT_COLOR_LOG = "DARK_GREY";
-    
-    /**
-     * The default color to use for "channel" text.
-     */
-    public static final String DEFAULT_COLOR_CHANNEL = "YELLOW";
-    
-    /**
-     * The default color to use for "video" text.
-     */
-    public static final String DEFAULT_COLOR_VIDEO = "PURPLE";
-    
-    /**
-     * The default color to use for "number" text.
-     */
-    public static final String DEFAULT_COLOR_NUMBER = "WHITE";
-    
-    /**
-     * The default color to use for "file" text.
-     */
-    public static final String DEFAULT_COLOR_FILE = "GREY";
-    
-    /**
-     * The default color to use for "exe" text.
-     */
-    public static final String DEFAULT_COLOR_EXE = "ORANGE";
-    
-    /**
-     * The default color to use for "link" text.
-     */
-    public static final String DEFAULT_COLOR_LINK = "TEAL";
-    
-    /**
-     * The default color to use for Progress Bar "base" text.
-     */
-    public static final String DEFAULT_COLOR_PROGRESS_BAR_BASE = ProgressBar.DEFAULT_COLOR_BASE.name();
-    
-    /**
-     * The default color to use for Progress Bar "good" text.
-     */
-    public static final String DEFAULT_COLOR_PROGRESS_BAR_GOOD = ProgressBar.DEFAULT_COLOR_GOOD.name();
-    
-    /**
-     * The default color to use for Progress Bar "bad" text.
-     */
-    public static final String DEFAULT_COLOR_PROGRESS_BAR_BAD = ProgressBar.DEFAULT_COLOR_BAD.name();
-    
-    //Ensure config is loaded prior to using colors
-    static {
-        if (Configurator.activeProgram == null) {
-            logger.trace(LogUtils.NEWLINE);
-            logger.error(Color.bad("Attempted to load colors before the config was initialized"));
-            throw new RuntimeException();
-        }
-    }
-    
-    
-    //Static Functions
-    
-    /**
-     * A function that loads a color setting configuration.
-     */
-    private static final BiFunction<String, String, Console.ConsoleEffect> colorSettingLoader = (String subKey, String def) -> {
-        final String confColor = Configurator.getSetting(Configurator.ConfigSection.COLOR.getSettingKey(subKey), def);
-        String color = confColor.matches("(?i)DEFAULT(?:.COLOR)?") ? def :
-                       confColor.toUpperCase().replace(" ", "_");
-        
-        if (!AVAILABLE_COLORS.contains(color)) {
-            logger.warn(Color.apply(Console.ConsoleEffect.RED, (confColor + " is not a valid color")));
-            color = def;
-        }
-        return Console.ConsoleEffect.valueOf(color);
-    };
-    
     
     //Static Fields
     
     /**
-     * A flag indicating whether to enable colors or not.
+     * A flag indicating whether the color configuration settings have been loaded yet or not.
      */
-    public static final boolean enableColors = Configurator.getSetting(List.of(
-                    "enableColors",
-                    "color.enableColors",
-                    "color.enable"),
-            DEFAULT_ENABLE_COLORS);
-    
-    /**
-     * The color to use for "base" text.
-     */
-    public static final Console.ConsoleEffect base = colorSettingLoader.apply("base", DEFAULT_COLOR_BASE);
-    
-    /**
-     * The color to use for "good" text.
-     */
-    public static final Console.ConsoleEffect good = colorSettingLoader.apply("good", DEFAULT_COLOR_GOOD);
-    
-    /**
-     * The color to use for "bad" text.
-     */
-    public static final Console.ConsoleEffect bad = colorSettingLoader.apply("bad", DEFAULT_COLOR_BAD);
-    
-    /**
-     * The color to use for "log" text.
-     */
-    public static final Console.ConsoleEffect log = colorSettingLoader.apply("log", DEFAULT_COLOR_LOG);
-    
-    /**
-     * The color to use for "channel" text.
-     */
-    public static final Console.ConsoleEffect channel = colorSettingLoader.apply("channel", DEFAULT_COLOR_CHANNEL);
-    
-    /**
-     * The color to use for "video" text.
-     */
-    public static final Console.ConsoleEffect video = colorSettingLoader.apply("video", DEFAULT_COLOR_VIDEO);
-    
-    /**
-     * The color to use for "number" text.
-     */
-    public static final Console.ConsoleEffect number = colorSettingLoader.apply("number", DEFAULT_COLOR_NUMBER);
-    
-    /**
-     * The color to use for "file" text.
-     */
-    public static final Console.ConsoleEffect file = colorSettingLoader.apply("file", DEFAULT_COLOR_FILE);
-    
-    /**
-     * The color to use for "exe" text.
-     */
-    public static final Console.ConsoleEffect exe = colorSettingLoader.apply("exe", DEFAULT_COLOR_EXE);
-    
-    /**
-     * The color to use for "link" text.
-     */
-    public static final Console.ConsoleEffect link = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
-    
-    /**
-     * The color to use for Progress Bar "base" text.
-     */
-    public static final Console.ConsoleEffect progressBarBase = colorSettingLoader.apply("progressBar.base", DEFAULT_COLOR_PROGRESS_BAR_BASE);
-    
-    /**
-     * The color to use for Progress Bar "good" text.
-     */
-    public static final Console.ConsoleEffect progressBarGood = colorSettingLoader.apply("progressBar.good", DEFAULT_COLOR_PROGRESS_BAR_GOOD);
-    
-    /**
-     * The color to use for Progress Bar "bad" text.
-     */
-    public static final Console.ConsoleEffect progressBarBad = colorSettingLoader.apply("progressBar.bad", DEFAULT_COLOR_PROGRESS_BAR_BAD);
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
     
     //Static Methods
+    
+    /**
+     * Initializes the color configuration.
+     */
+    public static void initColors() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.debug(log("Initializing Colors..."));
+            
+            Config.init();
+        }
+    }
     
     /**
      * Applies a color to output.
@@ -240,7 +85,7 @@ public class Color {
      * @return The colored output.
      */
     public static String apply(Console.ConsoleEffect color, Object o) {
-        return !enableColors ? String.valueOf(o) :
+        return !Config.enableColors ? String.valueOf(o) :
                color.apply(String.valueOf(o));
     }
     
@@ -251,7 +96,7 @@ public class Color {
      * @return The colored output.
      */
     public static String base(Object o) {
-        return apply(base, o);
+        return apply(Config.base, o);
     }
     
     /**
@@ -261,7 +106,7 @@ public class Color {
      * @return The colored output.
      */
     public static String good(Object o) {
-        return apply(good, o);
+        return apply(Config.good, o);
     }
     
     /**
@@ -271,7 +116,7 @@ public class Color {
      * @return The colored output.
      */
     public static String bad(Object o) {
-        return apply(bad, o);
+        return apply(Config.bad, o);
     }
     
     /**
@@ -281,7 +126,7 @@ public class Color {
      * @return The colored output.
      */
     public static String log(Object o) {
-        return apply(log, o);
+        return apply(Config.log, o);
     }
     
     /**
@@ -291,7 +136,7 @@ public class Color {
      * @return The colored output.
      */
     public static String channel(Object o) {
-        return apply(channel, o);
+        return apply(Config.channel, o);
     }
     
     /**
@@ -301,7 +146,7 @@ public class Color {
      * @return The colored output.
      */
     public static String video(Object o) {
-        return apply(video, o);
+        return apply(Config.video, o);
     }
     
     /**
@@ -311,7 +156,7 @@ public class Color {
      * @return The colored output.
      */
     public static String number(Object o) {
-        return apply(number, o);
+        return apply(Config.number, o);
     }
     
     /**
@@ -321,7 +166,7 @@ public class Color {
      * @return The colored output.
      */
     public static String file(Object o) {
-        return apply(file, o);
+        return apply(Config.file, o);
     }
     
     /**
@@ -331,7 +176,7 @@ public class Color {
      * @return The colored output.
      */
     public static String exe(Object o) {
-        return apply(exe, o);
+        return apply(Config.exe, o);
     }
     
     /**
@@ -341,7 +186,7 @@ public class Color {
      * @return The colored output.
      */
     public static String link(Object o) {
-        return apply(link, o);
+        return apply(Config.link, o);
     }
     
     /**
@@ -352,7 +197,7 @@ public class Color {
      * @return The quoted output.
      */
     public static String quoted(String output, boolean doubleQuote) {
-        final String quote = Color.log(doubleQuote ? '\"' : '\'');
+        final String quote = log(doubleQuote ? '\"' : '\'');
         return quote + output + quote;
     }
     
@@ -1653,6 +1498,209 @@ public class Color {
         } else {
             return bad(value);
         }
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Holds the color Config.
+     */
+    public static class Config {
+        
+        //Constants
+        
+        /**
+         * The default value of the flag indicating whether to enable colors or not.
+         */
+        public static final boolean DEFAULT_ENABLE_COLORS = true;
+        
+        /**
+         * The default color to use for "base" text.
+         */
+        public static final String DEFAULT_COLOR_BASE = "GREEN";
+        
+        /**
+         * The default color to use for "good" text.
+         */
+        public static final String DEFAULT_COLOR_GOOD = "CYAN";
+        
+        /**
+         * The default color to use for "bad" text.
+         */
+        public static final String DEFAULT_COLOR_BAD = "RED";
+        
+        /**
+         * The default color to use for "log" text.
+         */
+        public static final String DEFAULT_COLOR_LOG = "DARK_GREY";
+        
+        /**
+         * The default color to use for "channel" text.
+         */
+        public static final String DEFAULT_COLOR_CHANNEL = "YELLOW";
+        
+        /**
+         * The default color to use for "video" text.
+         */
+        public static final String DEFAULT_COLOR_VIDEO = "PURPLE";
+        
+        /**
+         * The default color to use for "number" text.
+         */
+        public static final String DEFAULT_COLOR_NUMBER = "WHITE";
+        
+        /**
+         * The default color to use for "file" text.
+         */
+        public static final String DEFAULT_COLOR_FILE = "GREY";
+        
+        /**
+         * The default color to use for "exe" text.
+         */
+        public static final String DEFAULT_COLOR_EXE = "ORANGE";
+        
+        /**
+         * The default color to use for "link" text.
+         */
+        public static final String DEFAULT_COLOR_LINK = "TEAL";
+        
+        /**
+         * The default color to use for Progress Bar "base" text.
+         */
+        public static final String DEFAULT_COLOR_PROGRESS_BAR_BASE = ProgressBar.DEFAULT_COLOR_BASE.name();
+        
+        /**
+         * The default color to use for Progress Bar "good" text.
+         */
+        public static final String DEFAULT_COLOR_PROGRESS_BAR_GOOD = ProgressBar.DEFAULT_COLOR_GOOD.name();
+        
+        /**
+         * The default color to use for Progress Bar "bad" text.
+         */
+        public static final String DEFAULT_COLOR_PROGRESS_BAR_BAD = ProgressBar.DEFAULT_COLOR_BAD.name();
+        
+        
+        //Static Fields
+        
+        /**
+         * A flag indicating whether to enable colors or not.
+         */
+        public static boolean enableColors = DEFAULT_ENABLE_COLORS;
+        
+        /**
+         * The color to use for "base" text.
+         */
+        public static Console.ConsoleEffect base = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_BASE);
+        
+        /**
+         * The color to use for "good" text.
+         */
+        public static Console.ConsoleEffect good = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_GOOD);
+        
+        /**
+         * The color to use for "bad" text.
+         */
+        public static Console.ConsoleEffect bad = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_BAD);
+        
+        /**
+         * The color to use for "log" text.
+         */
+        public static Console.ConsoleEffect log = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_LOG);
+        
+        /**
+         * The color to use for "channel" text.
+         */
+        public static Console.ConsoleEffect channel = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_CHANNEL);
+        
+        /**
+         * The color to use for "video" text.
+         */
+        public static Console.ConsoleEffect video = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_VIDEO);
+        
+        /**
+         * The color to use for "number" text.
+         */
+        public static Console.ConsoleEffect number = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_NUMBER);
+        
+        /**
+         * The color to use for "file" text.
+         */
+        public static Console.ConsoleEffect file = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_FILE);
+        
+        /**
+         * The color to use for "exe" text.
+         */
+        public static Console.ConsoleEffect exe = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_EXE);
+        
+        /**
+         * The color to use for "link" text.
+         */
+        public static Console.ConsoleEffect link = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_LINK);
+        
+        /**
+         * The color to use for Progress Bar "base" text.
+         */
+        public static Console.ConsoleEffect progressBarBase = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_PROGRESS_BAR_BASE);
+        
+        /**
+         * The color to use for Progress Bar "good" text.
+         */
+        public static Console.ConsoleEffect progressBarGood = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_PROGRESS_BAR_GOOD);
+        
+        /**
+         * The color to use for Progress Bar "bad" text.
+         */
+        public static Console.ConsoleEffect progressBarBad = Console.ConsoleEffect.valueOf(DEFAULT_COLOR_PROGRESS_BAR_BAD);
+        
+        
+        //Static Functions
+        
+        /**
+         * A function that loads a color setting configuration.
+         */
+        private static final BiFunction<String, String, Console.ConsoleEffect> colorSettingLoader = (String subKey, String def) -> {
+            final String confColor = !loaded.get() ? def :
+                                     Configurator.getSetting(Configurator.ConfigSection.COLOR.getSettingKey(subKey), def);
+            String color = confColor.matches("(?i)DEFAULT(?:.COLOR)?") ? def :
+                           confColor.toUpperCase().replace(" ", "_");
+            
+            if (!AVAILABLE_COLORS.contains(color)) {
+                logger.warn(apply(Console.ConsoleEffect.RED, (confColor + " is not a valid color")));
+                color = def;
+            }
+            return Console.ConsoleEffect.valueOf(color);
+        };
+        
+        
+        //Static Methods
+        
+        /**
+         * Initializes the Config.
+         */
+        private static void init() {
+            enableColors = Configurator.getSetting(List.of(
+                            "enableColors",
+                            "color.enableColors",
+                            "color.enable"),
+                    DEFAULT_ENABLE_COLORS);
+            
+            base = colorSettingLoader.apply("base", DEFAULT_COLOR_BASE);
+            good = colorSettingLoader.apply("good", DEFAULT_COLOR_GOOD);
+            bad = colorSettingLoader.apply("bad", DEFAULT_COLOR_BAD);
+            log = colorSettingLoader.apply("log", DEFAULT_COLOR_LOG);
+            channel = colorSettingLoader.apply("channel", DEFAULT_COLOR_CHANNEL);
+            video = colorSettingLoader.apply("video", DEFAULT_COLOR_VIDEO);
+            number = colorSettingLoader.apply("number", DEFAULT_COLOR_NUMBER);
+            file = colorSettingLoader.apply("file", DEFAULT_COLOR_FILE);
+            exe = colorSettingLoader.apply("exe", DEFAULT_COLOR_EXE);
+            link = colorSettingLoader.apply("link", DEFAULT_COLOR_LINK);
+            
+            progressBarBase = colorSettingLoader.apply("progressBar.base", DEFAULT_COLOR_PROGRESS_BAR_BASE);
+            progressBarGood = colorSettingLoader.apply("progressBar.good", DEFAULT_COLOR_PROGRESS_BAR_GOOD);
+            progressBarBad = colorSettingLoader.apply("progressBar.bad", DEFAULT_COLOR_PROGRESS_BAR_BAD);
+        }
+        
     }
     
 }

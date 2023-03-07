@@ -12,7 +12,7 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.config.Configurator;
+import youtube.util.LogUtils;
 
 /**
  * Filters file logging to the main log file.
@@ -37,7 +37,7 @@ public class FileLogFilter extends Filter<ILoggingEvent> {
      */
     @Override
     public FilterReply decide(ILoggingEvent event) {
-        return (Configurator.Config.allowFileLogging && Configurator.Config.writeMainLog) ?
+        return (LogUtils.Config.allowFileLogging && LogUtils.Config.writeMainLog) ?
                FilterReply.NEUTRAL : FilterReply.DENY;
     }
     

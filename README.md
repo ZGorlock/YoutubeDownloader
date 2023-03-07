@@ -907,10 +907,10 @@ To configure the logging, find or create the `"log"` [json configuration](#loggi
 | &nbsp;                         | &nbsp;                                                                                                                                                                                                                                                                                                                                                                              |
 | **_file_**                     | **The file log settings :** _(optional)_                                                                                                                                                                                                                                                                                                                                            |
 | **_file.allowFileLogging_**    | When this setting is enabled, logging to files in the `log/` directory will be permitted. <br/> When this setting is disabled, all file logging will be disabled. <br/> The acceptable values for this setting are `true` or `false`. _(optional; enabled by default)_                                                                                                              |
-| **_file.daysToKeepLogs_**      | The number of days to retain log files before deleting them. <br/> Once a log file has become older than the value specified, it will be deleted the next time the program runs. <br/> You may set this setting to `-1` to indicate that logs should never be purged. <br/> The acceptable values for this setting are any positive integer, or `-1`. _(optional; `30` by default)_ |
 | **_file.writeMainLog_**        | When this setting is enabled, the program will be permitted to write to the main log file. <br/> When this setting is disabled, logging to the main log file will be disabled. <br/> The acceptable values for this setting are `true` or `false`. _(optional; enabled by default)_                                                                                                 |
 | **_file.writeDownloadLog_**    | When this setting is enabled, the program will be permitted to write to the download log file. <br/> When this setting is disabled, logging to the download log file will be disabled. <br/> The acceptable values for this setting are `true` or `false`. _(optional; enabled by default)_                                                                                         |
 | **_file.writeApiLog_**         | When this setting is enabled, the program will be permitted to write to the api log file. <br/> When this setting is disabled, logging to the api log file will be disabled. <br/> The acceptable values for this setting are `true` or `false`. _(optional; enabled by default)_                                                                                                   |
+| **_file.daysToKeepLogs_**      | The number of days to retain log files before deleting them. <br/> Once a log file has become older than the value specified, it will be deleted the next time the program runs. <br/> You may set this setting to `-1` to indicate that logs should never be purged. <br/> The acceptable values for this setting are any positive integer, or `-1`. _(optional; `30` by default)_ |
 |                                |                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ### Logging Configuration (Sample):
@@ -926,10 +926,10 @@ To configure the logging, find or create the `"log"` [json configuration](#loggi
     },
     "file": {
         "allowFileLogging": true,
-        "daysToKeepLogs": 30,
         "writeMainLog": true,
         "writeDownloadLog": true,
-        "writeApiLog": true
+        "writeApiLog": true,
+        "daysToKeepLogs": 30
     }
 }
 ```

@@ -8,6 +8,7 @@
 package youtube.util;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
@@ -42,11 +43,6 @@ public final class DownloadUtils {
     //Constants
     
     /**
-     * A flag indicating whether to display a progress bar or not.
-     */
-    public static final boolean DISPLAY_PROGRESS_BAR = Configurator.Config.showProgressBar && !Configurator.Config.showWork;
-    
-    /**
      * A list of error responses that are considered a failure instead of an error, so the video will not be blocked.
      */
     private static final String[] NON_CRITICAL_ERRORS = new String[] {
@@ -75,9 +71,9 @@ public final class DownloadUtils {
         
         //Values
         
-        SUCCESS("Succeeded", false, Color.good),
-        FAILURE("Failed", true, Color.bad),
-        ERROR("Error", true, Color.bad);
+        SUCCESS("Succeeded", false, Color.Config.good),
+        FAILURE("Failed", true, Color.Config.bad),
+        ERROR("Error", true, Color.Config.bad);
         
         
         //Fields
@@ -166,20 +162,20 @@ public final class DownloadUtils {
      * @return A download response indicating the result of the download attempt.
      */
     private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) {
-        final boolean newExe = !ExecutableUtils.executable.isDeprecated();
-        final boolean asMp3 = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3);
+        final boolean newExe = !ExecutableUtils.Config.executable.isDeprecated();
+        final boolean audio = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Config.asMp3);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
-        if (isRetry && (Configurator.Config.neverUseBrowserCookies || StringUtility.isNullOrBlank(Configurator.Config.browser))) {
+        if (isRetry && (Configurator.Config.neverUseBrowserCookies || StringUtility.isNullOrBlank(Config.browser))) {
             return null;
         }
         
-        final String cmd = Color.exe(ExecutableUtils.executable.getCall()) + Color.log(" ") +
+        final String cmd = Color.exe(ExecutableUtils.Config.executable.getCall()) + Color.log(" ") +
                 Color.log("--output ") + Color.quoteFilePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), true) + Color.log(" ") +
                 Color.log("--geo-bypass --rm-cache-dir " +
-                        (isRetry ? ("--cookies-from-browser " + Configurator.Config.browser.toLowerCase() + " ") : "")) +
-                Color.log((asMp3 ? ("--extract-audio --audio-format " + Utils.DEFAULT_AUDIO_FORMAT + " ") :
-                           ((newExe && !Configurator.Config.preMerged) ? "" : "--format best ")) +
+                        (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
+                Color.log((audio ? ("--extract-audio --audio-format " + Utils.DEFAULT_AUDIO_FORMAT + " ") :
+                           ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? "-f b " : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
                 Color.link(video.getInfo().getUrl());
@@ -197,7 +193,7 @@ public final class DownloadUtils {
     private static DownloadResponse performDownload(String cmd, Video video, boolean isRetry) {
         LogUtils.logDivider(logger, '-');
         LogUtils.log(logger, (isRetry ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.INFO),
-                (Configurator.Config.showCommand ? (LogUtils.INDENT + cmd) : StringUtility.removeConsoleEscapeCharacters(cmd)));
+                (LogUtils.Config.showCommand ? (LogUtils.INDENT + cmd) : StringUtility.removeConsoleEscapeCharacters(cmd)));
         
         final DownloadResponse response = new DownloadResponse();
         final DownloadProgressBar progressBar = new DownloadProgressBar(video, response);
@@ -228,6 +224,67 @@ public final class DownloadUtils {
         LogUtils.logDivider(logger, '-');
         
         return response;
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Holds the download Config.
+     */
+    public static class Config {
+        
+        //Constants
+        
+        /**
+         * The default value of the flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         */
+        public static final boolean DEFAULT_PRE_MERGED = true;
+        
+        /**
+         * The default value of the flag indicating whether to download the videos as mp3 files or not.
+         */
+        public static final boolean DEFAULT_AS_MP3 = false;
+        
+        
+        //Static Fields
+        
+        /**
+         * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         */
+        public static boolean preMerged = DEFAULT_PRE_MERGED;
+        
+        /**
+         * A flag indicating whether to download the videos as mp3 files or not.
+         */
+        public static boolean asMp3 = DEFAULT_AS_MP3;
+        
+        /**
+         * The browser that cookies will be used from when attempting to retry certain failed downloads.
+         */
+        public static String browser = null;
+        
+        
+        //Static Methods
+        
+        /**
+         * Initializes the Config.
+         */
+        private static void init() {
+            preMerged = Configurator.getSetting(List.of(
+                            "preMerged",
+                            "format.preMerged"),
+                    DEFAULT_PRE_MERGED);
+            asMp3 = Configurator.getSetting(List.of(
+                            "asMp3",
+                            "format.asMp3"),
+                    DEFAULT_AS_MP3);
+            
+            browser = Configurator.getSetting(List.of(
+                    "browser",
+                    "location.browser"));
+        }
+        
     }
     
     
@@ -470,13 +527,13 @@ public final class DownloadUtils {
          * @param response the Download Response.
          */
         public DownloadProgressBar(Video video, DownloadResponse response) {
-            super("", 0L, 32, "KB", DISPLAY_PROGRESS_BAR);
+            super("", 0L, 32, "KB", (LogUtils.Config.showProgressBar && !LogUtils.Config.showWork));
             
             this.video = video;
             this.response = response;
             
             setIndent(LogUtils.INDENT_WIDTH);
-            setColors(Color.progressBarBase, Color.progressBarGood, Color.progressBarBad);
+            setColors(Color.Config.progressBarBase, Color.Config.progressBarGood, Color.Config.progressBarBad);
         }
         
         
@@ -491,9 +548,9 @@ public final class DownloadUtils {
          */
         @Override
         public synchronized boolean processLog(String log, boolean isError) {
-            logger.trace(Configurator.Config.showWork ? Color.log(log) : log);
+            logger.trace(LogUtils.Config.showWork ? Color.log(log) : log);
             
-            if (!Configurator.Config.showWork && Configurator.Config.showProgressBar) {
+            if (!LogUtils.Config.showWork && LogUtils.Config.showProgressBar) {
                 
                 if (getInitialProgress() == 0) {
                     final Matcher resumeMatcher = RESUME_PATTERN.matcher(log);
@@ -555,7 +612,7 @@ public final class DownloadUtils {
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Merging Formats" +
-                            (Optional.ofNullable(getVideo().getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Configurator.Config.asMp3) ? " and Extracting Audio" : "") + "...");
+                            (Optional.ofNullable(getVideo().getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Config.asMp3) ? " and Extracting Audio" : "") + "...");
                     logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
                     complete(true, completionMessage);
                 }
@@ -587,7 +644,7 @@ public final class DownloadUtils {
          * @param exception The exception that ended the download, or null if the download ended naturally.
          */
         protected synchronized void finishDownload(Exception exception) {
-            if (DISPLAY_PROGRESS_BAR) {
+            if (LogUtils.Config.showProgressBar && !LogUtils.Config.showWork) {
                 if (!isCompleted()) {
                     if (((exception != null) && (getProgress() > 0)) || (getResponse().getError() != null)) {
                         final String errorMessage = Color.bad(getResponse().getMessage());

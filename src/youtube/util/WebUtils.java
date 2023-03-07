@@ -89,6 +89,22 @@ public final class WebUtils {
     //Static Methods
     
     /**
+     * Determines if internet access is available.
+     *
+     * @return Whether internet access is available.
+     */
+    public static boolean checkInternet() {
+        logger.debug(Color.log("Checking Internet..."));
+        
+        if (!Internet.isOnline()) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.warn(Color.bad("Internet access is required"));
+            return false;
+        }
+        return true;
+    }
+    
+    /**
      * Fetches the Video from a Youtube video url.
      *
      * @param url    The video url.

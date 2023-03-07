@@ -75,6 +75,11 @@ public class YoutubeChannelDownloader {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
+        logger.info(Color.number("--------------------------"));
+        logger.info(Color.number("Youtube Channel Downloader"));
+        logger.info(Color.number("--------------------------"));
+        logger.trace(LogUtils.NEWLINE);
+        
         if (!Utils.startup(Configurator.Program.YOUTUBE_CHANNEL_DOWNLOADER)) {
             return;
         }
@@ -91,18 +96,22 @@ public class YoutubeChannelDownloader {
      * Processes Channels.
      */
     private static void run() {
+        logger.debug(Color.log("Starting..."));
+        logger.trace(LogUtils.NEWLINE);
+        
         Channels.loadChannels();
         KeyStore.load();
         
-        if (Configurator.Config.channel == null) {
-            boolean skip = (Configurator.Config.startAt != null);
-            boolean stop = (Configurator.Config.stopAt != null);
+        logger.trace(LogUtils.NEWLINE);
+        if (Channels.Config.channel == null) {
+            boolean skip = (Channels.Config.startAt != null);
+            boolean stop = (Channels.Config.stopAt != null);
             
-            if (!((skip && stop) && (Channels.configIndex(Configurator.Config.stopAt) < Channels.configIndex(Configurator.Config.startAt)))) {
+            if (!((skip && stop) && (Channels.configIndex(Channels.Config.stopAt) < Channels.configIndex(Channels.Config.startAt)))) {
                 for (ChannelConfig config : Channels.getConfigs()) {
-                    if (!(skip &= !config.getKey().equals(Configurator.Config.startAt)) && config.isMemberOfGroup(Configurator.Config.group)) {
+                    if (!(skip &= !config.getKey().equals(Channels.Config.startAt)) && config.isMemberOfGroup(Channels.Config.group)) {
                         processChannel(config.getKey());
-                        if (stop && config.getKey().equals(Configurator.Config.stopAt)) {
+                        if (stop && config.getKey().equals(Channels.Config.stopAt)) {
                             break;
                         }
                     }
@@ -110,8 +119,9 @@ public class YoutubeChannelDownloader {
             }
             
         } else {
-            processChannel(Configurator.Config.channel);
+            processChannel(Channels.Config.channel);
         }
+        logger.trace(LogUtils.NEWLINE);
         
         KeyStore.save();
         Stats.print();
@@ -155,6 +165,8 @@ public class YoutubeChannelDownloader {
                 cleanChannel();
         
         Stats.totalChannelsProcessed.incrementAndGet();
+        
+        logger.trace(LogUtils.NEWLINE);
         return success;
     }
     

@@ -57,7 +57,7 @@ public class SponsorBlocker {
         final boolean configValid = (config != null) && config.isEnabled();
         final boolean globalConfigValid = (globalConfig != null) && globalConfig.isEnabled();
         
-        if ((!configValid && !globalConfigValid) || ExecutableUtils.executable.isDeprecated()) {
+        if ((!configValid && !globalConfigValid) || ExecutableUtils.Config.executable.isDeprecated()) {
             return "";
         }
         

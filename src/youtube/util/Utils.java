@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
-import commons.access.Internet;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -122,16 +121,15 @@ public final class Utils {
      * @return Whether startup was successful or not.
      */
     public static boolean startup(Configurator.Program program) {
+        logger.debug(Color.log("Initializing..."));
+        logger.trace(LogUtils.NEWLINE);
+        
         Configurator.loadSettings(program);
         LogUtils.initLogging();
+        Color.initColors();
+        FileUtils.initFilesystem();
         
-        if (!Internet.isOnline()) {
-            logger.trace(LogUtils.NEWLINE);
-            logger.warn(Color.bad("Internet access is required"));
-            return false;
-        }
-        
-        return ExecutableUtils.checkExe();
+        return WebUtils.checkInternet() && ExecutableUtils.checkExe();
     }
     
     /**

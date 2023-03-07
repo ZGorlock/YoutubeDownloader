@@ -51,21 +51,6 @@ public class Channels {
      */
     public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, ("channels" + '.' + Utils.CONFIG_FILE_FORMAT));
     
-    /**
-     * The default drive to use for storage of downloaded files.
-     */
-    public static final String DEFAULT_STORAGE_DRIVE = PathUtils.getUserDrivePath();
-    
-    /**
-     * The default Music directory in the storage drive.
-     */
-    public static final String DEFAULT_MUSIC_DIR = "Music/";
-    
-    /**
-     * The default Videos directory in the storage drive.
-     */
-    public static final String DEFAULT_VIDEOS_DIR = "Videos/";
-    
     
     //Static Fields
     
@@ -113,30 +98,6 @@ public class Channels {
      * A list of registered Channel Group names.
      */
     private static final Set<String> groupNames = new HashSet<>();
-    
-    /**
-     * The drive to use for storage of downloaded files.
-     */
-    public static final File storageDrive = new File(Configurator.getSetting(List.of(
-                    "storageDrive",
-                    "location.storageDrive"),
-            DEFAULT_STORAGE_DRIVE));
-    
-    /**
-     * The Music directory in the storage drive.
-     */
-    public static final File musicDir = new File(storageDrive, Configurator.getSetting(List.of(
-                    "musicDir",
-                    "location.musicDir"),
-            DEFAULT_MUSIC_DIR));
-    
-    /**
-     * The Videos directory in the storage drive.
-     */
-    public static final File videoDir = new File(storageDrive, Configurator.getSetting(List.of(
-                    "videoDir",
-                    "location.videoDir"),
-            DEFAULT_VIDEOS_DIR));
     
     
     //Static Methods
@@ -245,6 +206,10 @@ public class Channels {
     @SuppressWarnings("unchecked")
     public static void loadChannels() {
         if (loaded.compareAndSet(false, true)) {
+            logger.debug(Color.log("Loading Channels..."));
+            
+            Config.init();
+            
             try {
                 final List<Map<String, Object>> channelListData = (List<Map<String, Object>>) new JSONParser().parse(readChannelConfiguration());
                 
@@ -349,7 +314,7 @@ public class Channels {
      * Prints the Channels map.
      */
     public static void print() {
-        if (!Configurator.Config.printChannels) {
+        if (!Config.printChannels) {
             return;
         }
         
@@ -359,6 +324,70 @@ public class Channels {
         root.print();
         
         logger.trace(LogUtils.NEWLINE);
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Holds the channels Config.
+     */
+    public static class Config {
+        
+        //Constants
+        
+        /**
+         * The default value of the flag indicating whether to print the Channel list at the start of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_CHANNELS = false;
+        
+        
+        //Static Fields
+        
+        /**
+         * A flag indicating whether to print the Channel list at the start of the run or not.
+         */
+        public static boolean printChannels = DEFAULT_PRINT_CHANNELS;
+        
+        /**
+         * The Channel to process, or null if all Channels should be processed.
+         */
+        public static String channel = null;
+        
+        /**
+         * The group to process, or null if all groups should be processed.
+         */
+        public static String group = null;
+        
+        /**
+         * The Channel to start processing from, if processing all Channels.
+         */
+        public static String startAt = null;
+        
+        /**
+         * The Channel to stop processing at, if processing all Channels.
+         */
+        public static String stopAt = null;
+        
+        
+        //Static Methods
+        
+        /**
+         * Initializes the Config.
+         */
+        private static void init() {
+            printChannels = Configurator.getSetting(List.of(
+                            "printChannels",
+                            "log.printChannels",
+                            "output.printChannels"),
+                    DEFAULT_PRINT_CHANNELS);
+            
+            channel = Configurator.getSetting("filter.channel");
+            group = Configurator.getSetting("filter.group");
+            startAt = Configurator.getSetting("filter.startAt");
+            stopAt = Configurator.getSetting("filter.stopAt");
+        }
+        
     }
     
 }

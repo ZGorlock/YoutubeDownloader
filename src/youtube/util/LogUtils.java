@@ -166,8 +166,11 @@ public final class LogUtils {
      */
     public static void initLogging() {
         if (loaded.compareAndSet(false, true)) {
-            System.setProperty("logback.configurationFile", LogUtils.LOGBACK_CONFIG_FILE.getAbsolutePath());
+            logger.debug(Color.log("Initializing Logging..."));
             
+            Config.init();
+            
+            System.setProperty("logback.configurationFile", LOGBACK_CONFIG_FILE.getAbsolutePath());
             Runtime.getRuntime().addShutdownHook(new Thread(LogUtils::shutdownLogging));
         }
     }
@@ -466,10 +469,10 @@ public final class LogUtils {
      * Purges old log files.
      */
     private static void cleanupOldLogs() {
-        if (Optional.ofNullable(Configurator.Config.daysToKeepLogs).orElse(-1L) < 0) {
+        if (Optional.ofNullable(Config.daysToKeepLogs).orElse(-1L) < 0) {
             return;
         }
-        fetchAllLogsOlderThan(Configurator.Config.daysToKeepLogs.intValue())
+        fetchAllLogsOlderThan(Config.daysToKeepLogs.intValue())
                 .forEach(Filesystem::deleteFile);
         
         Filesystem.getDirs(LOG_DIR).stream()
@@ -573,6 +576,199 @@ public final class LogUtils {
                 .map(logName -> logName.replaceAll("^.+?-([\\d\\-]+)[.\\-]\\D.+$", "$1"))
                 .map(LogUtils::parseDatestamp)
                 .orElse(new Date(0));
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Holds the log Config.
+     */
+    public static class Config {
+        
+        //Constants
+        
+        /**
+         * The default value of the flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_STATS = true;
+        
+        /**
+         * The default value of the flag indicating whether to print the executable version at the start of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
+        
+        /**
+         * The default value of the flag indicating whether to print the command sent to the executable during a download or not.
+         */
+        public static final boolean DEFAULT_SHOW_COMMAND = true;
+        
+        /**
+         * The default value of the flag indicating whether to print the output produced by the executable during a download or not.
+         */
+        public static final boolean DEFAULT_SHOW_WORK = false;
+        
+        /**
+         * The default value of the flag indicating whether to display a progress bar in the terminal during a download or not.
+         */
+        public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
+        
+        /**
+         * The default value of the setting indicating whether to permit log files in the log directory to be written or not.
+         */
+        public static final boolean DEFAULT_ALLOW_FILE_LOGGING = true;
+        
+        /**
+         * The default value of the setting indicating the number of days to retain log files before deleting them.
+         */
+        public static final long DEFAULT_DAYS_TO_KEEP_LOGS = 30;
+        
+        /**
+         * The default value of the setting indicating whether to permit the main log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_MAIN_LOG = true;
+        
+        /**
+         * The default value of the setting indicating whether to permit the download log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_DOWNLOAD_LOG = true;
+        
+        /**
+         * The default value of the setting indicating whether to permit the api log file to be written or not.
+         */
+        public static final boolean DEFAULT_WRITE_API_LOG = true;
+        
+        
+        //Static Fields
+        
+        /**
+         * A flag indicating whether to print statistics at the end of the run or not.
+         */
+        public static boolean printStats = DEFAULT_PRINT_STATS;
+        
+        /**
+         * A flag indicating whether to print the executable version at the start of the run or not.
+         */
+        public static boolean printExeVersion = DEFAULT_PRINT_EXE_VERSION;
+        
+        /**
+         * A flag indicating whether to print the command sent to the executable during a download or not.
+         */
+        public static boolean showCommand = DEFAULT_SHOW_COMMAND;
+        
+        /**
+         * A flag indicating whether to print the output produced by the executable during a download or not.
+         */
+        public static boolean showWork = DEFAULT_SHOW_WORK;
+        
+        /**
+         * A flag indicating whether to display a progress bar in the terminal during a download or not.
+         */
+        public static boolean showProgressBar = DEFAULT_SHOW_PROGRESS_BAR;
+        
+        /**
+         * A flag indicating whether to permit log files in the log directory to be written or not.
+         */
+        public static boolean allowFileLogging = DEFAULT_ALLOW_FILE_LOGGING;
+        
+        /**
+         * A flag indicating whether to permit the main log file to be written or not.
+         */
+        public static boolean writeMainLog = DEFAULT_WRITE_MAIN_LOG;
+        
+        /**
+         * A flag indicating whether to permit the download log file to be written or not.
+         */
+        public static boolean writeDownloadLog = DEFAULT_WRITE_DOWNLOAD_LOG;
+        
+        /**
+         * A flag indicating whether to permit the api log file to be written or not.
+         */
+        public static boolean writeApiLog = DEFAULT_WRITE_API_LOG;
+        
+        /**
+         * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
+         */
+        public static Long daysToKeepLogs = DEFAULT_DAYS_TO_KEEP_LOGS;
+        
+        
+        //Static Methods
+        
+        /**
+         * Initializes the Config.
+         */
+        private static void init() {
+            printStats = Configurator.getSetting(List.of(
+                            "printStats",
+                            "log.printStats",
+                            "output.printStats"),
+                    DEFAULT_PRINT_STATS);
+            printExeVersion = Configurator.getSetting(List.of(
+                            "printExeVersion",
+                            "log.printExeVersion",
+                            "output.printExeVersion"),
+                    DEFAULT_PRINT_EXE_VERSION);
+            
+            showCommand = Configurator.getSetting(List.of(
+                            "showCommand",
+                            "logCommand",
+                            "flag.showCommand",
+                            "flag.logCommand",
+                            "log.download.showCommand",
+                            "log.download.logCommand",
+                            "log.showCommand",
+                            "log.logCommand"),
+                    DEFAULT_SHOW_COMMAND);
+            showWork = Configurator.getSetting(List.of(
+                            "showWork",
+                            "logWork",
+                            "flag.showWork",
+                            "flag.logWork",
+                            "log.download.showWork",
+                            "log.download.logWork",
+                            "log.showWork",
+                            "log.logWork"),
+                    DEFAULT_SHOW_WORK);
+            showProgressBar = Configurator.getSetting(List.of(
+                            "showProgressBar",
+                            "logProgressBar",
+                            "flag.showProgressBar",
+                            "flag.logProgressBar",
+                            "log.download.showProgressBar",
+                            "log.download.logProgressBar",
+                            "log.showProgressBar",
+                            "log.logProgressBar"),
+                    DEFAULT_SHOW_PROGRESS_BAR);
+            
+            allowFileLogging = Configurator.getSetting(List.of(
+                            "allowFileLogging",
+                            "flag.allowFileLogging",
+                            "log.file.allowFileLogging",
+                            "log.file.allow"),
+                    DEFAULT_ALLOW_FILE_LOGGING);
+            writeMainLog = Configurator.getSetting(List.of(
+                            "writeMainLog",
+                            "flag.writeMainLog",
+                            "log.file.writeMainLog"),
+                    DEFAULT_WRITE_MAIN_LOG);
+            writeDownloadLog = Configurator.getSetting(List.of(
+                            "writeDownloadLog",
+                            "flag.writeDownloadLog",
+                            "log.file.writeDownloadLog"),
+                    DEFAULT_WRITE_DOWNLOAD_LOG);
+            writeApiLog = Configurator.getSetting(List.of(
+                            "writeApiLog",
+                            "flag.writeApiLog",
+                            "log.file.writeApiLog"),
+                    DEFAULT_WRITE_API_LOG);
+            daysToKeepLogs = Configurator.getSetting(List.of(
+                            "daysToKeepLogs",
+                            "flag.daysToKeepLogs",
+                            "log.file.daysToKeepLogs",
+                            "log.daysToKeepLogs"),
+                    DEFAULT_DAYS_TO_KEEP_LOGS);
+        }
+        
     }
     
 }

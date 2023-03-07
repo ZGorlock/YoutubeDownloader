@@ -107,6 +107,8 @@ public class KeyStore {
             return;
         }
         
+        logger.debug(Color.log("Loading KeyStore..."));
+        
         Optional.ofNullable(KEY_STORE_FILE)
                 .filter(file -> (file.exists() || Filesystem.createFile(file)))
                 .filter(file -> (!Filesystem.isEmpty(file) || restoreFromBackup()))
@@ -168,6 +170,8 @@ public class KeyStore {
             logger.warn(Color.bad("The key store has not been loaded"));
             return;
         }
+        
+        logger.debug(Color.log("Saving KeyStore..."));
         
         Optional.ofNullable(KEY_STORE_FILE)
                 .filter(file -> (file.exists() || Filesystem.createFile(file)))

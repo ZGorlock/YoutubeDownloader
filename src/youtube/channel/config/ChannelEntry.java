@@ -24,11 +24,11 @@ import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.SponsorBlocker;
 import youtube.config.base.ConfigData;
 import youtube.state.KeyStore;
+import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -215,7 +215,7 @@ public abstract class ChannelEntry extends ConfigData {
         this.keepClean = parseData("keepClean");
         
         this.ignoreGlobalLocations = parseData("ignoreGlobalLocations");
-        this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsMp3() ? Channels.musicDir : Channels.videoDir)) : null;
+        this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsMp3() ? FileUtils.Config.musicDir : FileUtils.Config.videoDir)) : null;
         
         this.outputFolderPath = parseString("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> parseData("outputFolderPath"));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
@@ -419,7 +419,7 @@ public abstract class ChannelEntry extends ConfigData {
         Optional.ofNullable(key)
                 .map(key -> (key + (isGroup() ? ":" : ""))).map(Utils::formatUnderscoredString)
                 .ifPresent(key -> {
-                    final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.link : Color.channel) : (active ? Color.log : Color.bad);
+                    final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.Config.link : Color.Config.channel) : (active ? Color.Config.log : Color.Config.bad);
                     logger.debug(StringUtility.repeatString(LogUtils.INDENT_HARD, indent) + Color.apply(color, key));
                 });
     }
@@ -663,9 +663,9 @@ public abstract class ChannelEntry extends ConfigData {
     protected static File parseFilePath(String directoryPrefix, String filePath) {
         return new File(Optional.ofNullable(directoryPrefix).orElse("") +
                 cleanFilePath(filePath)
-                        .replace("${D}", Channels.storageDrive.getAbsolutePath())
-                        .replace("${V}", Channels.videoDir.getAbsolutePath())
-                        .replace("${M}", Channels.musicDir.getAbsolutePath()));
+                        .replace("${D}", FileUtils.Config.storageDrive.getAbsolutePath())
+                        .replace("${V}", FileUtils.Config.videoDir.getAbsolutePath())
+                        .replace("${M}", FileUtils.Config.musicDir.getAbsolutePath()));
     }
     
     /**

@@ -27,7 +27,6 @@ import youtube.entity.Video;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
 import youtube.util.LogUtils;
-import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 
@@ -51,11 +50,6 @@ public class YoutubeDownloader {
      */
     public static final File DOWNLOAD_QUEUE = new File(Project.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
     
-    /**
-     * The default output directory to store downloaded files in.
-     */
-    public static final String DEFAULT_OUTPUT_DIR = PathUtils.path(PathUtils.getUserHomePath(), "Youtube");
-    
     
     //Static Fields
     
@@ -63,11 +57,6 @@ public class YoutubeDownloader {
      * The list of Youtube video urls to download.
      */
     private static final List<String> download = new ArrayList<>();
-    
-    /**
-     * The output directory to store downloaded files in.
-     */
-    private static File outputDir;
     
     
     //Main Method
@@ -78,13 +67,17 @@ public class YoutubeDownloader {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
+        logger.info(Color.number("------------------"));
+        logger.info(Color.number("Youtube Downloader"));
+        logger.info(Color.number("------------------"));
+        logger.trace(LogUtils.NEWLINE);
+        
         if (!Utils.startup(Configurator.Program.YOUTUBE_DOWNLOADER)) {
             return;
         }
         
-        outputDir = getOutputDir();
-        if (!outputDir.exists() && !outputDir.mkdirs()) {
-            logger.error(Color.bad("Unable to create output directory: ") + Color.quoteFilePath(outputDir));
+        if (!FileUtils.Config.outputDir.exists() && !FileUtils.Config.outputDir.mkdirs()) {
+            logger.error(Color.bad("Unable to create output directory: ") + Color.quoteFilePath(FileUtils.Config.outputDir));
             return;
         }
         
@@ -97,7 +90,9 @@ public class YoutubeDownloader {
      * Runs the Youtube Downloader.
      */
     private static void run() {
+        logger.debug(Color.log("Starting..."));
         logger.trace(LogUtils.NEWLINE);
+        
         loadDownloadQueue();
         
         try (Scanner in = new Scanner(System.in)) {
@@ -155,7 +150,7 @@ public class YoutubeDownloader {
         return Optional.ofNullable(url)
                 .map(YoutubeDownloader::parseUrl)
                 .map(WebUtils::fetchVideo)
-                .map(Mappers.forEach(e -> e.updateOutputDir(outputDir)))
+                .map(Mappers.forEach(e -> e.updateOutputDir(FileUtils.Config.outputDir)))
                 .orElseGet(() -> {
                     logger.warn(Color.bad("Failed to fetch the video details from: ") + Color.link(url));
                     return null;
@@ -215,19 +210,6 @@ public class YoutubeDownloader {
                 FileUtils.writeLines(DOWNLOAD_QUEUE, download.stream()
                         .filter(e -> !StringUtility.isNullOrBlank(e))
                         .collect(Collectors.toList())));
-    }
-    
-    /**
-     * Returns the output directory to store downloaded files in.
-     *
-     * @return The output directory to store downloaded files in.
-     */
-    private static File getOutputDir() {
-        return new File(Configurator.getSetting(List.of(
-                        "outputDir",
-                        "location.outputDir",
-                        "location.output"),
-                DEFAULT_OUTPUT_DIR));
     }
     
 }

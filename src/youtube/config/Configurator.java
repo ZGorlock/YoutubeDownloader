@@ -368,6 +368,8 @@ public class Configurator {
     @SuppressWarnings("unchecked")
     public static void loadSettings(Program program) {
         if (loaded.compareAndSet(false, true)) {
+            logger.debug(Color.log("Loading Settings..."));
+            
             activeProgram = program;
             
             try {
@@ -387,6 +389,7 @@ public class Configurator {
             }
         }
         
+        Config.init();
         print();
     }
     
@@ -401,7 +404,7 @@ public class Configurator {
         final Map<String, Object> settingSectionData = (Map<String, Object>) settingsData.get(section);
         
         if (settingSectionData != null) {
-            if (section.equals("sponsorBlock") && (SponsorBlocker.globalConfig == null)) {
+            if (section.equals(ConfigSection.SPONSOR_BLOCK.getKey()) && (SponsorBlocker.globalConfig == null)) {
                 SponsorBlocker.loadGlobalConfig(settingSectionData);
             }
             loadSettingSection(settingSectionData, section, "");
@@ -431,7 +434,7 @@ public class Configurator {
     @SuppressWarnings("unchecked")
     private static void loadSettingEntry(Map.Entry<String, Object> settingEntryData, String section, String prefix) {
         if ((settingEntryData.getValue() != null) && (settingEntryData.getValue() instanceof Map)) {
-            if (settingEntryData.getKey().equals("sponsorBlock")) {
+            if (settingEntryData.getKey().equals(ConfigSection.SPONSOR_BLOCK.getKey()) && (SponsorBlocker.globalConfig == null)) {
                 SponsorBlocker.loadGlobalConfig(((Map<String, Object>) settingEntryData.getValue()));
             }
             loadSettingSection(((Map<String, Object>) settingEntryData.getValue()), section, (prefix + settingEntryData.getKey() + '.'));
@@ -439,7 +442,6 @@ public class Configurator {
             settings.putIfAbsent(section, new TreeMap<>(String::compareTo));
             settings.get(section).put((prefix + settingEntryData.getKey()), settingEntryData.getValue());
         }
-        
     }
     
     /**
@@ -458,7 +460,7 @@ public class Configurator {
      * Prints the active configuration settings.
      */
     public static void print() {
-        if (!Configurator.Config.printSettings) {
+        if (!Config.printSettings) {
             return;
         }
         
@@ -482,21 +484,16 @@ public class Configurator {
     //Inner Classes
     
     /**
-     * Holds a Config.
+     * Holds the main Config.
      */
     public static class Config {
         
         //Constants
         
         /**
-         * The default value of the flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         * The default value of the flag indicating whether to print the active configuration settings at the start of the run or not.
          */
-        public static final boolean DEFAULT_PRE_MERGED = true;
-        
-        /**
-         * The default value of the flag indicating whether to download the videos as mp3 files or not.
-         */
-        public static final boolean DEFAULT_AS_MP3 = false;
+        public static final boolean DEFAULT_PRINT_SETTINGS = false;
         
         /**
          * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
@@ -568,371 +565,182 @@ public class Configurator {
          */
         public static final boolean DEFAULT_PREVENT_EXE_VERSION_CHECK = false;
         
-        /**
-         * The default value of the flag indicating whether to print statistics at the end of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_STATS = true;
-        
-        /**
-         * The default value of the flag indicating whether to print the Channel list at the start of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_CHANNELS = false;
-        
-        /**
-         * The default value of the flag indicating whether to print the active configuration settings at the start of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_SETTINGS = false;
-        
-        /**
-         * The default value of the flag indicating whether to print the executable version at the start of the run or not.
-         */
-        public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
-        
-        /**
-         * The default value of the flag indicating whether to print the command sent to the executable during a download or not.
-         */
-        public static final boolean DEFAULT_SHOW_COMMAND = true;
-        
-        /**
-         * The default value of the flag indicating whether to print the output produced by the executable during a download or not.
-         */
-        public static final boolean DEFAULT_SHOW_WORK = false;
-        
-        /**
-         * The default value of the flag indicating whether to display a progress bar in the terminal during a download or not.
-         */
-        public static final boolean DEFAULT_SHOW_PROGRESS_BAR = true;
-        
-        /**
-         * The default value of the setting indicating whether to permit log files in the log directory to be written or not.
-         */
-        public static final boolean DEFAULT_ALLOW_FILE_LOGGING = true;
-        
-        /**
-         * The default value of the setting indicating the number of days to retain log files before deleting them.
-         */
-        public static final long DEFAULT_DAYS_TO_KEEP_LOGS = 30;
-        
-        /**
-         * The default value of the setting indicating whether to permit the main log file to be written or not.
-         */
-        public static final boolean DEFAULT_WRITE_MAIN_LOG = true;
-        
-        /**
-         * The default value of the setting indicating whether to permit the download log file to be written or not.
-         */
-        public static final boolean DEFAULT_WRITE_DOWNLOAD_LOG = true;
-        
-        /**
-         * The default value of the setting indicating whether to permit the api log file to be written or not.
-         */
-        public static final boolean DEFAULT_WRITE_API_LOG = true;
-        
         
         //Static Fields
         
         /**
-         * A flag indicating whether to download only pre-merged formats or not; only used when using yt-dlp.
+         * A flag indicating whether to print the active configuration settings at the start of the run or not.
          */
-        public static final boolean preMerged = getSetting(List.of(
-                        "preMerged",
-                        "format.preMerged"),
-                DEFAULT_PRE_MERGED);
-        
-        /**
-         * A flag indicating whether to download the videos as mp3 files or not.
-         */
-        public static final boolean asMp3 = getSetting(List.of(
-                        "asMp3",
-                        "format.asMp3"),
-                DEFAULT_AS_MP3);
+        public static boolean printSettings = DEFAULT_PRINT_SETTINGS;
         
         /**
          * A flag indicating whether to move files to the recycling bin instead of deleting them.
          */
-        public static final boolean deleteToRecyclingBin = getSetting(List.of(
-                        "deleteToRecyclingBin",
-                        "flag.deleteToRecyclingBin"),
-                DEFAULT_DELETE_TO_RECYCLING_BIN);
+        public static boolean deleteToRecyclingBin = DEFAULT_DELETE_TO_RECYCLING_BIN;
         
         /**
          * A flag indicating whether to prohibit the use of browser cookies in an attempt to download restricted videos or not.
          */
-        public static final boolean neverUseBrowserCookies = getSetting(List.of(
-                        "neverUseBrowserCookies",
-                        "flag.neverUseBrowserCookies"),
-                DEFAULT_NEVER_USE_BROWSER_COOKIES);
+        public static boolean neverUseBrowserCookies = DEFAULT_NEVER_USE_BROWSER_COOKIES;
         
         /**
          * A flag indicating whether to retry previously failed videos or not.
          */
-        public static final boolean retryPreviousFailures = getSetting(List.of(
-                        "retryPreviousFailures",
-                        "flag.retryPreviousFailures",
-                        "flag.retryFailed"),
-                DEFAULT_RETRY_PREVIOUS_FAILURES);
+        public static boolean retryPreviousFailures = DEFAULT_RETRY_PREVIOUS_FAILURES;
         
         /**
          * A flag indicating whether to run in safe mode or not.
          */
-        public static final boolean safeMode = getSetting(List.of(
-                        "safeMode",
-                        "test.safeMode",
-                        "flag.test.safeMode",
-                        "flag.safeMode"),
-                DEFAULT_SAFE_MODE);
+        public static boolean safeMode = DEFAULT_SAFE_MODE;
         
         /**
          * A flag indicating whether to disable running the main code or not.
          */
-        public static final boolean preventRun = getSetting(List.of(
-                        "preventRun",
-                        "test.preventRun",
-                        "flag.test.preventRun",
-                        "flag.preventRun"),
-                DEFAULT_PREVENT_RUN);
+        public static boolean preventRun = DEFAULT_PREVENT_RUN;
         
         /**
          * A flag indicating whether to disable processing Channels or not.
          */
-        public static final boolean preventProcess = getSetting(List.of(
-                        "preventProcess",
-                        "test.preventProcess",
-                        "flag.test.preventProcess",
-                        "flag.preventProcess"),
-                DEFAULT_PREVENT_PROCESS);
+        public static boolean preventProcess = DEFAULT_PREVENT_PROCESS;
         
         /**
          * A flag indicating whether to disable downloading content or not.
          */
-        public static final boolean preventDownload = safeMode || getSetting(List.of(
-                        "preventDownload",
-                        "test.preventDownload",
-                        "flag.test.preventDownload",
-                        "flag.preventDownload"),
-                DEFAULT_PREVENT_DOWNLOAD);
+        public static boolean preventDownload = DEFAULT_PREVENT_DOWNLOAD;
         
         /**
          * A flag indicating whether to globally prevent any media deletion or not.
          */
-        public static final boolean preventDeletion = safeMode || getSetting(List.of(
-                        "preventDeletion",
-                        "test.preventDeletion",
-                        "flag.test.preventDeletion",
-                        "flag.preventDeletion"),
-                DEFAULT_PREVENT_DELETION);
+        public static boolean preventDeletion = DEFAULT_PREVENT_DELETION;
         
         /**
          * A flag indicating whether to globally prevent any media renaming or not.
          */
-        public static final boolean preventRenaming = safeMode || getSetting(List.of(
-                        "preventRenaming",
-                        "test.preventRenaming",
-                        "flag.test.preventRenaming",
-                        "flag.preventRenaming"),
-                DEFAULT_PREVENT_RENAMING);
+        public static boolean preventRenaming = DEFAULT_PREVENT_RENAMING;
         
         /**
          * A flag indicating whether to disable playlist modification or not.
          */
-        public static final boolean preventPlaylistEdit = safeMode || getSetting(List.of(
-                        "preventPlaylistEdit",
-                        "test.preventPlaylistEdit",
-                        "flag.test.preventPlaylistEdit",
-                        "flag.preventPlaylistEdit"),
-                DEFAULT_PREVENT_PLAYLIST_EDIT);
+        public static boolean preventPlaylistEdit = DEFAULT_PREVENT_PLAYLIST_EDIT;
         
         /**
          * A flag indicating whether to disable fetching the latest data for Channels or not.
          */
-        public static final boolean preventChannelFetch = safeMode || getSetting(List.of(
-                        "preventChannelFetch",
-                        "test.preventChannelFetch",
-                        "flag.test.preventChannelFetch",
-                        "flag.preventChannelFetch"),
-                DEFAULT_PREVENT_CHANNEL_FETCH);
+        public static boolean preventChannelFetch = DEFAULT_PREVENT_CHANNEL_FETCH;
         
         /**
          * A flag indicating whether to disable fetching the info for Videos or not.
          */
-        public static final boolean preventVideoFetch = safeMode || getSetting(List.of(
-                        "preventVideoFetch",
-                        "test.preventVideoFetch",
-                        "flag.test.preventVideoFetch",
-                        "flag.preventVideoFetch"),
-                DEFAULT_PREVENT_VIDEO_FETCH);
+        public static boolean preventVideoFetch = DEFAULT_PREVENT_VIDEO_FETCH;
         
         /**
          * A flag indicating whether to disable automatic updating of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeAutoUpdate = safeMode || getSetting(List.of(
-                        "preventExeAutoUpdate",
-                        "test.preventExeAutoUpdate",
-                        "flag.test.preventExeAutoUpdate",
-                        "flag.preventExeAutoUpdate"),
-                DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+        public static boolean preventExeAutoUpdate = DEFAULT_PREVENT_EXE_AUTO_UPDATE;
         
         /**
          * A flag indicating whether to disable checking the latest version of the yt-dlp or youtube-dl executables or not.
          */
-        public static final boolean preventExeVersionCheck = safeMode || getSetting(List.of(
-                        "preventExeVersionCheck",
-                        "test.preventExeVersionCheck",
-                        "flag.test.preventExeVersionCheck",
-                        "flag.preventExeVersionCheck"),
-                DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        public static boolean preventExeVersionCheck = DEFAULT_PREVENT_EXE_VERSION_CHECK;
+        
+        
+        //Static Methods
         
         /**
-         * A flag indicating whether to print statistics at the end of the run or not.
+         * Initializes the Config.
          */
-        public static final boolean printStats = getSetting(List.of(
-                        "printStats",
-                        "log.printStats",
-                        "output.printStats"),
-                DEFAULT_PRINT_STATS);
-        
-        /**
-         * A flag indicating whether to print the Channel list at the start of the run or not.
-         */
-        public static final boolean printChannels = getSetting(List.of(
-                        "printChannels",
-                        "log.printChannels",
-                        "output.printChannels"),
-                DEFAULT_PRINT_CHANNELS);
-        
-        /**
-         * A flag indicating whether to print the active configuration settings at the start of the run or not.
-         */
-        public static final boolean printSettings = getSetting(List.of(
-                        "printSettings",
-                        "log.printSettings",
-                        "output.printSettings"),
-                DEFAULT_PRINT_SETTINGS);
-        
-        /**
-         * A flag indicating whether to print the executable version at the start of the run or not.
-         */
-        public static final boolean printExeVersion = getSetting(List.of(
-                        "printExeVersion",
-                        "log.printExeVersion",
-                        "output.printExeVersion"),
-                DEFAULT_PRINT_EXE_VERSION);
-        
-        /**
-         * A flag indicating whether to print the command sent to the executable during a download or not.
-         */
-        public static final boolean showCommand = getSetting(List.of(
-                        "showCommand",
-                        "logCommand",
-                        "flag.showCommand",
-                        "flag.logCommand",
-                        "log.download.showCommand",
-                        "log.download.logCommand",
-                        "log.showCommand",
-                        "log.logCommand"),
-                DEFAULT_SHOW_COMMAND);
-        
-        /**
-         * A flag indicating whether to print the output produced by the executable during a download or not.
-         */
-        public static final boolean showWork = getSetting(List.of(
-                        "showWork",
-                        "logWork",
-                        "flag.showWork",
-                        "flag.logWork",
-                        "log.download.showWork",
-                        "log.download.logWork",
-                        "log.showWork",
-                        "log.logWork"),
-                DEFAULT_SHOW_WORK);
-        
-        /**
-         * A flag indicating whether to display a progress bar in the terminal during a download or not.
-         */
-        public static final boolean showProgressBar = getSetting(List.of(
-                        "showProgressBar",
-                        "logProgressBar",
-                        "flag.showProgressBar",
-                        "flag.logProgressBar",
-                        "log.download.showProgressBar",
-                        "log.download.logProgressBar",
-                        "log.showProgressBar",
-                        "log.logProgressBar"),
-                DEFAULT_SHOW_PROGRESS_BAR);
-        
-        /**
-         * A flag indicating whether to permit log files in the log directory to be written or not.
-         */
-        public static final boolean allowFileLogging = getSetting(List.of(
-                        "allowFileLogging",
-                        "flag.allowFileLogging",
-                        "log.file.allowFileLogging",
-                        "log.file.allow"),
-                DEFAULT_ALLOW_FILE_LOGGING);
-        
-        /**
-         * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
-         */
-        public static final Long daysToKeepLogs = getSetting(List.of(
-                        "daysToKeepLogs",
-                        "flag.daysToKeepLogs",
-                        "log.file.daysToKeepLogs",
-                        "log.daysToKeepLogs"),
-                DEFAULT_DAYS_TO_KEEP_LOGS);
-        
-        /**
-         * A flag indicating whether to permit the main log file to be written or not.
-         */
-        public static final boolean writeMainLog = getSetting(List.of(
-                        "writeMainLog",
-                        "flag.writeMainLog",
-                        "log.file.writeMainLog"),
-                DEFAULT_WRITE_MAIN_LOG);
-        
-        /**
-         * A flag indicating whether to permit the download log file to be written or not.
-         */
-        public static final boolean writeDownloadLog = getSetting(List.of(
-                        "writeDownloadLog",
-                        "flag.writeDownloadLog",
-                        "log.file.writeDownloadLog"),
-                DEFAULT_WRITE_DOWNLOAD_LOG);
-        
-        /**
-         * A flag indicating whether to permit the api log file to be written or not.
-         */
-        public static final boolean writeApiLog = getSetting(List.of(
-                        "writeApiLog",
-                        "flag.writeApiLog",
-                        "log.file.writeApiLog"),
-                DEFAULT_WRITE_API_LOG);
-        
-        /**
-         * The browser that cookies will be used from when attempting to retry certain failed downloads.
-         */
-        public static final String browser = getSetting(List.of(
-                "browser",
-                "location.browser"));
-        
-        /**
-         * The Channel to process, or null if all Channels should be processed.
-         */
-        public static final String channel = getSetting("filter.channel");
-        
-        /**
-         * The group to process, or null if all groups should be processed.
-         */
-        public static final String group = getSetting("filter.group");
-        
-        /**
-         * The Channel to start processing from, if processing all Channels.
-         */
-        public static final String startAt = getSetting("filter.startAt");
-        
-        /**
-         * The Channel to stop processing at, if processing all Channels.
-         */
-        public static final String stopAt = getSetting("filter.stopAt");
+        private static void init() {
+            printSettings = Configurator.getSetting(List.of(
+                            "printSettings",
+                            "log.printSettings",
+                            "output.printSettings"),
+                    DEFAULT_PRINT_SETTINGS);
+            
+            deleteToRecyclingBin = getSetting(List.of(
+                            "deleteToRecyclingBin",
+                            "flag.deleteToRecyclingBin"),
+                    DEFAULT_DELETE_TO_RECYCLING_BIN);
+            neverUseBrowserCookies = getSetting(List.of(
+                            "neverUseBrowserCookies",
+                            "flag.neverUseBrowserCookies"),
+                    DEFAULT_NEVER_USE_BROWSER_COOKIES);
+            retryPreviousFailures = getSetting(List.of(
+                            "retryPreviousFailures",
+                            "flag.retryPreviousFailures",
+                            "flag.retryFailed"),
+                    DEFAULT_RETRY_PREVIOUS_FAILURES);
+            
+            safeMode = getSetting(List.of(
+                            "safeMode",
+                            "test.safeMode",
+                            "flag.test.safeMode",
+                            "flag.safeMode"),
+                    DEFAULT_SAFE_MODE);
+            
+            preventRun = getSetting(List.of(
+                            "preventRun",
+                            "test.preventRun",
+                            "flag.test.preventRun",
+                            "flag.preventRun"),
+                    DEFAULT_PREVENT_RUN);
+            preventProcess = getSetting(List.of(
+                            "preventProcess",
+                            "test.preventProcess",
+                            "flag.test.preventProcess",
+                            "flag.preventProcess"),
+                    DEFAULT_PREVENT_PROCESS);
+            
+            preventDownload = safeMode || getSetting(List.of(
+                            "preventDownload",
+                            "test.preventDownload",
+                            "flag.test.preventDownload",
+                            "flag.preventDownload"),
+                    DEFAULT_PREVENT_DOWNLOAD);
+            preventDeletion = safeMode || getSetting(List.of(
+                            "preventDeletion",
+                            "test.preventDeletion",
+                            "flag.test.preventDeletion",
+                            "flag.preventDeletion"),
+                    DEFAULT_PREVENT_DELETION);
+            preventRenaming = safeMode || getSetting(List.of(
+                            "preventRenaming",
+                            "test.preventRenaming",
+                            "flag.test.preventRenaming",
+                            "flag.preventRenaming"),
+                    DEFAULT_PREVENT_RENAMING);
+            preventPlaylistEdit = safeMode || getSetting(List.of(
+                            "preventPlaylistEdit",
+                            "test.preventPlaylistEdit",
+                            "flag.test.preventPlaylistEdit",
+                            "flag.preventPlaylistEdit"),
+                    DEFAULT_PREVENT_PLAYLIST_EDIT);
+            
+            preventChannelFetch = safeMode || getSetting(List.of(
+                            "preventChannelFetch",
+                            "test.preventChannelFetch",
+                            "flag.test.preventChannelFetch",
+                            "flag.preventChannelFetch"),
+                    DEFAULT_PREVENT_CHANNEL_FETCH);
+            preventVideoFetch = safeMode || getSetting(List.of(
+                            "preventVideoFetch",
+                            "test.preventVideoFetch",
+                            "flag.test.preventVideoFetch",
+                            "flag.preventVideoFetch"),
+                    DEFAULT_PREVENT_VIDEO_FETCH);
+            
+            preventExeAutoUpdate = safeMode || getSetting(List.of(
+                            "preventExeAutoUpdate",
+                            "test.preventExeAutoUpdate",
+                            "flag.test.preventExeAutoUpdate",
+                            "flag.preventExeAutoUpdate"),
+                    DEFAULT_PREVENT_EXE_AUTO_UPDATE);
+            preventExeVersionCheck = safeMode || getSetting(List.of(
+                            "preventExeVersionCheck",
+                            "test.preventExeVersionCheck",
+                            "flag.test.preventExeVersionCheck",
+                            "flag.preventExeVersionCheck"),
+                    DEFAULT_PREVENT_EXE_VERSION_CHECK);
+        }
         
     }
     

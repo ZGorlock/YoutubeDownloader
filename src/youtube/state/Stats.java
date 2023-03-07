@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.config.Color;
-import youtube.config.Configurator;
 import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.Utils;
@@ -142,6 +141,8 @@ public final class Stats {
      * Calculates the total data saved from Youtube.
      */
     private static void calculateData() {
+        logger.debug(Color.log("Calculating Stats..."));
+        
         Channels.getChannels().stream()
                 .flatMap(channel -> channel.getState().getSaved().stream()
                         .map(saved -> channel.getState().getKeyStore().get(saved))
@@ -163,7 +164,7 @@ public final class Stats {
      * Prints statistics about the completed run.
      */
     public static void print() {
-        if (!Configurator.Config.printStats) {
+        if (!LogUtils.Config.printStats) {
             return;
         }
         
@@ -185,7 +186,6 @@ public final class Stats {
         
         calculateData();
         
-        logger.trace(LogUtils.NEWLINE);
         logger.trace(LogUtils.NEWLINE);
         logger.debug(Color.number("--- Stats ---"));
         
