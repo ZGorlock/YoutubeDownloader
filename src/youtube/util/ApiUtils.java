@@ -43,7 +43,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channels;
 import youtube.channel.config.ChannelConfig;
+import youtube.channel.config.ChannelEntry;
 import youtube.channel.state.ChannelState;
 import youtube.config.Color;
 import youtube.entity.Channel;
@@ -106,6 +108,15 @@ public final class ApiUtils {
      * The maximum number of results to request per page.
      */
     private static final int MAX_RESULTS_PER_PAGE = 50;
+    
+    /**
+     * The pattern for the call log.
+     */
+    private static final String CALL_LOG_PATTERN = "%!s  ::  %-?s  %7d B  %s  %s"
+            .replace("!", String.valueOf(Channels.getFiltered().stream().map(Channels::getChannel).map(Channel::getConfig)
+                    .map(ChannelEntry::getName).mapToInt(String::length).max().orElse(1)))
+            .replace("?", String.valueOf(Arrays.stream(Endpoint.values())
+                    .map(Endpoint::getName).mapToInt(String::length).max().orElse(1)));
     
     
     //Enums
@@ -1026,16 +1037,14 @@ public final class ApiUtils {
          * @param channelState The Channel State of the calling Channel.
          */
         private static void logApiCall(Endpoint endpoint, URI request, String response, boolean error, ChannelState channelState) {
-            final String baseLog = String.format("%-15s  %7d B  %s  %s",
+            final String log = String.format(CALL_LOG_PATTERN,
+                    Optional.ofNullable(channelState).map(ChannelState::getChannelName).orElse("~"),
                     endpoint.getName(), response.length(), (error ? "-X" : "->"), request);
             
-            LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG),
-                    (Optional.ofNullable(channelState).map(ChannelState::getChannelName).orElse("~") + "  ::  " + baseLog));
-            
+            LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG), log);
             Optional.ofNullable(channelState).map(ChannelState::getCallLogFile)
-                    .ifPresent((CheckedConsumer<File>) callLog ->
-                            FileUtils.writeStringToFile(callLog,
-                                    (LogUtils.timestamp() + " - " + baseLog + System.lineSeparator()), true));
+                    .ifPresent((CheckedConsumer<File>) callLog -> FileUtils.writeStringToFile(callLog,
+                            (log.replaceAll("^.+:: ", (LogUtils.timestamp() + " - ")) + System.lineSeparator()), true));
             
             Stats.totalApiCalls.incrementAndGet();
             Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
