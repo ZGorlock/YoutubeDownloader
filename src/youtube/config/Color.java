@@ -8,6 +8,9 @@
 package youtube.config;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -1601,6 +1604,55 @@ public class Color {
      */
     public static String quoteExeFileName(ExecutableUtils.Executable executable) {
         return quoteExeFileName(executable, false);
+    }
+    
+    /**
+     * Colors and formats a variable based on its data type to be displayed on the console.
+     *
+     * @param variable The variable.
+     * @return The prepared console output.
+     */
+    public static String formatVariable(Object variable) {
+        final String value = String.valueOf(variable);
+        
+        if (variable == null) {
+            return log(value);
+            
+        } else if (variable instanceof Number) {
+            return number(value);
+            
+        } else if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
+            return good(value);
+        } else if (variable instanceof Boolean) {
+            return good(Boolean.toString((Boolean) variable));
+            
+        } else if (value.contains("://")) {
+            return quoted(link(value));
+        } else if (variable instanceof URL) {
+            return quoted(link(((URL) variable).toExternalForm()));
+        } else if (variable instanceof URI) {
+            return quoted(link(((URI) variable).toASCIIString()));
+            
+        } else if (value.contains(":/") || value.startsWith("/") || value.endsWith("/") ||
+                value.contains(":\\") || value.startsWith("\\") || value.endsWith("\\")) {
+            return quoted(file(value));
+        } else if (variable instanceof File) {
+            return quoted(file(((File) variable).getAbsolutePath()));
+        } else if (variable instanceof Path) {
+            return quoted(file(((Path) variable).toAbsolutePath().toString()));
+            
+        } else if (variable instanceof String) {
+            return quoted(base(value));
+        } else if (variable instanceof StringBuilder) {
+            return quoted(base(((StringBuilder) variable).toString()));
+        } else if (variable instanceof StringBuffer) {
+            return quoted(base(((StringBuffer) variable).toString()));
+        } else if (variable instanceof CharSequence) {
+            return quoted(base(((CharSequence) variable).toString()));
+            
+        } else {
+            return bad(value);
+        }
     }
     
 }

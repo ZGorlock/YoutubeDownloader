@@ -95,6 +95,7 @@
     },
     
     "log": {
+        "printSettings": false,
         "printExeVersion": true,
         "download": {
             "showCommand": true,

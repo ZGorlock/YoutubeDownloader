@@ -24,6 +24,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
 
@@ -385,6 +386,8 @@ public class Configurator {
                 throw new RuntimeException(e);
             }
         }
+        
+        print();
     }
     
     /**
@@ -450,6 +453,33 @@ public class Configurator {
                 .filter(e -> !e.strip().startsWith("//"))
                 .collect(Collectors.joining());
     }
+    
+    /**
+     * Prints the active configuration settings.
+     */
+    public static void print() {
+        if (!Configurator.Config.printSettings) {
+            return;
+        }
+        
+        logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.number("--- Settings ---"));
+        
+        final int maxKeyLength = getSettings().keySet().stream()
+                .mapToInt(String::length).max().orElse(0);
+        
+        getSettings().entrySet().stream()
+                .map(setting -> String.join("",
+                        Color.base(setting.getKey()),
+                        Color.log(" " + ".".repeat(maxKeyLength - setting.getKey().length()) + " "),
+                        Color.formatVariable(setting.getValue())))
+                .forEachOrdered(logger::debug);
+        
+        logger.trace(LogUtils.NEWLINE);
+    }
+    
+    
+    //Inner Classes
     
     /**
      * Holds a Config.
@@ -544,12 +574,17 @@ public class Configurator {
         public static final boolean DEFAULT_PRINT_STATS = true;
         
         /**
-         * The default value of the flag indicating whether to print the Channel list at the beginning of the run or not.
+         * The default value of the flag indicating whether to print the Channel list at the start of the run or not.
          */
         public static final boolean DEFAULT_PRINT_CHANNELS = false;
         
         /**
-         * The default value of the flag indicating whether to print the executable version at the beginning of the run or not.
+         * The default value of the flag indicating whether to print the active configuration settings at the start of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_SETTINGS = false;
+        
+        /**
+         * The default value of the flag indicating whether to print the executable version at the start of the run or not.
          */
         public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
         
@@ -572,7 +607,7 @@ public class Configurator {
          * The default value of the setting indicating whether to permit log files in the log directory to be written or not.
          */
         public static final boolean DEFAULT_ALLOW_FILE_LOGGING = true;
-    
+        
         /**
          * The default value of the setting indicating the number of days to retain log files before deleting them.
          */
@@ -757,15 +792,25 @@ public class Configurator {
                 DEFAULT_PRINT_STATS);
         
         /**
-         * A flag indicating whether to print the Channel list at the beginning of the run or not.
+         * A flag indicating whether to print the Channel list at the start of the run or not.
          */
         public static final boolean printChannels = getSetting(List.of(
+                        "printChannels",
                         "log.printChannels",
                         "output.printChannels"),
                 DEFAULT_PRINT_CHANNELS);
         
         /**
-         * A flag indicating whether to print the executable version at the beginning of the run or not.
+         * A flag indicating whether to print the active configuration settings at the start of the run or not.
+         */
+        public static final boolean printSettings = getSetting(List.of(
+                        "printSettings",
+                        "log.printSettings",
+                        "output.printSettings"),
+                DEFAULT_PRINT_SETTINGS);
+        
+        /**
+         * A flag indicating whether to print the executable version at the start of the run or not.
          */
         public static final boolean printExeVersion = getSetting(List.of(
                         "printExeVersion",
@@ -824,7 +869,7 @@ public class Configurator {
                         "log.file.allowFileLogging",
                         "log.file.allow"),
                 DEFAULT_ALLOW_FILE_LOGGING);
-    
+        
         /**
          * The number of days to retain log files before deleting them, or -1 to retain logs indefinitely.
          */
