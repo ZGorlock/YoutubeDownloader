@@ -24,7 +24,6 @@ import commons.access.Internet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
-import youtube.channel.config.ChannelConfig;
 import youtube.channel.process.ChannelProcesses;
 import youtube.config.Color;
 import youtube.config.Configurator;
@@ -103,24 +102,7 @@ public class YoutubeChannelDownloader {
         KeyStore.load();
         
         logger.trace(LogUtils.NEWLINE);
-        if (Channels.Config.channel == null) {
-            boolean skip = (Channels.Config.startAt != null);
-            boolean stop = (Channels.Config.stopAt != null);
-            
-            if (!((skip && stop) && (Channels.configIndex(Channels.Config.stopAt) < Channels.configIndex(Channels.Config.startAt)))) {
-                for (ChannelConfig config : Channels.getConfigs()) {
-                    if (!(skip &= !config.getKey().equals(Channels.Config.startAt)) && config.isMemberOfGroup(Channels.Config.group)) {
-                        processChannel(config.getKey());
-                        if (stop && config.getKey().equals(Channels.Config.stopAt)) {
-                            break;
-                        }
-                    }
-                }
-            }
-            
-        } else {
-            processChannel(Channels.Config.channel);
-        }
+        Channels.getFiltered().forEach(YoutubeChannelDownloader::processChannel);
         logger.trace(LogUtils.NEWLINE);
         
         KeyStore.save();
@@ -153,6 +135,7 @@ public class YoutubeChannelDownloader {
             logger.info(Color.base("Processing Channel: ") + Color.channelDisplayName(channel));
         } else {
             logger.info(Color.bad("Would have processed Channel: ") + Color.channelDisplayName(channel) + Color.bad(" but processing is disabled"));
+            logger.trace(LogUtils.NEWLINE);
             return false;
         }
         

@@ -55,6 +55,11 @@ public class Channels {
     //Static Fields
     
     /**
+     * The Channels configuration root.
+     */
+    private static final ChannelGroup root = new ChannelGroup();
+    
+    /**
      * The map of Channels.
      */
     private static final Map<String, Channel> channels = new LinkedHashMap<>();
@@ -70,34 +75,34 @@ public class Channels {
     private static final Map<String, ChannelGroup> groups = new LinkedHashMap<>();
     
     /**
-     * The Channels configuration root.
+     * The list of Channel keys to be processed this run.
      */
-    private static final ChannelGroup root = new ChannelGroup();
+    private static final List<String> filteredChannels = new ArrayList<>();
     
     /**
-     * A flag indicating whether the Channels configuration has been loaded yet or not.
-     */
-    private static final AtomicBoolean loaded = new AtomicBoolean(false);
-    
-    /**
-     * A list of registered Channel Config keys.
+     * The list of registered Channel Config keys.
      */
     private static final Set<String> channelKeys = new HashSet<>();
     
     /**
-     * A list of registered Channel Config keys.
+     * The list of registered Channel Config keys.
      */
     private static final Set<String> channelNames = new HashSet<>();
     
     /**
-     * A list of registered Channel Group keys.
+     * The list of registered Channel Group keys.
      */
     private static final Set<String> groupKeys = new HashSet<>();
     
     /**
-     * A list of registered Channel Group names.
+     * The list of registered Channel Group names.
      */
     private static final Set<String> groupNames = new HashSet<>();
+    
+    /**
+     * The flag indicating whether the Channels configuration has been loaded yet or not.
+     */
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
     
     //Static Methods
@@ -130,12 +135,12 @@ public class Channels {
     }
     
     /**
-     * Returns the Channels configuration root.
+     * Returns the list of Channel keys to be processed this run.
      *
-     * @return The Channels configuration root.
+     * @return The list of Channel keys to be processed this run.
      */
-    public static ChannelGroup getRoot() {
-        return root;
+    public static List<String> getFiltered() {
+        return new ArrayList<>(filteredChannels);
     }
     
     /**
@@ -169,36 +174,6 @@ public class Channels {
     }
     
     /**
-     * Returns index of a Channel of a specified key.
-     *
-     * @param key The key of the Channel.
-     * @return The index of the Channel of the specified key, or -1 if it does not exist.
-     */
-    public static int channelIndex(String key) {
-        return new ArrayList<>(channels.keySet()).indexOf(key);
-    }
-    
-    /**
-     * Returns index of a Channel Config of a specified key.
-     *
-     * @param key The key of the Channel Config.
-     * @return The index of the Channel Config of the specified key, or -1 if it does not exist.
-     */
-    public static int configIndex(String key) {
-        return new ArrayList<>(configs.keySet()).indexOf(key);
-    }
-    
-    /**
-     * Returns index of a Channel Group of a specified key.
-     *
-     * @param key The key of the Channel Group.
-     * @return The index of the Channel Group of the specified key, or -1 if it does not exist.
-     */
-    public static int groupIndex(String key) {
-        return new ArrayList<>(groups.keySet()).indexOf(key);
-    }
-    
-    /**
      * Loads the Channels configuration from the channels file.
      *
      * @throws RuntimeException When the Channels configuration could not be loaded.
@@ -221,7 +196,34 @@ public class Channels {
             }
         }
         
+        filterChannels();
         print();
+    }
+    
+    /**
+     * Determines the list of Channel to be processed this run.
+     */
+    private static void filterChannels() {
+        filteredChannels.clear();
+        
+        if (Config.channel != null) {
+            filteredChannels.add(Config.channel);
+            
+        } else {
+            boolean skip = (Config.startAt != null);
+            boolean stop = (Config.stopAt != null);
+            
+            for (ChannelConfig config : getConfigs()) {
+                if (!(skip &= !config.getKey().equals(Config.startAt)) && config.isMemberOfGroup(Config.group)) {
+                    filteredChannels.add(config.getKey());
+                    if (stop && config.getKey().equals(Config.stopAt)) {
+                        break;
+                    }
+                }
+            }
+        }
+        
+        filteredChannels.removeIf(key -> (getChannel(key) == null));
     }
     
     /**
