@@ -97,6 +97,7 @@
     "log": {
         "printSettings": false,
         "printExeVersion": true,
+        "printExecutionTime": true,
         "download": {
             "showCommand": true,
             "showWork": false,

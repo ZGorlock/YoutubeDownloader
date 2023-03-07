@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import commons.access.Internet;
+import commons.time.DateTimeUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
@@ -65,6 +66,11 @@ public class YoutubeChannelDownloader {
      */
     private static final Map<String, Video> videoMap = new LinkedHashMap<>();
     
+    /**
+     * The program start time.
+     */
+    private static final long startTime = System.currentTimeMillis();
+    
     
     //Main Method
     
@@ -107,6 +113,11 @@ public class YoutubeChannelDownloader {
         
         KeyStore.save();
         Stats.print();
+        
+        if (LogUtils.Config.printExecutionTime) {
+            logger.debug(Color.log("Completed in ") + Color.number(DateTimeUtility.durationToDurationString(
+                    (System.currentTimeMillis() - startTime), false, false, true)));
+        }
     }
     
     /**

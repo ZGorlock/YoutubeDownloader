@@ -599,6 +599,11 @@ public final class LogUtils {
         public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
         
         /**
+         * The default value of the flag indicating whether to print the execution time at the end of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_EXECUTION_TIME = true;
+        
+        /**
          * The default value of the flag indicating whether to print the command sent to the executable during a download or not.
          */
         public static final boolean DEFAULT_SHOW_COMMAND = true;
@@ -650,6 +655,11 @@ public final class LogUtils {
          * A flag indicating whether to print the executable version at the start of the run or not.
          */
         public static boolean printExeVersion = DEFAULT_PRINT_EXE_VERSION;
+        
+        /**
+         * A flag indicating whether to print the execution time at the end of the run or not.
+         */
+        public static boolean printExecutionTime = DEFAULT_PRINT_EXECUTION_TIME;
         
         /**
          * A flag indicating whether to print the command sent to the executable during a download or not.
@@ -708,6 +718,11 @@ public final class LogUtils {
                             "log.printExeVersion",
                             "output.printExeVersion"),
                     DEFAULT_PRINT_EXE_VERSION);
+            printExecutionTime = Configurator.getSetting(List.of(
+                            "printExecutionTime",
+                            "log.printExecutionTime",
+                            "output.printExecutionTime"),
+                    DEFAULT_PRINT_EXECUTION_TIME);
             
             showCommand = Configurator.getSetting(List.of(
                             "showCommand",
