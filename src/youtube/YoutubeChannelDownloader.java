@@ -194,7 +194,7 @@ public class YoutubeChannelDownloader {
     private static boolean loadChannelData() {
         try {
             final Set<String> videoTitles = new HashSet<>();
-            ApiUtils.fetchPlaylistVideos(channel).stream()
+            ApiUtils.fetchChannelVideos(channel).stream()
                     .filter(Objects::nonNull).filter(VideoInfo::isValid)
                     .map(videoInfo -> new Video(videoInfo, channel))
                     .filter(video -> videoTitles.add(video.getTitle()))

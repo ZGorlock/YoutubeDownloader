@@ -49,6 +49,7 @@ import youtube.channel.config.ChannelEntry;
 import youtube.channel.state.ChannelState;
 import youtube.config.Color;
 import youtube.entity.Channel;
+import youtube.entity.Playlist;
 import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;
@@ -695,22 +696,43 @@ public final class ApiUtils {
     /**
      * Calls the Youtube Data API and fetches the Videos of a Playlist.
      *
-     * @param channelConfig The Channel Config of the Channel.
-     * @param channelState  The Channel State of the calling Channel.
+     * @param playlistInfo The Playlist Info of the Playlist.
+     * @param channelState The Channel State of the calling Channel.
      * @return The list of Videos.
      */
-    public static List<VideoInfo> fetchPlaylistVideos(ChannelConfig channelConfig, ChannelState channelState) {
-        return fetchPlaylistVideos(channelConfig.getPlaylistId(), channelState);
+    public static List<VideoInfo> fetchPlaylistVideos(PlaylistInfo playlistInfo, ChannelState channelState) {
+        return fetchPlaylistVideos(playlistInfo.getPlaylistId(), channelState);
     }
     
     /**
      * Calls the Youtube Data API and fetches the Videos of a Playlist.
      *
-     * @param channel The Channel.
+     * @param playlistInfo The Playlist Info of the Playlist.
      * @return The list of Videos.
      */
-    public static List<VideoInfo> fetchPlaylistVideos(Channel channel) {
-        return fetchPlaylistVideos(channel.getConfig(), channel.getState());
+    public static List<VideoInfo> fetchPlaylistVideos(PlaylistInfo playlistInfo) {
+        return fetchPlaylistVideos(playlistInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Playlist.
+     *
+     * @param playlist     The Playlist.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchPlaylistVideos(Playlist playlist, ChannelState channelState) {
+        return fetchPlaylistVideos(playlist.getInfo(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Playlist.
+     *
+     * @param playlist The Playlist.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchPlaylistVideos(Playlist playlist) {
+        return fetchPlaylistVideos(playlist, null);
     }
     
     /**
@@ -723,7 +745,7 @@ public final class ApiUtils {
     @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> fetchPlaylistVideosData(String playlistId, ChannelState channelState) {
         return ApiHandler.fetchEntityListData(Endpoint.PLAYLIST_ITEMS, playlistId, channelState,
-                new HashMap<>(Map.of("playlistId", playlistId.replaceAll("^UC", "UU"))),
+                new HashMap<>(Map.of("playlistId", playlistId)),
                 e -> Optional.ofNullable((Map<String, Object>) e.get("contentDetails")).map(e2 -> (String) e2.get("videoId")).orElse(null),
                 ids -> ApiHandler.callApi(Endpoint.VIDEO, new HashMap<>(Map.of("id", ids)), channelState));
     }
@@ -741,22 +763,189 @@ public final class ApiUtils {
     /**
      * Calls the Youtube Data API and fetches the data of the Videos of a Playlist.
      *
-     * @param channelConfig The Channel Config of the Channel.
-     * @param channelState  The Channel State of the calling Channel.
+     * @param playlistInfo The Playlist Info of the Playlist.
+     * @param channelState The Channel State of the calling Channel.
      * @return The json data of the list of Videos.
      */
-    public static List<Map<String, Object>> fetchPlaylistVideosData(ChannelConfig channelConfig, ChannelState channelState) {
-        return fetchPlaylistVideosData(channelConfig.getPlaylistId(), channelState);
+    public static List<Map<String, Object>> fetchPlaylistVideosData(PlaylistInfo playlistInfo, ChannelState channelState) {
+        return fetchPlaylistVideosData(playlistInfo.getPlaylistId(), channelState);
     }
     
     /**
      * Calls the Youtube Data API and fetches the data of the Videos of a Playlist.
      *
+     * @param playlistInfo The Playlist Info of the Playlist.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchPlaylistVideosData(PlaylistInfo playlistInfo) {
+        return fetchPlaylistVideosData(playlistInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Playlist.
+     *
+     * @param playlist     The Playlist.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchPlaylistVideosData(Playlist playlist, ChannelState channelState) {
+        return fetchPlaylistVideosData(playlist.getInfo(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Playlist.
+     *
+     * @param playlist The Playlist.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchPlaylistVideosData(Playlist playlist) {
+        return fetchPlaylistVideosData(playlist, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channelId    The id of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(String channelId, ChannelState channelState) {
+        return EntityHandler.loadEntityList(ApiEntity.VIDEO, channelId, channelState, ApiUtils::fetchChannelVideosData);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param playlistId The id of the Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(String playlistId) {
+        return fetchChannelVideos(playlistId, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channelInfo  The Channel Info of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(ChannelInfo channelInfo, ChannelState channelState) {
+        return fetchChannelVideos(channelInfo.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channelInfo The Channel Info of the Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(ChannelInfo channelInfo) {
+        return fetchChannelVideos(channelInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @param channelState  The Channel State of the calling Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(ChannelConfig channelConfig, ChannelState channelState) {
+        return fetchChannelVideos(channelConfig.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(ChannelConfig channelConfig) {
+        return fetchChannelVideos(channelConfig, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Videos of a Channel.
+     *
+     * @param channel The Channel.
+     * @return The list of Videos.
+     */
+    public static List<VideoInfo> fetchChannelVideos(Channel channel) {
+        return fetchChannelVideos(channel.getConfig(), channel.getState());
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelId    The id of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(String channelId, ChannelState channelState) {
+        return fetchPlaylistVideosData(channelId.replaceAll("^UC", "UU"), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelId The id of the Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(String channelId) {
+        return fetchChannelVideosData(channelId, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelInfo  The Channel Info of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(ChannelInfo channelInfo, ChannelState channelState) {
+        return fetchChannelVideosData(channelInfo.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelInfo The Channel Info of the Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(ChannelInfo channelInfo) {
+        return fetchChannelVideosData(channelInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @param channelState  The Channel State of the calling Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(ChannelConfig channelConfig, ChannelState channelState) {
+        return fetchChannelVideosData(channelConfig.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @return The json data of the list of Videos.
+     */
+    public static List<Map<String, Object>> fetchChannelVideosData(ChannelConfig channelConfig) {
+        return fetchChannelVideosData(channelConfig, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Videos of a Channel.
+     *
      * @param channel The Channel.
      * @return The json data of the list of Videos.
      */
-    public static List<Map<String, Object>> fetchPlaylistVideosData(Channel channel) {
-        return fetchPlaylistVideosData(channel.getConfig(), channel.getState());
+    public static List<Map<String, Object>> fetchChannelVideosData(Channel channel) {
+        return fetchChannelVideosData(channel.getConfig(), channel.getState());
     }
     
     /**
@@ -783,12 +972,43 @@ public final class ApiUtils {
     /**
      * Calls the Youtube Data API and fetches the Playlists of a Channel.
      *
+     * @param channelInfo  The Channel Info of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The list of Playlists.
+     */
+    public static List<PlaylistInfo> fetchChannelPlaylists(ChannelInfo channelInfo, ChannelState channelState) {
+        return fetchChannelPlaylists(channelInfo.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Playlists of a Channel.
+     *
+     * @param channelInfo The Channel Info of the Channel.
+     * @return The list of Playlists.
+     */
+    public static List<PlaylistInfo> fetchChannelPlaylists(ChannelInfo channelInfo) {
+        return fetchChannelPlaylists(channelInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Playlists of a Channel.
+     *
      * @param channelConfig The Channel Config of the Channel.
      * @param channelState  The Channel State of the calling Channel.
      * @return The list of Playlists.
      */
     public static List<PlaylistInfo> fetchChannelPlaylists(ChannelConfig channelConfig, ChannelState channelState) {
-        return fetchChannelPlaylists(channelConfig.getPlaylistId(), channelState);
+        return fetchChannelPlaylists(channelConfig.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the Playlists of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @return The list of Playlists.
+     */
+    public static List<PlaylistInfo> fetchChannelPlaylists(ChannelConfig channelConfig) {
+        return fetchChannelPlaylists(channelConfig, null);
     }
     
     /**
@@ -798,7 +1018,7 @@ public final class ApiUtils {
      * @return The list of Playlists.
      */
     public static List<PlaylistInfo> fetchChannelPlaylists(Channel channel) {
-        return fetchChannelPlaylists(channel.getConfig().getChannelId(), channel.getState());
+        return fetchChannelPlaylists(channel.getConfig(), channel.getState());
     }
     
     /**
@@ -810,7 +1030,7 @@ public final class ApiUtils {
      */
     public static List<Map<String, Object>> fetchChannelPlaylistsData(String channelId, ChannelState channelState) {
         return ApiHandler.fetchEntityListData(Endpoint.CHANNEL_PLAYLISTS, channelId, channelState,
-                new HashMap<>(Map.of("channelId", channelId.replaceAll("^UU", "UC"))),
+                new HashMap<>(Map.of("channelId", channelId)),
                 e -> (String) e.get("id"),
                 ids -> ApiHandler.callApi(Endpoint.PLAYLIST, new HashMap<>(Map.of("id", ids)), channelState));
     }
@@ -828,12 +1048,43 @@ public final class ApiUtils {
     /**
      * Calls the Youtube Data API and fetches the data of the Playlists of a Channel.
      *
+     * @param channelInfo  The Channel Info of the Channel.
+     * @param channelState The Channel State of the calling Channel.
+     * @return The json data of the list of Playlists.
+     */
+    public static List<Map<String, Object>> fetchChannelPlaylistsData(ChannelInfo channelInfo, ChannelState channelState) {
+        return fetchChannelPlaylistsData(channelInfo.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Playlists of a Channel.
+     *
+     * @param channelInfo The Channel Info of the Channel.
+     * @return The json data of the list of Playlists.
+     */
+    public static List<Map<String, Object>> fetchChannelPlaylistsData(ChannelInfo channelInfo) {
+        return fetchChannelPlaylistsData(channelInfo, null);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Playlists of a Channel.
+     *
      * @param channelConfig The Channel Config of the Channel.
      * @param channelState  The Channel State of the calling Channel.
      * @return The json data of the list of Playlists.
      */
     public static List<Map<String, Object>> fetchChannelPlaylistsData(ChannelConfig channelConfig, ChannelState channelState) {
-        return fetchChannelPlaylistsData(channelConfig.getPlaylistId(), channelState);
+        return fetchChannelPlaylistsData(channelConfig.getChannelId(), channelState);
+    }
+    
+    /**
+     * Calls the Youtube Data API and fetches the data of the Playlists of a Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @return The json data of the list of Playlists.
+     */
+    public static List<Map<String, Object>> fetchChannelPlaylistsData(ChannelConfig channelConfig) {
+        return fetchChannelPlaylistsData(channelConfig, null);
     }
     
     /**
@@ -843,7 +1094,7 @@ public final class ApiUtils {
      * @return The json data of the list of Playlists.
      */
     public static List<Map<String, Object>> fetchChannelPlaylistsData(Channel channel) {
-        return fetchChannelPlaylistsData(channel.getConfig().getChannelId(), channel.getState());
+        return fetchChannelPlaylistsData(channel.getConfig(), channel.getState());
     }
     
     /**

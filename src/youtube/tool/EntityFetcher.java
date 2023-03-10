@@ -55,6 +55,9 @@ public class EntityFetcher {
         resultEntities = results.computeIfAbsent("Channel Playlists", key -> new ArrayList<>());
         fetchChannelPlaylists("UCMV3aTOwUtG5vwfH9_rzb2w", resultEntities);
         
+        resultEntities = results.computeIfAbsent("Channel Videos", key -> new ArrayList<>());
+        fetchChannelVideos("UCMV3aTOwUtG5vwfH9_rzb2w", resultEntities);
+        
         resultEntities = results.computeIfAbsent("Playlist Videos", key -> new ArrayList<>());
         fetchPlaylistVideos("PLovlAKbQVz6D3nqwNV7XmIAJBlZ_6OmYw", resultEntities);
         
@@ -129,6 +132,23 @@ public class EntityFetcher {
         result.addAll(channelPlaylists);
         return IntStream.range(0, channelPlaylists.size())
                 .mapToObj(i -> new ImmutablePair<>((EntityInfo) channelPlaylists.get(i), channelPlaylistsData.get(i)))
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Fetches the Videos of a Channel from the Youtube Data API.
+     *
+     * @param channelId The id of the Channel.
+     * @param result    The list to store the Videos in.
+     * @return The json data of the Videos and the list of Video Info.
+     */
+    private static List<ImmutablePair<EntityInfo, Map<String, Object>>> fetchChannelVideos(String channelId, List<EntityInfo> result) {
+        final List<Map<String, Object>> channelVideosData = ApiUtils.fetchChannelVideosData(channelId);
+        final List<VideoInfo> channelVideos = ApiUtils.fetchChannelVideos(channelId);
+        
+        result.addAll(channelVideos);
+        return IntStream.range(0, channelVideos.size())
+                .mapToObj(i -> new ImmutablePair<>((EntityInfo) channelVideos.get(i), channelVideosData.get(i)))
                 .collect(Collectors.toList());
     }
     
