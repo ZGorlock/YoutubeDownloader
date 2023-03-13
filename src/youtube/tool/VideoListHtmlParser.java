@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import commons.access.Project;
@@ -74,8 +73,7 @@ public class VideoListHtmlParser {
                 .map(e -> e.getElementsByClass("yt-simple-endpoint style-scope ytd-playlist-video-renderer"))
                 .stream().flatMap(Collection::stream)
                 .map(e -> e.attr("href")).filter(e -> !e.isEmpty())
-                .map(WebUtils.VIDEO_URL_PATTERN::matcher).filter(Matcher::matches)
-                .map(e -> e.group("video"))
+                .map(WebUtils::getVideoId)
                 .collect(Collectors.toList());
         
         videoIdList.stream().map(Color::log).forEach(logger::debug);

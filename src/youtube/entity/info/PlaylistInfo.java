@@ -51,7 +51,7 @@ public class PlaylistInfo extends EntityInfo {
         super(playlistData);
         
         this.playlistId = metadata.getEntityId();
-        this.url = WebUtils.PLAYLIST_BASE + playlistId;
+        this.url = WebUtils.getPlaylistUrl(playlistId);
         
         this.videoCount = parseData("contentDetails", "itemCount");
     }

@@ -125,7 +125,7 @@ public class VideoInfo extends EntityInfo {
         super(videoData);
         
         this.videoId = metadata.getEntityId();
-        this.url = WebUtils.VIDEO_BASE + videoId;
+        this.url = WebUtils.getVideoUrl(videoId);
         
         this.playlistPosition = parseLong("snippet", "position").orElse(null);
         

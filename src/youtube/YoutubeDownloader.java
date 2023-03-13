@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import commons.access.Project;
@@ -165,7 +164,7 @@ public class YoutubeDownloader {
      */
     private static String parseUrl(String url) {
         return Optional.ofNullable(url)
-                .map(WebUtils.VIDEO_URL_PATTERN::matcher).filter(Matcher::matches).map(Matcher::group)
+                .filter(WebUtils::isVideoUrl)
                 .orElseGet(() -> {
                     logger.warn(Color.bad("The URL: ") + Color.link(url) + Color.bad(" is not a Youtube video"));
                     return null;

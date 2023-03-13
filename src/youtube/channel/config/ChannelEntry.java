@@ -692,10 +692,10 @@ public abstract class ChannelEntry extends ConfigData {
                 .map(type -> {
                     switch (type) {
                         case CHANNEL:
-                            return WebUtils.CHANNEL_BASE + playlistId.replaceAll("^UU", "UC");
+                            return WebUtils.getChannelUrl(playlistId);
                         case PLAYLIST:
                         case ALBUM:
-                            return WebUtils.PLAYLIST_BASE + playlistId;
+                            return WebUtils.getPlaylistUrl(playlistId);
                         default:
                             return null;
                     }

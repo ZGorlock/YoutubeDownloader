@@ -68,7 +68,7 @@ public final class WebUtils {
     /**
      * The base custom url for Youtube channels.
      */
-    public static final String CHANNEL_CUSTOM_BASE = YOUTUBE_BASE + "/@";
+    public static final String CHANNEL_CUSTOM_BASE = YOUTUBE_BASE + "/c/";
     
     /**
      * The regex pattern for a Youtube video url.
@@ -83,7 +83,7 @@ public final class WebUtils {
     /**
      * The regex pattern for a Youtube channel url.
      */
-    public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:c(?:hannel)?|u(?:ser)?)/(?<channel>\\w+).*$");
+    public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:@|(?:c(?:hannel|/@)?|u(?:ser)?)/)(?<channel>\\w+).*$");
     
     
     //Static Methods
@@ -105,6 +105,103 @@ public final class WebUtils {
     }
     
     /**
+     * Determines if a url is a Youtube channel url.
+     *
+     * @param url The url.
+     * @return Whether the specified url is a Youtube channel url.
+     */
+    public static boolean isYoutubeUrl(String url) {
+        return Optional.ofNullable(url)
+                .map(e -> e.startsWith(YOUTUBE_BASE))
+                .orElse(false);
+    }
+    
+    /**
+     * Determines if a url is a Youtube channel url.
+     *
+     * @param url        The url.
+     * @param urlPattern The pattern the url should match.
+     * @return Whether the specified url is a Youtube channel url which matches the specified pattern.
+     */
+    public static boolean isYoutubeUrl(String url, Pattern urlPattern) {
+        return Optional.ofNullable(url)
+                .filter(WebUtils::isYoutubeUrl)
+                .map(urlPattern::matcher).map(Matcher::matches)
+                .orElse(false);
+    }
+    
+    /**
+     * Determines if a url is a Youtube channel url.
+     *
+     * @param url The url.
+     * @return Whether the specified url is a Youtube channel url.
+     */
+    public static boolean isChannelUrl(String url) {
+        return isYoutubeUrl(url, CHANNEL_URL_PATTERN);
+    }
+    
+    /**
+     * Determines if a url is a Youtube playlist url.
+     *
+     * @param url The url.
+     * @return Whether the specified url is a Youtube playlist url.
+     */
+    public static boolean isPlaylistUrl(String url) {
+        return isYoutubeUrl(url, PLAYLIST_URL_PATTERN);
+    }
+    
+    /**
+     * Determines if a url is a Youtube video url.
+     *
+     * @param url The url.
+     * @return Whether the specified url is a Youtube video url.
+     */
+    public static boolean isVideoUrl(String url) {
+        return isYoutubeUrl(url, VIDEO_URL_PATTERN);
+    }
+    
+    /**
+     * Returns the url associated with the Youtube channel.
+     *
+     * @param channelId The Youtube channel id or custom url key.
+     * @return The Youtube channel url, or null if the channel id is invalid.
+     */
+    public static String getChannelUrl(String channelId) {
+        return Optional.ofNullable(channelId)
+                .filter(id -> !id.isBlank())
+                .map(id -> id.replaceAll("^UU", "UC")).map(id -> id.replaceAll("^@", "/@"))
+                .map(id -> ((id.startsWith("/") ? YOUTUBE_BASE :
+                             id.startsWith("UC") ? CHANNEL_BASE : CHANNEL_CUSTOM_BASE) + id))
+                .orElse(null);
+    }
+    
+    /**
+     * Returns the url associated with the Youtube playlist.
+     *
+     * @param playlistId The Youtube playlist id.
+     * @return The Youtube playlist url, or null if the playlist id is invalid.
+     */
+    public static String getPlaylistUrl(String playlistId) {
+        return Optional.ofNullable(playlistId)
+                .filter(id -> !id.isBlank())
+                .map(id -> (PLAYLIST_BASE + id))
+                .orElse(null);
+    }
+    
+    /**
+     * Returns the url associated with the Youtube video.
+     *
+     * @param videoId The Youtube video id.
+     * @return The Youtube video url, or null if the video id is invalid.
+     */
+    public static String getVideoUrl(String videoId) {
+        return Optional.ofNullable(videoId)
+                .filter(id -> !id.isBlank())
+                .map(id -> (VIDEO_BASE + id))
+                .orElse(null);
+    }
+    
+    /**
      * Fetches the Video from a Youtube video url.
      *
      * @param url    The video url.
@@ -113,25 +210,19 @@ public final class WebUtils {
      */
     @SuppressWarnings("unchecked")
     public static VideoInfo fetchVideo(String url, boolean useApi) {
-        final Matcher videoUrlMatcher = VIDEO_URL_PATTERN.matcher(url);
-        
         VideoInfo video = null;
         final Map<String, String> videoDetails = MapUtility.mapOf(
-                new ImmutablePair<>("videoId", videoUrlMatcher.matches() ? videoUrlMatcher.group("video") : ""),
+                new ImmutablePair<>("videoId", getVideoId(url)),
                 new ImmutablePair<>("name", ""),
                 new ImmutablePair<>("datePublished", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
         
         if (!Configurator.Config.preventVideoFetch) {
-            
             if (useApi) {
-                try {
-                    video = ApiUtils.fetchVideo(videoDetails.get("videoId"));
-                } catch (Exception ignored) {
-                }
+                video = ApiUtils.fetchVideo(videoDetails.get("videoId"));
                 
             } else {
                 final Pattern metaPattern = Pattern.compile("^\\s*<meta\\s*itemprop=\"(?<prop>[^\"]+)\"\\s*content=\"(?<value>[^\"]+)\"\\s*>\\s*$");
-                Optional.ofNullable(url).map(Internet::getHtml)
+                Optional.of(url).map(Internet::getHtml)
                         .map(Node::toString).map(StringUtility::splitLines)
                         .stream().flatMap(Collection::stream)
                         .map(metaPattern::matcher).filter(Matcher::matches)
@@ -157,26 +248,77 @@ public final class WebUtils {
     }
     
     /**
-     * Fetches the Channel playlist id from a Youtube channel url.
+     * Extracts the video id from a Youtube video url.
      *
-     * @param url The Youtube channel url.
+     * @param url The Youtube video url.
+     * @return The video id, or an empty string if there was an error.
+     */
+    public static String getVideoId(String url) {
+        return Optional.ofNullable(url)
+                .filter(WebUtils::isVideoUrl)
+                .map(VIDEO_URL_PATTERN::matcher).filter(Matcher::matches)
+                .map(videoUrlMatcher -> videoUrlMatcher.group("video"))
+                .orElse("");
+    }
+    
+    /**
+     * Extracts the playlist id from a Youtube playlist url.
+     *
+     * @param url The Youtube playlist url.
      * @return The playlist id, or an empty string if there was an error.
      */
-    public static String fetchPlaylistId(String url) {
+    public static String getPlaylistId(String url) {
         return Optional.ofNullable(url)
+                .filter(WebUtils::isPlaylistUrl)
                 .map(PLAYLIST_URL_PATTERN::matcher).filter(Matcher::matches)
                 .map(playlistUrlMatcher -> playlistUrlMatcher.group("playlist"))
-                .orElseGet(() -> Optional.ofNullable(url)
-                        .map(CHANNEL_URL_PATTERN::matcher).filter(Matcher::matches)
-                        .map(channelUrlMatcher -> Pattern.compile("^.*\"externalId\":\"(?<externalId>[^\"]+)\".*$"))
-                        .map(externalIdPattern -> Optional.ofNullable(url).map(Internet::getHtml)
-                                .map(Node::toString).map(StringUtility::splitLines)
-                                .stream().flatMap(Collection::stream)
-                                .map(externalIdPattern::matcher).filter(Matcher::matches)
-                                .map(externalIdMatcher -> externalIdMatcher.group("externalId")).filter(Objects::nonNull)
-                                .map(externalId -> externalId.replaceAll("^UC", "UU"))
-                                .findFirst().orElse(""))
-                        .orElse(""));
+                .orElseGet(() -> getChannelPlaylistId(url));
+    }
+    
+    /**
+     * Extracts the channel playlist id from a Youtube channel url.
+     *
+     * @param url The Youtube channel url.
+     * @return The channel playlist id, or an empty string if there was an error.
+     */
+    public static String getChannelPlaylistId(String url) {
+        return Optional.ofNullable(url)
+                .map(WebUtils::getChannelId)
+                .map(id -> id.replaceAll("^UC", "UU"))
+                .orElse("");
+    }
+    
+    /**
+     * Extracts the channel id from a Youtube channel url.
+     *
+     * @param url The Youtube channel url.
+     * @return The channel id, or an empty string if there was an error.
+     */
+    public static String getChannelId(String url) {
+        return Optional.ofNullable(url)
+                .filter(WebUtils::isChannelUrl)
+                .map(CHANNEL_URL_PATTERN::matcher).filter(Matcher::matches)
+                .map(channelUrlMatcher -> channelUrlMatcher.group("channel"))
+                .filter(id -> id.startsWith("UC"))
+                .orElseGet(() -> fetchExternalId(url));
+    }
+    
+    /**
+     * Fetches the external id from a Youtube channel url.
+     *
+     * @param url The Youtube channel url.
+     * @return The external id, or an empty string if there was an error.
+     */
+    public static String fetchExternalId(String url) {
+        final Pattern externalIdPattern = Pattern.compile("^.*\"externalId\":\"(?<externalId>[^\"]+)\".*$");
+        return Optional.ofNullable(url)
+                .filter(WebUtils::isChannelUrl)
+                .map(Internet::getHtml)
+                .map(Node::toString).map(StringUtility::splitLines)
+                .stream().flatMap(Collection::stream)
+                .map(externalIdPattern::matcher).filter(Matcher::matches)
+                .map(externalIdMatcher -> externalIdMatcher.group("externalId")).filter(Objects::nonNull)
+                .findFirst().orElse("");
     }
     
     /**
@@ -187,9 +329,9 @@ public final class WebUtils {
      */
     public static void checkPlaylistId(ChannelConfig channel) {
         if (StringUtility.isNullOrBlank(channel.getPlaylistId())) {
-            channel.playlistId = WebUtils.fetchPlaylistId(channel.getUrl());
+            channel.playlistId = getPlaylistId(channel.getUrl());
             
-            logger.warn(Color.bad("Channel does not have a playlistId defined, please add this to the Channel configuration"));
+            logger.warn(Color.bad("Channel does not have a ") + Color.link("playlistId") + Color.bad(" defined, please add this to the Channel configuration"));
             if (channel.getPlaylistId().isEmpty()) {
                 throw new RuntimeException();
             }
