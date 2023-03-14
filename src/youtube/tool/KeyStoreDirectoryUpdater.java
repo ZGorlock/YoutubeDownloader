@@ -7,11 +7,15 @@
 
 package youtube.tool;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.config.Color;
 import youtube.state.KeyStore;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
@@ -59,11 +63,31 @@ public class KeyStoreDirectoryUpdater {
         final String search = PathUtils.localPath(true, "", oldLocation, name);
         final String replace = PathUtils.localPath(true, "", newLocation, name);
         
-        final List<String> keyStoreLines = FileUtils.readLines(KeyStore.KEY_STORE_FILE);
+        final List<String> originalLines = FileUtils.readLines(KeyStore.KEY_STORE_FILE);
+        final List<String> updatedLines = Optional.ofNullable(originalLines)
+                .map(lines -> lines.stream()
+                        .map(line -> line.replace(search, replace))
+                        .collect(Collectors.toList()))
+                .filter(newLines -> {
+                    try {
+                        FileUtils.writeLines(KeyStore.KEY_STORE_FILE, newLines);
+                        return true;
+                    } catch (IOException e) {
+                        return false;
+                    }
+                })
+                .orElse(null);
         
-        FileUtils.writeLines(KeyStore.KEY_STORE_FILE, keyStoreLines.stream()
-                .map(e -> e.replace(search, replace))
-                .collect(Collectors.toList()));
+        if ((originalLines != null) && (updatedLines != null)) {
+            final long updateCount = IntStream.range(0, updatedLines.size()).filter(i -> !updatedLines.get(i).equals(originalLines.get(i))).count();
+            if (updateCount > 0) {
+                logger.info(Color.good("Successfully updated ") + Color.number(updateCount) + Color.good(" lines in the key store file: ") + Color.quoteFilePath(KeyStore.KEY_STORE_FILE));
+            } else {
+                logger.info(Color.base("No updates were made in the key store file: ") + Color.quoteFilePath(KeyStore.KEY_STORE_FILE));
+            }
+        } else {
+            logger.error(Color.bad("Failed to update the key store file: ") + Color.quoteFilePath(KeyStore.KEY_STORE_FILE));
+        }
     }
     
 }
