@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
 import commons.access.Project;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.YoutubeDownloader;
 import youtube.config.Color;
-import youtube.util.FileUtils;
 import youtube.util.WebUtils;
 
 /**
@@ -63,10 +63,9 @@ public class VideoListHtmlParser {
      * Runs the Video List Html Parser.
      *
      * @param args Arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
-        final String videoListHtml = FileUtils.readFileToString(VIDEO_LIST_HTML_FILE);
+    public static void main(String[] args) {
+        final String videoListHtml = Filesystem.readFileToString(VIDEO_LIST_HTML_FILE);
         
         final List<String> videoIdList = Optional.ofNullable(videoListHtml).map(Jsoup::parse)
                 .map(e -> e.getElementsByClass("ytd-playlist-video-list-renderer").first())
@@ -78,7 +77,7 @@ public class VideoListHtmlParser {
         
         videoIdList.stream().map(Color::log).forEach(logger::debug);
         if (OUTPUT_TO_DOWNLOAD_QUEUE) {
-            FileUtils.writeLines(YoutubeDownloader.DOWNLOAD_QUEUE, videoIdList, true);
+            Filesystem.writeLines(YoutubeDownloader.DOWNLOAD_QUEUE, videoIdList, true);
         }
     }
     

@@ -344,7 +344,7 @@ public final class Filesystem {
                         return false;
                     }
                 }
-                FileUtils.copyFileToDirectory(fileSrc, fileDest); //copies file into destination directory
+                FileUtils.copyFileToDirectory(fileSrc, fileDest, true); //copies file into destination directory
             } else {
                 if (fileDest.exists()) {
                     if (overwrite) {
@@ -356,7 +356,7 @@ public final class Filesystem {
                         return false;
                     }
                 }
-                FileUtils.copyFile(fileSrc, fileDest); //copies file to destination file path
+                FileUtils.copyFile(fileSrc, fileDest, true); //copies file to destination file path
             }
             return true;
         } catch (IOException ignored) {
@@ -460,7 +460,7 @@ public final class Filesystem {
                         return false;
                     }
                 }
-                FileUtils.copyDirectory(dirSrc, dirDest); //copies directory to destination directory path
+                FileUtils.copyDirectory(dirSrc, dirDest, true); //copies directory to destination directory path
             }
             return true;
         } catch (IOException ignored) {
@@ -1514,7 +1514,7 @@ public final class Filesystem {
      * Reads a file out to a string.
      *
      * @param file The file to read.
-     * @return The contents of the file as a string.
+     * @return The contents of the file as a string, or null if there it could not be read.
      */
     public static String readFileToString(File file) {
         if (logFilesystem()) {
@@ -1524,13 +1524,13 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
             }
-            return "";
+            return null;
         }
         if (file.isDirectory()) {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read directories to strings: {}", StringUtility.fileString(file));
             }
-            return "";
+            return null;
         }
         
         try {
@@ -1539,7 +1539,7 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read file to string: {}", StringUtility.fileString(file));
             }
-            return "";
+            return null;
         }
     }
     
@@ -1547,7 +1547,7 @@ public final class Filesystem {
      * Reads a file out to a byte array.
      *
      * @param file The file to read.
-     * @return The contents of the file as a byte array.
+     * @return The contents of the file as a byte array, or null if there it could not be read.
      */
     public static byte[] readFileToByteArray(File file) {
         if (logFilesystem()) {
@@ -1557,13 +1557,13 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
             }
-            return new byte[0];
+            return null;
         }
         if (file.isDirectory()) {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read directories to byte arrays: {}", StringUtility.fileString(file));
             }
-            return new byte[0];
+            return null;
         }
         
         try {
@@ -1572,7 +1572,7 @@ public final class Filesystem {
             if (logFilesystem()) {
                 logger.trace("Filesystem: Unable to read file to byte array: {}", StringUtility.fileString(file));
             }
-            return new byte[0];
+            return null;
         }
     }
     
@@ -1580,7 +1580,7 @@ public final class Filesystem {
      * Reads a file out to a list of lines.
      *
      * @param file The file to read.
-     * @return The contents of the file as a list of strings.
+     * @return The contents of the file as a list of strings, or null if there it could not be read.
      */
     public static List<String> readLines(File file) {
         if (logFilesystem()) {

@@ -8,15 +8,19 @@
 package youtube.channel;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
+import commons.object.string.StringUtility;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +30,6 @@ import youtube.channel.config.ChannelGroup;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.entity.Channel;
-import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -304,12 +307,15 @@ public class Channels {
      * Reads the Channels configuration file.
      *
      * @return The content of the Channels configuration file.
-     * @throws Exception When there is an issue reading the configuration file.
+     * @throws RuntimeException When there is an issue reading the configuration file.
      */
-    private static String readChannelConfiguration() throws Exception {
-        return FileUtils.readLines(CHANNELS_FILE).stream()
-                .filter(e -> !e.strip().startsWith("//"))
-                .collect(Collectors.joining());
+    private static String readChannelConfiguration() {
+        return Optional.of(CHANNELS_FILE).map(Filesystem::readLines)
+                .map(lines -> lines.stream()
+                        .filter(line -> !StringUtility.isNullOrBlank(line))
+                        .filter(line -> !line.strip().startsWith("//"))
+                        .collect(Collectors.joining()))
+                .orElseThrow(() -> new RuntimeException(new IOException("Error reading: " + PathUtils.path(CHANNELS_FILE))));
     }
     
     /**

@@ -20,6 +20,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import commons.access.Desktop;
+import commons.access.Filesystem;
 import commons.access.Internet;
 import commons.time.DateTimeUtility;
 import org.slf4j.Logger;
@@ -181,6 +183,7 @@ public class YoutubeChannelDownloader {
             channel.getInfo();
             
         } catch (Exception e) {
+            logger.error(Color.bad("Failed to initialize Channel: ") + Color.channelName(channel) + Color.bad(" for processing"), e);
             return false;
         }
         return true;
@@ -200,6 +203,7 @@ public class YoutubeChannelDownloader {
                     .filter(video -> videoTitles.add(video.getTitle()))
                     .forEach(video -> videoMap.put(video.getInfo().getVideoId(), video));
         } catch (Exception e) {
+            logger.error(Color.bad("Failed to load the data of Channel: ") + Color.channelName(channel), e);
             return false;
         }
         return true;
@@ -353,15 +357,18 @@ public class YoutubeChannelDownloader {
         }
         
         if (channel.getConfig().getPlaylistFile() == null) {
-            return false;
+            return true;
         }
         
-        List<String> existingPlaylist = new ArrayList<>();
+        final List<String> existingPlaylist = new ArrayList<>();
         if (channel.getConfig().getPlaylistFile().exists()) {
             try {
-                existingPlaylist = FileUtils.readLines(channel.getConfig().getPlaylistFile());
-            } catch (IOException e) {
-                logger.error(Color.bad("Failed to read existing playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()), e);
+                Optional.of(channel.getConfig().getPlaylistFile())
+                        .map(Filesystem::readLines)
+                        .map(existingPlaylist::addAll)
+                        .orElseThrow(() -> new IOException("Error reading: " + PathUtils.path(channel.getConfig().getPlaylistFile())));
+            } catch (Exception e) {
+                logger.error(Color.bad("Failed to load existing playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()), e);
                 return false;
             }
         }
@@ -383,7 +390,9 @@ public class YoutubeChannelDownloader {
             if (!Configurator.Config.preventPlaylistEdit) {
                 logger.info(Color.base("Updating playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()));
                 try {
-                    FileUtils.writeLines(channel.getConfig().getPlaylistFile(), playlist);
+                    Optional.of(channel.getConfig().getPlaylistFile())
+                            .filter(file -> Filesystem.writeLines(file, playlist))
+                            .orElseThrow(() -> new IOException("Error writing: " + PathUtils.path(channel.getConfig().getPlaylistFile())));
                 } catch (IOException e) {
                     logger.error(Color.bad("Failed to update playlist: ") + Color.quoteFilePath(channel.getConfig().getPlaylistFile()), e);
                     return false;
@@ -417,23 +426,23 @@ public class YoutubeChannelDownloader {
         
         if (!channel.getState().getErrorFlag().get() && channel.getConfig().isKeepClean()) {
             
-            List<File> videos = FileUtils.getFiles(channel.getConfig().getOutputFolder());
-            for (File video : videos) {
-                if (video.isFile() && !saved.contains(PathUtils.localPath(video))) {
+            List<File> channelFiles = Filesystem.getFiles(channel.getConfig().getOutputFolder());
+            for (File channelFile : channelFiles) {
+                if (channelFile.isFile() && !saved.contains(PathUtils.localPath(channelFile))) {
                     
                     if (!Configurator.Config.preventDeletion) {
-                        logger.info(Color.base("Deleting: ") + Color.quoteVideoFileName(video));
+                        logger.info(Color.base("Deleting: ") + Color.quoteVideoFileName(channelFile));
                         try {
-                            if (Configurator.Config.deleteToRecyclingBin) {
-                                FileUtils.recycleFile(video);
-                            } else {
-                                FileUtils.deleteFile(video);
-                            }
-                        } catch (IOException e) {
-                            logger.error(Color.bad("Failed to delete: ") + Color.quoteVideoFileName(video), e);
+                            Optional.of(channelFile)
+                                    .filter(file -> Configurator.Config.deleteToRecyclingBin ?
+                                                    Desktop.trash(file) :
+                                                    Filesystem.deleteFile(file))
+                                    .orElseThrow(() -> new IOException("Error deleting: " + PathUtils.path(channelFile)));
+                        } catch (Exception e) {
+                            logger.error(Color.bad("Failed to delete: ") + Color.quoteVideoFileName(channelFile), e);
                         }
                         
-                        if (!video.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT)) {
+                        if (!channelFile.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT)) {
                             if (channel.getConfig().isSaveAsMp3()) {
                                 Stats.totalAudioDeletions.incrementAndGet();
                             } else {
@@ -442,7 +451,7 @@ public class YoutubeChannelDownloader {
                         }
                         
                     } else {
-                        logger.info(Color.bad("Would have deleted: ") + Color.quoteVideoFileName(video) + Color.bad(" but deletion is disabled"));
+                        logger.info(Color.bad("Would have deleted: ") + Color.quoteVideoFileName(channelFile) + Color.bad(" but deletion is disabled"));
                     }
                 }
             }

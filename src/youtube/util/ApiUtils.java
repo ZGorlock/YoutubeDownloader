@@ -25,8 +25,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
 import commons.lambda.function.checked.CheckedBiFunction;
-import commons.lambda.function.checked.CheckedConsumer;
 import commons.lambda.function.checked.CheckedFunction;
 import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.function.unchecked.UncheckedSupplier;
@@ -79,21 +79,14 @@ public final class ApiUtils {
     /**
      * The Youtube API key.
      */
-    private static final String API_KEY;
-    
-    //Populates API_KEY
-    static {
-        try {
-            API_KEY = FileUtils.readFileToString(API_KEY_FILE).strip();
-            if (API_KEY.isEmpty()) {
-                throw new KeyException();
-            }
-        } catch (Exception e) {
-            logger.warn(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.quoteFilePath(API_KEY_FILE));
-            logger.warn(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
-            throw new RuntimeException(e);
-        }
-    }
+    private static final String API_KEY = Optional.of(API_KEY_FILE)
+            .map(Filesystem::readFileToString).map(String::strip)
+            .filter(key -> !StringUtility.isNullOrEmpty(key))
+            .orElseThrow(() -> {
+                logger.warn(Color.bad("Must supply a Google API key with Youtube Data API enabled in ") + Color.quoteFilePath(API_KEY_FILE));
+                logger.warn(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
+                return new RuntimeException(new KeyException());
+            });
     
     /**
      * The base url for querying Youtube Playlists.
@@ -1221,7 +1214,7 @@ public final class ApiUtils {
          */
         private static List<String> loadDataCache(Endpoint endpoint, ChannelState channelState) {
             return Optional.ofNullable(channelState).map(state -> state.getDataFile(endpoint.getName()))
-                    .filter(File::exists).map((CheckedFunction<File, String>) FileUtils::readFileToString)
+                    .filter(File::exists).map(Filesystem::readFileToString)
                     .filter(data -> !StringUtility.isNullOrBlank(data))
                     .map(data -> data.split("(?:^|\r?\n)[\\[,\\]](?:\r?\n|$)"))
                     .map(dataPages -> Arrays.stream(dataPages)
@@ -1240,7 +1233,7 @@ public final class ApiUtils {
          */
         private static void saveDataCache(List<String> dataPages, Endpoint endpoint, ChannelState channelState) {
             Optional.ofNullable(channelState).map(state -> state.getDataFile(endpoint.getName()))
-                    .ifPresent((CheckedConsumer<File>) dataFile -> FileUtils.writeStringToFile(dataFile,
+                    .ifPresent(dataFile -> Filesystem.writeStringToFile(dataFile,
                             dataPages.stream().collect(Collectors.joining(
                                     (System.lineSeparator() + "," + System.lineSeparator()),
                                     ("[" + System.lineSeparator()), (System.lineSeparator() + "]")))));
@@ -1294,7 +1287,7 @@ public final class ApiUtils {
             
             LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG), log);
             Optional.ofNullable(channelState).map(ChannelState::getCallLogFile)
-                    .ifPresent((CheckedConsumer<File>) callLog -> FileUtils.writeStringToFile(callLog,
+                    .ifPresent(callLog -> Filesystem.writeStringToFile(callLog,
                             (log.replaceAll("^.+:: ", (LogUtils.timestamp() + " - ")) + System.lineSeparator()), true));
             
             Stats.totalApiCalls.incrementAndGet();

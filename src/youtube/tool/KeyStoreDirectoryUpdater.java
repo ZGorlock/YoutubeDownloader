@@ -7,17 +7,16 @@
 
 package youtube.tool;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import commons.access.Filesystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.config.Color;
 import youtube.state.KeyStore;
-import youtube.util.FileUtils;
 import youtube.util.PathUtils;
 
 /**
@@ -57,25 +56,17 @@ public class KeyStoreDirectoryUpdater {
      * Runs the Key Store Directory Updater.
      *
      * @param args Arguments to the main method.
-     * @throws Exception When there is an error.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         final String search = PathUtils.localPath(true, "", oldLocation, name);
         final String replace = PathUtils.localPath(true, "", newLocation, name);
         
-        final List<String> originalLines = FileUtils.readLines(KeyStore.KEY_STORE_FILE);
+        final List<String> originalLines = Filesystem.readLines(KeyStore.KEY_STORE_FILE);
         final List<String> updatedLines = Optional.ofNullable(originalLines)
                 .map(lines -> lines.stream()
                         .map(line -> line.replace(search, replace))
                         .collect(Collectors.toList()))
-                .filter(newLines -> {
-                    try {
-                        FileUtils.writeLines(KeyStore.KEY_STORE_FILE, newLines);
-                        return true;
-                    } catch (IOException e) {
-                        return false;
-                    }
-                })
+                .filter(newLines -> Filesystem.writeLines(KeyStore.KEY_STORE_FILE, newLines))
                 .orElse(null);
         
         if ((originalLines != null) && (updatedLines != null)) {

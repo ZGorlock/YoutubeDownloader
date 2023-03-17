@@ -11,14 +11,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import commons.access.Filesystem;
 import commons.access.Project;
-import commons.lambda.function.checked.CheckedConsumer;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import youtube.channel.config.ChannelConfig;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.state.KeyStore;
-import youtube.util.FileUtils;
+import youtube.util.PathUtils;
 import youtube.util.Utils;
 
 /**
@@ -160,11 +161,25 @@ public class ChannelState {
         cleanupLegacyState();
         
         try {
-            getQueued().addAll(FileUtils.readLines(getQueueFile()));
-            getSaved().addAll(FileUtils.readLines(getSaveFile()));
-            getBlocked().addAll(FileUtils.readLines(getBlockFile()));
+            Optional.of(getQueueFile())
+                    .filter(file -> file.exists() || Filesystem.createFile(file))
+                    .map(Filesystem::readLines)
+                    .map(loaded -> getQueued().addAll(loaded))
+                    .orElseThrow(() -> new IOException("Error reading: " + PathUtils.path(getQueueFile())));
             
-        } catch (IOException e) {
+            Optional.of(getSaveFile())
+                    .filter(file -> file.exists() || Filesystem.createFile(file))
+                    .map(Filesystem::readLines)
+                    .map(loaded -> getSaved().addAll(loaded))
+                    .orElseThrow(() -> new IOException("Error reading: " + PathUtils.path(getSaveFile())));
+            
+            Optional.of(getBlockFile())
+                    .filter(file -> file.exists() || Filesystem.createFile(file))
+                    .map(Filesystem::readLines)
+                    .map(loaded -> getBlocked().addAll(loaded))
+                    .orElseThrow(() -> new IOException("Error reading: " + PathUtils.path(getBlockFile())));
+            
+        } catch (Exception e) {
             logger.error(Color.bad("Failed to load the state of Channel: ") + Color.channelName(this), e);
             throw new RuntimeException(e);
         }
@@ -187,11 +202,19 @@ public class ChannelState {
         getBlocked().removeAll(getSaved());
         
         try {
-            FileUtils.writeLines(getQueueFile(), getQueued());
-            FileUtils.writeLines(getSaveFile(), getSaved());
-            FileUtils.writeLines(getBlockFile(), getBlocked());
+            Optional.of(getQueueFile())
+                    .filter(file -> Filesystem.writeLines(file, getQueued()))
+                    .orElseThrow(() -> new IOException("Error writing: " + PathUtils.path(getQueueFile())));
             
-        } catch (IOException e) {
+            Optional.of(getSaveFile())
+                    .filter(file -> Filesystem.writeLines(file, getSaved()))
+                    .orElseThrow(() -> new IOException("Error writing: " + PathUtils.path(getSaveFile())));
+            
+            Optional.of(getBlockFile())
+                    .filter(file -> Filesystem.writeLines(file, getBlocked()))
+                    .orElseThrow(() -> new IOException("Error writing: " + PathUtils.path(getBlockFile())));
+            
+        } catch (Exception e) {
             logger.error(Color.bad("Failed to save the state of Channel: ") + Color.channelName(this), e);
             throw new RuntimeException(e);
         }
@@ -203,13 +226,16 @@ public class ChannelState {
      * @return The list of state files.
      */
     public List<File> getStateFiles() {
-        return FileUtils.getFiles(getStateLocation());
+        return Optional.of(getStateLocation())
+                .map(Filesystem::getFiles)
+                .orElseGet(Collections::emptyList);
     }
     
     /**
-     * Returns the list of state files.
+     * Returns a state file with a specific name.
      *
-     * @return The list of state files.
+     * @param fileName The name of the state file.
+     * @return The state file.
      */
     public File getStateFile(String fileName) {
         return new File(getStateLocation(), (getChannelName() + '-' + fileName));
@@ -222,7 +248,7 @@ public class ChannelState {
      */
     public List<File> getDataFiles() {
         return getStateFiles().stream()
-                .filter(e -> e.getName().startsWith(getDataFile().getName().replaceAll("\\..+$", "")))
+                .filter(stateFile -> stateFile.getName().startsWith(getDataFile().getName().replaceAll("\\..+$", "")))
                 .collect(Collectors.toList());
     }
     
@@ -234,7 +260,7 @@ public class ChannelState {
      */
     public File getDataFile(String type) {
         return getStateFile(getDataFile().getName()
-                .replaceAll((getChannelName() + "-"), "")
+                .replaceAll((getChannelName() + '-'), "")
                 .replaceFirst("(?=\\.)", getDataFileTypeSuffix(type)));
     }
     
@@ -246,9 +272,9 @@ public class ChannelState {
      */
     private String getDataFileTypeSuffix(String type) {
         return Optional.ofNullable(type)
-                .map(e -> e.replace(DEFAULT_DATA_FILE_TYPE, ""))
-                .filter(e -> !e.isBlank())
-                .map(e -> '-' + e).orElse("");
+                .map(dataType -> dataType.replace(DEFAULT_DATA_FILE_TYPE, ""))
+                .filter(dataType -> !dataType.isBlank())
+                .map(dataType -> ('-' + dataType)).orElse("");
     }
     
     /**
@@ -257,7 +283,7 @@ public class ChannelState {
     public void cleanupData() {
         if (!Configurator.Config.preventChannelFetch) {
             Stream.of(getDataFiles(), List.of(getCallLogFile())).flatMap(Collection::stream)
-                    .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
+                    .forEach(Filesystem::deleteFile);
         }
     }
     
@@ -266,23 +292,19 @@ public class ChannelState {
      */
     private void cleanupLegacyState() {
         Stream.of(getDataFile(), getSaveFile(), getQueueFile(), getBlockFile())
-                .forEach((CheckedConsumer<File>) stateFile -> {
-                    final File oldFile = new File(new File(CHANNEL_DATA_DIR.getParentFile(), stateFile.getParentFile().getName()), stateFile.getName());
-                    if (oldFile.exists()) {
-                        if (stateFile.exists()) {
-                            FileUtils.deleteFile(oldFile);
-                        } else {
-                            FileUtils.moveFile(oldFile, stateFile);
-                        }
-                    }
-                });
+                .forEach(stateFile -> Optional.of(stateFile)
+                        .map(file -> new File(new File(CHANNEL_DATA_DIR.getParentFile(), file.getParentFile().getName()), file.getName()))
+                        .filter(File::exists)
+                        .map(oldFile -> stateFile.exists() ?
+                                        Filesystem.deleteFile(oldFile) :
+                                        Filesystem.moveFile(oldFile, stateFile)));
+        
         Stream.of(getDataFile(), getCallLogFile())
-                .map(e -> e.getName().replaceAll("\\..+$", ""))
-                .map(e -> getStateFiles().stream()
-                        .filter(e2 -> e2.getName().startsWith(e) && e2.getName().endsWith('.' + Utils.LIST_FILE_FORMAT))
-                        .collect(Collectors.toList()))
-                .flatMap(Collection::stream)
-                .forEach((CheckedConsumer<File>) FileUtils::deleteFile);
+                .map(dataFile -> dataFile.getName().replaceAll("\\..+$", ""))
+                .flatMap(oldName -> getStateFiles().stream()
+                        .filter(file -> file.getName().startsWith(oldName))
+                        .filter(file -> file.getName().endsWith('.' + Utils.LIST_FILE_FORMAT)))
+                .forEach(Filesystem::deleteFile);
     }
     
     /**

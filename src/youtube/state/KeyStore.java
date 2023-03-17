@@ -8,6 +8,8 @@
 package youtube.state;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -109,13 +111,13 @@ public class KeyStore {
         
         logger.debug(Color.log("Loading KeyStore..."));
         
-        Optional.ofNullable(KEY_STORE_FILE)
+        Optional.of(KEY_STORE_FILE)
                 .filter(file -> (file.exists() || Filesystem.createFile(file)))
                 .filter(file -> (!Filesystem.isEmpty(file) || restoreFromBackup()))
                 .filter(KeyStore::readFromFile)
                 .orElseThrow(() -> {
                     logger.error(Color.bad("Could not load or create key store file: ") + Color.quoteFilePath(KEY_STORE_FILE));
-                    throw new RuntimeException();
+                    return new RuntimeException(new IOException("Error reading: " + PathUtils.path(KEY_STORE_FILE)));
                 });
     }
     
@@ -145,7 +147,7 @@ public class KeyStore {
      * @return Whether the operation was successful or not required.
      */
     private static boolean restoreFromBackup() {
-        return Optional.ofNullable(KEY_STORE_BACKUP)
+        return Optional.of(KEY_STORE_BACKUP)
                 .filter(File::exists).filter(backup -> !Filesystem.isEmpty(backup))
                 .map(backup -> Filesystem.copyFile(KEY_STORE_BACKUP, KEY_STORE_FILE, true))
                 .map(success -> {
@@ -173,13 +175,13 @@ public class KeyStore {
         
         logger.debug(Color.log("Saving KeyStore..."));
         
-        Optional.ofNullable(KEY_STORE_FILE)
+        Optional.of(KEY_STORE_FILE)
                 .filter(file -> (file.exists() || Filesystem.createFile(file)))
                 .filter(file -> (Filesystem.isEmpty(file) || persistToBackup()))
                 .filter(KeyStore::writeToFile)
                 .orElseThrow(() -> {
                     logger.error(Color.bad("Could not save or create key store file: ") + Color.quoteFilePath(KEY_STORE_FILE));
-                    throw new RuntimeException();
+                    return new RuntimeException(new IOException("Error writing: " + PathUtils.path(KEY_STORE_FILE)));
                 });
     }
     
@@ -190,7 +192,7 @@ public class KeyStore {
      * @return Whether the key store was successfully written to the file.
      */
     private static boolean writeToFile(File file) {
-        return Optional.ofNullable(keyStore)
+        return Optional.of(keyStore)
                 .map(ProjectKeyStore::format)
                 .map(keyStoreLines -> Filesystem.safeRewrite(file, keyStoreLines))
                 .map(success -> {
@@ -209,7 +211,7 @@ public class KeyStore {
      * @return Whether the operation was successful or not required.
      */
     private static boolean persistToBackup() {
-        return Optional.ofNullable(KEY_STORE_BACKUP)
+        return Optional.of(KEY_STORE_BACKUP)
                 .map(backup -> Filesystem.copyFile(KEY_STORE_FILE, KEY_STORE_BACKUP, true))
                 .map(success -> {
                     if (!success) {
@@ -451,7 +453,6 @@ public class KeyStore {
          *
          * @param lines The lines from the key store file.
          * @return Whether the lines from the key store file were successfully parsed.
-         * @throws RuntimeException When the key store lines contain invalid data.
          */
         private boolean parse(List<String> lines) {
             return Optional.ofNullable(lines)
@@ -809,15 +810,18 @@ public class KeyStore {
          *
          * @param keyStoreLine The line from the key store file.
          * @return The KeyStore Entry.
-         * @throws RuntimeException When the key store line is not valid.
+         * @throws ParseException When the key store line is not valid.
          */
-        private static KeyStoreEntry parse(String keyStoreLine) {
-            final String[] parts = Optional.ofNullable(keyStoreLine)
+        private static KeyStoreEntry parse(String keyStoreLine) throws ParseException {
+            return Optional.ofNullable(keyStoreLine)
                     .filter(line -> !line.isEmpty())
                     .map(line -> line.split(Pattern.quote(SEPARATOR) + "+"))
                     .filter(lineParts -> (lineParts.length == Part.values().length))
-                    .orElseThrow(RuntimeException::new);
-            return new KeyStoreEntry(parts[0], parts[1], parts[2]);
+                    .map(lineParts -> new KeyStoreEntry(lineParts[0], lineParts[1], lineParts[2]))
+                    .orElseThrow(() -> {
+                        logger.warn(Color.bad("Unable to parse key store line: ") + Color.formatVariable(keyStoreLine));
+                        return new ParseException(keyStoreLine, 0);
+                    });
         }
         
     }

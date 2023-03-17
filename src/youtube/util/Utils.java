@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -140,11 +141,11 @@ public final class Utils {
      */
     public static File findVideoFile(File output) {
         return Optional.ofNullable(output)
-                .map(File::getParentFile).filter(File::exists)
-                .map(FileUtils::getCanonicalFiles)
-                .map(files -> files.stream()
+                .filter(File::exists).map(File::getParentFile)
+                .filter(File::exists).map(Filesystem::getFiles)
+                .map(files -> files.stream().map(FileUtils::getCanonicalFile)
                         .filter(e -> FileUtils.getFileTitleKey(e.getName()).equals(FileUtils.getFileTitleKey(output.getName())))
-                        .filter(File::exists).filter(e -> (e.length() > 0))
+                        .filter(File::exists).filter(e -> !Filesystem.isEmpty(e))
                         .filter(e -> FileUtils.getFileFormat(e.getName()).equals(FileUtils.getFileFormat(output.getName())) ||
                                 (isVideoFormat(e.getName()) && isVideoFormat(output.getName())) ||
                                 (isAudioFormat(e.getName()) && isAudioFormat(output.getName()))

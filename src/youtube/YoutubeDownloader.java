@@ -8,14 +8,15 @@
 package youtube;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
 import commons.access.Project;
-import commons.lambda.function.unchecked.UncheckedConsumer;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import youtube.entity.Video;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
 import youtube.util.LogUtils;
+import youtube.util.PathUtils;
 import youtube.util.Utils;
 import youtube.util.WebUtils;
 
@@ -193,10 +195,14 @@ public class YoutubeDownloader {
      * @throws RuntimeException When the download queue could not be loaded.
      */
     private static void loadDownloadQueue() {
-        Optional.of(download).ifPresent((UncheckedConsumer<List<String>>) download ->
-                download.addAll(FileUtils.readLines(DOWNLOAD_QUEUE).stream()
-                        .filter(e -> !StringUtility.isNullOrBlank(e))
-                        .collect(Collectors.toList())));
+        Optional.of(DOWNLOAD_QUEUE)
+                .filter(file -> file.exists() || Filesystem.createFile(file))
+                .map(Filesystem::readLines)
+                .map(lines -> lines.stream()
+                        .filter(line -> !StringUtility.isNullOrBlank(line))
+                        .collect(Collectors.toList()))
+                .map(download::addAll)
+                .orElseThrow(() -> new RuntimeException(new IOException("Error reading: " + PathUtils.path(DOWNLOAD_QUEUE))));
     }
     
     /**
@@ -205,10 +211,12 @@ public class YoutubeDownloader {
      * @throws RuntimeException When the download queue could not be saved.
      */
     private static void saveDownloadQueue() {
-        Optional.of(download).ifPresent((UncheckedConsumer<List<String>>) download ->
-                FileUtils.writeLines(DOWNLOAD_QUEUE, download.stream()
-                        .filter(e -> !StringUtility.isNullOrBlank(e))
-                        .collect(Collectors.toList())));
+        Optional.of(download)
+                .map(downloadQueue -> downloadQueue.stream()
+                        .filter(line -> !StringUtility.isNullOrBlank(line))
+                        .collect(Collectors.toList()))
+                .filter(downloadQueue -> Filesystem.writeLines(DOWNLOAD_QUEUE, downloadQueue))
+                .orElseThrow(() -> new RuntimeException(new IOException("Error writing: " + PathUtils.path(DOWNLOAD_QUEUE))));
     }
     
 }

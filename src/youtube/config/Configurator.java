@@ -8,6 +8,7 @@
 package youtube.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,11 +20,12 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import commons.access.Filesystem;
 import commons.object.collection.MapUtility;
+import commons.object.string.StringUtility;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 import youtube.util.Utils;
@@ -448,12 +450,15 @@ public class Configurator {
      * Reads the configuration file.
      *
      * @return The content of the configuration file.
-     * @throws Exception When there is an issue reading the configuration file.
+     * @throws RuntimeException When there is an issue reading the configuration file.
      */
-    private static String readConfiguration() throws Exception {
-        return FileUtils.readLines(CONF_FILE).stream()
-                .filter(e -> !e.strip().startsWith("//"))
-                .collect(Collectors.joining());
+    private static String readConfiguration() {
+        return Optional.of(CONF_FILE).map(Filesystem::readLines)
+                .map(lines -> lines.stream()
+                        .filter(line -> !StringUtility.isNullOrBlank(line))
+                        .filter(line -> !line.strip().startsWith("//"))
+                        .collect(Collectors.joining()))
+                .orElseThrow(() -> new RuntimeException(new IOException("Error reading: " + PathUtils.path(CONF_FILE))));
     }
     
     /**
