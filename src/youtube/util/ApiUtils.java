@@ -845,7 +845,9 @@ public final class ApiUtils {
      * @return The list of Videos.
      */
     public static List<VideoInfo> fetchChannelVideos(ChannelConfig channelConfig, ChannelState channelState) {
-        return fetchChannelVideos(channelConfig.getChannelId(), channelState);
+        return channelConfig.isYoutubeChannel() ?
+               fetchChannelVideos(channelConfig.getChannelId(), channelState) :
+               fetchPlaylistVideos(channelConfig.getPlaylistId(), channelState);
     }
     
     /**
