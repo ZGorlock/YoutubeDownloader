@@ -27,7 +27,7 @@ import youtube.entity.Channel;
 import youtube.entity.Playlist;
 import youtube.entity.info.PlaylistInfo;
 import youtube.util.ApiUtils;
-import youtube.util.Utils;
+import youtube.util.FileUtils;
 
 /**
  * Parses Youtube Data API v3 <i>playlists</i> response.
@@ -143,7 +143,7 @@ public class ChannelPlaylistParser {
                                 new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || playlist.getConfig().isSavePlaylist())),
                                 new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && playlist.getConfig().isKeepClean())),
                                 new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().getTitle()) : null),
-                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + playlist.getInfo().getTitle() + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null)
+                                new ImmutablePair<>("playlistFilePath", !SEPARATE_FOLDERS ? ("~ - " + FileUtils.setFormat(playlist.getInfo().getTitle(), FileUtils.DEFAULT_PLAYLIST_FORMAT)) : null)
                         )), playlist.getConfig().getParent()))
                 .collect(Collectors.collectingAndThen(Collectors.toList(),
                         playlistChannels -> playlistChannels.stream()

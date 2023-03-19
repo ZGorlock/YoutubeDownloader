@@ -20,8 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.Channels;
 import youtube.config.Color;
+import youtube.util.FileUtils;
 import youtube.util.LogUtils;
-import youtube.util.Utils;
 
 /**
  * Keeps track of statistics for the Youtube Channel Downloader.
@@ -172,10 +172,10 @@ public final class Stats {
                 .map(KeyStore.KeyStoreEntry::getLocalFile).distinct()
                 .filter(Objects::nonNull).filter(File::exists)
                 .forEach(file -> {
-                    if (Utils.isVideoFormat(file.getName())) {
+                    if (FileUtils.isVideoFormat(file.getName())) {
                         (filtered ? totalFilteredVideo : totalVideo).incrementAndGet();
                         (filtered ? totalFilteredVideoData : totalVideoData).addAndGet(file.length());
-                    } else if (Utils.isAudioFormat(file.getName())) {
+                    } else if (FileUtils.isAudioFormat(file.getName())) {
                         (filtered ? totalFilteredAudio : totalAudio).incrementAndGet();
                         (filtered ? totalFilteredAudioData : totalAudioData).addAndGet(file.length());
                     }
@@ -212,7 +212,9 @@ public final class Stats {
                                 maxDataLength.accumulateAndGet(e.length(), (x, y) -> e.contains(".") ? Math.max(x, y) : 0)))
                         .map(e -> String.join("",
                                 LogUtils.INDENT_HARD, Color.base(title), Color.number(e), (e.contains(".") ? Color.base(" MB") : "")))
-                        .orElseGet(() -> Color.link(Utils.formatUnderscoredString(title))));
+                        .orElseGet(() -> Color.link(Optional.ofNullable(title)
+                                .map(e -> e.replace("_", " ")).map(String::toLowerCase).map(StringUtility::toTitleCase)
+                                .orElse(title))));
         
         calculateData();
         if (filtered) {

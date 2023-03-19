@@ -232,7 +232,7 @@ public final class PathUtils {
      * @see #localPath(boolean, String...)
      */
     public static String localPath(boolean endingSlash, File file) {
-        return localPath(endingSlash, FileUtils.getCanonicalFile(file).getAbsolutePath());
+        return localPath(endingSlash, FileUtils.getCanonical(file).getAbsolutePath());
     }
     
     /**

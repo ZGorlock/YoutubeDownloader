@@ -27,8 +27,8 @@ import youtube.entity.Video;
 import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.util.ExecutableUtils;
+import youtube.util.FileUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Handles coloring of console output.
@@ -435,7 +435,7 @@ public class Color {
      * @return The prepared console output.
      */
     public static String videoFilePath(String videoFilePath) {
-        return videoFilePath.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(videoFilePath) : video(videoFilePath);
+        return FileUtils.isFormat(videoFilePath, FileUtils.DOWNLOAD_FILE_FORMAT) ? file(videoFilePath) : video(videoFilePath);
     }
     
     /**
@@ -528,7 +528,7 @@ public class Color {
      * @return The prepared console output.
      */
     public static String videoFileName(String videoFileName) {
-        return videoFileName.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(videoFileName) : video(videoFileName);
+        return FileUtils.isFormat(videoFileName, FileUtils.DOWNLOAD_FILE_FORMAT) ? file(videoFileName) : video(videoFileName);
     }
     
     /**
@@ -1024,7 +1024,7 @@ public class Color {
      * @return The prepared console output.
      */
     public static String channelFilePath(String channelFilePath) {
-        return channelFilePath.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(channelFilePath) : channel(channelFilePath);
+        return FileUtils.isFormat(channelFilePath, FileUtils.DOWNLOAD_FILE_FORMAT) ? file(channelFilePath) : channel(channelFilePath);
     }
     
     /**
@@ -1148,7 +1148,7 @@ public class Color {
      * @return The prepared console output.
      */
     public static String channelFileName(String channelFileName) {
-        return channelFileName.endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT) ? file(channelFileName) : channel(channelFileName);
+        return FileUtils.isFormat(channelFileName, FileUtils.DOWNLOAD_FILE_FORMAT) ? file(channelFileName) : channel(channelFileName);
     }
     
     /**

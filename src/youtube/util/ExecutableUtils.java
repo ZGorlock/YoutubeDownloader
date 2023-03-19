@@ -97,7 +97,7 @@ public final class ExecutableUtils {
          */
         Executable(String executableName, String website, boolean deprecated) {
             this.name = executableName;
-            this.exe = new File(EXECUTABLE_DIR, (name + (OperatingSystem.isWindows() ? ('.' + Utils.EXECUTABLE_FILE_FORMAT) : "")));
+            this.exe = new File(EXECUTABLE_DIR, FileUtils.setFormat(name, (OperatingSystem.isWindows() ? FileUtils.EXECUTABLE_FILE_FORMAT : null)));
             this.call = !EXECUTABLE_DIR.equals(PathUtils.WORKING_DIR) ? StringUtility.quote(exe.getAbsolutePath()) :
                         ((OperatingSystem.isWindows() ? "" : ('.' + PathUtils.SEPARATOR)) + exe.getName());
             this.website = website;

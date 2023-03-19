@@ -235,7 +235,7 @@ public class YoutubeChannelDownloader {
         videoMap.forEach((videoId, video) -> {
             channel.getState().getSaved().remove(videoId);
             
-            if (video.getOutput().exists() && FileUtils.getCanonicalFile(video.getOutput()).getAbsolutePath().equals(video.getOutput().getAbsolutePath())) {
+            if (video.getOutput().exists() && FileUtils.getCanonical(video.getOutput()).getAbsolutePath().equals(video.getOutput().getAbsolutePath())) {
                 channel.getState().getSaved().add(videoId);
                 channel.getState().getBlocked().remove(videoId);
                 channel.getState().getKeyStore().put(video);
@@ -244,15 +244,17 @@ public class YoutubeChannelDownloader {
                 File oldOutput = Optional.ofNullable(channel.getState().getKeyStore().get(videoId))
                         .map(KeyStore.KeyStoreEntry::getLocalPath)
                         .map(File::new).filter(File::exists)
-                        .map(FileUtils::getCanonicalFile).filter(File::exists)
-                        .orElseGet(() -> Utils.findVideoFile(video.getOutput()));
+                        .map(FileUtils::getCanonical).filter(File::exists)
+                        .orElseGet(() -> FileUtils.findVideoFile(video.getOutput()));
                 
                 if ((oldOutput == null) || !oldOutput.exists()) {
                     channel.getState().getQueued().add(videoId);
                     
                 } else {
-                    File newOutput = new File(video.getConfig().getOutputFolder(), video.getOutput().getName()
-                            .replace(('.' + FileUtils.getFileFormat(video.getOutput().getName())), ('.' + FileUtils.getFileFormat(oldOutput.getName()))));
+                    File newOutput = Optional.ofNullable(video.getOutput()).map(File::getName)
+                            .map(e -> FileUtils.setFormat(e, FileUtils.getFormat(oldOutput.getName())))
+                            .map(e -> new File(video.getConfig().getOutputFolder(), e))
+                            .orElse(oldOutput);
                     
                     if (oldOutput.getName().equals(newOutput.getName())) {
                         video.updateOutput(newOutput);
@@ -442,7 +444,7 @@ public class YoutubeChannelDownloader {
                             logger.error(Color.bad("Failed to delete: ") + Color.quoteVideoFileName(channelFile), e);
                         }
                         
-                        if (!channelFile.getName().endsWith('.' + Utils.DOWNLOAD_FILE_FORMAT)) {
+                        if (!FileUtils.isFormat(channelFile.getName(), FileUtils.DOWNLOAD_FILE_FORMAT)) {
                             if (channel.getConfig().isSaveAsMp3()) {
                                 Stats.totalAudioDeletions.incrementAndGet();
                             } else {

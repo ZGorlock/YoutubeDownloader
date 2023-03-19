@@ -30,9 +30,9 @@ import youtube.channel.config.ChannelGroup;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.entity.Channel;
+import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Manages Channel Configs and Channel Groups for the Youtube Channel Downloader.
@@ -52,7 +52,7 @@ public class Channels {
     /**
      * The file containing the Channel configuration for the Youtube Downloader.
      */
-    public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, ("channels" + '.' + Utils.CONFIG_FILE_FORMAT));
+    public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, FileUtils.setFormat("channels", FileUtils.CONFIG_FILE_FORMAT));
     
     
     //Static Fields

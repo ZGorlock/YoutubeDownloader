@@ -31,7 +31,6 @@ import youtube.state.KeyStore;
 import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 import youtube.util.WebUtils;
 
 /**
@@ -417,7 +416,8 @@ public abstract class ChannelEntry extends ConfigData {
      */
     protected void print(int indent) {
         Optional.ofNullable(key)
-                .map(key -> (key + (isGroup() ? ":" : ""))).map(Utils::formatUnderscoredString)
+                .map(key -> (key + (isGroup() ? ":" : "")))
+                .map(e -> e.replace("_", " ")).map(String::toLowerCase).map(StringUtility::toTitleCase)
                 .ifPresent(key -> {
                     final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.Config.link : Color.Config.channel) : (active ? Color.Config.log : Color.Config.bad);
                     logger.debug(StringUtility.repeatString(LogUtils.INDENT_HARD, indent) + Color.apply(color, key));

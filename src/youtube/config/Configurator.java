@@ -26,9 +26,9 @@ import commons.object.string.StringUtility;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.util.FileUtils;
 import youtube.util.LogUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Handles configuration of the Youtube Downloader.
@@ -48,7 +48,7 @@ public class Configurator {
     /**
      * The file containing the configuration for the Youtube Downloader.
      */
-    public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, ("conf" + '.' + Utils.CONFIG_FILE_FORMAT));
+    public static final File CONF_FILE = new File(PathUtils.WORKING_DIR, FileUtils.setFormat("conf", FileUtils.CONFIG_FILE_FORMAT));
     
     
     //Enums

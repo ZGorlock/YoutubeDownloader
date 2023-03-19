@@ -174,7 +174,7 @@ public final class DownloadUtils {
                 Color.log("--output ") + Color.quoteFilePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), true) + Color.log(" ") +
                 Color.log("--geo-bypass --rm-cache-dir " +
                         (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
-                Color.log((audio ? ("--extract-audio --audio-format " + Utils.DEFAULT_AUDIO_FORMAT + " ") :
+                Color.log((audio ? ("--extract-audio --audio-format " + FileUtils.DEFAULT_AUDIO_FORMAT + " ") :
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? "-f b " : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +

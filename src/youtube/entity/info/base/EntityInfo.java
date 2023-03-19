@@ -17,7 +17,7 @@ import youtube.entity.info.detail.Statistics;
 import youtube.entity.info.detail.TagList;
 import youtube.entity.info.detail.ThumbnailSet;
 import youtube.entity.info.detail.TopicList;
-import youtube.util.Utils;
+import youtube.util.FileUtils;
 
 /**
  * Defines the Entity Info of an Entity.
@@ -122,7 +122,7 @@ public abstract class EntityInfo extends EntityData {
         this.metadata = new EntityMetadata(entityData);
         
         this.rawTitle = parseData("snippet", "title");
-        this.title = Utils.cleanVideoTitle(rawTitle);
+        this.title = FileUtils.cleanVideoTitle(rawTitle);
         
         this.description = parseData("snippet", "description");
         this.status = parseData("status", "privacyStatus");

@@ -30,7 +30,6 @@ import youtube.entity.Channel;
 import youtube.entity.Video;
 import youtube.util.FileUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Manages the key store.
@@ -50,7 +49,7 @@ public class KeyStore {
     /**
      * The file containing the key store.
      */
-    public static final File KEY_STORE_FILE = new File(Project.DATA_DIR, ("keyStore" + '.' + Utils.LIST_FILE_FORMAT));
+    public static final File KEY_STORE_FILE = new File(Project.DATA_DIR, FileUtils.setFormat("keyStore", FileUtils.LIST_FILE_FORMAT));
     
     /**
      * The backup file of the key store.
@@ -717,7 +716,7 @@ public class KeyStore {
             this.channelName = channelName;
             this.videoId = videoId;
             this.localPath = Optional.ofNullable(path).map(PathUtils::localPath).orElse(null);
-            this.localFile = Optional.ofNullable(localPath).map(File::new).map(FileUtils::getCanonicalFile).orElse(null);
+            this.localFile = Optional.ofNullable(localPath).map(File::new).map(FileUtils::getCanonical).orElse(null);
         }
         
         /**

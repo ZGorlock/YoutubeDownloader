@@ -49,7 +49,7 @@ public final class LogUtils {
     /**
      * The logback configuration file.
      */
-    public static final File LOGBACK_CONFIG_FILE = new File(Project.RESOURCES_DIR, ("logback" + '.' + Utils.XML_FILE_FORMAT));
+    public static final File LOGBACK_CONFIG_FILE = new File(Project.RESOURCES_DIR, FileUtils.setFormat("logback", FileUtils.XML_FILE_FORMAT));
     
     /**
      * The log directory.
@@ -298,10 +298,11 @@ public final class LogUtils {
      * @return The daily log file with the specified log key.
      */
     public static File getDailyLog(String logKey) {
-        return new File(LOG_DIR, (Stream.of(
-                        Utils.PROJECT_TITLE, datestamp(), logKey)
-                .filter(e -> !StringUtility.isNullOrBlank(e))
-                .collect(Collectors.joining("-")) + '.' + Utils.LOG_FILE_FORMAT));
+        return new File(LOG_DIR, FileUtils.setFormat(
+                Stream.of(Utils.PROJECT_TITLE, datestamp(), logKey)
+                        .filter(e -> !StringUtility.isNullOrBlank(e))
+                        .collect(Collectors.joining("-")),
+                FileUtils.LOG_FILE_FORMAT));
     }
     
     /**

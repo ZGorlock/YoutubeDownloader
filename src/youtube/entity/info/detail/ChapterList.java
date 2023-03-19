@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.entity.info.detail.base.EntityDetail;
 import youtube.entity.info.detail.base.EntityDetailSet;
-import youtube.util.Utils;
+import youtube.util.FileUtils;
 
 /**
  * Defines the Chapter List of a Video.
@@ -194,7 +194,7 @@ public class ChapterList extends EntityDetailSet<ChapterList.Chapter> {
          * @return The cleaned title.
          */
         private String cleanTitle(String... titleParts) {
-            return Utils.cleanVideoTitle(
+            return FileUtils.cleanVideoTitle(
                     String.join("", titleParts).replace(":", "-"));
         }
         

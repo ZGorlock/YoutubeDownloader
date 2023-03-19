@@ -49,7 +49,7 @@ public class YoutubeDownloader {
     /**
      * The initial queue of Youtube video urls to download.
      */
-    public static final File DOWNLOAD_QUEUE = new File(Project.DATA_DIR, ("downloadQueue" + '.' + Utils.LIST_FILE_FORMAT));
+    public static final File DOWNLOAD_QUEUE = new File(Project.DATA_DIR, FileUtils.setFormat("downloadQueue", FileUtils.LIST_FILE_FORMAT));
     
     
     //Static Fields

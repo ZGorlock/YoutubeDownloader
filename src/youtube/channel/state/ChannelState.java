@@ -28,8 +28,8 @@ import youtube.channel.config.ChannelConfig;
 import youtube.config.Color;
 import youtube.config.Configurator;
 import youtube.state.KeyStore;
+import youtube.util.FileUtils;
 import youtube.util.PathUtils;
-import youtube.util.Utils;
 
 /**
  * Manages the state of a Channel.
@@ -137,11 +137,11 @@ public class ChannelState {
         this.keyStore = KeyStore.get(channelName);
         
         this.stateLocation = new File(CHANNEL_DATA_DIR, channelName);
-        this.dataFile = getStateFile("data" + '.' + Utils.DATA_FILE_FORMAT);
-        this.callLogFile = getStateFile("callLog" + '.' + Utils.LOG_FILE_FORMAT);
-        this.saveFile = getStateFile("save" + '.' + Utils.LIST_FILE_FORMAT);
-        this.queueFile = getStateFile("queue" + '.' + Utils.LIST_FILE_FORMAT);
-        this.blockFile = getStateFile("blocked" + '.' + Utils.LIST_FILE_FORMAT);
+        this.dataFile = getStateFile("data", FileUtils.DATA_FILE_FORMAT);
+        this.callLogFile = getStateFile("callLog", FileUtils.LOG_FILE_FORMAT);
+        this.saveFile = getStateFile("save", FileUtils.LIST_FILE_FORMAT);
+        this.queueFile = getStateFile("queue", FileUtils.LIST_FILE_FORMAT);
+        this.blockFile = getStateFile("blocked", FileUtils.LIST_FILE_FORMAT);
         
         this.errorFlag = new AtomicBoolean(false);
         
@@ -242,6 +242,17 @@ public class ChannelState {
     }
     
     /**
+     * Returns a state file with a specific name and format.
+     *
+     * @param fileName   The name of the state file.
+     * @param fileFormat The format of the state file.
+     * @return The state file.
+     */
+    public File getStateFile(String fileName, String fileFormat) {
+        return getStateFile(FileUtils.setFormat(fileName, fileFormat));
+    }
+    
+    /**
      * Returns the list of data files.
      *
      * @return The list of data files.
@@ -303,7 +314,7 @@ public class ChannelState {
                 .map(dataFile -> dataFile.getName().replaceAll("\\..+$", ""))
                 .flatMap(oldName -> getStateFiles().stream()
                         .filter(file -> file.getName().startsWith(oldName))
-                        .filter(file -> file.getName().endsWith('.' + Utils.LIST_FILE_FORMAT)))
+                        .filter(file -> FileUtils.isFormat(file.getName(), FileUtils.LIST_FILE_FORMAT)))
                 .forEach(Filesystem::deleteFile);
     }
     

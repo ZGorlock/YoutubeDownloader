@@ -11,13 +11,11 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.util.FileUtils;
-import youtube.util.Utils;
 
 /**
  * Defines a Channel Config of the Youtube Channel Downloader.
@@ -113,7 +111,7 @@ public class ChannelConfig extends ChannelEntry {
         super(configData, parent);
         
         this.playlistFilePath = parseString("playlistFile").map(ChannelConfig::cleanFilePath).orElseGet(() -> parseData("playlistFilePath"));
-        this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> parseFilePath(locationPrefix, getPlaylistFilePath())).orElse(null);
+        this.playlistFile = Optional.ofNullable(playlistFilePath).map(e -> getPlaylistFilePath()).map(e -> parseFilePath(locationPrefix, e)).orElse(null);
         
         this.type = ChannelType.determineType(playlistId);
     }
@@ -221,7 +219,7 @@ public class ChannelConfig extends ChannelEntry {
         return getName() + Optional.ofNullable(name)
                 .filter(e -> e.matches(".*P\\d+$"))
                 .map(e -> Optional.ofNullable(outputFolderPath).orElse(playlistFilePath))
-                .map(FileUtils::getFileTitle).map(e -> e.replaceAll("^~\\s*[-/]", ""))
+                .map(FileUtils::getTitle).map(e -> e.replaceAll("^~\\s*[-/]", ""))
                 .map(String::strip).map(e -> (" - (" + e + ")"))
                 .orElse("");
     }
@@ -233,7 +231,7 @@ public class ChannelConfig extends ChannelEntry {
      */
     public File getPlaylistFile() {
         return Optional.ofNullable(playlistFile).orElseGet(() ->
-                (isSavePlaylist() ? new File(getOutputFolder().getAbsolutePath() + '.' + Utils.DEFAULT_PLAYLIST_FORMAT) : null));
+                (isSavePlaylist() ? new File(FileUtils.setFormat(getOutputFolder().getAbsolutePath(), FileUtils.DEFAULT_PLAYLIST_FORMAT)) : null));
     }
     
     /**
@@ -242,9 +240,10 @@ public class ChannelConfig extends ChannelEntry {
      * @return The path representing the playlist file.
      */
     public String getPlaylistFilePath() {
-        return Optional.ofNullable(playlistFilePath).orElse("~")
-                .replaceAll("^~", getOutputFolderPath())
-                .replaceAll("(?<!^)(?:" + Pattern.quote('.' + Utils.DEFAULT_PLAYLIST_FORMAT) + ")+?$", ('.' + Utils.DEFAULT_PLAYLIST_FORMAT));
+        return Optional.of(Optional.ofNullable(playlistFilePath).orElse("~"))
+                .map(e -> e.replaceAll("^~", getOutputFolderPath()))
+                .map(e -> FileUtils.setFormat(e, FileUtils.DEFAULT_PLAYLIST_FORMAT))
+                .orElse(null);
     }
     
     /**

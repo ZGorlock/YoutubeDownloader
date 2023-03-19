@@ -19,7 +19,6 @@ import youtube.entity.base.EntityType;
 import youtube.entity.info.VideoInfo;
 import youtube.util.DownloadUtils;
 import youtube.util.FileUtils;
-import youtube.util.Utils;
 
 /**
  * Defines a Video.
@@ -88,7 +87,7 @@ public class Video extends Entity<VideoInfo> {
      */
     private void initFiles() {
         download = new File(getOutputDir(), getTitle());
-        output = new File(getOutputDir(), (getTitle() + '.' + getFormat()));
+        output = new File(getOutputDir(), FileUtils.setFormat(getTitle(), getFormat()));
     }
     
     /**
@@ -97,7 +96,7 @@ public class Video extends Entity<VideoInfo> {
      * @param videoTitle The title, or null to reset the title to the original.
      */
     public void updateTitle(String videoTitle) {
-        title = Utils.cleanVideoTitle(
+        title = FileUtils.cleanVideoTitle(
                 Optional.ofNullable(videoTitle)
                         .orElseGet(() -> getInfo().getTitle()));
         initFiles();
@@ -128,7 +127,7 @@ public class Video extends Entity<VideoInfo> {
     public void updateOutput(File outputFile) {
         output = outputFile;
         updateOutputDir(output.getParentFile());
-        updateTitle(FileUtils.getFileTitle(output.getName()));
+        updateTitle(FileUtils.getTitle(output.getName()));
     }
     
     /**
@@ -175,11 +174,11 @@ public class Video extends Entity<VideoInfo> {
     public String getFormat() {
         return Optional.ofNullable(getOutput())
                 .map(File::getName)
-                .map(FileUtils::getFileFormat)
+                .map(FileUtils::getFormat)
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                                          .map(ChannelEntry::isSaveAsMp3)
                                          .orElse(DownloadUtils.Config.asMp3)
-                                 ? Utils.DEFAULT_AUDIO_FORMAT : Utils.DEFAULT_VIDEO_FORMAT);
+                                 ? FileUtils.DEFAULT_AUDIO_FORMAT : FileUtils.DEFAULT_VIDEO_FORMAT);
     }
     
     /**
