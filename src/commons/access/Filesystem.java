@@ -29,6 +29,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import ch.qos.logback.classic.Level;
 import commons.object.string.StringUtility;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
@@ -83,33 +84,29 @@ public final class Filesystem {
      * Will return true if the file already exists.
      */
     public static boolean createFile(File file) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Creating file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Creating file: {}", file);
         
         if (file.exists()) {
+            Log.trace("File already exists: {}", file);
             return true;
         }
         
         //make missing directories before creating file
         File parent = file.getParentFile();
         if ((parent != null) && !parent.exists() && !createDirectory(parent)) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Could not create destination directory: {}", StringUtility.fileString(parent));
-            }
+            Log.warn("Could not create destination directory: {}", parent);
             return false;
         }
         
         try {
             if (file.createNewFile() || FileUtils.waitFor(file, 1)) {
+                Log.info("Created file: {}", file);
                 return true;
             }
         } catch (IOException ignored) {
         }
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Unable to create file: {}", StringUtility.fileString(file));
-        }
+        Log.warn("Unable to create file: {}", file);
         return false;
     }
     
@@ -121,21 +118,19 @@ public final class Filesystem {
      * Will return true if the directory already exists.
      */
     public static boolean createDirectory(File dir) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Creating directory: {}", StringUtility.fileString(dir));
-        }
+        Log.trace("Creating directory: {}", dir);
         
         if (dir.exists()) {
+            Log.trace("Directory already exists: {}", dir);
             return true;
         }
         
         if (dir.mkdirs() || FileUtils.waitFor(dir, 1)) {
+            Log.info("Created directory: {}", dir);
             return true;
         }
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Unable to create directory: {}", StringUtility.fileString(dir));
-        }
+        Log.warn("Unable to create directory: {}", dir);
         return false;
     }
     
@@ -149,21 +144,19 @@ public final class Filesystem {
         if (file.isDirectory()) {
             return deleteDirectory(file);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Deleting file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Deleting file: {}", file);
         
         if (!file.exists()) {
+            Log.trace("File already deleted: {}", file);
             return true;
         }
         
         if (FileUtils.deleteQuietly(file)) {
+            Log.info("Deleted file: {}", file);
             return true;
         }
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Unable to delete file: {}", StringUtility.fileString(file));
-        }
+        Log.warn("Unable to delete directory: {}", file);
         return false;
     }
     
@@ -177,21 +170,19 @@ public final class Filesystem {
         if (dir.isFile()) {
             return deleteFile(dir);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Deleting directory: {}", StringUtility.fileString(dir));
-        }
+        Log.trace("Deleting directory: {}", dir);
         
         if (!dir.exists()) {
+            Log.trace("Directory already deleted: {}", dir);
             return true;
         }
         
         try {
             FileUtils.deleteDirectory(dir);
+            Log.info("Deleted directory: {}", dir);
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to delete directory: {}", StringUtility.fileString(dir));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to delete directory: {}", e, dir);
             return false;
         }
     }
@@ -219,33 +210,27 @@ public final class Filesystem {
         if (fileSrc.isDirectory()) {
             return renameDirectory(fileSrc, fileDest);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Renaming file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-        }
+        Log.trace("Renaming file: {} to: {}", fileSrc, fileDest);
         
         if (!fileSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source file does not exist: {}", StringUtility.fileString(fileSrc));
-            }
+            Log.warn("Source file does not exist: {}", fileSrc);
             return false;
         }
         if (fileSrc.getAbsolutePath().equals(fileDest.getAbsolutePath())) {
+            Log.trace("Source file: {} and destination file: {} are the same", fileSrc, fileDest);
             return true;
         }
         if (fileDest.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Destination file already exists: {}", StringUtility.fileString(fileDest));
-            }
+            Log.warn("Destination file already exists: {}", fileDest);
             return false;
         }
         
         if (fileSrc.renameTo(fileDest)) {
+            Log.info("Renamed file: {} to: {}", fileSrc, fileDest);
             return true;
         }
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Unable to rename file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-        }
+        Log.warn("Unable to rename file: {} to: {}", fileSrc, fileDest);
         return false;
     }
     
@@ -260,33 +245,27 @@ public final class Filesystem {
         if (dirSrc.isFile()) {
             return renameFile(dirSrc, dirDest);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Renaming directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-        }
+        Log.trace("Renaming directory: {} to: {}", dirSrc, dirDest);
         
         if (!dirSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source directory does not exist: {}", StringUtility.fileString(dirSrc));
-            }
+            Log.warn("Source directory does not exist: {}", dirSrc);
             return false;
         }
         if (dirSrc.getAbsolutePath().equals(dirDest.getAbsolutePath())) {
+            Log.trace("Source directory: {} and destination directory: {} are the same", dirSrc, dirDest);
             return true;
         }
         if (dirDest.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Destination directory already exists: {}", StringUtility.fileString(dirDest));
-            }
+            Log.warn("Destination directory already exists: {}", dirDest);
             return false;
         }
         
         if (dirSrc.renameTo(dirDest)) {
+            Log.info("Renamed directory: {} to: {}", dirSrc, dirDest);
             return true;
         }
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Unable to rename directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-        }
+        Log.warn("Unable to rename directory: {} to: {}", dirSrc, dirDest);
         return false;
     }
     
@@ -317,17 +296,14 @@ public final class Filesystem {
         if (fileSrc.isDirectory()) {
             return copyDirectory(fileSrc, fileDest, overwrite);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Copying file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-        }
+        Log.trace("Copying file: {} to: {}", fileSrc, fileDest);
         
         if (!fileSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source file does not exist: {}", StringUtility.fileString(fileSrc));
-            }
+            Log.warn("Source file does not exist: {}", fileSrc);
             return false;
         }
         if (fileSrc.getAbsolutePath().equalsIgnoreCase(fileDest.getAbsolutePath())) {
+            Log.trace("Source file: {} and destination file: {} are the same", fileSrc, fileDest);
             return true;
         }
         
@@ -338,31 +314,27 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteFile(destFile);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination file already exists: {}", StringUtility.fileString(destFile));
-                        }
+                        Log.warn("Destination file already exists: {}", destFile);
                         return false;
                     }
                 }
                 FileUtils.copyFileToDirectory(fileSrc, fileDest, true); //copies file into destination directory
+                Log.info("Copied file: {} to: {}", fileSrc, destFile);
             } else {
                 if (fileDest.exists()) {
                     if (overwrite) {
                         delete(fileDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination file already exists: {}", StringUtility.fileString(fileDest));
-                        }
+                        Log.warn("Destination file already exists: {}", fileDest);
                         return false;
                     }
                 }
                 FileUtils.copyFile(fileSrc, fileDest, true); //copies file to destination file path
+                Log.info("Copied file: {} to: {}", fileSrc, fileDest);
             }
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to copy file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to copy file: {} to: {}", e, fileSrc, fileDest);
             return false;
         }
     }
@@ -395,17 +367,14 @@ public final class Filesystem {
         if (dirSrc.isFile()) {
             return copyFile(dirSrc, dirDest, overwrite);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Copying directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-        }
+        Log.trace("Copying directory: {} to: {}", dirSrc, dirDest);
         
         if (!dirSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source directory does not exist: {}", StringUtility.fileString(dirSrc));
-            }
+            Log.warn("Source directory does not exist: {}", dirSrc);
             return false;
         }
         if (dirSrc.getAbsolutePath().equalsIgnoreCase(dirDest.getAbsolutePath())) {
+            Log.trace("Source directory: {} and destination directory: {} are the same", dirSrc, dirDest);
             return true;
         }
         
@@ -415,17 +384,13 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteFile(dirDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory is a file: {}", StringUtility.fileString(dirDest));
-                        }
+                        Log.warn("Destination directory is a file: {}", dirDest);
                         return false;
                     }
                 }
                 if (!dirDest.exists()) {
                     if (!createDirectory(dirDest)) { //attempt to create destination directory if it doesn't exist
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Could not create destination directory: {}", StringUtility.fileString(dirDest));
-                        }
+                        Log.warn("Could not create destination directory: {}", dirDest);
                         return false;
                     }
                 }
@@ -434,39 +399,33 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteDirectory(destDir);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory already exists: {}", StringUtility.fileString(destDir));
-                        }
+                        Log.warn("Destination directory already exists: {}", destDir);
                         return false;
                     }
                 }
                 FileUtils.copyDirectoryToDirectory(dirSrc, dirDest); //copies directory within the destination directory
+                Log.info("Copied directory: {} to: {}", dirSrc, destDir);
             } else {
                 if (dirDest.exists()) {
                     if (overwrite) {
                         delete(dirDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory already exists: {}", StringUtility.fileString(dirDest));
-                        }
+                        Log.warn("Destination directory already exists: {}", dirDest);
                         return false;
                     }
                 }
                 if (!dirDest.getParentFile().exists()) {
                     if (!createDirectory(dirDest.getParentFile())) { //attempt to create destination directory if it doesn't exist
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Could not create destination directory: {}", StringUtility.fileString(dirDest.getParentFile()));
-                        }
+                        Log.warn("Could not create destination directory: {}", dirDest.getParentFile());
                         return false;
                     }
                 }
                 FileUtils.copyDirectory(dirSrc, dirDest, true); //copies directory to destination directory path
+                Log.info("Copied directory: {} to: {}", dirSrc, dirDest);
             }
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to copy directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to copy directory: {} to: {}", e, dirSrc, dirDest);
             return false;
         }
     }
@@ -536,17 +495,14 @@ public final class Filesystem {
         if (fileSrc.isDirectory()) {
             return moveDirectory(fileSrc, fileDest, overwrite);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Moving file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-        }
+        Log.trace("Moving file: {} to: {}", fileSrc, fileDest);
         
         if (!fileSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source file does not exist: {}", fileSrc.getName());
-            }
+            Log.warn("Source file does not exist: {}", fileSrc);
             return false;
         }
         if (fileSrc.getAbsolutePath().equalsIgnoreCase(fileDest.getAbsolutePath())) {
+            Log.trace("Source file: {} and destination file: {} are the same", fileSrc, fileDest);
             return true;
         }
         
@@ -557,31 +513,27 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteFile(destFile);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination file already exists: {}", StringUtility.fileString(destFile));
-                        }
+                        Log.warn("Destination file already exists: {}", destFile);
                         return false;
                     }
                 }
                 FileUtils.moveFileToDirectory(fileSrc, fileDest, true); //moves file into destination directory, creating the directory if it doesn't exist
+                Log.info("Moved file: {} to: {}", fileSrc, destFile);
             } else {
                 if (fileDest.exists()) {
                     if (overwrite) {
                         delete(fileDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination file already exists: {}", StringUtility.fileString(fileDest));
-                        }
+                        Log.warn("Destination file already exists: {}", fileDest);
                         return false;
                     }
                 }
                 FileUtils.moveFile(fileSrc, fileDest); //moves file from the source file path to the destination file path
+                Log.info("Moved file: {} to: {}", fileSrc, fileDest);
             }
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to move file: {} to: {}", StringUtility.fileString(fileSrc), StringUtility.fileString(fileDest));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to move file: {} to: {}", e, fileSrc, fileDest);
             return false;
         }
     }
@@ -614,17 +566,14 @@ public final class Filesystem {
         if (dirSrc.isFile()) {
             return moveFile(dirSrc, dirDest, overwrite);
         }
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Moving directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-        }
+        Log.trace("Moving directory: {} to: {}", dirSrc, dirDest);
         
         if (!dirSrc.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Source directory does not exist: {}", StringUtility.fileString(dirSrc));
-            }
+            Log.warn("Source directory does not exist: {}", dirSrc);
             return false;
         }
         if (dirSrc.getAbsolutePath().equalsIgnoreCase(dirDest.getAbsolutePath())) {
+            Log.trace("Source directory: {} and destination directory: {} are the same", dirSrc, dirDest);
             return true;
         }
         
@@ -634,9 +583,7 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteFile(dirDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory is a file: {}", StringUtility.fileString(dirDest));
-                        }
+                        Log.warn("Destination directory is a file: {}", dirDest);
                         return false;
                     }
                 }
@@ -645,39 +592,33 @@ public final class Filesystem {
                     if (overwrite) {
                         deleteDirectory(destDir);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory already exists: {}", StringUtility.fileString(destDir));
-                        }
+                        Log.warn("Destination directory already exists: {}", destDir);
                         return false;
                     }
                 }
                 FileUtils.moveDirectoryToDirectory(dirSrc, dirDest, true); //moves directory within the destination directory
+                Log.info("Moved directory: {} to: {}", dirSrc, destDir);
             } else {
                 if (dirDest.exists()) {
                     if (overwrite) {
                         delete(dirDest);
                     } else {
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Destination directory already exists: {}", StringUtility.fileString(dirDest));
-                        }
+                        Log.warn("Destination directory already exists: {}", dirDest);
                         return false;
                     }
                 }
                 if (!dirDest.getParentFile().exists()) {
                     if (!createDirectory(dirDest.getParentFile())) { //attempt to create destination directory if it doesn't exist
-                        if (logFilesystem()) {
-                            logger.trace("Filesystem: Could not create destination directory: {}", StringUtility.fileString(dirDest.getParentFile()));
-                        }
+                        Log.warn("Could not create destination directory: {}", dirDest.getParentFile());
                         return false;
                     }
                 }
                 FileUtils.moveDirectory(dirSrc, dirDest); //moves directory to destination directory path
+                Log.info("Moved directory: {} to: {}", dirSrc, dirDest);
             }
             return true;
-        } catch (IOException ignore) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to move directory: {} to: {}", StringUtility.fileString(dirSrc), StringUtility.fileString(dirDest));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to move directory: {} to: {}", e, dirSrc, dirDest);
             return false;
         }
     }
@@ -777,24 +718,29 @@ public final class Filesystem {
      * @return Whether the operation was successful or not.
      */
     public static boolean clearDirectory(File dir) {
+        Log.trace("Clearing directory: {}", dir);
+        
+        if (!dir.exists()) {
+            Log.warn("Target directory does not exist: {}", dir);
+            return false;
+        }
         if (!dir.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Target directory does not exist: {}", StringUtility.fileString(dir));
-            }
+            Log.warn("Target directory is not a directory: {}", dir);
             return false;
         }
         
         boolean success = true;
         List<File> entries = getFilesAndDirs(dir);
         
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Clearing directory: {}", StringUtility.fileString(dir));
-        }
-        
         for (File entry : entries) {
             success &= delete(entry);
         }
         
+        if (success) {
+            Log.info("Cleared directory: {}", dir);
+        } else {
+            Log.warn("Unable to clear directory: {}", dir);
+        }
         return success;
     }
     
@@ -806,19 +752,21 @@ public final class Filesystem {
      * @return A list of files that were discovered.
      */
     public static List<File> listFiles(File directory, FileFilter filter) {
+        Log.trace("Listing the files in directory: {}", directory);
+        
+        if (!directory.exists()) {
+            Log.warn("Target directory does not exist: {}", directory);
+            return new ArrayList<>();
+        }
         if (!directory.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: The target directory is not a directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Target directory is not a directory: {}", directory);
             return new ArrayList<>();
         }
         
         File[] files = directory.listFiles(filter);
         
         if (files == null) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Error while listing files in directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Unable to list the files in directory: {}", directory);
             return new ArrayList<>();
         }
         
@@ -835,10 +783,14 @@ public final class Filesystem {
      * @see #getFilesRecursivelyHelper(File, FileFilter, FileFilter)
      */
     public static List<File> getFilesRecursively(File directory, FileFilter fileFilter, FileFilter dirFilter) {
+        Log.trace("Listing the files in directory recursively: {}", directory);
+        
+        if (!directory.exists()) {
+            Log.warn("Target directory does not exist: {}", directory);
+            return new ArrayList<>();
+        }
         if (!directory.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: The target directory is not a directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Target directory is not a directory: {}", directory);
             return new ArrayList<>();
         }
         
@@ -883,9 +835,7 @@ public final class Filesystem {
                 ((file.isFile() && fileFilter.accept(file)) || (file.isDirectory() && dirFilter.accept(file))));
         
         if (list == null) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Error while recursively listing files in directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Unable to recursively list the files in directory: {}", directory);
             return returnList;
         }
         
@@ -909,10 +859,14 @@ public final class Filesystem {
      * @see #getDirsRecursivelyHelper(File, FileFilter)
      */
     public static List<File> getDirsRecursively(File directory, FileFilter dirFilter) {
+        Log.trace("Listing the directories in directory recursively: {}", directory);
+        
+        if (!directory.exists()) {
+            Log.warn("Target directory does not exist: {}", directory);
+            return new ArrayList<>();
+        }
         if (!directory.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: The target directory is not a directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Target directory is not a directory: {}", directory);
             return new ArrayList<>();
         }
         
@@ -944,9 +898,7 @@ public final class Filesystem {
                 (file.isDirectory() && dirFilter.accept(file)));
         
         if (list == null) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Error while recursively listing directories in directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Unable to recursively list the directories in directory: {}", directory);
             return returnList;
         }
         
@@ -968,10 +920,14 @@ public final class Filesystem {
      * @see #getFilesAndDirsRecursivelyHelper(File, FileFilter, FileFilter)
      */
     public static List<File> getFilesAndDirsRecursively(File directory, FileFilter fileFilter, FileFilter dirFilter) {
+        Log.trace("Listing the files and directories in directory recursively: {}", directory);
+        
+        if (!directory.exists()) {
+            Log.warn("Target directory does not exist: {}", directory);
+            return new ArrayList<>();
+        }
         if (!directory.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: The target directory is not a directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Target directory is not a directory: {}", directory);
             return new ArrayList<>();
         }
         
@@ -1016,9 +972,7 @@ public final class Filesystem {
                 ((file.isFile() && fileFilter.accept(file)) || (file.isDirectory() && dirFilter.accept(file))));
         
         if (list == null) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Error while recursively listing files and directories in directory: {}", StringUtility.fileString(directory));
-            }
+            Log.warn("Unable to recursively list the files and directories in directory: {}", directory);
             return new ArrayList<>();
         }
         
@@ -1125,24 +1079,22 @@ public final class Filesystem {
      * Will return false if either file does not exist.
      */
     public static boolean contentEquals(File a, File b) {
+        Log.trace("Comparing content of file: {} to: {}", a, b);
+        
         if (!a.exists() || !b.exists()) {
-            if (logFilesystem()) {
-                if (!a.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(a));
-                }
-                if (!b.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(b));
-                }
+            if (!a.exists()) {
+                Log.warn("File does not exist: {}", a);
+            }
+            if (!b.exists()) {
+                Log.warn("File does not exist: {}", b);
             }
             return false;
         }
         
         try {
             return FileUtils.contentEquals(a, b);
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to compare files: {} and: {}", StringUtility.fileString(a), StringUtility.fileString(b));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to compare files: {} and: {}", e, a, b);
             return false;
         }
     }
@@ -1158,7 +1110,10 @@ public final class Filesystem {
         if (file.isDirectory()) {
             return sizeOfDirectory(file);
         }
+        Log.trace("Determining size of file: {}", file);
+        
         if (!file.exists()) {
+            Log.trace("Target file does not exist: {}", file);
             return 0;
         }
         
@@ -1176,7 +1131,10 @@ public final class Filesystem {
         if (dir.isFile()) {
             return sizeOfFile(dir);
         }
+        Log.trace("Determining size of directory: {}", dir);
+        
         if (!dir.exists()) {
+            Log.trace("Target directory does not exist: {}", dir);
             return 0;
         }
         
@@ -1207,7 +1165,10 @@ public final class Filesystem {
         if (file.isDirectory()) {
             return directoryIsEmpty(file);
         }
+        Log.trace("Determining if file: {} is empty", file);
+        
         if (!file.exists()) {
+            Log.trace("Target file does not exist: {}", file);
             return true;
         }
         
@@ -1225,7 +1186,10 @@ public final class Filesystem {
         if (dir.isFile()) {
             return fileIsEmpty(dir);
         }
+        Log.trace("Determining if directory: {} is empty", dir);
+        
         if (!dir.exists()) {
+            Log.trace("Target directory does not exist: {}", dir);
             return true;
         }
         
@@ -1233,10 +1197,8 @@ public final class Filesystem {
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(path)) {
             Iterator<Path> files = ds.iterator();
             return !files.hasNext();
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to determine if directory is empty: {}", StringUtility.fileString(dir));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to determine if directory is empty: {}", e, dir);
             return false;
         }
     }
@@ -1263,14 +1225,14 @@ public final class Filesystem {
      * 0 if the size of file a is equal to the size of file b.
      */
     public static int sizeCompare(File a, File b) {
+        Log.trace("Comparing size of file: {} to: {}", a, b);
+        
         if (!a.exists() || !b.exists()) {
-            if (logFilesystem()) {
-                if (!a.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(a));
-                }
-                if (!b.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(b));
-                }
+            if (!a.exists()) {
+                Log.warn("File does not exist: {}", a);
+            }
+            if (!b.exists()) {
+                Log.warn("File does not exist: {}", b);
             }
             return 0;
         }
@@ -1288,14 +1250,14 @@ public final class Filesystem {
      * 0 if the date of file a is equal to the date of file b.
      */
     public static int dateCompare(File a, File b) {
+        Log.trace("Comparing date of file: {} to: {}", a, b);
+        
         if (!a.exists() || !b.exists()) {
-            if (logFilesystem()) {
-                if (!a.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(a));
-                }
-                if (!b.exists()) {
-                    logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(b));
-                }
+            if (!a.exists()) {
+                Log.warn("File does not exist: {}", a);
+            }
+            if (!b.exists()) {
+                Log.warn("File does not exist: {}", b);
             }
             return 0;
         }
@@ -1316,12 +1278,19 @@ public final class Filesystem {
      * @return The file dates of the file.
      */
     public static Map<String, FileTime> readDates(File file) {
+        Log.trace("Reading file dates of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         Map<String, FileTime> dates = new HashMap<>();
         List<String> attributes = Arrays.asList("lastModifiedTime", "lastAccessTime", "creationTime");
         for (String attribute : attributes) {
             try {
                 dates.put(attribute, (FileTime) Files.getAttribute(file.toPath(), attribute));
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.error("Unable to read: " + attribute + " of file: {}", e, file);
             }
         }
         return dates;
@@ -1334,9 +1303,16 @@ public final class Filesystem {
      * @return The last modified time of the file, or null if there was an error.
      */
     public static Date getLastModifiedTime(File file) {
+        Log.trace("Reading the last modified time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             return new Date(((FileTime) Files.getAttribute(file.toPath(), "lastModifiedTime")).toMillis());
         } catch (Exception e) {
+            Log.error("Unable to read the last modified time of file: {}", e, file);
             return null;
         }
     }
@@ -1348,9 +1324,16 @@ public final class Filesystem {
      * @return The last access time of the file, or null if there was an error.
      */
     public static Date getLastAccessTime(File file) {
+        Log.trace("Reading the last access time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             return new Date(((FileTime) Files.getAttribute(file.toPath(), "lastAccessTime")).toMillis());
         } catch (Exception e) {
+            Log.error("Unable to read the last access time of file: {}", e, file);
             return null;
         }
     }
@@ -1362,9 +1345,16 @@ public final class Filesystem {
      * @return The creation time of the file, or null if there was an error.
      */
     public static Date getCreationTime(File file) {
+        Log.trace("Reading the creation time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             return new Date(((FileTime) Files.getAttribute(file.toPath(), "creationTime")).toMillis());
         } catch (Exception e) {
+            Log.error("Unable to read the creation time of file: {}", e, file);
             return null;
         }
     }
@@ -1376,6 +1366,12 @@ public final class Filesystem {
      * @param dates The file dates.
      */
     public static void writeDates(File file, Map<String, FileTime> dates) {
+        Log.trace("Writing file dates of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         List<String> attributes = Arrays.asList("lastModifiedTime", "lastAccessTime", "creationTime");
         for (String attribute : attributes) {
             FileTime date = dates.get(attribute);
@@ -1384,7 +1380,8 @@ public final class Filesystem {
             }
             try {
                 Files.setAttribute(file.toPath(), attribute, date);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                Log.error("Unable to write: " + attribute + " of file: {}", e, file);
             }
         }
     }
@@ -1397,10 +1394,18 @@ public final class Filesystem {
      * @return Whether the last modified time of the file was successfully set or not.
      */
     public static boolean setLastModifiedTime(File file, Date time) {
+        Log.trace("Writing the last modified time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             Files.setAttribute(file.toPath(), "lastModifiedTime", FileTime.fromMillis(time.getTime()));
+            Log.debug("Wrote the last modified time of file: {}", file);
             return true;
         } catch (Exception e) {
+            Log.error("Unable to write the last modified time of file: {}", e, file);
             return false;
         }
     }
@@ -1413,10 +1418,18 @@ public final class Filesystem {
      * @return Whether the last access time of the file was successfully set or not.
      */
     public static boolean setLastAccessTime(File file, Date time) {
+        Log.trace("Writing the last access time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             Files.setAttribute(file.toPath(), "lastAccessTime", FileTime.fromMillis(time.getTime()));
+            Log.debug("Wrote the last access time of file: {}", file);
             return true;
         } catch (Exception e) {
+            Log.error("Unable to write the last access time of file: {}", e, file);
             return false;
         }
     }
@@ -1429,10 +1442,18 @@ public final class Filesystem {
      * @return Whether the creation time of the file was successfully set or not.
      */
     public static boolean setCreationTime(File file, Date time) {
+        Log.trace("Writing the creation time of file: {}", file);
+        
+        if (!file.exists()) {
+            Log.warn("File does not exist: {}", file);
+        }
+        
         try {
             Files.setAttribute(file.toPath(), "creationTime", FileTime.fromMillis(time.getTime()));
+            Log.debug("Wrote the creation time of file: {}", file);
             return true;
         } catch (Exception e) {
+            Log.error("Unable to write the creation time of file: {}", e, file);
             return false;
         }
     }
@@ -1445,28 +1466,21 @@ public final class Filesystem {
      * Will return null if file does not exist.
      */
     public static FileInputStream openInputStream(File file) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Opening input file stream to file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Opening input file stream to file: {}", file);
+        
         if (!file.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
-            }
+            Log.warn("File does not exist: {}", file);
             return null;
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to open input streams on directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to open input streams on directories: {}", file);
             return null;
         }
         
         try {
             return FileUtils.openInputStream(file);
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to open input file stream to file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to open input file stream to file: {}", e, file);
             return null;
         }
     }
@@ -1479,22 +1493,17 @@ public final class Filesystem {
      * @return The output stream that was opened.
      */
     public static FileOutputStream openOutputStream(File file, boolean append) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Opening {}output file stream to file: {}", (append ? "appending " : ""), StringUtility.fileString(file));
-        }
+        Log.trace("Opening " + (append ? "appending " : "") + "output file stream to file: {}", file);
+        
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to open output streams on directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to open output streams on directories: {}", file);
             return null;
         }
         
         try {
             return FileUtils.openOutputStream(file, append);
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to open output file stream to file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to open output file stream to file: {}", e, file);
             return null;
         }
     }
@@ -1517,28 +1526,21 @@ public final class Filesystem {
      * @return The contents of the file as a string, or null if there it could not be read.
      */
     public static String readFileToString(File file) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Reading file to string: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Reading file to string: {}", file);
+        
         if (!file.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
-            }
+            Log.warn("File does not exist: {}", file);
             return null;
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read directories to strings: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to read directories to strings: {}", file);
             return null;
         }
         
         try {
             return FileUtils.readFileToString(file, "UTF-8");
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read file to string: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to read file to string: {}", e, file);
             return null;
         }
     }
@@ -1550,28 +1552,21 @@ public final class Filesystem {
      * @return The contents of the file as a byte array, or null if there it could not be read.
      */
     public static byte[] readFileToByteArray(File file) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Reading file to byte array: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Reading file to byte array: {}", file);
+        
         if (!file.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
-            }
+            Log.warn("File does not exist: {}", file);
             return null;
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read directories to byte arrays: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to read directories to byte arrays: {}", file);
             return null;
         }
         
         try {
             return FileUtils.readFileToByteArray(file);
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read file to byte array: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to read file to byte array: {}", e, file);
             return null;
         }
     }
@@ -1583,28 +1578,21 @@ public final class Filesystem {
      * @return The contents of the file as a list of strings, or null if there it could not be read.
      */
     public static List<String> readLines(File file) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Reading lines from file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Reading lines from file: {}", file);
+        
         if (!file.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: File does not exist: {}", StringUtility.fileString(file));
-            }
+            Log.warn("File does not exist: {}", file);
             return null;
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read lines from directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to read lines from directories: {}", file);
             return null;
         }
         
         try {
             return FileUtils.readLines(file, "UTF-8");
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to read lines from file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to read lines from file: {}", e, file);
             return null;
         }
     }
@@ -1618,26 +1606,22 @@ public final class Filesystem {
      * @return Whether the write was successful or not.
      */
     public static boolean writeStringToFile(File file, String data, boolean append) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Writing string to file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Writing string to file: {}", file);
+        
         if (!file.exists()) {
             createFile(file);
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write strings to directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to write strings to directories: {}", file);
             return false;
         }
         
         try {
             FileUtils.writeStringToFile(file, data, "UTF-8", append);
+            Log.info("Wrote string to file: {}", file);
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write string to file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to write string to file: {}", e, file);
             return false;
         }
     }
@@ -1663,26 +1647,22 @@ public final class Filesystem {
      * @return Whether the write was successful or not.
      */
     public static boolean writeByteArrayToFile(File file, byte[] data, boolean append) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Writing byte array to file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Writing byte array to file: {}", file);
+        
         if (!file.exists()) {
             createFile(file);
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write byte arrays to directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to write byte arrays to directories: {}", file);
             return false;
         }
         
         try {
             FileUtils.writeByteArrayToFile(file, data, append);
+            Log.info("Wrote byte array to file: {}", file);
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write byte array to file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to write byte array to file: {}", e, file);
             return false;
         }
     }
@@ -1708,26 +1688,22 @@ public final class Filesystem {
      * @return Whether the write was successful or not.
      */
     public static boolean writeLines(File file, Collection<String> lines, boolean append) {
-        if (logFilesystem()) {
-            logger.trace("Filesystem: Writing lines to file: {}", StringUtility.fileString(file));
-        }
+        Log.trace("Writing lines to file: {}", file);
+        
         if (!file.exists()) {
             createFile(file);
         }
         if (file.isDirectory()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write lines to directories: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Unable to write lines to directories: {}", file);
             return false;
         }
         
         try {
             FileUtils.writeLines(file, lines, append);
+            Log.debug("Wrote lines to file: {}", file);
             return true;
-        } catch (IOException ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to write lines to file: {}", StringUtility.fileString(file));
-            }
+        } catch (IOException e) {
+            Log.error("Unable to write lines to file: {}", e, file);
             return false;
         }
     }
@@ -1748,34 +1724,28 @@ public final class Filesystem {
      * Safely replaces a file with another file.<br>
      * To be used when data preservation is critical and speed is not.
      *
-     * @param originalFile The original file.
      * @param newFile      The new file.
+     * @param originalFile The original file.
      * @return Whether the original file was successfully replaced with the new file or not.
      */
     public static boolean safeReplace(File newFile, File originalFile) {
+        Log.trace("Safely replacing: {} with: {}", originalFile, newFile);
+        
         if (!newFile.exists()) {
-            if (logFilesystem()) {
-                logger.trace("The file: {} does not exist", StringUtility.fileString(newFile));
-            }
+            Log.warn("The file: {} does not exist", newFile);
             return false;
         }
         
         File backup = new File(originalFile.getParentFile(), originalFile.getName() + ".bak");
         if (backup.exists()) {
-            if (logFilesystem()) {
-                logger.trace("A backup file: {} already exists, this could be data preserved from a failure; Will not continue", StringUtility.fileString(backup));
-            }
+            Log.error("A backup file: {} already exists, this could be data preserved from a failure; Will not continue", null, backup);
             return false;
         }
         
         if (originalFile.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Creating a backup file: {}", StringUtility.fileString(backup));
-            }
+            Log.info("Creating a backup file: {}", backup);
             if (!copyFile(originalFile, backup) || (checksum(backup) != checksum(originalFile)) || !deleteFile(originalFile)) {
-                if (logFilesystem()) {
-                    logger.trace("Failed to create backup file: {}", StringUtility.fileString(backup));
-                }
+                Log.warn("Failed to create backup file: {}", backup);
                 if (!originalFile.exists() && backup.exists()) {
                     move(backup, originalFile);
                 }
@@ -1784,13 +1754,9 @@ public final class Filesystem {
             }
         }
         
-        if (logFilesystem()) {
-            logger.trace("Replacing: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
-        }
+        Log.info("Replacing: {} with: {}", originalFile, newFile);
         if (!copy(newFile, originalFile, true) || (checksum(originalFile) != checksum(newFile)) || !deleteFile(newFile)) {
-            if (logFilesystem()) {
-                logger.trace("Failed to replace: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
-            }
+            Log.warn("Failed to replace: {} with: {}", originalFile, newFile);
             if (backup.exists()) {
                 move(backup, originalFile);
             }
@@ -1798,9 +1764,7 @@ public final class Filesystem {
         }
         
         deleteFile(backup);
-        if (logFilesystem()) {
-            logger.trace("Successfully replaced: {} with: {}", StringUtility.fileString(originalFile), StringUtility.fileString(newFile));
-        }
+        Log.info("Successfully replaced: {} with: {}", originalFile, newFile);
         return true;
     }
     
@@ -1813,29 +1777,23 @@ public final class Filesystem {
      * @return Whether the file was successfully rewritten or not.
      */
     public static boolean safeRewrite(File file, String data) {
+        Log.trace("Safely rewriting: {}", file);
+        
         File tmp = new File(file.getParentFile(), file.getName() + ".tmp");
         if (tmp.exists()) {
-            if (logFilesystem()) {
-                logger.trace("A temporary file: {} already exists, this could be data preserved from a failure; Will not continue", StringUtility.fileString(tmp));
-            }
+            Log.error("A temporary file: {} already exists, this could be data preserved from a failure; Will not continue", null, tmp);
             return false;
         }
         
-        if (logFilesystem()) {
-            logger.trace("Rewriting: {}", StringUtility.fileString(file));
-        }
+        Log.info("Rewriting: {}", file);
         if (!writeStringToFile(tmp, data) || !safeReplace(tmp, file)) {
-            if (logFilesystem()) {
-                logger.trace("Failed to rewrite: {}", StringUtility.fileString(file));
-            }
+            Log.warn("Failed to rewrite: {}", file);
             deleteFile(tmp);
             return false;
         }
         
         deleteFile(tmp);
-        if (logFilesystem()) {
-            logger.trace("Successfully rewrote: {}", StringUtility.fileString(file));
-        }
+        Log.info("Successfully rewrote: {}", file);
         return true;
     }
     
@@ -1886,26 +1844,23 @@ public final class Filesystem {
      * @return Whether the operation was successful or not.
      */
     public static boolean createSymbolicLink(File target, File link) {
+        Log.trace("Creating symbolic link from: {} to: {}", target, link);
+        
         if (!target.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Symbolic link target does not exist: {}", StringUtility.fileString(target));
-            }
+            Log.warn("Symbolic link target does not exist: {}", target);
             return false;
         }
         if (link.exists()) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: File already exists: {}", StringUtility.fileString(link));
-            }
+            Log.warn("File already exists: {}", link);
             return false;
         }
         
         try {
             Files.createSymbolicLink(Paths.get(link.getAbsolutePath()), Paths.get(target.getAbsolutePath()));
+            Log.info("Created symbolic link from: {} to: {}", target, link);
             return true;
-        } catch (Exception ignored) {
-            if (logFilesystem()) {
-                logger.trace("Filesystem: Unable to create symbolic link from: {} to: {}", StringUtility.fileString(target), StringUtility.fileString(link));
-            }
+        } catch (Exception e) {
+            Log.error("Unable to create symbolic link from: {} to: {}", e, target, link);
             return false;
         }
     }
@@ -2235,13 +2190,98 @@ public final class Filesystem {
         return generatePath(Project.TMP_DIR.getName(), UUID.randomUUID().toString()).length();
     }
     
+    
+    //Inner Classes
+    
     /**
-     * Determines if filesystem logging is enabled or not.
-     *
-     * @return Whether filesystem logging is enabled or not.
+     * Logs Filesystem events.
      */
-    public static boolean logFilesystem() {
-        return true;
+    private static class Log {
+        
+        //Static Fields
+        
+        /**
+         * The Filesystem log level.
+         */
+        private static final Level level = Level.DEBUG;
+        
+        
+        //Static Methods
+        
+        /**
+         * Returns the Filesystem log level.
+         *
+         * @return The Filesystem log level.
+         */
+        public static Level logLevel() {
+            return level;
+        }
+        
+        /**
+         * Logs a Filesystem event.
+         *
+         * @param log   The log.
+         * @param error The error.
+         * @param vars  The variables for the log.
+         */
+        private static void doLog(Level level, String log, Throwable error, File... vars) {
+            if (level.isGreaterOrEqual(logLevel())) {
+                logger.trace(StringUtility.format(("Filesystem: " + StringUtility.padLeft(level.toString(), 5) + ": " + log),
+                        Arrays.stream(vars).map(StringUtility::fileString).map(e -> StringUtility.quote(e, true)).toArray()), error);
+            }
+        }
+        
+        /**
+         * Logs a Filesystem trace event.
+         *
+         * @param log  The log.
+         * @param vars The variables for the log.
+         */
+        public static void trace(String log, File... vars) {
+            doLog(Level.TRACE, log, null, vars);
+        }
+        
+        /**
+         * Logs a Filesystem debug event.
+         *
+         * @param log  The log.
+         * @param vars The variables for the log.
+         */
+        public static void debug(String log, File... vars) {
+            doLog(Level.DEBUG, log, null, vars);
+        }
+        
+        /**
+         * Logs a Filesystem info event.
+         *
+         * @param log  The log.
+         * @param vars The variables for the log.
+         */
+        public static void info(String log, File... vars) {
+            doLog(Level.INFO, log, null, vars);
+        }
+        
+        /**
+         * Logs a Filesystem warn event.
+         *
+         * @param log  The log.
+         * @param vars The variables for the log.
+         */
+        public static void warn(String log, File... vars) {
+            doLog(Level.WARN, log, null, vars);
+        }
+        
+        /**
+         * Logs a Filesystem error event.
+         *
+         * @param log   The log.
+         * @param error The error.
+         * @param vars  The variables for the log.
+         */
+        public static void error(String log, Throwable error, File... vars) {
+            doLog(Level.ERROR, log, error, vars);
+        }
+        
     }
     
 }
