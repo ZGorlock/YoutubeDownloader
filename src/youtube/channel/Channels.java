@@ -209,7 +209,11 @@ public class Channels {
     private static void filterChannels() {
         filteredChannels.clear();
         
-        if (Config.channel != null) {
+        if (!Config.enableFiltering) {
+            getConfigs().stream().map(ChannelEntry::getKey)
+                    .forEachOrdered(filteredChannels::add);
+            
+        } else if (Config.channel != null) {
             filteredChannels.add(Config.channel);
             
         } else {
@@ -349,6 +353,11 @@ public class Channels {
          */
         public static final boolean DEFAULT_PRINT_CHANNELS = false;
         
+        /**
+         * The default value of the flag indicating whether to enable filtering or not.
+         */
+        public static final boolean DEFAULT_ENABLE_FILTERING = true;
+        
         
         //Static Fields
         
@@ -356,6 +365,11 @@ public class Channels {
          * A flag indicating whether to print the Channel list at the start of the run or not.
          */
         public static boolean printChannels = DEFAULT_PRINT_CHANNELS;
+        
+        /**
+         * A flag indicating whether to enable filtering or not.
+         */
+        public static boolean enableFiltering = DEFAULT_ENABLE_FILTERING;
         
         /**
          * The Channel to process, or null if all Channels should be processed.
@@ -389,6 +403,12 @@ public class Channels {
                             "log.printChannels",
                             "output.printChannels"),
                     DEFAULT_PRINT_CHANNELS);
+            
+            enableFiltering = Configurator.getSetting(List.of(
+                            "enableFiltering",
+                            "filter.enableFiltering",
+                            "filter.enable"),
+                    DEFAULT_ENABLE_FILTERING);
             
             channel = Configurator.getSetting("filter.channel");
             group = Configurator.getSetting("filter.group");

@@ -11,6 +11,7 @@
             "preMerged": true
         },
         "filter": {
+            "enableFiltering": true,
             "channel": null,
             "group": null,
             "startAt": null,
