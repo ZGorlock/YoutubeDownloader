@@ -35,6 +35,8 @@ import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.apache.http.ParseException;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -1265,7 +1267,9 @@ public final class ApiUtils {
                     logApiCall(endpoint, request.getURI(), response.get(), error.get(), channelState);
                     
                     if (!error.get()) {
-                        parameters.put("pageToken", (String) ((Map<String, Object>) new JSONParser().parse(response.get())).get("nextPageToken"));
+                        parameters.put("pageToken", Optional.ofNullable(response.get())
+                                .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(response.get()))
+                                .map(e -> (String) e.get("nextPageToken")).orElse(null));
                         return response.get();
                     }
                 }
@@ -1349,36 +1353,42 @@ public final class ApiUtils {
          * @return The response.
          * @throws RuntimeException If the response is an error.
          */
+        @SuppressWarnings("unchecked")
         private static String handleResponse(String response, ChannelState channelState) {
             return Optional.ofNullable(response)
                     .filter(e -> e.contains("\"error\": {"))
-                    .filter(e -> e.contains("\"code\":"))
-                    .map(e -> e.replaceAll("(?s)^.*\"code\":\\s*(\\d+).*$", "$1"))
-                    .filter(e -> !StringUtility.isNullOrBlank(e))
-                    .filter(errorCode -> {
-                        switch (errorCode) {
-                            case "404":
+                    .filter(errorResponse -> {
+                        final Map<String, Object> error = Optional.of(errorResponse)
+                                .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(e))
+                                .map(e -> (Map<String, Object>) e.get("error")).orElse(null);
+                        final Integer code = Optional.ofNullable(error).map(e -> (Long) e.get("code")).map(Long::intValue).orElse(null);
+                        final String message = Optional.ofNullable(error).map(e -> (String) e.get("message")).orElse(null);
+                        final String reason = Optional.ofNullable(error).map(e -> (List<Map<String, Object>>) e.get("errors"))
+                                .map(e -> ListUtility.getOrNull(e, 0)).map(e -> (String) e.get("reason")).orElse(null);
+                        
+                        switch (Optional.ofNullable(code).orElse(-1)) {
+                            case 404:
                                 logger.warn(Color.bad("The Youtube source") +
-                                        ((channelState != null) ? (Color.bad(" referenced by Channel: ") + Color.channelName(channelState)) : "") +
+                                        Optional.ofNullable(channelState).map(Color::channelName).map(e -> (Color.bad(" referenced by Channel: ") + e)).orElse("") +
                                         Color.bad(" does not exist"));
                                 break;
-                            case "403":
+                            case 403:
                                 logger.warn(Color.bad("Your API Key is not authorized or has exceeded its quota"));
                                 break;
-                            case "400":
-                                logger.warn(Color.bad("The API call that was made does not Your API Key is not authorized or has exceeded its quota"));
+                            case 400:
+                                logger.warn(Color.bad("The API call that was made is invalid"));
                                 break;
                             default:
-                                logger.warn(Color.bad("Error: ") + Color.number(errorCode) + Color.bad(" while calling API") +
-                                        ((channelState != null) ? (Color.bad(" for Channel: ") + Color.channelName(channelState)) : ""));
+                                logger.warn(Color.bad("Error: ") + Color.number(code) + Color.bad(" while calling API") +
+                                        Optional.ofNullable(channelState).map(Color::channelName).map(e -> (Color.bad(" for Channel: ") + e)).orElse(""));
                                 break;
                         }
-                        if (channelState != null) {
-                            channelState.getErrorFlag().set(true);
-                        }
-                        logger.error(Color.bad("Youtube Data API responded with error code: ") + Color.number(errorCode) +
-                                (response.contains("\"reason\":") ? (Color.bad(" (" + response.replaceAll("(?s)^.*\"reason\": \"([^\"]+)\",.*$", "$1") + ")")) : ""));
-                        throw new RuntimeException();
+                        logger.error(Color.bad("Youtube Data API responded with error code: ") + Color.number(code) +
+                                Optional.ofNullable(reason).map(e -> (" (" + e + ")")).map(Color::bad).orElse("") +
+                                System.lineSeparator() + LogUtils.INDENT_HARD + Color.bad(message));
+                        
+                        Optional.ofNullable(channelState).map(ChannelState::getErrorFlag).ifPresent(errorFlag -> errorFlag.set(true));
+                        throw new RuntimeException(new HttpResponseException(Optional.ofNullable(code).orElse(-1), reason));
                     })
                     .orElse(response);
         }
@@ -1394,15 +1404,14 @@ public final class ApiUtils {
         @SuppressWarnings("unchecked")
         private static List<Map<String, Object>> parseResponse(String response, ChannelState channelState) {
             return Optional.ofNullable(response)
-                    .map((CheckedFunction<String, Map<String, Object>>) e ->
-                            (Map<String, Object>) new JSONParser().parse(e))
+                    .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(e))
                     .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
                     .orElseThrow(() -> {
-                        if ((channelState != null) && channelState.getErrorFlag().compareAndSet(false, true)) {
+                        if (Optional.ofNullable(channelState).map(ChannelState::getErrorFlag).map(errorFlag -> errorFlag.compareAndSet(false, true)).orElse(false)) {
                             logger.warn(Color.bad("Error parsing API data for Channel: ") + Color.channelName(channelState));
                         }
                         logger.error(Color.bad("Youtube Data API responded with invalid data"));
-                        throw new RuntimeException();
+                        return new RuntimeException(new ParseException());
                     });
         }
         
