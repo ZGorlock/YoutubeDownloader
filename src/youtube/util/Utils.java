@@ -42,15 +42,15 @@ public final class Utils {
      * @return Whether startup was successful or not.
      */
     public static boolean startup(Configurator.Program program) {
-        logger.debug(Color.log("Initializing..."));
         logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.log("Initializing..."));
         
-        Configurator.loadSettings(program);
-        LogUtils.initLogging();
-        Color.initColors();
-        FileUtils.initFilesystem();
-        
-        return WebUtils.checkInternet() && ExecutableUtils.checkExe();
+        return Configurator.initConfig(program) &&
+                LogUtils.initLogging() &&
+                Color.initColors() &&
+                FileUtils.initFilesystem() &&
+                WebUtils.initWeb() &&
+                ExecutableUtils.initExecutable();
     }
     
 }

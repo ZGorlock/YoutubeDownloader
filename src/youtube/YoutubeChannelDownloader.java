@@ -85,7 +85,6 @@ public class YoutubeChannelDownloader {
         logger.info(Color.number("--------------------------"));
         logger.info(Color.number("Youtube Channel Downloader"));
         logger.info(Color.number("--------------------------"));
-        logger.trace(LogUtils.NEWLINE);
         
         if (!Utils.startup(Configurator.Program.YOUTUBE_CHANNEL_DOWNLOADER)) {
             return;
@@ -103,20 +102,21 @@ public class YoutubeChannelDownloader {
      * Processes Channels.
      */
     private static void run() {
-        logger.debug(Color.log("Starting..."));
         logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.log("Starting..."));
         
-        Channels.loadChannels();
-        KeyStore.load();
+        Channels.initChannels();
+        KeyStore.initKeystore();
         
         logger.trace(LogUtils.NEWLINE);
         Channels.getFiltered().forEach(YoutubeChannelDownloader::processChannel);
         logger.trace(LogUtils.NEWLINE);
         
-        KeyStore.save();
+        KeyStore.saveKeyStore();
         Stats.print();
         
         if (LogUtils.Config.printExecutionTime) {
+            logger.trace(LogUtils.NEWLINE);
             logger.debug(Color.log("Completed in ") + Color.number(DateTimeUtility.durationToDurationString(
                     (System.currentTimeMillis() - startTime), false, false, true)));
         }

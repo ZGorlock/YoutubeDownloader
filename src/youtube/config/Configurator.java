@@ -208,7 +208,7 @@ public class Configurator {
     private static final Map<String, Map<String, Object>> settings = new HashMap<>();
     
     /**
-     * A flag indicating whether the configuration settings have been loaded yet or not.
+     * A flag indicating whether the configuration has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
@@ -362,37 +362,52 @@ public class Configurator {
     }
     
     /**
-     * Loads the settings configuration from the configuration file.
+     * Initializes the configuration.
      *
      * @param program The program.
+     * @return Whether the configuration was successfully initialized.
+     */
+    public static boolean initConfig(Program program) {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Config..."));
+            
+            activeProgram = program;
+            loadSettings();
+            
+            Config.init();
+            
+            print();
+            
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Loads the settings configuration from the configuration file.
+     *
      * @throws RuntimeException When the settings configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
-    public static void loadSettings(Program program) {
-        if (loaded.compareAndSet(false, true)) {
-            logger.debug(Color.log("Loading Settings..."));
-            
-            activeProgram = program;
-            
-            try {
-                final Map<String, Object> settingsData = (Map<String, Object>) new JSONParser().parse(readConfiguration());
-                settingsData.keySet().forEach(section ->
-                        loadSettingSection(settingsData, section));
-                
-                activeSettings.putAll(getDefinedSettings(activeProgram.getConfigRoot()));
-                settings.entrySet().stream()
-                        .filter(section -> !ConfigSection.isRootSection(section.getKey()))
-                        .forEach(section -> section.getValue().forEach((settingKey, settingValue) ->
-                                activeSettings.putIfAbsent((section.getKey() + '.' + settingKey), settingValue)));
-                
-            } catch (Exception e) {
-                logger.error(Color.bad("Could not load settings from: ") + Color.quoteFilePath(CONF_FILE), e);
-                throw new RuntimeException(e);
-            }
-        }
+    private static void loadSettings() {
+        logger.debug(Color.log("Loading Settings..."));
         
-        Config.init();
-        print();
+        try {
+            final Map<String, Object> settingsData = (Map<String, Object>) new JSONParser().parse(readConfiguration());
+            settingsData.keySet().forEach(section ->
+                    loadSettingSection(settingsData, section));
+            
+            activeSettings.putAll(getDefinedSettings(activeProgram.getConfigRoot()));
+            settings.entrySet().stream()
+                    .filter(section -> !ConfigSection.isRootSection(section.getKey()))
+                    .forEach(section -> section.getValue().forEach((settingKey, settingValue) ->
+                            activeSettings.putIfAbsent((section.getKey() + '.' + settingKey), settingValue)));
+            
+        } catch (Exception e) {
+            logger.error(Color.bad("Could not load settings from: ") + Color.quoteFilePath(CONF_FILE), e);
+            throw new RuntimeException(e);
+        }
     }
     
     /**
@@ -481,8 +496,6 @@ public class Configurator {
                         Color.log(" " + ".".repeat(maxKeyLength - setting.getKey().length()) + " "),
                         Color.formatVariable(setting.getValue())))
                 .forEachOrdered(logger::debug);
-        
-        logger.trace(LogUtils.NEWLINE);
     }
     
     

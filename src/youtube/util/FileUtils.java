@@ -124,7 +124,7 @@ public final class FileUtils {
     //Static Fields
     
     /**
-     * A flag indicating whether the filesystem configuration has been loaded yet or not.
+     * A flag indicating whether the file system has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
@@ -133,13 +133,19 @@ public final class FileUtils {
     
     /**
      * Initializes the file system.
+     *
+     * @return Whether the file system was successfully initialized.
      */
-    public static void initFilesystem() {
+    public static boolean initFilesystem() {
         if (loaded.compareAndSet(false, true)) {
-            logger.debug(Color.log("Initializing Filesystem..."));
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing File System..."));
             
             Config.init();
+            
+            return true;
         }
+        return false;
     }
     
     /**

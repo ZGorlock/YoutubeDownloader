@@ -177,30 +177,45 @@ public class Channels {
     }
     
     /**
+     * Initializes the Channels configuration.
+     *
+     * @return Whether the Channels configuration was successfully initialized.
+     */
+    public static boolean initChannels() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Channels..."));
+            
+            Config.init();
+            
+            loadChannels();
+            filterChannels();
+            
+            print();
+            
+            return true;
+        }
+        return false;
+    }
+    
+    /**
      * Loads the Channels configuration from the channels file.
      *
      * @throws RuntimeException When the Channels configuration could not be loaded.
      */
     @SuppressWarnings("unchecked")
-    public static void loadChannels() {
-        if (loaded.compareAndSet(false, true)) {
-            logger.debug(Color.log("Loading Channels..."));
-            
-            Config.init();
-            
-            try {
-                final List<Map<String, Object>> channelListData = (List<Map<String, Object>>) new JSONParser().parse(readChannelConfiguration());
-                
-                loadChannelList(channelListData, root);
-                
-            } catch (Exception e) {
-                logger.error(Color.bad("Could not load channels from: ") + Color.quoteFilePath(CHANNELS_FILE), e);
-                throw new RuntimeException(e);
-            }
-        }
+    private static void loadChannels() {
+        logger.debug(Color.log("Loading Channels..."));
         
-        filterChannels();
-        print();
+        try {
+            final List<Map<String, Object>> channelListData = (List<Map<String, Object>>) new JSONParser().parse(readChannelConfiguration());
+            
+            loadChannelList(channelListData, root);
+            
+        } catch (Exception e) {
+            logger.error(Color.bad("Could not load channels from: ") + Color.quoteFilePath(CHANNELS_FILE), e);
+            throw new RuntimeException(e);
+        }
     }
     
     /**
@@ -334,8 +349,6 @@ public class Channels {
         logger.debug(Color.number("--- Channels ---"));
         
         root.print();
-        
-        logger.trace(LogUtils.NEWLINE);
     }
     
     

@@ -92,8 +92,8 @@ public class ChannelPlaylistParser {
      * @param args Arguments to the main method.
      */
     public static void main(String[] args) {
-        Configurator.loadSettings(Configurator.Program.YOUTUBE_CHANNEL_DOWNLOADER);
-        Channels.loadChannels();
+        Configurator.initConfig(Configurator.Program.YOUTUBE_CHANNEL_DOWNLOADER);
+        Channels.initChannels();
         
         final Channel baseChannel = Channels.getChannel(baseChannelKey);
         if ((baseChannel == null) || !baseChannel.getConfig().isYoutubeChannel()) {

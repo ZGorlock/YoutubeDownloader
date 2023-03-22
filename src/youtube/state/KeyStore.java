@@ -29,6 +29,7 @@ import youtube.config.Color;
 import youtube.entity.Channel;
 import youtube.entity.Video;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 
 /**
@@ -98,13 +99,30 @@ public class KeyStore {
     //Static Methods
     
     /**
+     * Initializes the KeyStore.
+     *
+     * @return Whether the KeyStore was successfully initialized.
+     */
+    public static boolean initKeystore() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing KeyStore..."));
+            
+            loadKeyStore();
+            
+            return true;
+        }
+        return false;
+    }
+    
+    /**
      * Loads the key store.
      *
      * @throws RuntimeException When the key store could not be loaded.
      */
-    public static void load() {
-        if (!loaded.compareAndSet(false, true)) {
-            logger.warn(Color.bad("The key store has already been loaded"));
+    private static void loadKeyStore() {
+        if (!loaded.get()) {
+            logger.warn(Color.bad("The KeyStore has already been loaded"));
             return;
         }
         
@@ -166,9 +184,9 @@ public class KeyStore {
      *
      * @throws RuntimeException When the key store could not be saved.
      */
-    public static void save() {
+    public static void saveKeyStore() {
         if (!loaded.get()) {
-            logger.warn(Color.bad("The key store has not been loaded"));
+            logger.warn(Color.bad("The KeyStore has not been loaded"));
             return;
         }
         

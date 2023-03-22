@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -182,7 +183,32 @@ public final class ExecutableUtils {
     }
     
     
+    //Static Fields
+    
+    /**
+     * A flag indicating whether the executable has been loaded yet or not.
+     */
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
+    
+    
     //Static Methods
+    
+    /**
+     * Initializes the executable.
+     *
+     * @return Whether the executable was successfully initialized.
+     */
+    public static boolean initExecutable() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Executable..."));
+            
+            Config.init();
+            
+            return checkExe();
+        }
+        return false;
+    }
     
     /**
      * Determines if the exe exists and attempts to update it, or attempts to download it if it does not exist.
@@ -191,8 +217,6 @@ public final class ExecutableUtils {
      */
     public static boolean checkExe() {
         logger.debug(Color.log("Checking Executable..."));
-        
-        Config.init();
         
         boolean exists = Config.executable.getExe().exists();
         String currentVersion = Configurator.Config.preventExeVersionCheck ? "?" : getCurrentExecutableVersion();
@@ -204,26 +228,21 @@ public final class ExecutableUtils {
             if (LogUtils.Config.printExeVersion) {
                 logger.trace(LogUtils.NEWLINE);
                 logger.info(Color.exeFileName(Config.executable) + printedCurrentVersion);
-                logger.trace(LogUtils.NEWLINE);
             }
         } else {
             logger.trace(LogUtils.NEWLINE);
             logger.warn(Color.bad("Requires ") + Color.exeName(Config.executable));
-            logger.trace(LogUtils.NEWLINE);
         }
         
         if (exists && (currentVersion.isEmpty() || latestVersion.isEmpty())) {
             if (LogUtils.Config.printExeVersion) {
                 logger.warn(Color.bad("Unable to check for updates for ") + Color.exeName(Config.executable));
-                logger.trace(LogUtils.NEWLINE);
             }
             
         } else if (!exists || !currentVersion.equals(latestVersion)) {
             if (exists) {
                 if (LogUtils.Config.printExeVersion) {
                     logger.info(Color.base("Current Version:") + printedCurrentVersion + Color.base(" Latest Version:") + printedLatestVersion);
-                } else {
-                    logger.trace(LogUtils.NEWLINE);
                 }
             }
             
@@ -241,7 +260,6 @@ public final class ExecutableUtils {
             } else {
                 logger.info(Color.bad("Would have " + (exists ? "updated to" : "downloaded") + " ") + Color.exeName(Config.executable) + printedLatestVersion + Color.bad(" but auto updating is disabled"));
             }
-            logger.trace(LogUtils.NEWLINE);
         }
         
         return Config.executable.getExe().exists();

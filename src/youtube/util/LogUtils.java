@@ -151,16 +151,22 @@ public final class LogUtils {
     
     /**
      * Initializes the logging configuration.
+     *
+     * @return Whether the logging configuration was successfully initialized.
      */
-    public static void initLogging() {
+    public static boolean initLogging() {
         if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
             logger.debug(Color.log("Initializing Logging..."));
             
             Config.init();
             
             System.setProperty("logback.configurationFile", LOGBACK_CONFIG_FILE.getAbsolutePath());
             Runtime.getRuntime().addShutdownHook(new Thread(LogUtils::shutdownLogging));
+            
+            return true;
         }
+        return false;
     }
     
     /**

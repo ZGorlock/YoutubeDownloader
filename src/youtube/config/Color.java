@@ -28,6 +28,7 @@ import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.util.ExecutableUtils;
 import youtube.util.FileUtils;
+import youtube.util.LogUtils;
 import youtube.util.PathUtils;
 
 /**
@@ -59,7 +60,7 @@ public class Color {
     //Static Fields
     
     /**
-     * A flag indicating whether the color configuration settings have been loaded yet or not.
+     * A flag indicating whether the color configuration has been loaded yet or not.
      */
     private static final AtomicBoolean loaded = new AtomicBoolean(false);
     
@@ -68,13 +69,19 @@ public class Color {
     
     /**
      * Initializes the color configuration.
+     *
+     * @return Whether the color configuration was successfully initialized.
      */
-    public static void initColors() {
+    public static boolean initColors() {
         if (loaded.compareAndSet(false, true)) {
-            logger.debug(log("Initializing Colors..."));
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Colors..."));
             
             Config.init();
+            
+            return true;
         }
+        return false;
     }
     
     /**

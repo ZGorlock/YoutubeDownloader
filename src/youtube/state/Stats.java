@@ -268,8 +268,6 @@ public final class Stats {
             statPrinter.accept("    Video: ............ ", (double) totalFilteredVideoData.get());
             statPrinter.accept("    Audio: ............ ", (double) totalFilteredAudioData.get());
         }
-        
-        logger.trace(LogUtils.NEWLINE);
     }
     
 }

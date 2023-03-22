@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,7 +87,31 @@ public final class WebUtils {
     public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:@|(?:c(?:hannel|/@)?|u(?:ser)?)/)(?<channel>\\w+).*$");
     
     
+    //Static Fields
+    
+    /**
+     * A flag indicating whether the web system has been loaded yet or not.
+     */
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
+    
+    
     //Static Methods
+    
+    /**
+     * Initializes the web system.
+     *
+     * @return Whether the web system was successfully initialized.
+     */
+    public static boolean initWeb() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Web..."));
+            
+            return checkInternet() &&
+                    checkApi();
+        }
+        return false;
+    }
     
     /**
      * Determines if internet access is available.
@@ -99,6 +124,24 @@ public final class WebUtils {
         if (!Internet.isOnline()) {
             logger.trace(LogUtils.NEWLINE);
             logger.warn(Color.bad("Internet access is required"));
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Determines if API access is available.
+     *
+     * @return Whether API access is available.
+     */
+    public static boolean checkApi() {
+        logger.debug(Color.log("Checking API..."));
+        
+        try {
+            ApiUtils.fetchVideo("7f-MrT_yGg4");
+        } catch (Exception e) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.error(Color.bad("API access is required"), e);
             return false;
         }
         return true;
