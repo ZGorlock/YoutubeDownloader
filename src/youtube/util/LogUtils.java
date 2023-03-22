@@ -8,7 +8,6 @@
 package youtube.util;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -23,7 +22,6 @@ import java.util.stream.Stream;
 
 import commons.access.Filesystem;
 import commons.access.Project;
-import commons.lambda.function.checked.CheckedFunction;
 import commons.lambda.stream.collector.MapCollectors;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
@@ -55,16 +53,6 @@ public final class LogUtils {
      * The log directory.
      */
     public static final File LOG_DIR = Project.LOG_DIR;
-    
-    /**
-     * The stamp format used for timestamps.
-     */
-    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
-    
-    /**
-     * The stamp format used for datestamps.
-     */
-    public static final String DATESTAMP_FORMAT = "yyyy-MM-dd";
     
     /**
      * The newline string.
@@ -299,7 +287,7 @@ public final class LogUtils {
      */
     public static File getDailyLog(String logKey) {
         return new File(LOG_DIR, FileUtils.setFormat(
-                Stream.of(Utils.PROJECT_TITLE, datestamp(), logKey)
+                Stream.of(Utils.PROJECT_TITLE, DateUtils.datestamp(), logKey)
                         .filter(e -> !StringUtility.isNullOrBlank(e))
                         .collect(Collectors.joining("-")),
                 FileUtils.LOG_FILE_FORMAT));
@@ -322,6 +310,18 @@ public final class LogUtils {
      */
     public static File getDailyLog() {
         return getDailyLog("");
+    }
+    
+    /**
+     * Returns the associated date of a log file.
+     *
+     * @param logFile The log file.
+     * @return The associated date or the log file, or a dummy date if the file name does not include a datestamp.
+     */
+    public static Date getLogDate(File logFile) {
+        return Optional.ofNullable(logFile)
+                .map(FileUtils::getStampedFileDate)
+                .orElseGet(() -> new Date(0));
     }
     
     /**
@@ -362,7 +362,7 @@ public final class LogUtils {
      * @return The log files from the specified date.
      */
     public static List<File> fetchAllLogs(Date date) {
-        return Optional.ofNullable(date).map(LogUtils::datestamp)
+        return Optional.ofNullable(date).map(DateUtils::datestamp)
                 .map(LogUtils::fetchAllLogs)
                 .orElse(Collections.emptyList());
     }
@@ -370,7 +370,7 @@ public final class LogUtils {
     /**
      * Returns the log files grouped by date.
      *
-     * @return The log files grouped by date
+     * @return The log files grouped by date.
      */
     public static Map<Date, List<File>> fetchAllLogsByDate() {
         return fetchAllLogs().stream()
@@ -479,104 +479,6 @@ public final class LogUtils {
         Filesystem.getDirs(LOG_DIR).stream()
                 .filter(Filesystem::directoryIsEmpty)
                 .forEach(Filesystem::deleteDirectory);
-    }
-    
-    /**
-     * Formats a timestamp from a date.
-     *
-     * @param date   The date.
-     * @param format The timestamp format to use.
-     * @return A timestamp representation of the specified date, or null if it could not be formatted.
-     */
-    private static String formatDate(Date date, String format) {
-        return Optional.ofNullable(format).map(SimpleDateFormat::new)
-                .map(e -> e.format(date))
-                .orElse(null);
-    }
-    
-    /**
-     * Parses a date from a timestamp.
-     *
-     * @param timestamp The timestamp.
-     * @param format    The format of the timestamp.
-     * @return A date representation of the specified timestamp, or null if it could not be parsed.
-     */
-    private static Date parseStamp(String timestamp, String format) {
-        return Optional.ofNullable(format).map(SimpleDateFormat::new)
-                .map((CheckedFunction<SimpleDateFormat, Date>) e -> e.parse(timestamp))
-                .orElse(null);
-    }
-    
-    /**
-     * Returns a timestamp representing a date.
-     *
-     * @param date The date.
-     * @return A timestamp representing the specified date.
-     */
-    public static String timestamp(Date date) {
-        return formatDate(date, TIMESTAMP_FORMAT);
-    }
-    
-    /**
-     * Returns the current timestamp.
-     *
-     * @return The current timestamp.
-     */
-    public static String timestamp() {
-        return timestamp(new Date());
-    }
-    
-    /**
-     * Returns the date represented by a timestamp.
-     *
-     * @param timestamp The timestamp.
-     * @return The date represented by the timestamp.
-     */
-    public static Date parseTimestamp(String timestamp) {
-        return parseStamp(timestamp, TIMESTAMP_FORMAT);
-    }
-    
-    /**
-     * Returns a datestamp representing a date.
-     *
-     * @param date The date.
-     * @return A datestamp representing the specified date.
-     */
-    public static String datestamp(Date date) {
-        return formatDate(date, DATESTAMP_FORMAT);
-    }
-    
-    /**
-     * Returns the current datestamp.
-     *
-     * @return The current datestamp.
-     */
-    public static String datestamp() {
-        return datestamp(new Date());
-    }
-    
-    /**
-     * Returns the date represented by a datestamp.
-     *
-     * @param datestamp The datestamp.
-     * @return The date represented by the datestamp.
-     */
-    public static Date parseDatestamp(String datestamp) {
-        return parseStamp(datestamp, DATESTAMP_FORMAT);
-    }
-    
-    /**
-     * Returns the associated date of a log file.
-     *
-     * @param logFile The log file.
-     * @return The associated date or the log file.
-     */
-    public static Date getLogDate(File logFile) {
-        return Optional.ofNullable(logFile)
-                .map(File::getName)
-                .map(logName -> logName.replaceAll("^.+?-([\\d\\-]+)[.\\-]\\D.+$", "$1"))
-                .map(LogUtils::parseDatestamp)
-                .orElse(new Date(0));
     }
     
     

@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -346,6 +347,20 @@ public final class FileUtils {
         return Optional.ofNullable(fileName).map(FileUtils::getTitle)
                 .map(title -> title.replaceAll("(?i)[^\\w" + Pattern.quote(TITLE_NON_ASCII_CHAR) + "]+", ""))
                 .map(String::toUpperCase)
+                .orElse(null);
+    }
+    
+    /**
+     * Returns the stamped date from the file name of a file.
+     *
+     * @param file The file.
+     * @return The stamped date from the file name, or null if the file name does not include a datestamp.
+     */
+    public static Date getStampedFileDate(File file) {
+        return Optional.ofNullable(file)
+                .map(File::getName)
+                .map(fileName -> fileName.replaceAll("^.+?-([\\d\\-]+)[.\\-]\\D.+$", "$1"))
+                .map(DateUtils::parseDatestamp)
                 .orElse(null);
     }
     

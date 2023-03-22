@@ -1294,7 +1294,7 @@ public final class ApiUtils {
             LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG), log);
             Optional.ofNullable(channelState).map(ChannelState::getCallLogFile)
                     .ifPresent(callLog -> Filesystem.writeStringToFile(callLog,
-                            (log.replaceAll("^.+:: ", (LogUtils.timestamp() + " - ")) + System.lineSeparator()), true));
+                            (log.replaceAll("^.+:: ", (DateUtils.timestamp() + " - ")) + System.lineSeparator()), true));
             
             Stats.totalApiCalls.incrementAndGet();
             Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
