@@ -172,7 +172,7 @@ public final class ExecutableUtils {
          * @param name The name of the Executable.
          * @return The optional containing the Executable with the specified name, if it exists.
          */
-        private static Optional<Executable> ofName(String name) {
+        public static Optional<Executable> ofName(String name) {
             return Optional.ofNullable(name)
                     .map(searchName -> searchName.replaceAll("[\\W_]", "-"))
                     .flatMap(searchName -> Arrays.stream(values())
@@ -390,7 +390,7 @@ public final class ExecutableUtils {
             executable = Executable.ofName(
                             Configurator.getSetting("executable", DEFAULT_EXECUTABLE))
                     .orElseGet(() -> {
-                        logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName((String) Configurator.getSetting("executable")) + Color.bad(" is not valid"));
+                        logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName((String) Configurator.activeProgram.getConfigRoot().getDefinedSetting("executable")) + Color.bad(" is not valid"));
                         logger.warn(Color.bad("Using to the default executable: ") + Color.quoteExeName(DEFAULT_EXECUTABLE) + Color.bad(" instead"));
                         return Executable.ofName(DEFAULT_EXECUTABLE).orElse(null);
                     });

@@ -1473,37 +1473,40 @@ public class Color {
         } else if (variable instanceof Number) {
             return number(value);
             
-        } else if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
-            return good(value);
-        } else if (variable instanceof Boolean) {
-            return good(Boolean.toString((Boolean) variable));
+        } else if ("true".equalsIgnoreCase(value.trim())) {
+            return base(value);
+        } else if ("false".equalsIgnoreCase(value.trim())) {
+            return bad(value);
             
         } else if (value.contains("://")) {
-            return quoted(link(value));
+            return link(value);
         } else if (variable instanceof URL) {
-            return quoted(link(((URL) variable).toExternalForm()));
+            return link(((URL) variable).toExternalForm());
         } else if (variable instanceof URI) {
-            return quoted(link(((URI) variable).toASCIIString()));
+            return link(((URI) variable).toASCIIString());
             
         } else if (value.contains(":/") || value.startsWith("/") || value.endsWith("/") ||
                 value.contains(":\\") || value.startsWith("\\") || value.endsWith("\\")) {
-            return quoted(file(value));
+            return good(value);
         } else if (variable instanceof File) {
-            return quoted(file(((File) variable).getAbsolutePath()));
+            return good(((File) variable).getAbsolutePath());
         } else if (variable instanceof Path) {
-            return quoted(file(((Path) variable).toAbsolutePath().toString()));
+            return good(((Path) variable).toAbsolutePath().toString());
+            
+        } else if (ExecutableUtils.Executable.ofName(value).isPresent()) {
+            return exe(value);
             
         } else if (variable instanceof String) {
-            return quoted(base(value));
+            return channel(value);
         } else if (variable instanceof StringBuilder) {
-            return quoted(base(((StringBuilder) variable).toString()));
+            return channel(((StringBuilder) variable).toString());
         } else if (variable instanceof StringBuffer) {
-            return quoted(base(((StringBuffer) variable).toString()));
+            return channel(((StringBuffer) variable).toString());
         } else if (variable instanceof CharSequence) {
-            return quoted(base(((CharSequence) variable).toString()));
+            return channel(((CharSequence) variable).toString());
             
         } else {
-            return bad(value);
+            return log(value);
         }
     }
     

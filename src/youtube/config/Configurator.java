@@ -33,7 +33,7 @@ import youtube.util.PathUtils;
 /**
  * Handles configuration of the Youtube Downloader.
  */
-public class Configurator {
+public final class Configurator {
     
     //Logger
     
@@ -91,7 +91,7 @@ public class Configurator {
          *
          * @return The root Config Section for the Program.
          */
-        private ConfigSection getConfigRoot() {
+        public ConfigSection getConfigRoot() {
             return configRoot;
         }
         
@@ -139,6 +139,26 @@ public class Configurator {
         
         
         //Methods
+        
+        /**
+         * Returns the configuration settings defined in the Config Section.
+         *
+         * @return The configuration settings defined in the Config Section.
+         */
+        public Map<String, Object> getDefinedSettings() {
+            return Configurator.getDefinedSettings(getKey());
+        }
+        
+        /**
+         * Returns a configuration setting defined in the Config Section.
+         *
+         * @param subKey The sub key of the configuration setting.
+         * @param <T>    The type of the setting.
+         * @return The value of the configuration setting defined in the Config Section, or null if it does not exist.
+         */
+        public <T> T getDefinedSetting(String subKey) {
+            return Configurator.getDefinedSetting(getKey(), subKey);
+        }
         
         /**
          * Returns the key of a configuration setting that is a member of the Config Section.
@@ -231,13 +251,15 @@ public class Configurator {
      * @param key The key of the configuration setting.
      * @param def The default value to return if the configuration setting does not exist.
      * @param <T> The type of the setting.
+     * @param <V> The type of the default value of the setting.
      * @return The value of the configuration setting, or the default value if it does not exist.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getSetting(String key, T def) {
-        return (T) Optional.ofNullable(getSettings())
-                .map(e -> e.getOrDefault(key, def))
-                .orElse(null);
+    public static <T, V extends T> T getSetting(String key, V def) {
+        return Optional.ofNullable(getSettings())
+                .map(e -> (T) e.get(key))
+                .filter(e -> !(e instanceof String) || !((String) e).isEmpty())
+                .orElse(def);
     }
     
     /**
@@ -257,13 +279,14 @@ public class Configurator {
      * @param keyOptions The list of options for the key of the configuration setting, in order of precedence.
      * @param def        The default value to return if the configuration setting does not exist.
      * @param <T>        The type of the setting.
+     * @param <V>        The type of the default value of the setting.
      * @return The value of the configuration setting, or the default value if it does not exist.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getSetting(List<String> keyOptions, T def) {
-        return (T) Optional.ofNullable(keyOptions)
+    public static <T, V extends T> T getSetting(List<String> keyOptions, V def) {
+        return Optional.ofNullable(keyOptions)
                 .stream().flatMap(Collection::stream)
-                .map(Configurator::getSetting)
+                .map(e -> (T) getSetting(e))
                 .filter(Objects::nonNull)
                 .findFirst().orElse(def);
     }
@@ -309,28 +332,15 @@ public class Configurator {
      *
      * @param section The key of the Config Section.
      * @param subKey  The sub key of the configuration setting.
-     * @param def     The default value to return if the configuration setting does not exist.
      * @param <T>     The type of the setting.
-     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
+     * @return The value of the configuration setting defined in the configuration file, or null if it does not exist.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getDefinedSetting(String section, String subKey, T def) {
-        return (T) Optional.of(section)
-                .map(Configurator::getDefinedSettings)
-                .map(e -> e.getOrDefault(subKey, def))
-                .orElse(null);
-    }
-    
-    /**
-     * Returns a configuration setting defined in the configuration file.
-     *
-     * @param section The key of the Config Section.
-     * @param subKey  The sub key of the configuration setting.
-     * @param <T>     The type of the setting.
-     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
-     */
     public static <T> T getDefinedSetting(String section, String subKey) {
-        return getDefinedSetting(section, subKey, null);
+        return Optional.of(section)
+                .map(Configurator::getDefinedSettings)
+                .map(e -> (T) e.get(subKey))
+                .orElse(null);
     }
     
     /**
@@ -338,27 +348,15 @@ public class Configurator {
      *
      * @param section The Config Section.
      * @param subKey  The sub key of the configuration setting.
-     * @param def     The default value to return if the configuration setting does not exist.
      * @param <T>     The type of the setting.
-     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
+     * @return The value of the configuration setting defined in the configuration file, or null if it does not exist.
      */
-    public static <T> T getDefinedSetting(ConfigSection section, String subKey, T def) {
+    @SuppressWarnings("unchecked")
+    public static <T> T getDefinedSetting(ConfigSection section, String subKey) {
         return Optional.of(section)
                 .map(ConfigSection::getKey)
-                .map(sectionKey -> getDefinedSetting(sectionKey, subKey, def))
+                .map(sectionKey -> (T) getDefinedSetting(sectionKey, subKey))
                 .orElse(null);
-    }
-    
-    /**
-     * Returns a configuration setting defined in the configuration file.
-     *
-     * @param section The Config Section.
-     * @param subKey  The sub key of the configuration setting.
-     * @param <T>     The type of the setting.
-     * @return The value of the configuration setting defined in the configuration file, or the default value if it does not exist.
-     */
-    public static <T> T getDefinedSetting(ConfigSection section, String subKey) {
-        return getDefinedSetting(section, subKey, null);
     }
     
     /**
@@ -492,8 +490,8 @@ public class Configurator {
         
         getSettings().entrySet().stream()
                 .map(setting -> String.join("",
-                        Color.base(setting.getKey()),
-                        Color.log(" " + ".".repeat(maxKeyLength - setting.getKey().length()) + " "),
+                        Color.file(setting.getKey()),
+                        Color.log(" " + ".".repeat(maxKeyLength - setting.getKey().length() + 2) + " "),
                         Color.formatVariable(setting.getValue())))
                 .forEachOrdered(logger::debug);
     }
@@ -511,7 +509,7 @@ public class Configurator {
         /**
          * The default value of the flag indicating whether to print the active configuration settings at the start of the run or not.
          */
-        public static final boolean DEFAULT_PRINT_SETTINGS = false;
+        public static final boolean DEFAULT_PRINT_SETTINGS = true;
         
         /**
          * The default value of the flag indicating whether to move files to the recycling bin instead of deleting them.
@@ -668,7 +666,7 @@ public class Configurator {
          * Initializes the Config.
          */
         private static void init() {
-            printSettings = Configurator.getSetting(List.of(
+            printSettings = getSetting(List.of(
                             "printSettings",
                             "log.printSettings",
                             "output.printSettings"),

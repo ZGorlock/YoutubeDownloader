@@ -836,7 +836,7 @@ public class KeyStore {
                     .filter(lineParts -> (lineParts.length == Part.values().length))
                     .map(lineParts -> new KeyStoreEntry(lineParts[0], lineParts[1], lineParts[2]))
                     .orElseThrow(() -> {
-                        logger.warn(Color.bad("Unable to parse key store line: ") + Color.formatVariable(keyStoreLine));
+                        logger.warn(Color.bad("Unable to parse key store line: ") + Color.quoted(Color.base(keyStoreLine)));
                         return new ParseException(keyStoreLine, 0);
                     });
         }

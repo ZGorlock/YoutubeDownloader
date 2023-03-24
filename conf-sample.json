@@ -23,7 +23,7 @@
         },
         "flag": {
             "deleteToRecyclingBin": true,
-            "neverUseBrowserCookies": false,
+            "neverUseBrowserCookies": true,
             "retryPreviousFailures": false,
             "test": {
                 "safeMode": false,
@@ -47,11 +47,11 @@
             "browser": "Chrome"
         },
         "format": {
-            "asMp3": false,
-            "preMerged": true
+            "preMerged": true,
+            "asMp3": false
         },
         "flag": {
-            "neverUseBrowserCookies": false,
+            "neverUseBrowserCookies": true,
             "test": {
                 "safeMode": false,
                 "preventRun": false,
@@ -96,7 +96,7 @@
     },
     
     "log": {
-        "printSettings": false,
+        "printSettings": true,
         "printExeVersion": true,
         "printExecutionTime": true,
         "download": {
