@@ -50,7 +50,8 @@ public final class Utils {
                 Color.initColors() &&
                 FileUtils.initFilesystem() &&
                 WebUtils.initWeb() &&
-                ExecutableUtils.initExecutable();
+                ExecutableUtils.initExecutable() &&
+                BackupUtils.initBackup();
     }
     
 }

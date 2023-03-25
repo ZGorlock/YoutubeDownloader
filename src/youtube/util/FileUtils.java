@@ -106,6 +106,11 @@ public final class FileUtils {
     public static final String EXECUTABLE_FILE_FORMAT = "exe";
     
     /**
+     * The archive file format.
+     */
+    public static final String ARCHIVE_FILE_FORMAT = "zip";
+    
+    /**
      * The download file format.
      */
     public static final String DOWNLOAD_FILE_FORMAT = "part";

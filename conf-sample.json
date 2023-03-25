@@ -21,6 +21,22 @@
             "printStats": true,
             "printChannels": false
         },
+        "backup": {
+            "enableBackups": true,
+            "backupDir": null,
+            "compressBackups": true,
+            "daysBetweenBackups": 1,
+            "daysToKeepBackups": 30,
+            "files": {
+                "includeConfigs": true,
+                "includeData": true,
+                "includeLogs": true,
+                "includeSourceCode": true,
+                "includeCompiledSource": true,
+                "includeApiKey": true,
+                "includeExecutable": true
+            }
+        },
         "flag": {
             "deleteToRecyclingBin": true,
             "neverUseBrowserCookies": true,
