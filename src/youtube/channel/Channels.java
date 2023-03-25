@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import commons.access.Filesystem;
+import commons.access.Project;
 import commons.object.string.StringUtility;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -53,6 +54,11 @@ public class Channels {
      * The file containing the Channel configuration for the Youtube Downloader.
      */
     public static final File CHANNELS_FILE = new File(PathUtils.WORKING_DIR, FileUtils.setFormat("channels", FileUtils.CONFIG_FILE_FORMAT));
+    
+    /**
+     * The Channel data directory.
+     */
+    public static final File CHANNELS_DATA_DIR = new File(Project.DATA_DIR, "channel");
     
     
     //Static Fields
@@ -335,6 +341,47 @@ public class Channels {
                         .filter(line -> !line.strip().startsWith("//"))
                         .collect(Collectors.joining()))
                 .orElseThrow(() -> new RuntimeException(new IOException("Error reading: " + PathUtils.path(CHANNELS_FILE))));
+    }
+    
+    /**
+     * Returns the Channel caches present in the Channels data directory.
+     *
+     * @return The Channel caches present in the Channels data directory.
+     */
+    public static List<File> fetchAllChannelCaches() {
+        return Filesystem.getDirs(CHANNELS_DATA_DIR);
+    }
+    
+    /**
+     * Returns the Channel cache with a particular Channel name.
+     *
+     * @param channelName The name of the Channel.
+     * @return The Channel cache with the specified Channel name.
+     */
+    public static File fetchChannelCache(String channelName) {
+        return Optional.ofNullable(channelName)
+                .map(name -> new File(CHANNELS_DATA_DIR, name))
+                .orElse(null);
+    }
+    
+    /**
+     * Returns the Channel cache for a particular Channel.
+     *
+     * @param channelConfig The Channel Config of the Channel.
+     * @return The Channel cache for the specified Channel, or null if it does not exist.
+     */
+    public static File fetchChannelCache(ChannelConfig channelConfig) {
+        return fetchChannelCache(channelConfig.getName());
+    }
+    
+    /**
+     * Returns the Channel cache for a particular Channel.
+     *
+     * @param channel The Channel.
+     * @return The Channel cache for the specified Channel, or null if it does not exist.
+     */
+    public static File fetchChannelCache(Channel channel) {
+        return fetchChannelCache(channel.getConfig());
     }
     
     /**

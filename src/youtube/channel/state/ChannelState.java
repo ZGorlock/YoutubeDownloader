@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import commons.access.Filesystem;
-import commons.access.Project;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channels;
 import youtube.channel.config.ChannelConfig;
 import youtube.config.Color;
 import youtube.config.Configurator;
@@ -45,11 +45,6 @@ public class ChannelState {
     
     
     //Constants
-    
-    /**
-     * The Channel data directory.
-     */
-    public static final File CHANNEL_DATA_DIR = new File(Project.DATA_DIR, "channel");
     
     /**
      * The default Channel data file type.
@@ -136,7 +131,7 @@ public class ChannelState {
         
         this.keyStore = KeyStore.get(channelName);
         
-        this.stateLocation = new File(CHANNEL_DATA_DIR, channelName);
+        this.stateLocation = Channels.fetchChannelCache(channelConfig);
         this.dataFile = getStateFile("data", FileUtils.DATA_FILE_FORMAT);
         this.callLogFile = getStateFile("callLog", FileUtils.LOG_FILE_FORMAT);
         this.saveFile = getStateFile("save", FileUtils.LIST_FILE_FORMAT);
@@ -304,7 +299,7 @@ public class ChannelState {
     private void cleanupLegacyState() {
         Stream.of(getDataFile(), getSaveFile(), getQueueFile(), getBlockFile())
                 .forEach(stateFile -> Optional.of(stateFile)
-                        .map(file -> new File(new File(CHANNEL_DATA_DIR.getParentFile(), file.getParentFile().getName()), file.getName()))
+                        .map(file -> new File(new File(Channels.CHANNELS_DATA_DIR.getParentFile(), file.getParentFile().getName()), file.getName()))
                         .filter(File::exists)
                         .map(oldFile -> stateFile.exists() ?
                                         Filesystem.deleteFile(oldFile) :
