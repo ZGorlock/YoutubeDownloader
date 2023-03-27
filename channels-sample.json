@@ -474,6 +474,13 @@
                     "outputFolder": "~/How its Made"
                   },
                   {
+                    "key": "MODERN_MARVELS",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PL4F4CD715F1A3E6C7",
+                    "playlistId": "PL4F4CD715F1A3E6C7",
+                    "outputFolder": "~/Modern Marvels"
+                  },
+                  {
                     "key": "THE_POST_APOCALYPTIC_INVENTOR",
                     "active": true,
                     "url": "https://www.youtube.com/c/ThePostApocalypticInventor",
@@ -2073,6 +2080,14 @@
                         "url": "https://www.youtube.com/playlist?list=PLDSJpYkJoHD9f6nowvKrY2vHOZBgIZm_K",
                         "playlistId": "PLDSJpYkJoHD9f6nowvKrY2vHOZBgIZm_K",
                         "outputFolder": "~/Runescape F2P"
+                      },
+                      {
+                        "key": "RUNESCAPE_PROP_HUNT",
+                        "active": true,
+                        "name": "RunescapePropHunt",
+                        "url": "https://www.youtube.com/playlist?list=PLDSJpYkJoHD8gHVIxuGINjnv-uA7GCgkL",
+                        "playlistId": "PLDSJpYkJoHD8gHVIxuGINjnv-uA7GCgkL",
+                        "outputFolder": "~/Runescape Prop Hunt"
                       }
                     ]
                   },
@@ -2699,7 +2714,7 @@
                   },
                   {
                     "key": "TRAMBOLINO_COMPILATION",
-                    "active": true,
+                    "active": false,
                     "channels": [
                       {
                         "key": "TRAMBOLINO_COMPILATION",
@@ -2711,7 +2726,7 @@
                       },
                       {
                         "key": "TRAMBOLINO_COMPILATION_2",
-                        "active": true,
+                        "active": false,
                         "name": "TrambolinoCompilation2",
                         "url": "https://www.youtube.com/channel/UCsfXJ3GUu-6dV2553rpDfdg",
                         "playlistId": "UUsfXJ3GUu-6dV2553rpDfdg",
@@ -3277,6 +3292,13 @@
                     "url": "https://www.youtube.com/@fullchillmusic",
                     "playlistId": "UUhDLK20w8Z3VFWIotsKCpTw",
                     "outputFolder": "~/Full Chill Music"
+                  },
+                  {
+                    "key": "CHILL_BEAT_PHONK",
+                    "active": true,
+                    "url": "https://www.youtube.com/@chillbeatphonk",
+                    "playlistId": "UU_oeV58JVVXtxxs09oK1dLg",
+                    "outputFolder": "~/Chill Beat Phonk"
                   },
                   {
                     "key": "MIX_SNAKE",
