@@ -15,6 +15,7 @@ import java.util.Optional;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channels;
 import youtube.util.FileUtils;
 
 /**
@@ -161,6 +162,16 @@ public class ChannelConfig extends ChannelEntry {
      */
     public boolean isYoutubeAlbum() {
         return (type == ChannelType.ALBUM);
+    }
+    
+    /**
+     * Returns whether the Channel is filtered or not.
+     *
+     * @return Whether the Channel is filtered or not.
+     */
+    @Override
+    public boolean isFiltered() {
+        return Channels.isFiltered(getKey());
     }
     
     /**

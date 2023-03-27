@@ -227,7 +227,7 @@ public final class Stats {
         
         Stream.of(false, true).forEach(filtered ->
                 Channels.getChannels().stream()
-                        .filter(channel -> (!filtered || Channels.getFiltered().contains(channel.getConfig().getKey())))
+                        .filter(channel -> (!filtered || Channels.isFiltered(channel.getConfig().getKey())))
                         .map(Mappers.forEach(channel ->
                                 (filtered ? totalFilteredChannels : totalChannels).incrementAndGet()))
                         .flatMap(channel -> channel.getState().getSaved().stream()
@@ -277,10 +277,6 @@ public final class Stats {
         final AtomicInteger maxKeyLength = new AtomicInteger(24);
         final AtomicInteger maxDataLength = new AtomicInteger(0);
         
-        final boolean filtersEnabled = (Channels.Config.enableFiltering) && (Channels.getFiltered().size() != Channels.getChannels().size());
-        final boolean loggingEnabled = (LogUtils.Config.allowFileLogging);
-        final boolean backupsEnabled = (BackupUtils.Config.enableBackups);
-        
         final BiConsumer<String, Object> statPrinter = (String title, Object value) ->
                 logger.debug(Optional.ofNullable(value)
                         .map(String::valueOf)
@@ -305,7 +301,7 @@ public final class Stats {
         
         statPrinter.accept("Channel", null);
         statPrinter.accept("\tProcessed", totalChannelsProcessed.get());
-        if (filtersEnabled) {
+        if (Channels.isFilterActive()) {
             statPrinter.accept("\tFiltered", totalFilteredChannels.get());
         }
         statPrinter.accept("\tTotal", totalChannels.get());
@@ -336,16 +332,16 @@ public final class Stats {
         statPrinter.accept("Cache", null);
         statPrinter.accept("\tChannels", totalChannelCaches.get());
         statPrinter.accept("\t\tData", (double) totalChannelCacheData.get());
-        if (loggingEnabled) {
+        if (LogUtils.Config.allowFileLogging) {
             statPrinter.accept("\tLogs", totalLogs.get());
             statPrinter.accept("\t\tData", (double) totalLogData.get());
         }
-        if (backupsEnabled) {
+        if (BackupUtils.Config.enableBackups) {
             statPrinter.accept("\tBackups", totalBackups.get());
             statPrinter.accept("\t\tData", (double) totalBackupData.get());
         }
         
-        if (filtersEnabled) {
+        if (Channels.isFilterActive()) {
             statPrinter.accept("Filter", null);
             statPrinter.accept("\tDownloads", (totalFilteredVideo.get() + totalFilteredAudio.get()));
             statPrinter.accept("\t\tVideo", totalFilteredVideo.get());

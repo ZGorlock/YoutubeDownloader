@@ -24,6 +24,7 @@ import commons.object.collection.MapUtility;
 import commons.object.string.StringUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import youtube.channel.Channels;
 import youtube.config.Color;
 import youtube.config.SponsorBlocker;
 import youtube.config.base.ConfigData;
@@ -334,6 +335,15 @@ public abstract class ChannelEntry extends ConfigData {
     }
     
     /**
+     * Returns whether the Channel Entry is filtered or not.
+     *
+     * @return Whether the Channel Entry is filtered or not.
+     */
+    public boolean isFiltered() {
+        return false;
+    }
+    
+    /**
      * Returns the configuration data of the Channel Entry.
      *
      * @return The configuration data of the Channel Entry.
@@ -415,12 +425,17 @@ public abstract class ChannelEntry extends ConfigData {
      * @param indent The initial indent.
      */
     protected void print(int indent) {
-        Optional.ofNullable(key)
+        Optional.ofNullable(getKey())
                 .map(key -> (key + (isGroup() ? ":" : "")))
                 .map(e -> e.replace("_", " ")).map(String::toLowerCase).map(StringUtility::toTitleCase)
                 .ifPresent(key -> {
-                    final Console.ConsoleEffect color = isActive() ? (isGroup() ? Color.Config.link : Color.Config.channel) : (active ? Color.Config.log : Color.Config.bad);
-                    logger.debug(StringUtility.repeatString(LogUtils.INDENT_HARD, indent) + Color.apply(color, key));
+                    final Console.ConsoleEffect color = isActive() ?
+                                                        (isGroup() ? Color.Config.link : Color.Config.channel) :
+                                                        (active ? Color.Config.log : Color.Config.bad);
+                    logger.debug(String.join("",
+                            (Channels.isFilterActive() && isFiltered()) ? Color.good("* ") : Color.log("  "),
+                            StringUtility.repeatString(LogUtils.INDENT_HARD, indent),
+                            Color.apply(color, key)));
                 });
     }
     
@@ -428,7 +443,7 @@ public abstract class ChannelEntry extends ConfigData {
      * Prints the Channel Entry to the screen.
      */
     public void print() {
-        print((parent == null) ? -1 : 0);
+        print((getParent() == null) ? -1 : 0);
     }
     
     /**

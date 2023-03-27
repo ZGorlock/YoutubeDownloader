@@ -183,6 +183,16 @@ public class Channels {
     }
     
     /**
+     * Returns whether a Channel is filtered.
+     *
+     * @param key The key of the Channel.
+     * @return Whether a Channel is filtered.
+     */
+    public static boolean isFiltered(String key) {
+        return filteredChannels.contains(key);
+    }
+    
+    /**
      * Initializes the Channels configuration.
      *
      * @return Whether the Channels configuration was successfully initialized.
@@ -382,6 +392,15 @@ public class Channels {
      */
     public static File fetchChannelCache(Channel channel) {
         return fetchChannelCache(channel.getConfig());
+    }
+    
+    /**
+     * Returns whether Channel filtering is enabled and active.
+     *
+     * @return Whether Channel filtering is enabled and active.
+     */
+    public static boolean isFilterActive() {
+        return Config.enableFiltering && (filteredChannels.size() != channels.size());
     }
     
     /**
