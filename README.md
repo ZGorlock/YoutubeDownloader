@@ -74,7 +74,7 @@ Simply [**download**](https://github.com/ZGorlock/YoutubeDownloader/archive/refs
 \
 Then extract the files to a location of your choice.
 
-Alternatively you can clone the repository with [**git**](https://git-scm.com/) using:
+Alternatively you can clone the repository with [**Git**](#_dep_git) using:
 
 ```shell
 git clone "https://github.com/ZGorlock/YoutubeDownloader.git"
@@ -90,7 +90,8 @@ To run this project you will need to have the following dependencies installed:
 |                                            |                     |                                                             |                                                                                                                                                                 |                                                                                                                                                                   |
 | <span id="_dep_java">   **Java**   </span> |      `13.0.2`       |       [_jdk.java.net_](https://jdk.java.net/archive/)       | [**openjdk-13.0.2_windows-x64_bin.zip**](https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_windows-x64_bin.zip) | [**openjdk-13.0.2_linux-x64_bin.tar.gz**](https://download.java.net/java/GA/jdk13.0.2/d4173c853231432d94f001e99d882ca7/8/GPL/openjdk-13.0.2_linux-x64_bin.tar.gz) |
 | <span id="_dep_maven">  **Maven**  </span> |       `3.8.7`       | [_maven.apache.org_](https://maven.apache.org/download.cgi) |                       [**apache-maven-3.8.7-bin.zip**](https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.zip)                        |                     [**apache-maven-3.8.7-bin.tar.gz**](https://dlcdn.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.tar.gz)                      |
-| <span id="_dep_ffmpeg"> **FFmpeg** </span> |          -          |      [_ffmpeg.org_](https://ffmpeg.org/download.html)       |          [**ffmpeg-master-latest-win64-gpl.zip**](https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip)          |      [**ffmpeg-master-latest-linux64-gpl.tar.xz**](https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz)      |
+| <span id="_dep_ffmpeg"> **FFmpeg** </span> |    _recommended_    |      [_ffmpeg.org_](https://ffmpeg.org/download.html)       |          [**ffmpeg-master-latest-win64-gpl.zip**](https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip)          |      [**ffmpeg-master-latest-linux64-gpl.tar.xz**](https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz)      |
+| <span id="_dep_git">    **Git**    </span> |     _optional_      |       [_git-scm.com_](https://git-scm.com/downloads)        |                  [**Git-2.40.0-64-bit.exe**](https://github.com/git-for-windows/git/releases/download/v2.40.0.windows.1/Git-2.40.0-64-bit.exe)                  |                                      [**git-2.40.0.tar.gz**](https://www.kernel.org/pub/software/scm/git/git-2.40.0.tar.gz)                                       |
 |                                            |                     |                                                             |                                                                                                                                                                 |                                                                                                                                                                   |
 
 If you do not already have these dependencies installed then download the packages for your operating system.
@@ -110,7 +111,11 @@ mvn -v
 ```
 
 ```shell
-ffmpeg
+ffmpeg -version
+```
+
+```shell
+git --version
 ```
 
 
@@ -203,7 +208,7 @@ If you wish to receive these updates then you can [**download**](https://github.
 \
 _More information about the download process is provided under:_ [Downloading the Project](#downloading-the-project).
 
-If you cloned the repository with [**git**](https://git-scm.com/) then you can update to the latest code using:
+If you cloned the repository with [**Git**](#_dep_git) then you can update to the latest code using:
 
 ```shell
 git pull origin master
