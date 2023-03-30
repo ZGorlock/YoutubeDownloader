@@ -136,10 +136,10 @@ This project contains two programs:
 
 The project can be run by using the scripts provided in the project directory:
 
-- [ ] [`YoutubeDownloader.bat`](./YoutubeDownloader.bat)
-- [ ] [`YoutubeChannelDownloader.bat`](./YoutubeChannelDownloader.bat)
-- [ ] [`YoutubeDownloader.sh`](./YoutubeDownloader.sh)
-- [ ] [`YoutubeChannelDownloader.sh`](./YoutubeChannelDownloader.sh)
+- [ ] `YoutubeDownloader.bat`[<sup>🗋</sup>](./YoutubeDownloader.bat)
+- [ ] `YoutubeChannelDownloader.bat`[<sup>🗋</sup>](./YoutubeChannelDownloader.bat)
+- [ ] `YoutubeDownloader.sh`[<sup>🗋</sup>](./YoutubeDownloader.sh)
+- [ ] `YoutubeChannelDownloader.sh`[<sup>🗋</sup>](./YoutubeChannelDownloader.sh)
 
 \
 Depending on your operating system use either the _.bat_ scripts (Windows) or the _.sh_ scripts (Linux):
@@ -224,9 +224,9 @@ git pull origin master
 \
 ⚠️**WARNING**: Before updating the project, make sure you backup your configuration and data files:
 
-- [ ] [`conf.json`](./conf.json)
-- [ ] [`channels.json`](./channels.json)
-- [ ] [`src/youtube/channel/process/ChannelProcesses.java`](./src/youtube/channel/process/ChannelProcesses.java)
+- [ ] `conf.json`[<sup>🗋</sup>](./conf.json)
+- [ ] `channels.json`[<sup>🗋</sup>](./channels.json)
+- [ ] `src/youtube/channel/process/ChannelProcesses.java`[<sup>🗋</sup>](./src/youtube/channel/process/ChannelProcesses.java)
 - [ ] `data/*`
 
 ⚠️Updating may cause merge conflicts and could potentially overwrite your custom changes.
@@ -247,14 +247,14 @@ Videos will be saved in a `~/Youtube` folder in your user directory.
 \
 This can be customized by defining [_location.outputDir_](#_yd_location_outputDir) in the [Youtube Downloader Configuration](#configuring-the-youtube-downloader).
 
-You can also create a list of Youtube urls in the file [`data/downloadQueue.txt`](./data/downloadQueue.txt) and when the program is executed it will download the provided list of videos.
+You can also create a list of Youtube urls in the file `data/downloadQueue.txt` and when the program is executed it will download the provided list of videos.
 
 The program will continue to run until an empty line in entered: `Enter`.
 
 
 ## Configuring the Youtube Downloader
 
-You can customize the operation of the _Youtube Downloader_ by changing the settings inside the file [`conf.json`](./conf.json).
+You can customize the operation of the _Youtube Downloader_ by changing the settings inside the file `conf.json`[<sup>🗋</sup>](./conf.json).
 
 To configure the _Youtube Downloader_, find or create the `"YoutubeDownloader"` [**json configuration**](#youtube-downloader-configuration-sample) and customize the [Settings](#youtube-downloader-settings) it contains.
 
@@ -353,7 +353,7 @@ The free quota for the Youtube Data API is 10,000 queries per day, which is more
   - [ ] Select `YouTube Data API v3`
   - [ ] Click **_Public Data_**
   - [ ] Click **_Next_**
-- [ ] Copy the **API Key** to the file [`apiKey`](./apiKey) in the project directory
+- [ ] Copy the **API Key** to the file `apiKey`[<sup>🗋</sup>](./apiKey) in the project directory
 
 ### Recovering your API Key:
 
@@ -364,12 +364,12 @@ The free quota for the Youtube Data API is 10,000 queries per day, which is more
 - [ ] Click **_Credentials_**
   - [ ] Select your API key
   - [ ] Click **_Show Key_**
-- [ ] Copy the **API Key** to the file [`apiKey`](./apiKey) in the project directory
+- [ ] Copy the **API Key** to the file `apiKey`[<sup>🗋</sup>](./apiKey) in the project directory
 
 
 ## Configuring the Youtube Channel Downloader
 
-You can customize the operation of the _Youtube Channel Downloader_ by changing the settings inside the file [`conf.json`](./conf.json).
+You can customize the operation of the _Youtube Channel Downloader_ by changing the settings inside the file `conf.json`[<sup>🗋</sup>](./conf.json).
 
 To configure the _Youtube Channel Downloader_, find or create the `"YoutubeChannelDownloader"` [**json configuration**](#youtube-channel-downloader-configuration-sample) and customize the [Settings](#youtube-channel-downloader-settings) it contains.
 
@@ -381,9 +381,9 @@ To configure the _Youtube Channel Downloader_, find or create the `"YoutubeChann
 | <span id="_ycd_executable">                         **_executable_**                         </span> | The name of the executable which will be used to download content from Youtube. <br/> The two valid options for this setting are `"yt-dlp"` and `"youtube-dl"`. <br/> _More information about these executables is provided under:_ [Executable Options](#executable-options).                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | &nbsp;                                                                                               | &nbsp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | <span id="_ycd_location">                           **_location_**                           </span> | **The location settings for the _Youtube Channel Downloader_ :**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| <span id="_ycd_location_storageDrive">              **_location.storageDrive_**              </span> | The path of the drive where downloaded content will be saved. For example: `"C:/"`. <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in [`channels.json`](./channels.json).                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| <span id="_ycd_location_musicDir">                  **_location.musicDir_**                  </span> | The path of the directory where audio will be saved. For example: `"Users/User/Music/"`. <br/> This path is relative to [_location.storageDrive_](#_ycd_location_storageDrive). <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in [`channels.json`](./channels.json). <br/> If you leave this blank you must also leave [_location.storageDrive_](#_ycd_location_storageDrive) and [_location.videoDir_](#_ycd_location_videoDir) blank.                                                                                                                                                                                                                |
-| <span id="_ycd_location_videoDir">                  **_location.videoDir_**                  </span> | The path of the directory where video will be saved. For example: `"Users/User/Videos/"`. <br/> This path is relative to [_location.storageDrive_](#_ycd_location_storageDrive). <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in [`channels.json`](./channels.json). <br/> If you leave this blank you must also leave [_location.storageDrive_](#_ycd_location_storageDrive) and [_location.musicDir_](#__ycd_location_musicDir) blank.                                                                                                                                                                                                              |
+| <span id="_ycd_location_storageDrive">              **_location.storageDrive_**              </span> | The path of the drive where downloaded content will be saved. For example: `"C:/"`. <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in `channels.json`[<sup>🗋</sup>](./channels.json).                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| <span id="_ycd_location_musicDir">                  **_location.musicDir_**                  </span> | The path of the directory where audio will be saved. For example: `"Users/User/Music/"`. <br/> This path is relative to [_location.storageDrive_](#_ycd_location_storageDrive). <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in `channels.json`[<sup>🗋</sup>](./channels.json). <br/> If you leave this blank you must also leave [_location.storageDrive_](#_ycd_location_storageDrive) and [_location.videoDir_](#_ycd_location_videoDir) blank.                                                                                                                                                                                                                |
+| <span id="_ycd_location_videoDir">                  **_location.videoDir_**                  </span> | The path of the directory where video will be saved. For example: `"Users/User/Videos/"`. <br/> This path is relative to [_location.storageDrive_](#_ycd_location_storageDrive). <br/> You may leave this blank (`""` _or_ `null`) if you wish to specify the full path for each Channel in `channels.json`[<sup>🗋</sup>](./channels.json). <br/> If you leave this blank you must also leave [_location.storageDrive_](#_ycd_location_storageDrive) and [_location.musicDir_](#__ycd_location_musicDir) blank.                                                                                                                                                                                                              |
 | <span id="_ycd_location_browser">                   **_location.browser_**                   </span> | The name of the browser that you use locally to watch Youtube. <br/> This is the browser that cookies will be used from when attempting to retry certain failed downloads, assuming that [_flag.neverUseBrowserCookies_](#_ycd_flag_neverUseBrowserCookies) is disabled. <br/> The acceptable values for this setting are `"Brave"`, `"Chrome"`, `"Chromium"`, `"Edge"`, `"Firefox"`, `"Opera"`, `"Safari"`, or `"Vivaldi"`.                                                                                                                                                                                                                                                                                     |
 | &nbsp;                                                                                               | &nbsp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | <span id="_ycd_format">                             **_format_**                             </span> | **The format settings for the _Youtube Channel Downloader_ :**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -408,12 +408,12 @@ To configure the _Youtube Channel Downloader_, find or create the `"YoutubeChann
 | <span id="_ycd_backup_daysToKeepBackups">           **_backup.daysToKeepBackups_**           </span> | The number of days to retain backups before deleting them. <br/> Once a backup has become older than the value specified, it will be deleted the next time the program runs. <br/> You may set this setting to `-1` to indicate that backups should never be automatically deleted. <br/> The acceptable values for this setting are any positive integer, or `-1`. _(`30` by default)_                                                                                                                                                                                                                                                                                                                          |
 | &nbsp;                                                                                               | &nbsp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | <span id="_ycd_backup_files">                       **_backup.files_**                       </span> | **The backup file inclusion settings for the _Youtube Channel Downloader_ :**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| <span id="_ycd_backup_files_includeConfigs">        **_backup.files.includeConfigs_**        </span> | When this setting is enabled, _configuration_ files ([`conf.json`](./conf.json) _and_ [`channels.json`](./channels.json)) will be included in any backups that are created. <br/> When this setting is disabled, _configuration_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(enabled by default)_                                                                                                                                                                                                                                                                                                                            |
+| <span id="_ycd_backup_files_includeConfigs">        **_backup.files.includeConfigs_**        </span> | When this setting is enabled, _configuration_ files (`conf.json`[<sup>🗋</sup>](./conf.json) _and_ `channels.json`[<sup>🗋</sup>](./channels.json)) will be included in any backups that are created. <br/> When this setting is disabled, _configuration_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(enabled by default)_                                                                                                                                                                                                                                                                                                                            |
 | <span id="_ycd_backup_files_includeData">           **_backup.files.includeData_**           </span> | When this setting is enabled, _data_ files (`data/*`) will be included in any backups that are created. <br/> When this setting is disabled, _data_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(enabled by default)_                                                                                                                                                                                                                                                                                                                                                                                                         |
 | <span id="_ycd_backup_files_includeLogs">           **_backup.files.includeLogs_**           </span> | When this setting is enabled, _log_ files (`log/*`) will be included in any backups that are created. <br/> When this setting is disabled, _log_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(enabled by default)_                                                                                                                                                                                                                                                                                                                                                                                                            |
 | <span id="_ycd_backup_files_includeSourceCode">     **_backup.files.includeSourceCode_**     </span> | When this setting is enabled, _source code_ files (`src/*`) will be included in any backups that are created. <br/> When this setting is disabled, _source code_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(disabled by default)_                                                                                                                                                                                                                                                                                                                                                                                           |
 | <span id="_ycd_backup_files_includeCompiledSource"> **_backup.files.includeCompiledSource_** </span> | When this setting is enabled, _compiled source code_ files (`bin/*`) will be included in any backups that are created. <br/> When this setting is disabled, _compiled source code_ files will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(disabled by default)_                                                                                                                                                                                                                                                                                                                                                                         |
-| <span id="_ycd_backup_files_includeApiKey">         **_backup.files.includeApiKey_**         </span> | When this setting is enabled, your _api key_ file ([`apiKey`](./apiKey)) will be included in any backups that are created. <br/> When this setting is disabled, your _api key_ file will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(disabled by default)_                                                                                                                                                                                                                                                                                                                                                                              |
+| <span id="_ycd_backup_files_includeApiKey">         **_backup.files.includeApiKey_**         </span> | When this setting is enabled, your _api key_ file (`apiKey`[<sup>🗋</sup>](./apiKey)) will be included in any backups that are created. <br/> When this setting is disabled, your _api key_ file will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(disabled by default)_                                                                                                                                                                                                                                                                                                                                                                              |
 | <span id="_ycd_backup_files_includeExecutable">     **_backup.files.includeExecutable_**     </span> | When this setting is enabled, the selected [_executable_](#_ycd_executable) file (_e.g._ `yt-dlp.exe`) will be included in any backups that are created. <br/> When this setting is disabled, the selected [_executable_](#_ycd_executable) file will be excluded from any backups that are created. <br/> The acceptable values for this setting are `true` or `false`. _(disabled by default)_                                                                                                                                                                                                                                                                                                                 |
 | &nbsp;                                                                                               | &nbsp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | <span id="_ycd_flag">                               **_flag_**                               </span> | **The flag settings for the _Youtube Channel Downloader_ :**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -500,11 +500,11 @@ To configure the _Youtube Channel Downloader_, find or create the `"YoutubeChann
 
 ## Adding Channels
 
-You can specify the Youtube channels and playlists that you want to process by configuring Channels inside the file [`channels.json`](./channels.json).
+You can specify the Youtube channels and playlists that you want to process by configuring Channels inside the file `channels.json`[<sup>🗋</sup>](./channels.json).
 
-There are many examples in [`channels-sample.json`](./channels-sample.json) that you can use as a reference.
+There are many examples in `channels-sample.json`[<sup>🗋</sup>](./channels-sample.json) that you can use as a reference.
 \
-The file [`channels-sample.json`](./channels-sample.json) is also my personal Channel configuration; if you see any Channels that you like you can copy them to your [`channels.json`](./channels.json).
+The file `channels-sample.json`[<sup>🗋</sup>](./channels-sample.json) is also my personal Channel configuration; if you see any Channels that you like you can copy them to your `channels.json`[<sup>🗋</sup>](./channels.json).
 
 To add a Channel, create a new Channel [**json configuration**](#channel-configuration-sample) and customize the [Settings](#channel-settings) it contains.
 
@@ -599,7 +599,7 @@ The process of obtaining the _playlist id_ depends on whether your Channel repre
 
 After you have finished adding [Channel Configurations](#adding-channels), you have the option to group your Channels; making them easier to read, search, and filter.
 
-You can specify the groups that you want by configuring Channel Groups inside the file [`channels.json`](./channels.json).
+You can specify the groups that you want by configuring Channel Groups inside the file `channels.json`[<sup>🗋</sup>](./channels.json).
 
 To add a Channel Group, create a new Channel Group [**json configuration**](#channel-group-configuration-sample) and customize the [Settings](#channel-group-settings) it contains.
 
@@ -724,7 +724,7 @@ This would be equivalent to:
 
 There are certain instances where you may want to perform some additional processing on the Channel to filter which videos are downloaded, to rename the downloaded videos to something that you prefer, etc. This functionality is possible granted that you know a bit of Java.
 
-There are two methods in the file [`src/youtube/channel/process/ChannelProcesses.java`](./src/youtube/channel/process/ChannelProcesses.java); **performSpecialPreConditions()** and **performSpecialPostConditions()**.
+There are two methods in the file `src/youtube/channel/process/ChannelProcesses.java`[<sup>🗋</sup>](./src/youtube/channel/process/ChannelProcesses.java) :
 
 - **_performSpecialPreConditions()_**
   - Executed before the download queue is produced for the Channel
@@ -755,13 +755,13 @@ You can modify the video map and Channel state lists using your own custom logic
 
 There is also a collection of macro methods provided that you can call to perform certain actions.
 \
-These macro methods are defined in the files [`src/youtube/channel/process/macro/RenameProcess.java`](./src/youtube/channel/process/macro/RenameProcess.java) and [`src/youtube/channel/process/macro/FilterProcess.java`](./src/youtube/channel/process/macro/FilterProcess.java).
+These macro methods are defined in the files `src/youtube/channel/process/macro/RenameProcess.java`[<sup>🗋</sup>](./src/youtube/channel/process/macro/RenameProcess.java) and `src/youtube/channel/process/macro/FilterProcess.java`[<sup>🗋</sup>](./src/youtube/channel/process/macro/FilterProcess.java).
 \
 All of these methods will take the `videoMap` as their first argument, and the macro action will be performed on each Video in the video map.
 
-There are many examples of these processes in the file [`src/youtube/channel/process/ChannelProcesses_Sample.java`](./src/youtube/channel/process/ChannelProcesses_Sample.java) that you can use as a reference.
+There are many examples of these processes in the file `src/youtube/channel/process/ChannelProcesses_Sample.java`[<sup>🗋</sup>](./src/youtube/channel/process/ChannelProcesses_Sample.java) that you can use as a reference.
 \
-The file [`src/youtube/channel/process/ChannelProcesses_Sample.java`](./src/youtube/channel/process/ChannelProcesses_Sample.java) contains the processes for my personal Channel configuration; if you copied some of my Channel configurations from [`channels-sample.json`](./channels-sample.json) then you may also wish to copy the corresponding processes.
+The file `src/youtube/channel/process/ChannelProcesses_Sample.java`[<sup>🗋</sup>](./src/youtube/channel/process/ChannelProcesses_Sample.java) contains the processes for my personal Channel configuration; if you copied some of my Channel configurations from `channels-sample.json`[<sup>🗋</sup>](./channels-sample.json) then you may also wish to copy the corresponding processes.
 
 
 &nbsp;
@@ -771,7 +771,7 @@ The file [`src/youtube/channel/process/ChannelProcesses_Sample.java`](./src/yout
 
 # Configuration
 
-All of the configuration settings for the project are stored in the file [`conf.json`](./conf.json).
+All of the configuration settings for the project are stored in the file `conf.json`[<sup>🗋</sup>](./conf.json).
 
 
 ## Configuration Overview
@@ -817,7 +817,7 @@ All of the configuration settings for the project are stored in the file [`conf.
 
 ## SponsorBlock Configuration
 
-You can set up [<u>**SponsorBlock**</u>](https://sponsor.ajay.app/ "https://sponsor.ajay.app/") by changing the settings inside the file [`conf.json`](./conf.json) or [`channels.json`](./channels.json).
+You can set up [<u>**SponsorBlock**</u>](https://sponsor.ajay.app/ "https://sponsor.ajay.app/") by changing the settings inside the file `conf.json`[<sup>🗋</sup>](./conf.json) or `channels.json`[<sup>🗋</sup>](./channels.json).
 \
 SponsorBlock is able to automatically cut out unwanted segments from the content you download. _(sponsored sections, self promotions, interaction reminders, etc.)_
 \
@@ -835,9 +835,9 @@ You can also have custom SponsorBlock configurations for individual Channel Grou
 
 To configure SponsorBlock, find or create a `"sponsorBlock"` [**json configuration**](#sponsorblock-configuration-sample) and customize the [Settings](#sponsorblock-settings) it contains.
 
-- A configuration in [`conf.json`](./conf.json) will function as a global configuration for the entire project.
-- A configuration in [`conf.json`](./conf.json) inside the [Youtube Downloader Configuration](#configuring-the-youtube-downloader) or [Youtube Channel Downloader Configuration](#configuring-the-youtube-channel-downloader) will affect all content downloaded by the respective program.
-- A configuration in [`channels.json`](./channels.json) inside a [Channel Configuration](#adding-channels) will affect only that Channel, and one inside a [Channel Group Configuration](#grouping-channels) will affect all Channels and Channel Groups which are children of the group.
+- A configuration in `conf.json`[<sup>🗋</sup>](./conf.json) will function as a global configuration for the entire project.
+- A configuration in `conf.json`[<sup>🗋</sup>](./conf.json) inside the [Youtube Downloader Configuration](#configuring-the-youtube-downloader) or [Youtube Channel Downloader Configuration](#configuring-the-youtube-channel-downloader) will affect all content downloaded by the respective program.
+- A configuration in `channels.json`[<sup>🗋</sup>](./channels.json) inside a [Channel Configuration](#adding-channels) will affect only that Channel, and one inside a [Channel Group Configuration](#grouping-channels) will affect all Channels and Channel Groups which are children of the group.
 
 ### SponsorBlock Settings:
 
@@ -880,7 +880,7 @@ To configure SponsorBlock, find or create a `"sponsorBlock"` [**json configurati
 
 ## Color Configuration
 
-You can customize the colors used by the project when printing output to the console by changing the settings inside the file [`conf.json`](./conf.json).
+You can customize the colors used by the project when printing output to the console by changing the settings inside the file `conf.json`[<sup>🗋</sup>](./conf.json).
 \
 Changing these settings will affect the colors for both the _Youtube Downloader_ and the _Youtube Channel Downloader_.
 
@@ -964,7 +964,7 @@ To configure the colors, find or create the `"color"` [**json configuration**](#
 
 ## Logging Configuration
 
-You can customize what is printed to the console when running the project by changing the settings inside the file [`conf.json`](./conf.json).
+You can customize what is printed to the console when running the project by changing the settings inside the file `conf.json`[<sup>🗋</sup>](./conf.json).
 \
 Changing these settings will affect the logging for both the _Youtube Downloader_ and the _Youtube Channel Downloader_.
 
