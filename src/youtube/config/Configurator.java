@@ -259,6 +259,7 @@ public final class Configurator {
         return Optional.ofNullable(getSettings())
                 .map(e -> (T) e.get(key))
                 .filter(e -> !(e instanceof String) || !((String) e).isEmpty())
+                .filter(e -> !(e instanceof List) || !((List<?>) e).isEmpty())
                 .orElse(def);
     }
     

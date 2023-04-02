@@ -13,7 +13,9 @@
         "filter": {
             "enableFiltering": true,
             "channel": null,
+            "channelList": [],
             "group": null,
+            "groupList": [],
             "startAt": null,
             "stopAt": null
         },

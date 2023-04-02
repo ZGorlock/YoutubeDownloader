@@ -17,10 +17,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import commons.access.Filesystem;
 import commons.access.Project;
+import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -244,6 +246,8 @@ public class Channels {
             getConfigs().stream().map(ChannelEntry::getKey)
                     .forEachOrdered(filteredChannels::add);
             
+        } else if (!ListUtility.isNullOrEmpty(Config.channelList)) {
+            filteredChannels.addAll(Config.channelList);
         } else if (Config.channel != null) {
             filteredChannels.add(Config.channel);
             
@@ -251,8 +255,13 @@ public class Channels {
             boolean skip = (Config.startAt != null);
             boolean stop = (Config.stopAt != null);
             
+            final Predicate<ChannelConfig> groupFilter = (ChannelConfig config) ->
+                    Optional.ofNullable(Config.groupList).filter(e -> !e.isEmpty())
+                            .map(groups -> groups.stream().anyMatch(config::isMemberOfGroup))
+                            .orElseGet(() -> config.isMemberOfGroup(Config.group));
+            
             for (ChannelConfig config : getConfigs()) {
-                if (!(skip &= !config.getKey().equals(Config.startAt)) && config.isMemberOfGroup(Config.group)) {
+                if (!(skip &= !config.getKey().equals(Config.startAt)) && groupFilter.test(config)) {
                     filteredChannels.add(config.getKey());
                     if (stop && config.getKey().equals(Config.stopAt)) {
                         break;
@@ -456,9 +465,19 @@ public class Channels {
         public static String channel = null;
         
         /**
+         * The list Channel to process, or empty or null if all Channels should be processed.
+         */
+        public static List<String> channelList = null;
+        
+        /**
          * The group to process, or null if all groups should be processed.
          */
         public static String group = null;
+        
+        /**
+         * The list groups to process, or empty or null if all groups should be processed.
+         */
+        public static List<String> groupList = null;
         
         /**
          * The Channel to start processing from, if processing all Channels.
@@ -490,7 +509,11 @@ public class Channels {
                     DEFAULT_ENABLE_FILTERING);
             
             channel = Configurator.getSetting("filter.channel");
+            channelList = Configurator.getSetting("filter.channelList");
+            
             group = Configurator.getSetting("filter.group");
+            groupList = Configurator.getSetting("filter.groupList");
+            
             startAt = Configurator.getSetting("filter.startAt");
             stopAt = Configurator.getSetting("filter.stopAt");
         }
