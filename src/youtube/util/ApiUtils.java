@@ -31,6 +31,7 @@ import commons.lambda.function.checked.CheckedFunction;
 import commons.lambda.function.unchecked.UncheckedFunction;
 import commons.lambda.function.unchecked.UncheckedSupplier;
 import commons.lambda.stream.collector.MapCollectors;
+import commons.lambda.stream.mapper.Mappers;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
 import org.apache.http.HttpHeaders;
@@ -106,13 +107,13 @@ public final class ApiUtils {
     private static final int MAX_RESULTS_PER_PAGE = 50;
     
     /**
-     * The pattern for the call log.
+     * The pattern for an api log.
      */
-    private static final String CALL_LOG_PATTERN = "%!s  ::  %-?s  %7d B  %s  %s"
-            .replace("!", String.valueOf(Channels.getFiltered().stream().map(Channels::getChannel).map(Channel::getConfig)
-                    .map(ChannelEntry::getName).mapToInt(String::length).max().orElse(1)))
-            .replace("?", String.valueOf(Arrays.stream(Endpoint.values())
-                    .map(Endpoint::getName).mapToInt(String::length).max().orElse(1)));
+    private static final String API_LOG_PATTERN = StringUtility.format("%{}s  ::  %-{}s  %s",
+            Channels.getFiltered().stream().map(Channels::getChannel).map(Channel::getConfig)
+                    .map(ChannelEntry::getName).mapToInt(String::length).max().orElse(1),
+            Arrays.stream(Endpoint.values())
+                    .map(Endpoint::getName).mapToInt(String::length).max().orElse(1));
     
     
     //Enums
@@ -212,12 +213,17 @@ public final class ApiUtils {
         
         //Values
         
-        CHANNEL(Endpoint.CHANNEL, ApiUtils::fetchChannel, ApiUtils::fetchChannel, ApiUtils::fetchChannelData, ApiUtils::fetchChannelData, ChannelInfo::new),
-        PLAYLIST(Endpoint.PLAYLIST, ApiUtils::fetchPlaylist, ApiUtils::fetchPlaylist, ApiUtils::fetchPlaylistData, ApiUtils::fetchPlaylistData, PlaylistInfo::new),
-        VIDEO(Endpoint.VIDEO, ApiUtils::fetchVideo, ApiUtils::fetchVideo, ApiUtils::fetchVideoData, ApiUtils::fetchVideoData, VideoInfo::new);
+        CHANNEL("channel", Endpoint.CHANNEL, ApiUtils::fetchChannel, ApiUtils::fetchChannel, ApiUtils::fetchChannelData, ApiUtils::fetchChannelData, ChannelInfo::new),
+        PLAYLIST("playlist", Endpoint.PLAYLIST, ApiUtils::fetchPlaylist, ApiUtils::fetchPlaylist, ApiUtils::fetchPlaylistData, ApiUtils::fetchPlaylistData, PlaylistInfo::new),
+        VIDEO("video", Endpoint.VIDEO, ApiUtils::fetchVideo, ApiUtils::fetchVideo, ApiUtils::fetchVideoData, ApiUtils::fetchVideoData, VideoInfo::new);
         
         
         //Fields
+        
+        /**
+         * The name of the Entity.
+         */
+        public final String name;
         
         /**
          * The Endpoint used to fetch the Entity.
@@ -255,6 +261,7 @@ public final class ApiUtils {
         /**
          * Constructs an API Entity.
          *
+         * @param name                    The name of the Entity.
          * @param endpoint                The Endpoint used to fetch the Entity.
          * @param entityLoader            The function that loads the Entity.
          * @param checkedEntityLoader     The function that loads the Entity for a Channel.
@@ -262,12 +269,13 @@ public final class ApiUtils {
          * @param checkedEntityDataLoader The function that loads the json data of the Entity for a Channel.
          * @param entityParser            The function that parses the Entity.
          */
-        ApiEntity(Endpoint endpoint,
+        ApiEntity(String name, Endpoint endpoint,
                 CheckedFunction<String, EntityInfo> entityLoader,
                 CheckedBiFunction<String, ChannelState, EntityInfo> checkedEntityLoader,
                 CheckedFunction<String, Map<String, Object>> entityDataLoader,
                 CheckedBiFunction<String, ChannelState, Map<String, Object>> checkedEntityDataLoader,
                 CheckedFunction<Map<String, Object>, EntityInfo> entityParser) {
+            this.name = name;
             this.endpoint = endpoint;
             this.entityLoader = entityLoader;
             this.checkedEntityLoader = checkedEntityLoader;
@@ -339,6 +347,15 @@ public final class ApiUtils {
         
         
         //Getters
+        
+        /**
+         * Returns the name of the Entity.
+         *
+         * @return The name of the Entity.
+         */
+        public String getName() {
+            return name;
+        }
         
         /**
          * Returns the Endpoint used to fetch the Entity.
@@ -465,7 +482,7 @@ public final class ApiUtils {
      * @return The Channel Info.
      */
     public static ChannelInfo fetchChannel(String channelId, ChannelState channelState) {
-        return EntityHandler.loadEntity(ApiEntity.CHANNEL, channelId, channelState);
+        return ApiHandler.fetchEntity(ApiEntity.CHANNEL, channelId, channelState, ApiUtils::fetchChannelData);
     }
     
     /**
@@ -549,7 +566,7 @@ public final class ApiUtils {
      * @return The Playlist Info.
      */
     public static PlaylistInfo fetchPlaylist(String playlistId, ChannelState channelState) {
-        return EntityHandler.loadEntity(ApiEntity.PLAYLIST, playlistId, channelState);
+        return ApiHandler.fetchEntity(ApiEntity.PLAYLIST, playlistId, channelState, ApiUtils::fetchPlaylistData);
     }
     
     /**
@@ -633,7 +650,7 @@ public final class ApiUtils {
      * @return The Video Info.
      */
     public static VideoInfo fetchVideo(String videoId, ChannelState channelState) {
-        return EntityHandler.loadEntity(ApiEntity.VIDEO, videoId, channelState);
+        return ApiHandler.fetchEntity(ApiEntity.VIDEO, videoId, channelState, ApiUtils::fetchVideoData);
     }
     
     /**
@@ -675,7 +692,7 @@ public final class ApiUtils {
      * @return The list of Videos.
      */
     public static List<VideoInfo> fetchPlaylistVideos(String playlistId, ChannelState channelState) {
-        return EntityHandler.loadEntityList(ApiEntity.VIDEO, playlistId, channelState, ApiUtils::fetchPlaylistVideosData);
+        return ApiHandler.fetchEntityList(ApiEntity.VIDEO, playlistId, channelState, ApiUtils::fetchPlaylistVideosData);
     }
     
     /**
@@ -739,7 +756,7 @@ public final class ApiUtils {
      */
     @SuppressWarnings("unchecked")
     public static List<Map<String, Object>> fetchPlaylistVideosData(String playlistId, ChannelState channelState) {
-        return ApiHandler.fetchEntityListData(Endpoint.PLAYLIST_ITEMS, playlistId, channelState,
+        return ApiHandler.fetchEntityListData(Endpoint.PLAYLIST_ITEMS, ApiEntity.VIDEO, playlistId, channelState,
                 new HashMap<>(Map.of("playlistId", playlistId)),
                 e -> Optional.ofNullable((Map<String, Object>) e.get("contentDetails")).map(e2 -> (String) e2.get("videoId")).orElse(null),
                 ids -> ApiHandler.callApi(Endpoint.VIDEO, new HashMap<>(Map.of("id", ids)), channelState));
@@ -805,7 +822,7 @@ public final class ApiUtils {
      * @return The list of Videos.
      */
     public static List<VideoInfo> fetchChannelVideos(String channelId, ChannelState channelState) {
-        return EntityHandler.loadEntityList(ApiEntity.VIDEO, channelId, channelState, ApiUtils::fetchChannelVideosData);
+        return ApiHandler.fetchEntityList(ApiEntity.VIDEO, channelId, channelState, ApiUtils::fetchChannelVideosData);
     }
     
     /**
@@ -953,7 +970,7 @@ public final class ApiUtils {
      * @return The list of Playlists.
      */
     public static List<PlaylistInfo> fetchChannelPlaylists(String channelId, ChannelState channelState) {
-        return EntityHandler.loadEntityList(ApiEntity.PLAYLIST, channelId, channelState, ApiUtils::fetchChannelPlaylistsData);
+        return ApiHandler.fetchEntityList(ApiEntity.PLAYLIST, channelId, channelState, ApiUtils::fetchChannelPlaylistsData);
     }
     
     /**
@@ -1026,7 +1043,7 @@ public final class ApiUtils {
      * @return The json data of the list of Playlists.
      */
     public static List<Map<String, Object>> fetchChannelPlaylistsData(String channelId, ChannelState channelState) {
-        return ApiHandler.fetchEntityListData(Endpoint.CHANNEL_PLAYLISTS, channelId, channelState,
+        return ApiHandler.fetchEntityListData(Endpoint.CHANNEL_PLAYLISTS, ApiEntity.PLAYLIST, channelId, channelState,
                 new HashMap<>(Map.of("channelId", channelId)),
                 e -> (String) e.get("id"),
                 ids -> ApiHandler.callApi(Endpoint.PLAYLIST, new HashMap<>(Map.of("id", ids)), channelState));
@@ -1095,6 +1112,69 @@ public final class ApiUtils {
     }
     
     /**
+     * Logs an API message.
+     *
+     * @param channelState The Channel State.
+     * @param category     The category.
+     * @param message      The log message.
+     */
+    private static void logApi(ChannelState channelState, String category, String message) {
+        logger.trace(formatLog(channelState, category, message));
+    }
+    
+    /**
+     * Logs an API message.
+     *
+     * @param category The category.
+     * @param message  The log message.
+     */
+    private static void logApi(String category, String message) {
+        logApi(null, category, message);
+    }
+    
+    /**
+     * Logs an API message.
+     *
+     * @param message The log message.
+     */
+    private static void logApi(String message) {
+        logApi(null, message);
+    }
+    
+    /**
+     * Formats an API log message.
+     *
+     * @param channelState The Channel State.
+     * @param category     The category.
+     * @param message      The log message.
+     */
+    private static String formatLog(ChannelState channelState, String category, String message) {
+        return String.format(API_LOG_PATTERN,
+                Optional.ofNullable(channelState).map(ChannelState::getChannelName).orElse("~"),
+                Optional.ofNullable(category).map(String::trim).orElse(""),
+                message);
+    }
+    
+    /**
+     * Formats an API log message.
+     *
+     * @param category The category.
+     * @param message  The log message.
+     */
+    private static String formatLog(String category, String message) {
+        return formatLog(null, category, message);
+    }
+    
+    /**
+     * Formats an API log message.
+     *
+     * @param message The log message.
+     */
+    private static String formatLog(String message) {
+        return formatLog(null, message);
+    }
+    
+    /**
      * Clears the fetched Entity cache.
      */
     public static void clearCache() {
@@ -1126,16 +1206,18 @@ public final class ApiUtils {
          *
          * @param entityType   The Type of the Entity.
          * @param entityId     The id of the Entity.
-         * @param parameters   A map of parameters.
          * @param channelState The Channel State of the calling Channel.
+         * @param parameters   A map of parameters.
          * @return The json data of the Entity.
          * @throws RuntimeException When there is an error fetching or parsing the Entity.
          */
-        private static Map<String, Object> fetchEntityData(ApiEntity entityType, String entityId, Map<String, String> parameters, ChannelState channelState) {
+        private static Map<String, Object> fetchEntityData(ApiEntity entityType, String entityId, ChannelState channelState, Map<String, String> parameters) {
             return EntityHandler.loadEntityData(entityType, entityId, channelState,
-                    (id, state) -> Optional.ofNullable(entityType).map(ApiEntity::getEndpoint)
+                    (id, state) -> Optional.of(entityType.getEndpoint())
+                            .map(Mappers.forEach(e -> logApi(state, entityType.getEndpoint().getName(), ("Fetching " + entityType.getName() + " data for: [" + entityId + "]"))))
                             .map((UncheckedFunction<Endpoint, String>) apiEndpoint ->
                                     callApi(apiEndpoint, parameters, state))
+                            .map(Mappers.forEach(e -> logApi(state, entityType.getEndpoint().getName(), ("Parsing " + entityType.getName() + " data for: [" + entityId + "]"))))
                             .map(response -> parseResponse(response, state))
                             .map(dataList -> ListUtility.getOrNull(dataList, 0))
                             .orElse(Map.of()));
@@ -1151,62 +1233,105 @@ public final class ApiUtils {
          * @throws RuntimeException When there is an error fetching or parsing the Entity.
          */
         private static Map<String, Object> fetchEntityData(ApiEntity entityType, String entityId, ChannelState channelState) {
-            return fetchEntityData(entityType, entityId, new HashMap<>(Map.of("id", entityId)), channelState);
+            return fetchEntityData(entityType, entityId, channelState,
+                    new HashMap<>(Map.of("id", entityId)));
+        }
+        
+        /**
+         * Calls the Youtube Data API and fetches an Entity.
+         *
+         * @param entityType   The Type of the Entity.
+         * @param entityId     The id of the Entity.
+         * @param channelState The Channel State of the calling Channel.
+         * @param <T>          The type of the Entity.
+         * @return The Entity.
+         * @throws RuntimeException When there is an error fetching or parsing the Entity.
+         */
+        private static <T extends EntityInfo> T fetchEntity(ApiEntity entityType, String entityId, ChannelState channelState,
+                BiFunction<String, ChannelState, Map<String, Object>> entityDataFetcher) {
+            return EntityHandler.loadEntity(entityType, entityId, channelState, entityDataFetcher, entityType.getEntityParser());
         }
         
         /**
          * Calls the Youtube Data API and fetches the json data of a list of Entities.
          *
-         * @param endpoint          The API Endpoint.
-         * @param entityId          The id of the parent Entity.
-         * @param channelState      The Channel State of the calling Channel.
-         * @param parameters        A map of parameters.
-         * @param idExtractor       The function that extracts the id from a response data element.
-         * @param entityDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
+         * @param endpoint              The API Endpoint.
+         * @param entityListType        The Type of the listed Entities.
+         * @param entityId              The id of the parent Entity.
+         * @param channelState          The Channel State of the calling Channel.
+         * @param parameters            A map of parameters.
+         * @param idExtractor           The function that extracts the id from a response data element.
+         * @param entityPageDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
          * @return The json data of the list of Entities.
          * @throws RuntimeException When there is an error fetching or parsing the list of Entities.
          */
-        public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, String entityId, ChannelState channelState, Map<String, String> parameters,
+        public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, ApiEntity entityListType, String entityId, ChannelState channelState, Map<String, String> parameters,
                 UncheckedFunction<Map<String, Object>, String> idExtractor,
-                UncheckedFunction<String, String> entityDataFetcher) {
-            return Optional.ofNullable(loadDataCache(endpoint, channelState))
+                UncheckedFunction<String, String> entityPageDataFetcher) {
+            return Optional.of(Optional.ofNullable(
+                            loadDataCache(endpoint, channelState))
                     .orElseGet((UncheckedSupplier<List<String>>) () -> {
                         final List<String> pages = new ArrayList<>();
                         do {
-                            Optional.ofNullable(endpoint)
+                            Optional.of(endpoint)
+                                    .map(Mappers.forEach(e -> logApi(channelState, endpoint.getName(), ("Fetching " + endpoint.getName() + " list for: [" + entityId + "] (Page " + (pages.size() + 1) + ")"))))
                                     .map((UncheckedFunction<Endpoint, String>) apiEndpoint ->
                                             callApi(apiEndpoint, parameters, channelState))
                                     .map(response -> parseResponse(response, channelState).stream()
                                             .map(idExtractor)
                                             .filter(id -> !StringUtility.isNullOrBlank(id))
                                             .collect(Collectors.joining(",")))
-                                    .map(entityDataFetcher)
-                                    .ifPresent(pages::add);
+                                    .map(Mappers.forEach(e -> logApi(channelState, endpoint.getName(), ("Fetching " + endpoint.getName() + " entities for: [" + entityId + "] (Page " + (pages.size() + 1) + ")"))))
+                                    .map(entityPageDataFetcher)
+                                    .ifPresentOrElse(pages::add, () -> pages.add(null));
                         } while (parameters.get("pageToken") != null);
                         
                         saveDataCache(pages, endpoint, channelState);
                         return pages;
                     })
-                    .stream()
+            ).map(pages -> pages.stream()
+                    .filter(Objects::nonNull)
+                    .map(Mappers.forEach(e -> logApi(channelState, endpoint.getName(), ("Parsing " + endpoint.getName() + " entities for: [" + entityId + "] (Page " + (pages.indexOf(e) + 1) + ")"))))
                     .flatMap(data -> parseResponse(data, channelState).stream())
-                    .collect(Collectors.toList());
+                    .map(entityData -> EntityHandler.loadEntityData(entityListType, entityData, channelState))
+                    .collect(Collectors.toList())
+            ).orElse(List.of());
         }
         
         /**
          * Calls the Youtube Data API and fetches the json data of a list of Entities.
          *
-         * @param endpoint          The API Endpoint.
-         * @param entityId          The id of the parent Entity.
-         * @param channelState      The Channel State of the calling Channel.
-         * @param idExtractor       The function that extracts the id from a response data element.
-         * @param entityDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
+         * @param endpoint              The API Endpoint.
+         * @param entityListType        The Type of the listed Entities.
+         * @param entityId              The id of the parent Entity.
+         * @param channelState          The Channel State of the calling Channel.
+         * @param idExtractor           The function that extracts the id from a response data element.
+         * @param entityPageDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
          * @return The json data of the list of Entities.
          * @throws RuntimeException When there is an error fetching or parsing the list of Entities.
          */
-        public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, String entityId, ChannelState channelState,
+        public static List<Map<String, Object>> fetchEntityListData(Endpoint endpoint, ApiEntity entityListType, String entityId, ChannelState channelState,
                 UncheckedFunction<Map<String, Object>, String> idExtractor,
-                UncheckedFunction<String, String> entityDataFetcher) {
-            return fetchEntityListData(endpoint, entityId, channelState, new HashMap<>(Map.of("id", entityId)), idExtractor, entityDataFetcher);
+                UncheckedFunction<String, String> entityPageDataFetcher) {
+            return fetchEntityListData(endpoint, entityListType, entityId, channelState,
+                    new HashMap<>(Map.of("id", entityId)),
+                    idExtractor, entityPageDataFetcher);
+        }
+        
+        /**
+         * Calls the Youtube Data API and fetches a list of Entities.
+         *
+         * @param entityType          The Type of the Entities.
+         * @param entityId            The id of the parent Entity.
+         * @param channelState        The Channel State of the calling Channel.
+         * @param entitiesDataFetcher The function that fetches a page of Entity json data from the list of extracted Entity ids.
+         * @param <T>                 The type of the Entities.
+         * @return The list of Entities.
+         * @throws RuntimeException When there is an error fetching or parsing the list of Entities.
+         */
+        private static <T extends EntityInfo> List<T> fetchEntityList(ApiEntity entityType, String entityId, ChannelState channelState,
+                BiFunction<String, ChannelState, List<Map<String, Object>>> entitiesDataFetcher) {
+            return EntityHandler.loadEntityList(entityType, entityId, channelState, entitiesDataFetcher);
         }
         
         /**
@@ -1218,7 +1343,9 @@ public final class ApiUtils {
          */
         private static List<String> loadDataCache(Endpoint endpoint, ChannelState channelState) {
             return Optional.ofNullable(channelState).map(state -> state.getDataFile(endpoint.getName()))
-                    .filter(File::exists).map(Filesystem::readFileToString)
+                    .filter(File::exists).filter(file -> !Filesystem.isEmpty(file))
+                    .map(Mappers.forEach(e -> logApi(channelState, endpoint.getName(), ("Loading local data cache: " + e.getAbsolutePath() + "'"))))
+                    .map(Filesystem::readFileToString)
                     .filter(data -> !StringUtility.isNullOrBlank(data))
                     .map(data -> data.split("(?:^|\r?\n)[\\[,\\]](?:\r?\n|$)"))
                     .map(dataPages -> Arrays.stream(dataPages)
@@ -1237,6 +1364,7 @@ public final class ApiUtils {
          */
         private static void saveDataCache(List<String> dataPages, Endpoint endpoint, ChannelState channelState) {
             Optional.ofNullable(channelState).map(state -> state.getDataFile(endpoint.getName()))
+                    .map(Mappers.forEach(e -> logApi(channelState, endpoint.getName(), ("Saving local data cache: '" + e.getAbsolutePath() + "'"))))
                     .ifPresent(dataFile -> Filesystem.writeStringToFile(dataFile,
                             dataPages.stream().collect(Collectors.joining(
                                     (System.lineSeparator() + "," + System.lineSeparator()),
@@ -1258,6 +1386,8 @@ public final class ApiUtils {
             final AtomicBoolean error = new AtomicBoolean(false);
             
             for (int retry = 0; retry <= MAX_RETRIES; retry++) {
+                logApi(channelState, endpoint.getName(), ("Calling " + endpoint.getName() + " API... " + ((retry > 0) ? (" (Retry #" + retry + ")") : "")));
+                
                 final HttpGet request = buildApiRequest(endpoint, new HashMap<>(parameters));
                 
                 try (CloseableHttpResponse httpResponse = httpClient.execute(request)) {
@@ -1287,9 +1417,8 @@ public final class ApiUtils {
          * @param channelState The Channel State of the calling Channel.
          */
         private static void logApiCall(Endpoint endpoint, URI request, String response, boolean error, ChannelState channelState) {
-            final String log = String.format(CALL_LOG_PATTERN,
-                    Optional.ofNullable(channelState).map(ChannelState::getChannelName).orElse("~"),
-                    endpoint.getName(), response.length(), (error ? "-X" : "->"), request);
+            final String log = formatLog(channelState, endpoint.getName(),
+                    (response.length() + " B  " + (error ? "-X" : "->") + "  " + request));
             
             LogUtils.log(logger, (error ? LogUtils.LogLevel.WARN : LogUtils.LogLevel.DEBUG), log);
             Optional.ofNullable(channelState).map(ChannelState::getCallLogFile)
@@ -1405,7 +1534,7 @@ public final class ApiUtils {
         private static List<Map<String, Object>> parseResponse(String response, ChannelState channelState) {
             return Optional.ofNullable(response)
                     .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(e))
-                    .map(e -> (ArrayList<Map<String, Object>>) e.get("items"))
+                    .map(e -> (ArrayList<Map<String, Object>>) e.getOrDefault("items", new ArrayList<>()))
                     .orElseThrow(() -> {
                         if (Optional.ofNullable(channelState).map(ChannelState::getErrorFlag).map(errorFlag -> errorFlag.compareAndSet(false, true)).orElse(false)) {
                             logger.warn(Color.bad("Error parsing API data for Channel: ") + Color.channelName(channelState));
@@ -1421,6 +1550,14 @@ public final class ApiUtils {
      * Handles Entity loading and caching.
      */
     private static class EntityHandler {
+        
+        //Constants
+        
+        /**
+         * A flag indicating whether or not to log cache interactions by the Entity Handler.
+         */
+        private static final boolean LOG_CACHE_INTERACTIONS = false;
+        
         
         //Static Fields
         
@@ -1444,26 +1581,19 @@ public final class ApiUtils {
          *
          * @param entityType       The Type of the Entity.
          * @param entityId         The id of the Entity.
+         * @param channelState     The Channel State of the calling Channel.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @return The json data of the Entity, or null if it could not be loaded.
          */
-        private static Map<String, Object> cacheEntityData(ApiEntity entityType, String entityId,
+        private static Map<String, Object> cacheEntityData(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, Map<String, Object>> entityDataLoader) {
             return Optional.ofNullable(entityType).map(entityDataCache::get)
                     .flatMap(cache -> Optional.ofNullable(entityId)
-                            .map(id -> cache.computeIfAbsent(id, entityDataLoader)))
+                            .map(id -> {
+                                logApiCache(entityType, entityId, channelState, true, cache.containsKey(id));
+                                return cache.computeIfAbsent(id, entityDataLoader);
+                            }))
                     .orElse(null);
-        }
-        
-        /**
-         * Caches the json data of an Entity.
-         *
-         * @param entityType The Type of the Entity.
-         * @param entityId   The id of the Entity.
-         * @return The json data of the Entity, or null if it could not be loaded.
-         */
-        private static Map<String, Object> cacheEntityData(ApiEntity entityType, String entityId) {
-            return cacheEntityData(entityType, entityId, entityType.getEntityDataLoader());
         }
         
         /**
@@ -1471,29 +1601,39 @@ public final class ApiUtils {
          *
          * @param entityType   The Type of the Entity.
          * @param entityId     The id of the Entity.
+         * @param channelState The Channel State of the calling Channel.
          * @param entityLoader The function used to load the Entity.
          * @param <T>          The type of the Entity.
          * @return The Entity, or null if it could not be loaded.
          */
         @SuppressWarnings("unchecked")
-        private static <T extends EntityInfo> T cacheEntity(ApiEntity entityType, String entityId,
+        private static <T extends EntityInfo> T cacheEntity(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, T> entityLoader) {
             return Optional.ofNullable(entityType).map(entityCache::get)
                     .flatMap(cache -> Optional.ofNullable(entityId)
-                            .map(id -> (T) cache.computeIfAbsent(id, entityLoader)))
+                            .map(id -> {
+                                logApiCache(entityType, entityId, channelState, false, cache.containsKey(id));
+                                return (T) cache.computeIfAbsent(id, entityLoader);
+                            }))
                     .orElse(null);
         }
         
         /**
-         * Caches an Entity.
+         * Logs a cache interaction by the Entity Handler.
          *
-         * @param entityType The Type of the Entity.
-         * @param entityId   The id of the Entity.
-         * @param <T>        The type of the Entity.
-         * @return The Entity, or null if it could not be loaded.
+         * @param entityType   The Type of the Entity.
+         * @param entityId     The id of the Entity.
+         * @param channelState The Channel State of the calling Channel.
+         * @param data         Whether the interaction was with the Entity data cache.
+         * @param cached       Whether the Entity is currently cached.
          */
-        private static <T extends EntityInfo> T cacheEntity(ApiEntity entityType, String entityId) {
-            return cacheEntity(entityType, entityId, entityType.getEntityLoader());
+        private static void logApiCache(ApiEntity entityType, String entityId, ChannelState channelState, boolean data, boolean cached) {
+            if (LOG_CACHE_INTERACTIONS) {
+                logApi(channelState, "cache", String.join(" ",
+                        (cached ? "Retrieving" : "Loading"),
+                        (entityType.getName() + (data ? " data" : "")),
+                        "[" + entityId + "]"));
+            }
         }
         
         /**
@@ -1501,23 +1641,13 @@ public final class ApiUtils {
          *
          * @param entityType       The Entity Type of the Entity.
          * @param entityId         The id of the Entity.
+         * @param channelState     The Channel State of the calling Channel.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @return The json data of the Entity, or null if it could not be loaded.
          */
-        public static Map<String, Object> loadEntityData(ApiEntity entityType, String entityId,
+        public static Map<String, Object> loadEntityData(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, Map<String, Object>> entityDataLoader) {
-            return cacheEntityData(entityType, entityId, entityDataLoader);
-        }
-        
-        /**
-         * Loads the json data of an Entity.
-         *
-         * @param entityType The Entity Type of the Entity.
-         * @param entityId   The id of the Entity.
-         * @return The json data of the Entity, or null if it could not be loaded.
-         */
-        public static Map<String, Object> loadEntityData(ApiEntity entityType, String entityId) {
-            return loadEntityData(entityType, entityId, entityType.getEntityDataLoader());
+            return cacheEntityData(entityType, entityId, channelState, entityDataLoader);
         }
         
         /**
@@ -1531,7 +1661,7 @@ public final class ApiUtils {
          */
         public static Map<String, Object> loadEntityData(ApiEntity entityType, String entityId, ChannelState channelState,
                 BiFunction<String, ChannelState, Map<String, Object>> entityDataLoader) {
-            return loadEntityData(entityType, entityId,
+            return loadEntityData(entityType, entityId, channelState,
                     id -> entityDataLoader.apply(id, channelState));
         }
         
@@ -1550,12 +1680,13 @@ public final class ApiUtils {
         /**
          * Loads the json data of an Entity.
          *
-         * @param entityType The Entity Type of the Entity.
-         * @param entityData The json data of the Entity.
+         * @param entityType   The Entity Type of the Entity.
+         * @param entityData   The json data of the Entity.
+         * @param channelState The Channel State of the calling Channel.
          * @return The json data of the Entity, or null if it could not be loaded.
          */
-        public static Map<String, Object> loadEntityData(ApiEntity entityType, Map<String, Object> entityData) {
-            return loadEntityData(entityType, (String) entityData.get("id"),
+        public static Map<String, Object> loadEntityData(ApiEntity entityType, Map<String, Object> entityData, ChannelState channelState) {
+            return loadEntityData(entityType, (String) entityData.get("id"), channelState,
                     id -> entityData);
         }
         
@@ -1564,13 +1695,14 @@ public final class ApiUtils {
          *
          * @param entityType   The Entity Type of the Entity.
          * @param entityId     The id of the Entity.
+         * @param channelState The Channel State of the calling Channel.
          * @param entityLoader The function used to load the Entity.
          * @param <T>          The type of the Entity.
          * @return The Entity, or null if it could not be loaded.
          */
-        private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId,
+        private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, T> entityLoader) {
-            return cacheEntity(entityType, entityId, entityLoader);
+            return cacheEntity(entityType, entityId, channelState, entityLoader);
         }
         
         /**
@@ -1585,7 +1717,7 @@ public final class ApiUtils {
          */
         private static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, ChannelState channelState,
                 BiFunction<String, ChannelState, T> entityDataLoader) {
-            return loadEntity(entityType, entityId,
+            return loadEntity(entityType, entityId, channelState,
                     id -> entityDataLoader.apply(id, channelState));
         }
         
@@ -1594,31 +1726,20 @@ public final class ApiUtils {
          *
          * @param entityType       The Entity Type of the Entity.
          * @param entityId         The id of the Entity.
+         * @param channelState     The Channel State of the calling Channel.
          * @param entityDataLoader The function used to load the json data of the Entity.
          * @param entityParser     The function used to parse the Entity.
          * @param <T>              The type of the Entity.
          * @return The Entity, or null if it could not be loaded.
          */
-        public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId,
+        public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, Map<String, Object>> entityDataLoader,
                 Function<Map<String, Object>, T> entityParser) {
-            return loadEntity(entityType, entityId,
+            return loadEntity(entityType, entityId, channelState,
                     id -> Optional.ofNullable(id)
                             .map(entityDataLoader)
                             .map(entityParser)
                             .orElse(null));
-        }
-        
-        /**
-         * Loads an Entity.
-         *
-         * @param entityType The Entity Type of the Entity.
-         * @param entityId   The id of the Entity.
-         * @param <T>        The type of the Entity.
-         * @return The Entity, or null if it could not be loaded.
-         */
-        public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId) {
-            return loadEntity(entityType, entityId, entityType.getEntityDataLoader(), entityType.getEntityParser());
         }
         
         /**
@@ -1635,7 +1756,7 @@ public final class ApiUtils {
         public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, String entityId, ChannelState channelState,
                 BiFunction<String, ChannelState, Map<String, Object>> entityDataLoader,
                 Function<Map<String, Object>, T> entityParser) {
-            return loadEntity(entityType, entityId,
+            return loadEntity(entityType, entityId, channelState,
                     id -> entityDataLoader.apply(id, channelState),
                     entityParser);
         }
@@ -1656,14 +1777,15 @@ public final class ApiUtils {
         /**
          * Loads an Entity.
          *
-         * @param entityType The Entity Type of the Entity.
-         * @param entityData The json data of the Entity.
-         * @param <T>        The type of the Entity.
+         * @param entityType   The Entity Type of the Entity.
+         * @param entityData   The json data of the Entity.
+         * @param channelState The Channel State of the calling Channel.
+         * @param <T>          The type of the Entity.
          * @return The Entity, or null if it could not be loaded.
          */
-        public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, Map<String, Object> entityData) {
-            return loadEntity(entityType, (String) entityData.get("id"),
-                    id -> loadEntityData(entityType, entityData),
+        public static <T extends EntityInfo> T loadEntity(ApiEntity entityType, Map<String, Object> entityData, ChannelState channelState) {
+            return loadEntity(entityType, (String) entityData.get("id"), channelState,
+                    id -> loadEntityData(entityType, entityData, channelState),
                     entityType.getEntityParser());
         }
         
@@ -1672,15 +1794,16 @@ public final class ApiUtils {
          *
          * @param entityType         The Entity Type of the Entities.
          * @param entityId           The id of the parent Entity.
+         * @param channelState       The Channel State of the calling Channel.
          * @param entitiesDataLoader The function used to load the json data of the Entities.
          * @return The json data of the list of Entities, or null if it could not be loaded.
          */
-        public static List<Map<String, Object>> loadEntityListData(ApiEntity entityType, String entityId,
+        public static List<Map<String, Object>> loadEntityListData(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, List<Map<String, Object>>> entitiesDataLoader) {
             return Optional.ofNullable(entityId)
                     .map(entitiesDataLoader)
                     .map(entityDataList -> entityDataList.stream()
-                            .map(entityData -> loadEntityData(entityType, entityData))
+                            .map(entityData -> loadEntityData(entityType, entityData, channelState))
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()))
                     .orElse(null);
@@ -1697,7 +1820,7 @@ public final class ApiUtils {
          */
         public static List<Map<String, Object>> loadEntityListData(ApiEntity entityType, String entityId, ChannelState channelState,
                 BiFunction<String, ChannelState, List<Map<String, Object>>> entitiesDataLoader) {
-            return loadEntityListData(entityType, entityId,
+            return loadEntityListData(entityType, entityId, channelState,
                     id -> entitiesDataLoader.apply(id, channelState));
         }
         
@@ -1706,16 +1829,17 @@ public final class ApiUtils {
          *
          * @param entityType         The Entity Type of the Entities.
          * @param entityId           The id of the parent Entity.
+         * @param channelState       The Channel State of the calling Channel.
          * @param entitiesDataLoader The function used to load the json data of the Entities.
          * @param <T>                The type of the Entities.
          * @return The list of Entities, or null if it could not be loaded.
          */
         @SuppressWarnings("unchecked")
-        public static <T extends EntityInfo> List<T> loadEntityList(ApiEntity entityType, String entityId,
+        public static <T extends EntityInfo> List<T> loadEntityList(ApiEntity entityType, String entityId, ChannelState channelState,
                 Function<String, List<Map<String, Object>>> entitiesDataLoader) {
-            return Optional.ofNullable(loadEntityListData(entityType, entityId, entitiesDataLoader))
+            return Optional.ofNullable(loadEntityListData(entityType, entityId, channelState, entitiesDataLoader))
                     .map(entityDataList -> entityDataList.stream()
-                            .map(entityData -> (T) loadEntity(entityType, entityData))
+                            .map(entityData -> (T) loadEntity(entityType, entityData, channelState))
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList()))
                     .orElse(null);
@@ -1733,7 +1857,7 @@ public final class ApiUtils {
          */
         public static <T extends EntityInfo> List<T> loadEntityList(ApiEntity entityType, String entityId, ChannelState channelState,
                 BiFunction<String, ChannelState, List<Map<String, Object>>> entitiesDataLoader) {
-            return loadEntityList(entityType, entityId,
+            return loadEntityList(entityType, entityId, channelState,
                     id -> entitiesDataLoader.apply(id, channelState));
         }
         
