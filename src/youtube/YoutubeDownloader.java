@@ -71,7 +71,6 @@ public class YoutubeDownloader {
         logger.info(Color.number("------------------"));
         logger.info(Color.number("Youtube Downloader"));
         logger.info(Color.number("------------------"));
-        logger.trace(LogUtils.NEWLINE);
         
         if (!Utils.startup(Configurator.Program.YOUTUBE_DOWNLOADER)) {
             return;
@@ -91,8 +90,8 @@ public class YoutubeDownloader {
      * Runs the Youtube Downloader.
      */
     private static void run() {
-        logger.debug(Color.log("Starting..."));
         logger.trace(LogUtils.NEWLINE);
+        logger.debug(Color.log("Starting..."));
         
         loadDownloadQueue();
         
@@ -180,7 +179,10 @@ public class YoutubeDownloader {
      */
     private static void getInput(Scanner in) {
         Optional.ofNullable(in)
-                .map(Mappers.forEach(e -> System.out.print(Color.log(": "))))
+                .map(Mappers.forEach(e -> {
+                    logger.trace(LogUtils.NEWLINE);
+                    System.out.print(Color.log(": "));
+                }))
                 .map(Scanner::nextLine).map(String::strip)
                 .filter(e -> !e.isBlank())
                 .ifPresent(input -> {
