@@ -451,6 +451,13 @@
                     "url": "https://www.youtube.com/user/minutephysics",
                     "playlistId": "UUUHW94eEFW7hkUMVaZz4eDg",
                     "outputFolder": "~/Minute Physics"
+                  },
+                  {
+                    "key": "PHYSICS_EXPLAINED",
+                    "active": true,
+                    "url": "https://www.youtube.com/@PhysicsExplainedVideos",
+                    "playlistId": "UUIZ5ZOeiXYbmKTl_85ghNPw",
+                    "outputFolder": "~/Physics Explained"
                   }
                 ]
               },
@@ -459,13 +466,6 @@
                 "active": true,
                 "outputFolder": "~/Engineering",
                 "channels": [
-                  {
-                    "key": "STUFF_MADE_HERE",
-                    "active": true,
-                    "url": "https://www.youtube.com/c/StuffMadeHere",
-                    "playlistId": "UUj1VqrHhDte54oLgPG4xpuQ",
-                    "outputFolder": "~/Stuff Made Here"
-                  },
                   {
                     "key": "HOW_ITS_MADE",
                     "active": false,
@@ -481,11 +481,18 @@
                     "outputFolder": "~/Modern Marvels"
                   },
                   {
-                    "key": "THE_POST_APOCALYPTIC_INVENTOR",
+                    "key": "STUFF_MADE_HERE",
                     "active": true,
-                    "url": "https://www.youtube.com/c/ThePostApocalypticInventor",
-                    "playlistId": "UUDbWmfrwmzn1ZsGgrYRUxoA",
-                    "outputFolder": "~/The Post Apocalyptic Inventor"
+                    "url": "https://www.youtube.com/c/StuffMadeHere",
+                    "playlistId": "UUj1VqrHhDte54oLgPG4xpuQ",
+                    "outputFolder": "~/Stuff Made Here"
+                  },
+                  {
+                    "key": "REAL_ENGINEERING",
+                    "active": true,
+                    "url": "https://www.youtube.com/@RealEngineering",
+                    "playlistId": "UUR1IuLEqb6UEA_zQ81kwXfg",
+                    "outputFolder": "~/Real Engineering"
                   },
                   {
                     "key": "NEW_MIND",
@@ -493,6 +500,27 @@
                     "url": "https://www.youtube.com/c/NewMind",
                     "playlistId": "UU5_Y-BKzq1uW_2rexWkUzlA",
                     "outputFolder": "~/New Mind"
+                  },
+                  {
+                    "key": "MACHINE_THINKING",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/machinethinking",
+                    "playlistId": "UUfsznjef2zGJnrCRQBXqo6Q",
+                    "outputFolder": "~/Machine Thinking"
+                  },
+                  {
+                    "key": "TECH_INGREDIENTS",
+                    "active": true,
+                    "url": "https://www.youtube.com/@TechIngredients",
+                    "playlistId": "UUVSHXNNBitaPd5lYz48--yg",
+                    "outputFolder": "~/Tech Ingredients"
+                  },
+                  {
+                    "key": "APPLIED_SCIENCE",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/AppliedScience",
+                    "playlistId": "UUivA7_KLKWo43tFcCkFvydw",
+                    "outputFolder": "~/Applied Science"
                   },
                   {
                     "key": "ADAM_SAVAGE",
@@ -516,25 +544,11 @@
                     ]
                   },
                   {
-                    "key": "APPLIED_SCIENCE",
+                    "key": "THE_POST_APOCALYPTIC_INVENTOR",
                     "active": true,
-                    "url": "https://www.youtube.com/c/AppliedScience",
-                    "playlistId": "UUivA7_KLKWo43tFcCkFvydw",
-                    "outputFolder": "~/Applied Science"
-                  },
-                  {
-                    "key": "MACHINE_THINKING",
-                    "active": true,
-                    "url": "https://www.youtube.com/c/machinethinking",
-                    "playlistId": "UUfsznjef2zGJnrCRQBXqo6Q",
-                    "outputFolder": "~/Machine Thinking"
-                  },
-                  {
-                    "key": "REAL_ENGINEERING",
-                    "active": true,
-                    "url": "https://www.youtube.com/@RealEngineering",
-                    "playlistId": "UUR1IuLEqb6UEA_zQ81kwXfg",
-                    "outputFolder": "~/Real Engineering"
+                    "url": "https://www.youtube.com/c/ThePostApocalypticInventor",
+                    "playlistId": "UUDbWmfrwmzn1ZsGgrYRUxoA",
+                    "outputFolder": "~/The Post Apocalyptic Inventor"
                   },
                   {
                     "key": "ZACK_FREEDMAN",
@@ -542,6 +556,13 @@
                     "url": "https://www.youtube.com/c/ZackFreedman",
                     "playlistId": "UUUW49KGPezggFi0PGyDvcvg",
                     "outputFolder": "~/Zack Freedman"
+                  },
+                  {
+                    "key": "LOCK_PICKING_LAWYER",
+                    "active": false,
+                    "url": "https://www.youtube.com/c/lockpickinglawyer",
+                    "playlistId": "UUm9K6rby98W8JigLoZOh6FQ",
+                    "outputFolder": "~/Lock Picking Lawyer"
                   },
                   {
                     "key": "NAKED_SCIENCE_TOY_STORIES",
@@ -783,6 +804,20 @@
                     "url": "https://www.youtube.com/c/CodeBullet",
                     "playlistId": "UU0e3QhIYukixgh5VVpKHH9Q",
                     "outputFolder": "~/Code Bullet"
+                  },
+                  {
+                    "key": "FIRESHIP",
+                    "active": true,
+                    "url": "https://www.youtube.com/@Fireship",
+                    "playlistId": "UUsBjURrPoezykLs9EqgamOA",
+                    "outputFolder": "~/Fireship"
+                  },
+                  {
+                    "key": "JACK_RHYSIDER",
+                    "active": true,
+                    "url": "https://www.youtube.com/@JackRhysider",
+                    "playlistId": "UUMIqrmh2lMdzhlCPK5ahsAg",
+                    "outputFolder": "~/Jack Rhysider"
                   },
                   {
                     "key": "MAJOR_GEEKS",
@@ -1213,139 +1248,17 @@
                 ]
               },
               {
-                "key": "CRIME",
-                "active": true,
-                "outputFolder": "~/Crime",
-                "channels": [
-                  {
-                    "key": "FORENSIC_FILES",
-                    "active": false,
-                    "outputFolder": "${V}/Shows/Forensic Files",
-                    "savePlaylist": true,
-                    "keepClean": false,
-                    "channels": [
-                      {
-                        "key": "FORENSIC_FILES",
-                        "active": false,
-                        "name": "ForensicFiles",
-                        "url": "https://www.youtube.com/user/MedicalDetectivesTV",
-                        "playlistId": "UUVBTlb6_rQkWY99ZKi2oBMw",
-                        "outputFolder": "~/All"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S01",
-                        "active": true,
-                        "name": "ForensicFilesS01",
-                        "playlistId": "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_",
-                        "outputFolder": "~/Season 1"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S02",
-                        "active": true,
-                        "name": "ForensicFilesS02",
-                        "playlistId": "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt",
-                        "outputFolder": "~/Season 2"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S03",
-                        "active": true,
-                        "name": "ForensicFilesS03",
-                        "playlistId": "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7",
-                        "outputFolder": "~/Season 3"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S04",
-                        "active": true,
-                        "name": "ForensicFilesS04",
-                        "playlistId": "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU",
-                        "outputFolder": "~/Season 4"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S05",
-                        "active": true,
-                        "name": "ForensicFilesS05",
-                        "playlistId": "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T",
-                        "outputFolder": "~/Season 5"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S06",
-                        "active": true,
-                        "name": "ForensicFilesS06",
-                        "playlistId": "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3",
-                        "outputFolder": "~/Season 6"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S07",
-                        "active": true,
-                        "name": "ForensicFilesS07",
-                        "playlistId": "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr",
-                        "outputFolder": "~/Season 7"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S08",
-                        "active": true,
-                        "name": "ForensicFilesS08",
-                        "playlistId": "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx",
-                        "outputFolder": "~/Season 8"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S09",
-                        "active": true,
-                        "name": "ForensicFilesS09",
-                        "playlistId": "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1",
-                        "outputFolder": "~/Season 9"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S10",
-                        "active": true,
-                        "name": "ForensicFilesS10",
-                        "playlistId": "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y",
-                        "outputFolder": "~/Season 10"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S11",
-                        "active": true,
-                        "name": "ForensicFilesS11",
-                        "playlistId": "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd",
-                        "outputFolder": "~/Season 11"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S12",
-                        "active": true,
-                        "name": "ForensicFilesS12",
-                        "playlistId": "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN",
-                        "outputFolder": "~/Season 12"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S13",
-                        "active": true,
-                        "name": "ForensicFilesS13",
-                        "playlistId": "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_",
-                        "outputFolder": "~/Season 13"
-                      },
-                      {
-                        "key": "FORENSIC_FILES_S14",
-                        "active": true,
-                        "name": "ForensicFilesS14",
-                        "playlistId": "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k",
-                        "outputFolder": "~/Season 14"
-                      }
-                    ]
-                  },
-                  {
-                    "key": "LOCK_PICKING_LAWYER",
-                    "active": false,
-                    "url": "https://www.youtube.com/c/lockpickinglawyer",
-                    "playlistId": "UUm9K6rby98W8JigLoZOh6FQ",
-                    "outputFolder": "~/Lock Picking Lawyer"
-                  }
-                ]
-              },
-              {
                 "key": "NATURE",
                 "active": true,
                 "outputFolder": "~/Nature",
                 "channels": [
+                  {
+                    "key": "BBC_EARTH",
+                    "active": true,
+                    "url": "https://www.youtube.com/@bbcearth",
+                    "playlistId": "UUwmZiChSryoWQCZMIQezgTg",
+                    "outputFolder": "~/BBC Earth"
+                  },
                   {
                     "key": "FREE_DOCUMENTARY",
                     "active": true,
@@ -1836,7 +1749,7 @@
                       },
                       {
                         "key": "SPARK_DOCUMENTARY_P29",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLo1_uWd0YBJL4Rv2Xf0YQeSQMd2hbRFVG",
                         "playlistFile": "~ - Medical Documentaries.m3u"
                       },
@@ -2023,6 +1936,357 @@
                         "active": true,
                         "playlistId": "PLaevADMuI9-GiZ5CwbbyN5wiRFnq6Y89y",
                         "playlistFile": "~ - Game Changers.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "INSIDER_BUSINESS",
+                    "active": true,
+                    "outputFolder": "~/Insider Business",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "INSIDER_BUSINESS",
+                        "active": true,
+                        "name": "InsiderBusiness",
+                        "url": "https://www.youtube.com/@InsiderBusiness",
+                        "playlistId": "UUcyq283he07B7_KUX07mmtA",
+                        "keepClean": false
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P01",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau4wSl9By0h8qIgOBbN9Zmhd",
+                        "playlistFile": "~ - So Expensive.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P02",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7dpUvROOF48MXXG0oldyZ-",
+                        "playlistFile": "~ - True Cost.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P03",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5hYEv92vbY8SKKHty-2YLo",
+                        "playlistFile": "~ - What It Takes.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P04",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7p-Au2E1uYKYVPNE2b62dN",
+                        "playlistFile": "~ - World Wide Waste.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P05",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6t-ab7uUZZnAtWZuLyMW9r",
+                        "playlistFile": "~ - Still Standing.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P06",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5t4kKbwmCsrXUiyUoZBQ5m",
+                        "playlistFile": "~ - Big Business.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P07",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5vIOiTlhqHUADN_nA4x8v8",
+                        "playlistFile": "~ - Rise And Fall.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P08",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6oPx8jo9Ju3aC3BAxqjel8",
+                        "playlistFile": "~ - Business Insider Today.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P09",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau4_enXAddvW0B6ldD1p9SPg",
+                        "playlistFile": "~ - Sports Insider.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P10",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7_awo6lKJKd0Rf9RMtDwxe",
+                        "playlistFile": "~ - Luxury Living.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P11",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau47OCsuOVtkgB8gQMmhUwuR",
+                        "playlistFile": "~ - Life Hacks.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P12",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5iYO9OSbKR3vS5olOrOPyP",
+                        "playlistFile": "~ - Government & Politics.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P13",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau45IeH50BAslQrMmwAnBBS4",
+                        "playlistFile": "~ - Planes, Trains & Automobiles.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P14",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6BOxAE-9dkBYA1jLv6DuW_",
+                        "playlistFile": "~ - Real Estate Insider.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P15",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6deBlkFn0lsYbnfPUmGkbf",
+                        "playlistFile": "~ - Fast Food Insider.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P16",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7Sh1Ii6SiOUjgAzbnC9lMO",
+                        "playlistFile": "~ - Retail Insider.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P17",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau4LxX8lA98CS_KzGgX3md11",
+                        "playlistFile": "~ - Personal Finance.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P18",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6jj6z403crZpuNgk6WX0OZ",
+                        "playlistFile": "~ - Explainers.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P19",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau55Qtb5Nx6MGcmu13DakKKV",
+                        "playlistFile": "~ - Investing & Stocks.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P20",
+                        "active": false,
+                        "playlistId": "PLmur3Z0Afau49u6fNkNMlKNFYbI7H23ki",
+                        "playlistFile": "~ - The Bottom Line.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P21",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau4ABL55y4kE0-eUDd0-Vpl0",
+                        "playlistFile": "~ - Retail.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P22",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau4nJPHpmyx76w9vvkezWT7k",
+                        "playlistFile": "~ - Cars Insider.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P23",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5HSLnYels-ryQu7vlBLM2V",
+                        "playlistFile": "~ - News.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P24",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5TFjumxC1Zgujj3egio97l",
+                        "playlistFile": "~ - Luxury Travel And Hotels.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P25",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7Yw_jGqsHtKEASH3Ked-dI",
+                        "playlistFile": "~ - Success.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P26",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5TwKRLnQV7Dl7vL_-vh6KQ",
+                        "playlistFile": "~ - Life.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P27",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau6VC_mPZrs6ldUjbhmhmc9h",
+                        "playlistFile": "~ - Science.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P28",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau5GlCfoFO-fwrKDTpumY_Hd",
+                        "playlistFile": "~ - Tech.m3u"
+                      },
+                      {
+                        "key": "INSIDER_BUSINESS_P29",
+                        "active": true,
+                        "playlistId": "PLmur3Z0Afau7NG6j1RBFZ1IaoUGEYpsq9",
+                        "playlistFile": "~ - Food.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "FD_CRIME",
+                    "active": true,
+                    "outputFolder": "~/FD Crime",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "FD_CRIME",
+                        "active": false,
+                        "name": "FD Crime",
+                        "url": "https://www.youtube.com/@FDCrime",
+                        "playlistId": "UUQ-UEhur3z7Jn2lS25d5zzw",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "FD_CRIME_P01",
+                        "active": true,
+                        "playlistId": "PLTRNQOWwuox_fn9E2z5akKL9yjgr23bB-",
+                        "playlistFile": "~ - Scam City.m3u"
+                      },
+                      {
+                        "key": "FD_CRIME_P02",
+                        "active": true,
+                        "playlistId": "PLTRNQOWwuox8FCxfLD-IMfbRsYi76LrAH",
+                        "playlistFile": "~ - Crime Down Under - Line of Fire.m3u"
+                      },
+                      {
+                        "key": "FD_CRIME_P03",
+                        "active": true,
+                        "playlistId": "PLTRNQOWwuox8dTAsUvz6KqK_9G-hFHd00",
+                        "playlistFile": "~ - The Negotiators.m3u"
+                      },
+                      {
+                        "key": "FD_CRIME_P04",
+                        "active": true,
+                        "playlistId": "PLTRNQOWwuox9mL8KP9JQNzlYV7dzSUdNp",
+                        "playlistFile": "~ - Behind Bars.m3u"
+                      },
+                      {
+                        "key": "FD_CRIME_P05",
+                        "active": true,
+                        "playlistId": "PLTRNQOWwuox_0PIponXJ7XlevnFYDxsom",
+                        "playlistFile": "~ - The FBI Files.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "FORENSIC_FILES",
+                    "active": false,
+                    "outputFolder": "${V}/Shows/Forensic Files",
+                    "savePlaylist": true,
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "FORENSIC_FILES",
+                        "active": false,
+                        "name": "ForensicFiles",
+                        "url": "https://www.youtube.com/user/MedicalDetectivesTV",
+                        "playlistId": "UUVBTlb6_rQkWY99ZKi2oBMw",
+                        "outputFolder": "~/All"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S01",
+                        "active": true,
+                        "name": "ForensicFilesS01",
+                        "playlistId": "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_",
+                        "outputFolder": "~/Season 1"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S02",
+                        "active": true,
+                        "name": "ForensicFilesS02",
+                        "playlistId": "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt",
+                        "outputFolder": "~/Season 2"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S03",
+                        "active": true,
+                        "name": "ForensicFilesS03",
+                        "playlistId": "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7",
+                        "outputFolder": "~/Season 3"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S04",
+                        "active": true,
+                        "name": "ForensicFilesS04",
+                        "playlistId": "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU",
+                        "outputFolder": "~/Season 4"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S05",
+                        "active": true,
+                        "name": "ForensicFilesS05",
+                        "playlistId": "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T",
+                        "outputFolder": "~/Season 5"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S06",
+                        "active": true,
+                        "name": "ForensicFilesS06",
+                        "playlistId": "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3",
+                        "outputFolder": "~/Season 6"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S07",
+                        "active": true,
+                        "name": "ForensicFilesS07",
+                        "playlistId": "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr",
+                        "outputFolder": "~/Season 7"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S08",
+                        "active": true,
+                        "name": "ForensicFilesS08",
+                        "playlistId": "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx",
+                        "outputFolder": "~/Season 8"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S09",
+                        "active": true,
+                        "name": "ForensicFilesS09",
+                        "playlistId": "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1",
+                        "outputFolder": "~/Season 9"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S10",
+                        "active": true,
+                        "name": "ForensicFilesS10",
+                        "playlistId": "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y",
+                        "outputFolder": "~/Season 10"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S11",
+                        "active": true,
+                        "name": "ForensicFilesS11",
+                        "playlistId": "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd",
+                        "outputFolder": "~/Season 11"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S12",
+                        "active": true,
+                        "name": "ForensicFilesS12",
+                        "playlistId": "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN",
+                        "outputFolder": "~/Season 12"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S13",
+                        "active": true,
+                        "name": "ForensicFilesS13",
+                        "playlistId": "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_",
+                        "outputFolder": "~/Season 13"
+                      },
+                      {
+                        "key": "FORENSIC_FILES_S14",
+                        "active": true,
+                        "name": "ForensicFilesS14",
+                        "playlistId": "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k",
+                        "outputFolder": "~/Season 14"
                       }
                     ]
                   }
@@ -2645,6 +2909,13 @@
                         "playlistFile": "~ - Wizards Watch.m3u"
                       }
                     ]
+                  },
+                  {
+                    "key": "JAKE_AND_AMIR",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLWkg4t_m90-pqBgpj8WZG6cVVeQvWI1df",
+                    "playlistId": "PLWkg4t_m90-pqBgpj8WZG6cVVeQvWI1df",
+                    "outputFolder": "~/Jake and Amir"
                   },
                   {
                     "key": "NATHAN_FOR_YOU",
