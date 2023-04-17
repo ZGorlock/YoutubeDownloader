@@ -12,12 +12,12 @@
         },
         "filter": {
             "enableFiltering": true,
-            "channel": null,
+            "channel": "",
             "channelList": [],
-            "group": null,
+            "group": "",
             "groupList": [],
-            "startAt": null,
-            "stopAt": null
+            "startAt": "",
+            "stopAt": ""
         },
         "log": {
             "printStats": true,
