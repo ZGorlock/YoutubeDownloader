@@ -25,6 +25,7 @@ import commons.lambda.function.checked.CheckedFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import youtube.channel.config.ChannelConfig;
+import youtube.channel.state.ChannelState;
 import youtube.config.Color;
 import youtube.entity.Channel;
 import youtube.entity.Video;
@@ -281,6 +282,16 @@ public class KeyStore {
     }
     
     /**
+     * Returns the key store for a Channel.
+     *
+     * @param channelState The Channel State of the Channel.
+     * @return The Channel KeyStore.
+     */
+    public static ChannelKeyStore get(ChannelState channelState) {
+        return get(channelState.getChannelName());
+    }
+    
+    /**
      * Returns all Channel KeyStores contained in the key store.
      *
      * @return The list of Channel KeyStores contained in the key store.
@@ -392,6 +403,36 @@ public class KeyStore {
          */
         public ChannelKeyStore get(String channelName) {
             return computeIfAbsent(channelName, ChannelKeyStore::new);
+        }
+        
+        /**
+         * Returns a Channel KeyStore.
+         *
+         * @param channelConfig The Channel Config of the Channel.
+         * @return The Channel KeyStore.
+         */
+        public ChannelKeyStore get(ChannelConfig channelConfig) {
+            return get(channelConfig.getName());
+        }
+        
+        /**
+         * Returns a Channel KeyStore.
+         *
+         * @param channel The Channel.
+         * @return The Channel KeyStore.
+         */
+        public ChannelKeyStore get(Channel channel) {
+            return get(channel.getConfig());
+        }
+        
+        /**
+         * Returns a Channel KeyStore.
+         *
+         * @param channelState The Channel State of the Channel.
+         * @return The Channel KeyStore.
+         */
+        public ChannelKeyStore get(ChannelState channelState) {
+            return get(channelState.getChannelName());
         }
         
         /**

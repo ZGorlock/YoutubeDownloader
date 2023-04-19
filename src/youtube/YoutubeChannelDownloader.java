@@ -176,7 +176,7 @@ public class YoutubeChannelDownloader {
             videoMap.clear();
             
             if (!Configurator.Config.preventChannelFetch) {
-                channel.getState().cleanupData();
+                channel.getState().cleanupCache();
             }
             
             WebUtils.checkPlaylistId(channel.getConfig());

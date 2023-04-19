@@ -99,7 +99,7 @@ public class ChannelPlaylistParser {
         if ((baseChannel == null) || !baseChannel.getConfig().isYoutubeChannel()) {
             return;
         }
-        baseChannel.getState().cleanupData();
+        baseChannel.getState().cleanupCache();
         
         final List<Playlist> playlists = fetchPlaylists(baseChannel);
         final List<ChannelConfig> playlistChannels = makePlaylistChannels(playlists);
