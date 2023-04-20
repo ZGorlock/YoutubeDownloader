@@ -34,6 +34,7 @@ import commons.lambda.stream.collector.MapCollectors;
 import commons.lambda.stream.mapper.Mappers;
 import commons.object.collection.ListUtility;
 import commons.object.string.StringUtility;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.ParseException;
@@ -57,6 +58,7 @@ import youtube.entity.info.ChannelInfo;
 import youtube.entity.info.PlaylistInfo;
 import youtube.entity.info.VideoInfo;
 import youtube.entity.info.base.EntityInfo;
+import youtube.state.ApiQuota;
 import youtube.state.Stats;
 
 /**
@@ -90,6 +92,11 @@ public final class ApiUtils {
                 logger.warn(Color.bad("See: ") + Color.link("https://github.com/ZGorlock/YoutubeDownloader#getting-an-api-key"));
                 return new RuntimeException(new KeyException());
             });
+    
+    /**
+     * The hash of the Youtube API key.
+     */
+    private static final String API_KEY_HASH = DigestUtils.sha1Hex(API_KEY);
     
     /**
      * The base url for querying Youtube Playlists.
@@ -133,12 +140,12 @@ public final class ApiUtils {
         
         //Values
         
-        CHANNEL("channels", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS)),
-        PLAYLIST("playlists", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.PLAYER)),
-        VIDEO("videos", EndpointCategory.ENTITY, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS, ResponsePart.RECORDING_DETAILS, ResponsePart.PLAYER)),
+        CHANNEL("channels", EndpointCategory.ENTITY, ApiQuota.QuotaCost.CHANNELS_LIST, List.of(ResponsePart.SNIPPET, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS)),
+        PLAYLIST("playlists", EndpointCategory.ENTITY, ApiQuota.QuotaCost.PLAYLISTS_LIST, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.PLAYER)),
+        VIDEO("videos", EndpointCategory.ENTITY, ApiQuota.QuotaCost.VIDEOS_LIST, List.of(ResponsePart.SNIPPET, ResponsePart.CONTENT_DETAILS, ResponsePart.STATUS, ResponsePart.STATISTICS, ResponsePart.TOPIC_DETAILS, ResponsePart.RECORDING_DETAILS, ResponsePart.PLAYER)),
         
-        PLAYLIST_ITEMS("playlistItems", EndpointCategory.DATA, List.of(ResponsePart.CONTENT_DETAILS)),
-        CHANNEL_PLAYLISTS("playlists", EndpointCategory.DATA, List.of(ResponsePart.ID));
+        PLAYLIST_ITEMS("playlistItems", EndpointCategory.DATA, ApiQuota.QuotaCost.PLAYLIST_ITEMS_LIST, List.of(ResponsePart.CONTENT_DETAILS)),
+        CHANNEL_PLAYLISTS("playlists", EndpointCategory.DATA, ApiQuota.QuotaCost.PLAYLISTS_LIST, List.of(ResponsePart.ID));
         
         
         //Fields
@@ -154,6 +161,11 @@ public final class ApiUtils {
         public final EndpointCategory category;
         
         /**
+         * The Quota Cost of the Endpoint.
+         */
+        public final ApiQuota.QuotaCost quotaCost;
+        
+        /**
          * The response parts to retrieve from the Endpoint.
          */
         public final List<ResponsePart> responseParts;
@@ -166,11 +178,13 @@ public final class ApiUtils {
          *
          * @param name          The name of the Endpoint.
          * @param category      The Category of the Endpoint.
+         * @param quotaCost     The Quota Cost of the Endpoint.
          * @param responseParts The response parts to retrieve from the Endpoint.
          */
-        Endpoint(String name, EndpointCategory category, List<ResponsePart> responseParts) {
+        Endpoint(String name, EndpointCategory category, ApiQuota.QuotaCost quotaCost, List<ResponsePart> responseParts) {
             this.name = name;
             this.category = category;
+            this.quotaCost = quotaCost;
             this.responseParts = responseParts.stream().distinct().collect(Collectors.toList());
         }
         
@@ -193,6 +207,15 @@ public final class ApiUtils {
          */
         public EndpointCategory getCategory() {
             return category;
+        }
+        
+        /**
+         * Returns the Quota Cost of the Endpoint.
+         *
+         * @return The Quota Cost of the Endpoint.
+         */
+        public ApiQuota.QuotaCost getQuotaCost() {
+            return quotaCost;
         }
         
         /**
@@ -472,7 +495,60 @@ public final class ApiUtils {
     }
     
     
+    //Static Fields
+    
+    /**
+     * A flag indicating whether the API has been loaded yet or not.
+     */
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
+    
+    
     //Static Methods
+    
+    /**
+     * Initializes the API.
+     *
+     * @return Whether the API was successfully initialized.
+     */
+    public static boolean initApi() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing API..."));
+            
+            return checkKey() &&
+                    checkQuota();
+        }
+        return false;
+    }
+    
+    /**
+     * Determines if the API key is available.
+     *
+     * @return Whether the API key is available.
+     */
+    public static boolean checkKey() {
+        logger.debug(Color.log("Checking API Key..."));
+        
+        if (StringUtility.isNullOrBlank(API_KEY)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.warn(Color.bad("API Key is required"));
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Determines if API key is available.
+     *
+     * @return Whether the API key is available.
+     */
+    public static boolean checkQuota() {
+        logger.debug(Color.log("Checking API Quota..."));
+        
+        ApiQuota.initQuota(API_KEY_HASH);
+        
+        return true;
+    }
     
     /**
      * Calls the Youtube Data API and fetches a Channel.
@@ -1393,15 +1469,15 @@ public final class ApiUtils {
                 try (CloseableHttpResponse httpResponse = httpClient.execute(request)) {
                     response.set(EntityUtils.toString(httpResponse.getEntity()).strip());
                     error.set(httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
-                    
+                } finally {
                     logApiCall(endpoint, request.getURI(), response.get(), error.get(), channelState);
-                    
-                    if (!error.get()) {
-                        parameters.put("pageToken", Optional.ofNullable(response.get())
-                                .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(response.get()))
-                                .map(e -> (String) e.get("nextPageToken")).orElse(null));
-                        return response.get();
-                    }
+                }
+                
+                if (!error.get()) {
+                    parameters.put("pageToken", Optional.ofNullable(response.get())
+                            .map((CheckedFunction<String, Map<String, Object>>) e -> (Map<String, Object>) new JSONParser().parse(response.get()))
+                            .map(e -> (String) e.get("nextPageToken")).orElse(null));
+                    return response.get();
                 }
             }
             return handleResponse(response.get(), channelState);
@@ -1429,6 +1505,8 @@ public final class ApiUtils {
             Stats.totalApiEntityCalls.addAndGet((endpoint.getCategory() == EndpointCategory.ENTITY) ? 1 : 0);
             Stats.totalApiDataCalls.addAndGet((endpoint.getCategory() == EndpointCategory.DATA) ? 1 : 0);
             Stats.totalApiFailures.addAndGet(error ? 1 : 0);
+            
+            ApiQuota.registerApiCall(API_KEY_HASH, endpoint.getQuotaCost());
         }
         
         /**

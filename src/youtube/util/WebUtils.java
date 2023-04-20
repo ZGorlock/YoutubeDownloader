@@ -107,8 +107,7 @@ public final class WebUtils {
             logger.trace(LogUtils.NEWLINE);
             logger.debug(Color.log("Initializing Web..."));
             
-            return checkInternet() &&
-                    checkApi();
+            return checkInternet();
         }
         return false;
     }
@@ -124,24 +123,6 @@ public final class WebUtils {
         if (!Internet.isOnline()) {
             logger.trace(LogUtils.NEWLINE);
             logger.warn(Color.bad("Internet access is required"));
-            return false;
-        }
-        return true;
-    }
-    
-    /**
-     * Determines if API access is available.
-     *
-     * @return Whether API access is available.
-     */
-    public static boolean checkApi() {
-        logger.debug(Color.log("Checking API..."));
-        
-        try {
-            ApiUtils.fetchVideo("7f-MrT_yGg4");
-        } catch (Exception e) {
-            logger.trace(LogUtils.NEWLINE);
-            logger.error(Color.bad("API access is required"), e);
             return false;
         }
         return true;

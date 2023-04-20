@@ -50,6 +50,7 @@ public final class Utils {
                 Color.initColors() &&
                 FileUtils.initFilesystem() &&
                 WebUtils.initWeb() &&
+                ApiUtils.initApi() &&
                 ExecutableUtils.initExecutable() &&
                 BackupUtils.initBackup();
     }
