@@ -61,6 +61,11 @@ public final class Stats {
     public static final AtomicLong totalChannelsProcessed = new AtomicLong(0L);
     
     /**
+     * A counter of the total number of files that were downloaded this run.
+     */
+    public static final AtomicLong totalDownloads = new AtomicLong(0L);
+    
+    /**
      * A counter of the total number of video files that were downloaded this run.
      */
     public static final AtomicLong totalVideoDownloads = new AtomicLong(0L);
@@ -69,6 +74,11 @@ public final class Stats {
      * A counter of the total number of audio files that were downloaded this run.
      */
     public static final AtomicLong totalAudioDownloads = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total number of files that were renamed this run.
+     */
+    public static final AtomicLong totalRenames = new AtomicLong(0L);
     
     /**
      * A counter of the total number of video files that were renamed this run.
@@ -81,6 +91,11 @@ public final class Stats {
     public static final AtomicLong totalAudioRenames = new AtomicLong(0L);
     
     /**
+     * A counter of the total number of files that were deleted this run.
+     */
+    public static final AtomicLong totalDeletions = new AtomicLong(0L);
+    
+    /**
      * A counter of the total number of video files that were deleted this run.
      */
     public static final AtomicLong totalVideoDeletions = new AtomicLong(0L);
@@ -91,6 +106,11 @@ public final class Stats {
     public static final AtomicLong totalAudioDeletions = new AtomicLong(0L);
     
     /**
+     * A counter of the total number of files that failed to download this run.
+     */
+    public static final AtomicLong totalDownloadFailures = new AtomicLong(0L);
+    
+    /**
      * A counter of the total number of video files that failed to download this run.
      */
     public static final AtomicLong totalVideoDownloadFailures = new AtomicLong(0L);
@@ -99,6 +119,11 @@ public final class Stats {
      * A counter of the total number of audio files that failed to download this run.
      */
     public static final AtomicLong totalAudioDownloadFailures = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total data downloaded from Youtube this run, in bytes.
+     */
+    public static final AtomicLong totalDataDownloaded = new AtomicLong(0L);
     
     /**
      * A counter of the total video data downloaded from Youtube this run, in bytes.
@@ -131,6 +156,26 @@ public final class Stats {
     public static final AtomicLong totalApiFailures = new AtomicLong(0L);
     
     /**
+     * A counter of the total daily quota for calling the Youtube Data API.
+     */
+    public static final AtomicLong totalQuota = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total daily quota used by calling the Youtube Data API.
+     */
+    public static final AtomicLong totalQuotaUsed = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total daily quota remaining for calling the Youtube Data API.
+     */
+    public static final AtomicLong totalQuotaRemaining = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total number of files saved from Youtube.
+     */
+    public static final AtomicLong total = new AtomicLong(0L);
+    
+    /**
      * A counter of the total number of video files saved from Youtube.
      */
     public static final AtomicLong totalVideo = new AtomicLong(0L);
@@ -139,6 +184,11 @@ public final class Stats {
      * A counter of the total number of audio files saved from Youtube.
      */
     public static final AtomicLong totalAudio = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total data saved from Youtube, in bytes.
+     */
+    public static final AtomicLong totalData = new AtomicLong(0L);
     
     /**
      * A counter of the total video data saved from Youtube, in bytes.
@@ -151,6 +201,11 @@ public final class Stats {
     public static final AtomicLong totalAudioData = new AtomicLong(0L);
     
     /**
+     * A counter of the total number of files saved from Youtube, considering only the Channels that were processed this run.
+     */
+    public static final AtomicLong totalFiltered = new AtomicLong(0L);
+    
+    /**
      * A counter of the total number of video files saved from Youtube, considering only the Channels that were processed this run.
      */
     public static final AtomicLong totalFilteredVideo = new AtomicLong(0L);
@@ -159,6 +214,11 @@ public final class Stats {
      * A counter of the total number of audio files saved from Youtube, considering only the Channels that were processed this run.
      */
     public static final AtomicLong totalFilteredAudio = new AtomicLong(0L);
+    
+    /**
+     * A counter of the total data saved from Youtube, in bytes, considering only the Channels that were processed this run.
+     */
+    public static final AtomicLong totalFilteredData = new AtomicLong(0L);
     
     /**
      * A counter of the total video data saved from Youtube, in bytes, considering only the Channels that were processed this run.
@@ -222,7 +282,12 @@ public final class Stats {
                 totalAudio, totalFilteredAudio, totalAudioData, totalFilteredAudioData,
                 totalChannelCaches, totalChannelCacheData,
                 totalLogs, totalLogData,
-                totalBackups, totalBackupData
+                totalBackups, totalBackupData,
+                totalDownloads, totalDownloadFailures, totalDataDownloaded,
+                totalRenames, totalDeletions,
+                totalFiltered, totalFilteredData,
+                total, totalData,
+                totalQuota, totalQuotaUsed, totalQuotaRemaining
         ).forEach(stat -> stat.set(0L));
         
         Stream.of(false, true).forEach(filtered ->
@@ -262,6 +327,23 @@ public final class Stats {
                     totalBackups.incrementAndGet();
                     totalBackupData.addAndGet(Filesystem.sizeOf(file));
                 });
+        
+        totalDownloads.set(totalVideoDownloads.get() + totalAudioDownloads.get());
+        totalDownloadFailures.set(totalVideoDownloadFailures.get() + totalAudioDownloadFailures.get());
+        totalDataDownloaded.set(totalVideoDataDownloaded.get() + totalAudioDataDownloaded.get());
+        
+        totalRenames.set(totalVideoRenames.get() + totalAudioRenames.get());
+        totalDeletions.set(totalVideoDeletions.get() + totalAudioDeletions.get());
+        
+        totalFiltered.set(totalFilteredVideo.get() + totalFilteredAudio.get());
+        totalFilteredData.set(totalFilteredVideoData.get() + totalFilteredAudioData.get());
+        
+        total.set(totalVideo.get() + totalAudio.get());
+        totalData.set(totalVideoData.get() + totalAudioData.get());
+        
+        totalQuota.set(ApiQuota.DAILY_QUOTA);
+        totalQuotaUsed.set(ApiQuota.getQuotaUsage());
+        totalQuotaRemaining.set(ApiQuota.getQuotaRemaining());
     }
     
     /**
@@ -307,19 +389,19 @@ public final class Stats {
         statPrinter.accept("\tTotal", totalChannels.get());
         
         statPrinter.accept("Run", null);
-        statPrinter.accept("\tDownloaded", (totalVideoDownloads.get() + totalAudioDownloads.get()));
+        statPrinter.accept("\tDownloaded", totalDownloads.get());
         statPrinter.accept("\t\tVideo", totalVideoDownloads.get());
         statPrinter.accept("\t\tAudio", totalAudioDownloads.get());
-        statPrinter.accept("\tFailed", (totalVideoDownloadFailures.get() + totalAudioDownloadFailures.get()));
+        statPrinter.accept("\tFailed", totalDownloadFailures.get());
         statPrinter.accept("\t\tVideo", totalVideoDownloadFailures.get());
         statPrinter.accept("\t\tAudio", totalAudioDownloadFailures.get());
-        statPrinter.accept("\tRenamed", (totalVideoRenames.get() + totalAudioRenames.get()));
+        statPrinter.accept("\tRenamed", totalRenames.get());
         statPrinter.accept("\t\tVideo", totalVideoRenames.get());
         statPrinter.accept("\t\tAudio", totalAudioRenames.get());
-        statPrinter.accept("\tDeleted", (totalVideoDeletions.get() + totalAudioDeletions.get()));
+        statPrinter.accept("\tDeleted", totalDeletions.get());
         statPrinter.accept("\t\tVideo", totalVideoDeletions.get());
         statPrinter.accept("\t\tAudio", totalAudioDeletions.get());
-        statPrinter.accept("\tData", (double) (totalVideoDataDownloaded.get() + totalAudioDataDownloaded.get()));
+        statPrinter.accept("\tData", (double) totalDataDownloaded.get());
         statPrinter.accept("\t\tVideo", (double) totalVideoDataDownloaded.get());
         statPrinter.accept("\t\tAudio", (double) totalAudioDataDownloaded.get());
         
@@ -328,6 +410,9 @@ public final class Stats {
         statPrinter.accept("\t\tEntity", totalApiEntityCalls.get());
         statPrinter.accept("\t\tData", totalApiDataCalls.get());
         statPrinter.accept("\tFailures", totalApiFailures.get());
+        statPrinter.accept("\tQuota", totalQuota.get());
+        statPrinter.accept("\t\tUsed", totalQuotaUsed.get());
+        statPrinter.accept("\t\tRemaining", totalQuotaRemaining.get());
         
         statPrinter.accept("Cache", null);
         statPrinter.accept("\tChannels", totalChannelCaches.get());
@@ -343,19 +428,19 @@ public final class Stats {
         
         if (Channels.isFilterActive()) {
             statPrinter.accept("Filter", null);
-            statPrinter.accept("\tDownloads", (totalFilteredVideo.get() + totalFilteredAudio.get()));
+            statPrinter.accept("\tDownloads", totalFiltered.get());
             statPrinter.accept("\t\tVideo", totalFilteredVideo.get());
             statPrinter.accept("\t\tAudio", totalFilteredAudio.get());
-            statPrinter.accept("\tData", (double) (totalFilteredVideoData.get() + totalFilteredAudioData.get()));
+            statPrinter.accept("\tData", (double) totalFilteredData.get());
             statPrinter.accept("\t\tVideo", (double) totalFilteredVideoData.get());
             statPrinter.accept("\t\tAudio", (double) totalFilteredAudioData.get());
         }
         
         statPrinter.accept("Total", null);
-        statPrinter.accept("\tDownloads", (totalVideo.get() + totalAudio.get()));
+        statPrinter.accept("\tDownloads", total.get());
         statPrinter.accept("\t\tVideo", totalVideo.get());
         statPrinter.accept("\t\tAudio", totalAudio.get());
-        statPrinter.accept("\tData", (double) (totalVideoData.get() + totalAudioData.get()));
+        statPrinter.accept("\tData", (double) totalData.get());
         statPrinter.accept("\t\tVideo", (double) totalVideoData.get());
         statPrinter.accept("\t\tAudio", (double) totalAudioData.get());
     }
