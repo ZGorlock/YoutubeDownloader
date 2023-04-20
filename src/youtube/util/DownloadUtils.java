@@ -563,8 +563,8 @@ public final class DownloadUtils {
                 final Matcher progressMatcher = PROGRESS_PATTERN.matcher(log);
                 if (progressMatcher.matches()) {
                     final double percentage = Double.parseDouble(progressMatcher.group("percentage")) / 100.0;
-                    final long total = (long) Double.parseDouble(progressMatcher.group("total"));
-                    final String units = progressMatcher.group("units").replace("i", "");
+                    final double total = Double.parseDouble(progressMatcher.group("total"));
+                    final String units = progressMatcher.group("units").replace("i", "").toUpperCase();
                     
                     long scale = 1L;
                     switch (units) {
@@ -579,7 +579,7 @@ public final class DownloadUtils {
                     }
                     
                     if (getNewPart().compareAndSet(true, false)) {
-                        updateTotal(total * scale);
+                        updateTotal((long) (total * scale));
                         getSaveProgress().set(getProgress());
                     }
                     
