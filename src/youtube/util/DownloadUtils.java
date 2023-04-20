@@ -176,7 +176,7 @@ public final class DownloadUtils {
                         (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
                 Color.log((audio ? ("--extract-audio --audio-format " + FileUtils.DEFAULT_AUDIO_FORMAT + " ") :
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
-                        (newExe ? "-f b " : "")) +
+                        (newExe ? ("-f b" + (audio ? "a" : "") + " ") : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
                 Color.link(video.getInfo().getUrl());
         
