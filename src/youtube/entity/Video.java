@@ -41,11 +41,6 @@ public class Video extends Entity<VideoInfo> {
     protected String title;
     
     /**
-     * The output directory of the Video.
-     */
-    protected File outputDir;
-    
-    /**
      * The download file of the Video.
      */
     protected File download;
@@ -98,6 +93,7 @@ public class Video extends Entity<VideoInfo> {
     public void updateTitle(String videoTitle) {
         title = FileUtils.cleanVideoTitle(
                 Optional.ofNullable(videoTitle)
+                        .map(newTitle -> newTitle.isBlank() ? getTitle() : newTitle)
                         .orElseGet(() -> getInfo().getTitle()));
         initFiles();
     }
@@ -107,6 +103,19 @@ public class Video extends Entity<VideoInfo> {
      */
     public void resetTitle() {
         updateTitle(null);
+    }
+    
+    /**
+     * Updates the output format of the Video.
+     *
+     * @param outputName The output file name.
+     */
+    public void updateFormat(String outputName) {
+        output = new File(getOutputDir(), FileUtils.setFormat(getTitle(),
+                Optional.ofNullable(outputName)
+                        .map(FileUtils::getFormat)
+                        .filter(format -> !format.isBlank())
+                        .orElseGet(this::getFormat)));
     }
     
     /**
@@ -125,9 +134,9 @@ public class Video extends Entity<VideoInfo> {
      * @param outputFile The output file.
      */
     public void updateOutput(File outputFile) {
-        output = outputFile;
-        updateOutputDir(output.getParentFile());
-        updateTitle(FileUtils.getTitle(output.getName()));
+        updateOutputDir(outputFile.getParentFile());
+        updateFormat(FileUtils.getFormat(outputFile.getName()));
+        updateTitle(FileUtils.getTitle(outputFile.getName()));
     }
     
     /**

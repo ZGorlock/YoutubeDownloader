@@ -7,7 +7,6 @@
 
 package youtube.util;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -590,7 +589,7 @@ public final class DownloadUtils {
             
             final Matcher existsMatcher = EXISTS_PATTERN.matcher(log);
             if (existsMatcher.matches()) {
-                getVideo().updateOutput(new File(existsMatcher.group("output")));
+                getVideo().updateFormat(existsMatcher.group("output"));
                 
                 final long size = getVideo().getOutput().length() / 1024;
                 updateTotal(size);
@@ -602,13 +601,13 @@ public final class DownloadUtils {
             
             final Matcher destinationMatcher = DESTINATION_PATTERN.matcher(log);
             if (destinationMatcher.matches()) {
-                getVideo().updateOutput(new File(destinationMatcher.group("destination")));
+                getVideo().updateFormat(destinationMatcher.group("destination"));
                 return getNewPart().compareAndSet(false, true);
             }
             
             final Matcher mergeMatcher = MERGE_PATTERN.matcher(log);
             if (mergeMatcher.matches()) {
-                getVideo().updateOutput(new File(mergeMatcher.group("merge")));
+                getVideo().updateFormat(mergeMatcher.group("merge"));
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Merging Formats" +
@@ -623,7 +622,7 @@ public final class DownloadUtils {
             
             final Matcher extractAudioMatcher = EXTRACT_AUDIO_PATTERN.matcher(log);
             if (extractAudioMatcher.matches()) {
-                getVideo().updateOutput(new File(extractAudioMatcher.group("audio")));
+                getVideo().updateFormat(extractAudioMatcher.group("audio"));
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Extracting Audio...");
