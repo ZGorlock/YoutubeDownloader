@@ -139,7 +139,7 @@ public class ChannelPlaylistParser {
                                 new ImmutablePair<>("key", (playlist.getConfig().getKey() + "_P")),
                                 new ImmutablePair<>("playlistId", playlist.getInfo().getPlaylistId()),
                                 new ImmutablePair<>("active", true),
-                                new ImmutablePair<>("saveAsMp3", playlist.getConfig().isSaveAsMp3()),
+                                new ImmutablePair<>("saveAsAudio", playlist.getConfig().isSaveAsAudio()),
                                 new ImmutablePair<>("savePlaylist", (SEPARATE_FOLDERS || playlist.getConfig().isSavePlaylist())),
                                 new ImmutablePair<>("keepClean", (SEPARATE_FOLDERS && playlist.getConfig().isKeepClean())),
                                 new ImmutablePair<>("outputFolderPath", SEPARATE_FOLDERS ? ("~/" + playlist.getInfo().getTitle()) : null),

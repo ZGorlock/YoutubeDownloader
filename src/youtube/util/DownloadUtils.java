@@ -162,7 +162,7 @@ public final class DownloadUtils {
      */
     private static DownloadResponse downloadYoutubeVideo(Video video, boolean isRetry) {
         final boolean newExe = !ExecutableUtils.Config.executable.isDeprecated();
-        final boolean audio = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Config.asMp3);
+        final boolean audio = Optional.ofNullable(video.getConfig()).map(ChannelEntry::isSaveAsAudio).orElse(Config.asAudio);
         final SponsorBlocker.SponsorBlockConfig sponsorBlockConfig = Optional.ofNullable(video.getConfig()).map(ChannelEntry::getSponsorBlockConfig).orElse(null);
         
         if (isRetry && (Configurator.Config.neverUseBrowserCookies || StringUtility.isNullOrBlank(Config.browser))) {
@@ -241,9 +241,9 @@ public final class DownloadUtils {
         public static final boolean DEFAULT_PRE_MERGED = true;
         
         /**
-         * The default value of the flag indicating whether to download the videos as mp3 files or not.
+         * The default value of the flag indicating whether to download as audio files or not.
          */
-        public static final boolean DEFAULT_AS_MP3 = false;
+        public static final boolean DEFAULT_AS_AUDIO = false;
         
         
         //Static Fields
@@ -254,9 +254,9 @@ public final class DownloadUtils {
         public static boolean preMerged = DEFAULT_PRE_MERGED;
         
         /**
-         * A flag indicating whether to download the videos as mp3 files or not.
+         * A flag indicating whether to download as audio files or not.
          */
-        public static boolean asMp3 = DEFAULT_AS_MP3;
+        public static boolean asAudio = DEFAULT_AS_AUDIO;
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
@@ -272,12 +272,17 @@ public final class DownloadUtils {
         private static void init() {
             preMerged = Configurator.getSetting(List.of(
                             "preMerged",
-                            "format.preMerged"),
+                            "format.preMerged",
+                            "process.format.preMerged"),
                     DEFAULT_PRE_MERGED);
-            asMp3 = Configurator.getSetting(List.of(
+            asAudio = Configurator.getSetting(List.of(
+                            "asAudio",
+                            "format.asAudio",
+                            "process.format.asAudio",
                             "asMp3",
-                            "format.asMp3"),
-                    DEFAULT_AS_MP3);
+                            "format.asMp3",
+                            "process.format.asMp3"),
+                    DEFAULT_AS_AUDIO);
             
             browser = Configurator.getSetting(List.of(
                     "browser",
@@ -611,7 +616,7 @@ public final class DownloadUtils {
                 
                 if (!isCompleted()) {
                     final String completionMessage = Color.good("Merging Formats" +
-                            (Optional.ofNullable(getVideo().getConfig()).map(ChannelEntry::isSaveAsMp3).orElse(Config.asMp3) ? " and Extracting Audio" : "") + "...");
+                            (Optional.ofNullable(getVideo().getConfig()).map(ChannelEntry::isSaveAsAudio).orElse(Config.asAudio) ? " and Extracting Audio" : "") + "...");
                     logger.info(StringUtility.removeConsoleEscapeCharacters(completionMessage));
                     complete(true, completionMessage);
                 }

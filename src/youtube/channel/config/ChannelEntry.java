@@ -65,9 +65,9 @@ public abstract class ChannelEntry extends ConfigData {
     public static final boolean DEFAULT_ACTIVE = true;
     
     /**
-     * The default value of the flag indicating whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
+     * The default value of the flag indicating whether to save the content that is downloaded by the Channel Entry as audio files or not.
      */
-    public static final boolean DEFAULT_SAVE_AS_MP3 = false;
+    public static final boolean DEFAULT_SAVE_AS_AUDIO = false;
     
     /**
      * The default value of the flag indicating whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
@@ -138,9 +138,9 @@ public abstract class ChannelEntry extends ConfigData {
     public String outputFolderPath;
     
     /**
-     * A flag indicating whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
+     * A flag indicating whether to save the content that is downloaded by the Channel Entry as audio files or not.
      */
-    public Boolean saveAsMp3;
+    public Boolean saveAsAudio;
     
     /**
      * A flag indicating whether to save the content that is downloaded by the Chanel Entry to a playlist or not.
@@ -209,13 +209,13 @@ public abstract class ChannelEntry extends ConfigData {
         this.group = parseData("group");
         
         this.active = parseData("active");
-        this.saveAsMp3 = parseData("saveAsMp3");
+        this.saveAsAudio = parseBoolean("saveAsAudio").orElseGet(() -> parseData("saveAsMp3"));
         this.savePlaylist = parseData("savePlaylist");
         this.reversePlaylist = parseData("reversePlaylist");
         this.keepClean = parseData("keepClean");
         
         this.ignoreGlobalLocations = parseData("ignoreGlobalLocations");
-        this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsMp3() ? FileUtils.Config.musicDir : FileUtils.Config.videoDir)) : null;
+        this.locationPrefix = !isIgnoreGlobalLocations() ? PathUtils.path(true, (isSaveAsAudio() ? FileUtils.Config.musicDir : FileUtils.Config.videoDir)) : null;
         
         this.outputFolderPath = parseString("outputFolder").map(ChannelEntry::cleanFilePath).orElseGet(() -> parseData("outputFolderPath"));
         this.outputFolder = Optional.ofNullable(outputFolderPath).map(e -> parseFilePath(locationPrefix, getOutputFolderPath())).orElse(null);
@@ -357,7 +357,7 @@ public abstract class ChannelEntry extends ConfigData {
         fields.put("url", Optional.ofNullable(url).map(String::strip).orElse(null));
         fields.put("playlistId", Optional.ofNullable(playlistId).map(String::strip).orElse(null));
         fields.put("outputFolder", Optional.ofNullable(outputFolderPath).orElse(Optional.ofNullable(outputFolder).map(File::getAbsolutePath).orElse(null)));
-        fields.put("saveAsMp3", saveAsMp3);
+        fields.put("saveAsAudio", saveAsAudio);
         fields.put("savePlaylist", savePlaylist);
         fields.put("reversePlaylist", reversePlaylist);
         fields.put("ignoreGlobalLocations", ignoreGlobalLocations);
@@ -379,7 +379,7 @@ public abstract class ChannelEntry extends ConfigData {
         fields.put("url", getUrl());
         fields.put("playlistId", getPlaylistId());
         fields.put("outputFolder", getOutputFolder());
-        fields.put("saveAsMp3", isSaveAsMp3());
+        fields.put("saveAsAudio", isSaveAsAudio());
         fields.put("savePlaylist", isSavePlaylist());
         fields.put("reversePlaylist", isReversePlaylist());
         fields.put("ignoreGlobalLocations", isIgnoreGlobalLocations());
@@ -547,13 +547,13 @@ public abstract class ChannelEntry extends ConfigData {
     }
     
     /**
-     * Returns whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
+     * Returns whether to save the content that is downloaded by the Channel Entry as audio files or not.
      *
-     * @return Whether to save the content that is downloaded by the Channel Entry as mp3 files or not; mp4 otherwise.
+     * @return Whether to save the content that is downloaded by the Channel Entry as audio files or not.
      */
-    public boolean isSaveAsMp3() {
-        return Optional.ofNullable(saveAsMp3).orElseGet(() ->
-                Optional.ofNullable(parent).map(ChannelEntry::isSaveAsMp3).orElse(DEFAULT_SAVE_AS_MP3));
+    public boolean isSaveAsAudio() {
+        return Optional.ofNullable(saveAsAudio).orElseGet(() ->
+                Optional.ofNullable(parent).map(ChannelEntry::isSaveAsAudio).orElse(DEFAULT_SAVE_AS_AUDIO));
     }
     
     /**

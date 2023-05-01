@@ -265,7 +265,7 @@ public class YoutubeChannelDownloader {
                         oldOutput.renameTo(newOutput);
                         video.updateOutput(newOutput);
                         
-                        if (channel.getConfig().isSaveAsMp3()) {
+                        if (channel.getConfig().isSaveAsAudio()) {
                             Stats.totalAudioRenames.incrementAndGet();
                         } else {
                             Stats.totalVideoRenames.incrementAndGet();
@@ -321,7 +321,7 @@ public class YoutubeChannelDownloader {
                     channel.getState().getSaved().add(videoId);
                     channel.getState().getKeyStore().put(video);
                     
-                    if (channel.getConfig().isSaveAsMp3()) {
+                    if (channel.getConfig().isSaveAsAudio()) {
                         Stats.totalAudioDownloads.incrementAndGet();
                         Stats.totalAudioDataDownloaded.addAndGet(video.getOutput().length());
                     } else {
@@ -333,7 +333,7 @@ public class YoutubeChannelDownloader {
                 case ERROR:
                     channel.getState().getBlocked().add(videoId);
                 case FAILURE:
-                    if (channel.getConfig().isSaveAsMp3()) {
+                    if (channel.getConfig().isSaveAsAudio()) {
                         Stats.totalAudioDownloadFailures.incrementAndGet();
                     } else {
                         Stats.totalVideoDownloadFailures.incrementAndGet();
@@ -445,7 +445,7 @@ public class YoutubeChannelDownloader {
                         }
                         
                         if (!FileUtils.isFormat(channelFile.getName(), FileUtils.DOWNLOAD_FILE_FORMAT)) {
-                            if (channel.getConfig().isSaveAsMp3()) {
+                            if (channel.getConfig().isSaveAsAudio()) {
                                 Stats.totalAudioDeletions.incrementAndGet();
                             } else {
                                 Stats.totalVideoDeletions.incrementAndGet();

@@ -7,8 +7,10 @@
             "videoDir": "Videos/",
             "browser": "Chrome"
         },
-        "format": {
-            "preMerged": true
+        "process": {
+            "format": {
+                "preMerged": true
+            }  
         },
         "filter": {
             "enableFiltering": true,
@@ -64,9 +66,11 @@
             "outputDir": "E:/Downloads/",
             "browser": "Chrome"
         },
-        "format": {
-            "preMerged": true,
-            "asMp3": false
+        "process": {
+            "format": {
+                "preMerged": true,
+                "asAudio": false
+            }
         },
         "flag": {
             "neverUseBrowserCookies": true,

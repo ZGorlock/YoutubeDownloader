@@ -11,7 +11,7 @@
       {
         "key": "VIDEO",
         "active": true,
-        "saveAsMp3": false,
+        "saveAsAudio": false,
         "channels": [
           {
             "key": "EDUCATIONAL",
@@ -2465,7 +2465,7 @@
                     "url": "https://www.youtube.com/c/OSRSBeatz",
                     "playlistId": "UUs1rnF_c_VSg74M5CQ-HKWg",
                     "outputFolder": "Runescape/OSRS Beatz",
-                    "saveAsMp3": true,
+                    "saveAsAudio": true,
                     "savePlaylist": false
                   }
                 ]
@@ -2493,7 +2493,7 @@
                     "key": "BARDIFY",
                     "active": true,
                     "outputFolder": "${D}/Documents/DnD/Music/Bardify",
-                    "saveAsMp3": true,
+                    "saveAsAudio": true,
                     "ignoreGlobalLocations": true,
                     "keepClean": false,
                     "channels": [
@@ -3050,7 +3050,7 @@
       {
         "key": "AUDIO",
         "active": true,
-        "saveAsMp3": true,
+        "saveAsAudio": true,
         "channels": [
           {
             "key": "MUSIC",
