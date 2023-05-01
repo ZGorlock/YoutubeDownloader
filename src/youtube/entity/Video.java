@@ -187,7 +187,7 @@ public class Video extends Entity<VideoInfo> {
                 .orElseGet(() -> Optional.ofNullable(getConfig())
                                          .map(ChannelEntry::isSaveAsAudio)
                                          .orElse(DownloadUtils.Config.asAudio)
-                                 ? FileUtils.DEFAULT_AUDIO_FORMAT : FileUtils.DEFAULT_VIDEO_FORMAT);
+                                 ? DownloadUtils.Config.defaultAudioFormat : DownloadUtils.Config.defaultVideoFormat);
     }
     
     /**

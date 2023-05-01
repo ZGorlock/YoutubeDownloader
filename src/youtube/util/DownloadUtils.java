@@ -173,7 +173,7 @@ public final class DownloadUtils {
                 Color.log("--output ") + Color.quoteFilePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), true) + Color.log(" ") +
                 Color.log("--geo-bypass --rm-cache-dir " +
                         (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
-                Color.log((audio ? ("--extract-audio --audio-format " + FileUtils.DEFAULT_AUDIO_FORMAT + " ") :
+                Color.log((audio ? ("--extract-audio --audio-format " + Config.defaultAudioFormat + " ") :
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? ("-f b" + (audio ? "a" : "") + " ") : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
@@ -245,6 +245,16 @@ public final class DownloadUtils {
          */
         public static final boolean DEFAULT_AS_AUDIO = false;
         
+        /**
+         * The default value of the default format to save video files in.
+         */
+        public static final String DEFAULT_DEFAULT_VIDEO_FORMAT = FileUtils.DEFAULT_VIDEO_FORMAT;
+        
+        /**
+         * The default value of the default format to save audio files in.
+         */
+        public static final String DEFAULT_DEFAULT_AUDIO_FORMAT = FileUtils.DEFAULT_AUDIO_FORMAT;
+        
         
         //Static Fields
         
@@ -257,6 +267,16 @@ public final class DownloadUtils {
          * A flag indicating whether to download as audio files or not.
          */
         public static boolean asAudio = DEFAULT_AS_AUDIO;
+        
+        /**
+         * The default format to save video files in.
+         */
+        public static String defaultVideoFormat = DEFAULT_DEFAULT_VIDEO_FORMAT;
+        
+        /**
+         * The default format to save audio files in.
+         */
+        public static String defaultAudioFormat = DEFAULT_DEFAULT_AUDIO_FORMAT;
         
         /**
          * The browser that cookies will be used from when attempting to retry certain failed downloads.
@@ -284,15 +304,29 @@ public final class DownloadUtils {
                             "process.format.asMp3"),
                     DEFAULT_AS_AUDIO);
             
+            defaultVideoFormat = Configurator.getSetting(List.of(
+                            "defaultVideoFormat",
+                            "videoFormat",
+                            "format.defaultVideoFormat",
+                            "format.videoFormat",
+                            "process.format.defaultVideoFormat",
+                            "process.format.videoFormat"),
+                    DEFAULT_DEFAULT_VIDEO_FORMAT);
+            defaultAudioFormat = Configurator.getSetting(List.of(
+                            "defaultAudioFormat",
+                            "audioFormat",
+                            "format.defaultAudioFormat",
+                            "format.audioFormat",
+                            "process.format.defaultAudioFormat",
+                            "process.format.audioFormat"),
+                    DEFAULT_DEFAULT_AUDIO_FORMAT);
+            
             browser = Configurator.getSetting(List.of(
                     "browser",
                     "location.browser"));
         }
         
     }
-    
-    
-    //Inner Classes
     
     /**
      * Defines a Download Response.

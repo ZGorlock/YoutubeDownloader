@@ -9,7 +9,9 @@
         },
         "process": {
             "format": {
-                "preMerged": true
+                "preMerged": true,
+                "defaultVideoFormat": "mp4",
+                "defaultAudioFormat": "mp3"
             }  
         },
         "filter": {
@@ -69,7 +71,9 @@
         "process": {
             "format": {
                 "preMerged": true,
-                "asAudio": false
+                "asAudio": false,
+                "defaultVideoFormat": "mp4",
+                "defaultAudioFormat": "mp3"
             }
         },
         "flag": {
