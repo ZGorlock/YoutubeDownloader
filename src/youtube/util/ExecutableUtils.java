@@ -10,6 +10,7 @@ package youtube.util;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
@@ -170,14 +171,18 @@ public final class ExecutableUtils {
          * Returns the Executable with a specific name.
          *
          * @param name The name of the Executable.
-         * @return The optional containing the Executable with the specified name, if it exists.
+         * @return The Executable with the specified name, or null if it does not exists.
          */
-        public static Optional<Executable> ofName(String name) {
+        public static Executable ofName(String name) {
             return Optional.ofNullable(name)
                     .map(searchName -> searchName.replaceAll("[\\W_]", "-"))
                     .flatMap(searchName -> Arrays.stream(values())
                             .filter(executable -> executable.getName().equalsIgnoreCase(searchName))
-                            .findFirst());
+                            .findFirst())
+                    .orElseGet(() -> {
+                        logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName(name) + Color.bad(" is not valid"));
+                        return null;
+                    });
         }
         
     }
@@ -378,7 +383,12 @@ public final class ExecutableUtils {
         /**
          * The Youtube Downloader executable to use.
          */
-        public static Executable executable = Executable.ofName(DEFAULT_EXECUTABLE).orElse(null);
+        public static Executable executable = Executable.ofName(DEFAULT_EXECUTABLE);
+        
+        /**
+         * The custom flags to pass to the Youtube Downloader executable.
+         */
+        public static String customFlags = null;
         
         
         //Static Methods
@@ -387,13 +397,21 @@ public final class ExecutableUtils {
          * Initializes the Config.
          */
         private static void init() {
-            executable = Executable.ofName(
-                            Configurator.getSetting("executable", DEFAULT_EXECUTABLE))
+            executable = Optional.ofNullable(Configurator.getSetting(List.of(
+                                    "executable",
+                                    "process.executable"),
+                            (String) null))
+                    .map(Executable::ofName)
                     .orElseGet(() -> {
-                        logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName((String) Configurator.activeProgram.getConfigRoot().getDefinedSetting("executable")) + Color.bad(" is not valid"));
                         logger.warn(Color.bad("Using to the default executable: ") + Color.quoteExeName(DEFAULT_EXECUTABLE) + Color.bad(" instead"));
-                        return Executable.ofName(DEFAULT_EXECUTABLE).orElse(null);
+                        return Executable.ofName(DEFAULT_EXECUTABLE);
                     });
+            
+            customFlags = Configurator.getSetting(List.of(
+                    "customFlags",
+                    "customArgs",
+                    "process.customFlags",
+                    "process.customArgs"));
         }
         
     }

@@ -1,6 +1,5 @@
 {
     "YoutubeChannelDownloader": {
-        "executable": "yt-dlp",
         "location": {
             "storageDrive": "E:/",
             "musicDir": "Music/",
@@ -8,6 +7,8 @@
             "browser": "Chrome"
         },
         "process": {
+            "executable": "yt-dlp",
+            "customFlags": null,
             "format": {
                 "preMerged": true,
                 "defaultVideoFormat": "mp4",
@@ -63,12 +64,13 @@
     },
     
     "YoutubeDownloader": {
-        "executable": "yt-dlp",
         "location": {
             "outputDir": "E:/Downloads/",
             "browser": "Chrome"
         },
         "process": {
+            "executable": "yt-dlp",
+            "customArgs": null,
             "format": {
                 "preMerged": true,
                 "asAudio": false,

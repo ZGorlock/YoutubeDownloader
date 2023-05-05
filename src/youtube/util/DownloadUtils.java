@@ -177,6 +177,7 @@ public final class DownloadUtils {
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? ("-f b" + (audio ? "a" : "") + " ") : "")) +
                 Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
+                Color.log(Optional.ofNullable(ExecutableUtils.Config.customFlags).orElse("") + " ") +
                 Color.link(video.getInfo().getUrl());
         
         return performDownload(cmd, video, isRetry);

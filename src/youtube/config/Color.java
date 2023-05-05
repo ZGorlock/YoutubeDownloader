@@ -1493,7 +1493,7 @@ public class Color {
         } else if (variable instanceof Path) {
             return good(((Path) variable).toAbsolutePath().toString());
             
-        } else if (ExecutableUtils.Executable.ofName(value).isPresent()) {
+        } else if (ExecutableUtils.Executable.ofName(value) != null) {
             return exe(value);
             
         } else if (variable instanceof String) {
