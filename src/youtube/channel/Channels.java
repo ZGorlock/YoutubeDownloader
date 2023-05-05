@@ -446,6 +446,16 @@ public class Channels {
          */
         public static final boolean DEFAULT_ENABLE_FILTERING = true;
         
+        /**
+         * The default value of the flag indicating whether to enable custom rename processes or not.
+         */
+        public static final boolean DEFAULT_ENABLE_CUSTOM_RENAME_PROCESSES = true;
+        
+        /**
+         * The default value of the flag indicating whether to enable custom filter processes or not.
+         */
+        public static final boolean DEFAULT_ENABLE_CUSTOM_FILTER_PROCESSES = true;
+        
         
         //Static Fields
         
@@ -489,6 +499,16 @@ public class Channels {
          */
         public static String stopAt = null;
         
+        /**
+         * A flag indicating whether to enable custom rename processes or not.
+         */
+        public static boolean enableCustomRenameProcesses = DEFAULT_ENABLE_CUSTOM_RENAME_PROCESSES;
+        
+        /**
+         * A flag indicating whether to enable custom filter processes or not.
+         */
+        public static boolean enableCustomFilterProcesses = DEFAULT_ENABLE_CUSTOM_FILTER_PROCESSES;
+        
         
         //Static Methods
         
@@ -516,6 +536,19 @@ public class Channels {
             
             startAt = Configurator.getSetting("filter.startAt");
             stopAt = Configurator.getSetting("filter.stopAt");
+            
+            enableCustomRenameProcesses = Configurator.getSetting(List.of(
+                            "enableCustomRenameProcesses",
+                            "process.enableCustomRenameProcesses",
+                            "process.name.enableCustomRenameProcesses",
+                            "name.enableCustomRenameProcesses"),
+                    DEFAULT_ENABLE_CUSTOM_RENAME_PROCESSES);
+            enableCustomFilterProcesses = Configurator.getSetting(List.of(
+                            "enableCustomFilterProcesses",
+                            "process.enableCustomFilterProcesses",
+                            "process.filter.enableCustomFilterProcesses",
+                            "filter.enableCustomFilterProcesses"),
+                    DEFAULT_ENABLE_CUSTOM_FILTER_PROCESSES);
         }
         
     }

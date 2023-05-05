@@ -226,7 +226,9 @@ public class YoutubeChannelDownloader {
             channel.getState().getBlocked().clear();
         }
         
-        ChannelProcesses.performSpecialPreConditions(channel, videoMap);
+        if (Channels.Config.enableCustomRenameProcesses) {
+            ChannelProcesses.performSpecialPreConditions(channel, videoMap);
+        }
         
         videoMap.values().stream().collect(Collectors.groupingBy(Video::getTitle)).entrySet()
                 .stream().filter(e -> (e.getValue().size() > 1)).forEach(e ->
@@ -282,7 +284,9 @@ public class YoutubeChannelDownloader {
             }
         });
         
-        ChannelProcesses.performSpecialPostConditions(channel, videoMap);
+        if (Channels.Config.enableCustomFilterProcesses) {
+            ChannelProcesses.performSpecialPostConditions(channel, videoMap);
+        }
         
         channel.getState().save();
         return true;

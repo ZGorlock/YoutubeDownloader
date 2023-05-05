@@ -9,11 +9,13 @@
         "process": {
             "executable": "yt-dlp",
             "customFlags": null,
+            "enableCustomRenameProcesses": true,
+            "enableCustomFilterProcesses": true,
             "format": {
                 "preMerged": true,
                 "defaultVideoFormat": "mp4",
                 "defaultAudioFormat": "mp3"
-            }  
+            }
         },
         "filter": {
             "enableFiltering": true,
