@@ -179,10 +179,7 @@ public final class ExecutableUtils {
                     .flatMap(searchName -> Arrays.stream(values())
                             .filter(executable -> executable.getName().equalsIgnoreCase(searchName))
                             .findFirst())
-                    .orElseGet(() -> {
-                        logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName(name) + Color.bad(" is not valid"));
-                        return null;
-                    });
+                    .orElse(null);
         }
         
     }
@@ -401,9 +398,14 @@ public final class ExecutableUtils {
                                     "executable",
                                     "process.executable"),
                             (String) null))
-                    .map(Executable::ofName)
+                    .map(executableName -> Optional.of(executableName)
+                            .map(Executable::ofName)
+                            .orElseGet(() -> {
+                                logger.warn(Color.bad("The configured executable: ") + Color.quoteExeName(executableName) + Color.bad(" is not valid"));
+                                return null;
+                            }))
                     .orElseGet(() -> {
-                        logger.warn(Color.bad("Using to the default executable: ") + Color.quoteExeName(DEFAULT_EXECUTABLE) + Color.bad(" instead"));
+                        logger.warn(Color.bad("Switching to the default executable: ") + Color.quoteExeName(DEFAULT_EXECUTABLE));
                         return Executable.ofName(DEFAULT_EXECUTABLE);
                     });
             
