@@ -68,13 +68,11 @@
                       {
                         "key": "THOUGHTY2",
                         "active": true,
-                        "name": "Thoughty2",
                         "keepClean": true
                       },
                       {
                         "key": "THOUGHTY2_NEW_INTRO_ONLY",
                         "active": true,
-                        "name": "Thoughty2NewIntroOnly",
                         "playlistFile": "~ - New Intro Only.m3u"
                       }
                     ]
@@ -87,7 +85,6 @@
                       {
                         "key": "VSAUCE",
                         "active": true,
-                        "name": "Vsauce",
                         "url": "https://www.youtube.com/c/vsauce1",
                         "playlistId": "UU6nSFpj9HTCZ5t-N3Rm3-HA"
                       },
@@ -100,7 +97,6 @@
                           {
                             "key": "MIND_FIELD_S1",
                             "active": true,
-                            "name": "MindFieldS1",
                             "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
                             "playlistId": "PLZRRxQcaEjA4qyEuYfAMCazlL0vQDkIj2",
                             "outputFolder": "~/Season 1"
@@ -108,7 +104,6 @@
                           {
                             "key": "MIND_FIELD_S2",
                             "active": true,
-                            "name": "MindFieldS2",
                             "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
                             "playlistId": "PLZRRxQcaEjA7wmh3Z6EQuOK9fm1CqnJCI",
                             "outputFolder": "~/Season 2"
@@ -116,7 +111,6 @@
                           {
                             "key": "MIND_FIELD_S3",
                             "active": true,
-                            "name": "MindFieldS3",
                             "url": "https://www.youtube.com/playlist?list=PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
                             "playlistId": "PLZRRxQcaEjA7LX19uAySGlc9hmprBxfEP",
                             "outputFolder": "~/Season 3"
@@ -185,13 +179,11 @@
                       {
                         "key": "PBS_SPACE_TIME",
                         "active": true,
-                        "name": "PbsSpaceTime",
                         "keepClean": true
                       },
                       {
                         "key": "PBS_SPACE_TIME_MATT_ONLY",
                         "active": true,
-                        "name": "PbsSpaceTimeMattOnly",
                         "playlistFile": "~ - Matt Only.m3u"
                       }
                     ]
@@ -205,7 +197,6 @@
                       {
                         "key": "ISAAC_ARTHUR",
                         "active": true,
-                        "name": "IsaacArthur",
                         "url": "https://www.youtube.com/channel/UCZFipeZtQM5CKUjx6grh54g",
                         "playlistId": "UUZFipeZtQM5CKUjx6grh54g",
                         "keepClean": true
@@ -539,13 +530,11 @@
                       {
                         "key": "ADAM_SAVAGE_TESTED",
                         "active": false,
-                        "name": "AdamSavageTested",
                         "outputFolder": "~ - Tested"
                       },
                       {
                         "key": "ADAM_SAVAGE_ONE_DAY_BUILDS",
                         "active": false,
-                        "name": "AdamSavageOneDayBuilds",
                         "outputFolder": "~ - One Day Builds"
                       }
                     ]
@@ -657,7 +646,6 @@
                       {
                         "key": "BEN_EATER",
                         "active": true,
-                        "name": "BenEater",
                         "url": "https://www.youtube.com/channel/UCS0N5baNlQWJCUrhCEo8WlA",
                         "playlistId": "UUS0N5baNlQWJCUrhCEo8WlA",
                         "keepClean": true
@@ -710,7 +698,6 @@
                       {
                         "key": "TECHNOLOGY_CONNECTIONS",
                         "active": true,
-                        "name": "TechnologyConnections",
                         "url": "https://www.youtube.com/c/TechnologyConnections",
                         "playlistId": "UUy0tKL1T7wFoYcxCe0xjN6Q",
                         "keepClean": true
@@ -875,7 +862,6 @@
                       {
                         "key": "NILE_RED",
                         "active": true,
-                        "name": "NileRed",
                         "url": "https://www.youtube.com/c/NileRed",
                         "playlistId": "UUFhXFikryT4aFcLkLw2LBLA",
                         "outputFolder": "~/Nile Red"
@@ -883,7 +869,6 @@
                       {
                         "key": "NILE_BLUE",
                         "active": true,
-                        "name": "NileBlue",
                         "url": "https://www.youtube.com/c/NileRed2",
                         "playlistId": "UU1D3yD4wlPMico0dss264XA",
                         "outputFolder": "~/Nile Blue"
@@ -904,7 +889,6 @@
                       {
                         "key": "EXPLOSIONS_AND_FIRE",
                         "active": true,
-                        "name": "ExplosionsAndFire",
                         "url": "https://www.youtube.com/c/ExplosionsFire2",
                         "playlistId": "UUVovvq34gd0ps5cVYNZrc7A",
                         "outputFolder": "~/Explosions&Fire"
@@ -912,7 +896,6 @@
                       {
                         "key": "EXPLOSIONS_AND_IRE",
                         "active": true,
-                        "name": "ExplosionsAndIre",
                         "url": "https://www.youtube.com/c/ExtractionsIre",
                         "playlistId": "UUvFApMFo_AafXbHRyEJefjA",
                         "outputFolder": "~/Explosions&Ire"
@@ -963,7 +946,6 @@
                       {
                         "key": "NHAT_BANG_SPA",
                         "active": true,
-                        "name": "NhatBangSpa",
                         "url": "https://www.youtube.com/channel/UCoZTzL23Hkah-5RZjUPt-Lg",
                         "playlistId": "UUaXE_FFGt8rhOf8BhH7fAJw",
                         "playlistFile": "~ - Nhat Bang Spa.m3u"
@@ -971,7 +953,6 @@
                       {
                         "key": "LIKE_YOU",
                         "active": true,
-                        "name": "LikeYou",
                         "url": "https://www.youtube.com/c/LikeYou55",
                         "playlistId": "UU3bVSowe2a0jK8NWNlMGVUg",
                         "playlistFile": "~ - Like You.m3u"
@@ -979,7 +960,6 @@
                       {
                         "key": "SURI_NGUYEN",
                         "active": true,
-                        "name": "SuriNguyen",
                         "url": "https://www.youtube.com/channel/UCMRXymZEaLVlllBmqS2sQtQ",
                         "playlistId": "UUMRXymZEaLVlllBmqS2sQtQ",
                         "playlistFile": "~ - Suri Nguyen.m3u"
@@ -1051,7 +1031,6 @@
                       {
                         "key": "MIKE_MALONEY",
                         "active": true,
-                        "name": "MikeMaloney",
                         "url": "https://www.youtube.com/c/Goldsilver",
                         "playlistId": "UUThv5tYUVaG4ZPA3p6EXZbQ",
                         "keepClean": true
@@ -1265,14 +1244,12 @@
                           {
                             "key": "SUPERSTONK",
                             "active": true,
-                            "name": "Superstonk",
                             "url": "https://www.youtube.com/c/Superstonk",
                             "playlistId": "UUI4EET9NJPWxUuXGlG6fxPA"
                           },
                           {
                             "key": "SUPERSTONK_2",
                             "active": true,
-                            "name": "Superstonk2",
                             "url": "https://www.youtube.com/channel/UCJ-mn_GXx-MZeL8KiNx-_IA",
                             "playlistId": "UUJ-mn_GXx-MZeL8KiNx-_IA"
                           }
@@ -1430,7 +1407,6 @@
                       {
                         "key": "DW_DOCUMENTARY",
                         "active": true,
-                        "name": "DwDocumentary",
                         "playlistId": "UUW39zufHfsuGgpLviKh297Q",
                         "keepClean": false
                       },
@@ -1499,7 +1475,6 @@
                       {
                         "key": "CNBC",
                         "active": false,
-                        "name": "CNBC",
                         "url": "https://www.youtube.com/c/CNBC",
                         "playlistId": "UUvJJ_dzjViJCoLf5uKUTwoA",
                         "keepClean": true
@@ -1507,7 +1482,6 @@
                       {
                         "key": "CNBC_ORIGINALS",
                         "active": true,
-                        "name": "CNBCOriginals",
                         "url": "https://www.youtube.com/playlist?list=PLDt0J62yU45sN1rBmNiSRr12acZBnPAZy",
                         "playlistId": "PLDt0J62yU45sN1rBmNiSRr12acZBnPAZy",
                         "outputFolder": "~ Originals",
@@ -1524,7 +1498,6 @@
                       {
                         "key": "FRONTLINE_PBS",
                         "active": true,
-                        "name": "FrontlinePbs",
                         "url": "https://www.youtube.com/c/frontline",
                         "playlistId": "UU3ScyryU9Oy9Wse3a8OAmYQ",
                         "keepClean": true
@@ -1630,7 +1603,6 @@
                       {
                         "key": "SPARK_DOCUMENTARY",
                         "active": true,
-                        "name": "SparkDocumentary",
                         "url": "https://www.youtube.com/c/SparkDocs",
                         "playlistId": "UUMV3aTOwUtG5vwfH9_rzb2w",
                         "keepClean": true
@@ -1844,7 +1816,6 @@
                       {
                         "key": "ENDEVR_DOCUMENTARY",
                         "active": true,
-                        "name": "EndevrDocumentary",
                         "url": "https://www.youtube.com/c/ENDEVRDocs",
                         "playlistId": "UUuw0GgMlZlAsWvpI8PgCN8g",
                         "keepClean": true
@@ -2004,7 +1975,6 @@
                       {
                         "key": "INSIDER_BUSINESS",
                         "active": true,
-                        "name": "InsiderBusiness",
                         "url": "https://www.youtube.com/@InsiderBusiness",
                         "playlistId": "UUcyq283he07B7_KUX07mmtA",
                         "keepClean": false
@@ -2194,7 +2164,6 @@
                       {
                         "key": "FD_CRIME",
                         "active": false,
-                        "name": "FD Crime",
                         "url": "https://www.youtube.com/@FDCrime",
                         "playlistId": "UUQ-UEhur3z7Jn2lS25d5zzw",
                         "keepClean": true
@@ -2241,7 +2210,6 @@
                       {
                         "key": "FORENSIC_FILES",
                         "active": false,
-                        "name": "ForensicFiles",
                         "url": "https://www.youtube.com/user/MedicalDetectivesTV",
                         "playlistId": "UUVBTlb6_rQkWY99ZKi2oBMw",
                         "outputFolder": "~/All"
@@ -2249,98 +2217,84 @@
                       {
                         "key": "FORENSIC_FILES_S01",
                         "active": true,
-                        "name": "ForensicFilesS01",
                         "playlistId": "PLQWkmlie7GRNlka2Q_cs79zJxQjuwRz8_",
                         "outputFolder": "~/Season 1"
                       },
                       {
                         "key": "FORENSIC_FILES_S02",
                         "active": true,
-                        "name": "ForensicFilesS02",
                         "playlistId": "PLQWkmlie7GRN75WevfXf7bqNnMhlKLNqt",
                         "outputFolder": "~/Season 2"
                       },
                       {
                         "key": "FORENSIC_FILES_S03",
                         "active": true,
-                        "name": "ForensicFilesS03",
                         "playlistId": "PLQWkmlie7GRM6GwaU1q6s3YVyGTpeddR7",
                         "outputFolder": "~/Season 3"
                       },
                       {
                         "key": "FORENSIC_FILES_S04",
                         "active": true,
-                        "name": "ForensicFilesS04",
                         "playlistId": "PLQWkmlie7GRP7BWVRsLnhmVhTzfThXQrU",
                         "outputFolder": "~/Season 4"
                       },
                       {
                         "key": "FORENSIC_FILES_S05",
                         "active": true,
-                        "name": "ForensicFilesS05",
                         "playlistId": "PLQWkmlie7GRM-J1IKHiHIhUqTYVQjxA0T",
                         "outputFolder": "~/Season 5"
                       },
                       {
                         "key": "FORENSIC_FILES_S06",
                         "active": true,
-                        "name": "ForensicFilesS06",
                         "playlistId": "PLQWkmlie7GRMGnesHh8V2KQip3_Yb71a3",
                         "outputFolder": "~/Season 6"
                       },
                       {
                         "key": "FORENSIC_FILES_S07",
                         "active": true,
-                        "name": "ForensicFilesS07",
                         "playlistId": "PLQWkmlie7GRM3f2nJj08yJbmK9yKdMeDr",
                         "outputFolder": "~/Season 7"
                       },
                       {
                         "key": "FORENSIC_FILES_S08",
                         "active": true,
-                        "name": "ForensicFilesS08",
                         "playlistId": "PLQWkmlie7GROYQHJtBx48rLKlJ1xEXnxx",
                         "outputFolder": "~/Season 8"
                       },
                       {
                         "key": "FORENSIC_FILES_S09",
                         "active": true,
-                        "name": "ForensicFilesS09",
                         "playlistId": "PLQWkmlie7GRMcFRYzIAzeF9NVTv6BJ4F1",
                         "outputFolder": "~/Season 9"
                       },
                       {
                         "key": "FORENSIC_FILES_S10",
                         "active": true,
-                        "name": "ForensicFilesS10",
                         "playlistId": "PLQWkmlie7GROKXnoCUTm2Ionm-CnWRY0Y",
                         "outputFolder": "~/Season 10"
                       },
                       {
                         "key": "FORENSIC_FILES_S11",
                         "active": true,
-                        "name": "ForensicFilesS11",
                         "playlistId": "PLQWkmlie7GRMdDjTGZL0gLjwNJLEp7fUd",
                         "outputFolder": "~/Season 11"
                       },
                       {
                         "key": "FORENSIC_FILES_S12",
                         "active": true,
-                        "name": "ForensicFilesS12",
                         "playlistId": "PLQWkmlie7GRMFlchCYYeht1CvGLfDpqKN",
                         "outputFolder": "~/Season 12"
                       },
                       {
                         "key": "FORENSIC_FILES_S13",
                         "active": true,
-                        "name": "ForensicFilesS13",
                         "playlistId": "PLQWkmlie7GROpzz1Tw9LNCnfZW0tL8Ew_",
                         "outputFolder": "~/Season 13"
                       },
                       {
                         "key": "FORENSIC_FILES_S14",
                         "active": true,
-                        "name": "ForensicFilesS14",
                         "playlistId": "PLQWkmlie7GRNy5SEfGqkLDXrALFpsjc2k",
                         "outputFolder": "~/Season 14"
                       }
@@ -2366,7 +2320,6 @@
                       {
                         "key": "SWAMPLETICS",
                         "active": true,
-                        "name": "Swampletics",
                         "url": "https://www.youtube.com/playlist?list=PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a",
                         "playlistId": "PLWiMc19-qaA3u1ZawZQIKAh0BknPvoK8a",
                         "outputFolder": "~/Swampletics"
@@ -2374,7 +2327,6 @@
                       {
                         "key": "TILEMAN",
                         "active": true,
-                        "name": "Tileman",
                         "url": "https://www.youtube.com/playlist?list=PLWiMc19-qaA3uAQXQUcn8c1VR5ZwqVOXl",
                         "playlistId": "PLWiMc19-qaA3uAQXQUcn8c1VR5ZwqVOXl",
                         "outputFolder": "~/Tileman"
@@ -2388,7 +2340,6 @@
                       {
                         "key": "BY_RELEASE",
                         "active": true,
-                        "name": "ByRelease",
                         "url": "https://www.youtube.com/playlist?list=PLDSJpYkJoHD-0Keg6Fu7bcVTlbR27T-88",
                         "playlistId": "PLDSJpYkJoHD-0Keg6Fu7bcVTlbR27T-88",
                         "outputFolder": "~/By Release"
@@ -2396,7 +2347,6 @@
                       {
                         "key": "RUNESCAPE_F2P",
                         "active": true,
-                        "name": "RunescapeF2P",
                         "url": "https://www.youtube.com/playlist?list=PLDSJpYkJoHD9f6nowvKrY2vHOZBgIZm_K",
                         "playlistId": "PLDSJpYkJoHD9f6nowvKrY2vHOZBgIZm_K",
                         "outputFolder": "~/Runescape F2P"
@@ -2404,7 +2354,6 @@
                       {
                         "key": "RUNESCAPE_PROP_HUNT",
                         "active": true,
-                        "name": "RunescapePropHunt",
                         "url": "https://www.youtube.com/playlist?list=PLDSJpYkJoHD8gHVIxuGINjnv-uA7GCgkL",
                         "playlistId": "PLDSJpYkJoHD8gHVIxuGINjnv-uA7GCgkL",
                         "outputFolder": "~/Runescape Prop Hunt"
@@ -2418,7 +2367,6 @@
                       {
                         "key": "MUDKIP_HCIM",
                         "active": true,
-                        "name": "MudkipHcim",
                         "url": "https://www.youtube.com/playlist?list=PL4Ct8chrkvPgti4HYTZFo7FSfxlLlptbN",
                         "playlistId": "PL4Ct8chrkvPgti4HYTZFo7FSfxlLlptbN",
                         "outputFolder": "~/HCIM - Mudkip"
@@ -2426,7 +2374,6 @@
                       {
                         "key": "MUDKIP_UIM",
                         "active": true,
-                        "name": "MudkipUim",
                         "url": "https://www.youtube.com/playlist?list=PL4Ct8chrkvPitHm4U6QZfxrmDJVgg6VR1",
                         "playlistId": "PL4Ct8chrkvPitHm4U6QZfxrmDJVgg6VR1",
                         "outputFolder": "~/UIM - Mudkip"
@@ -2440,7 +2387,6 @@
                       {
                         "key": "IRON_MAIN",
                         "active": true,
-                        "name": "IronMain",
                         "url": "https://www.youtube.com/playlist?list=PLhsEAJsiNQ3afUF7AkQ_6RbH0Nicd1wCX",
                         "playlistId": "PLhsEAJsiNQ3afUF7AkQ_6RbH0Nicd1wCX",
                         "outputFolder": "~/Iron Main"
@@ -2448,7 +2394,6 @@
                       {
                         "key": "ONE_KICK_RICK",
                         "active": true,
-                        "name": "OneKickRick",
                         "url": "https://www.youtube.com/playlist?list=PLhsEAJsiNQ3YMprz-CHZ_MCMxedsdANc2",
                         "playlistId": "PLhsEAJsiNQ3YMprz-CHZ_MCMxedsdANc2",
                         "outputFolder": "~/One Kick Rick"
@@ -2462,7 +2407,6 @@
                       {
                         "key": "LOWER_THE_BETTER",
                         "active": true,
-                        "name": "LowerTheBetter",
                         "url": "https://www.youtube.com/playlist?list=PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6",
                         "playlistId": "PLGCe4YMe1XHIVM8NE-RC7k3vSNfU72aO6",
                         "outputFolder": "~/Lower the Better"
@@ -2478,7 +2422,6 @@
                       {
                         "key": "OSRS_CHALLENGES_TANZOO",
                         "active": true,
-                        "name": "OsrsChallengesTanzoo",
                         "url": "https://www.youtube.com/playlist?list=PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU",
                         "playlistId": "PL-Ub6X6SpQG_CElz7Gt1lV_BOSCv5vWNU",
                         "playlistFile": "~ - Tanzoo.m3u"
@@ -2486,7 +2429,6 @@
                       {
                         "key": "OSRS_CHALLENGES_VIRTOSO",
                         "active": true,
-                        "name": "OsrsChallengesVirtoso",
                         "url": "https://www.youtube.com/playlist?list=PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb",
                         "playlistId": "PLkWQe8Xki9YgUGQSvwC7E7dxAtKDVZ0hb",
                         "playlistFile": "~ - Virtoso.m3u"
@@ -2500,7 +2442,6 @@
                       {
                         "key": "OSRS_WEEKLY_RECAP",
                         "active": true,
-                        "name": "OsrsWeeklyRecap",
                         "url": "https://www.youtube.com/playlist?list=PLiETVLquxFqxOaD4dT35ooeG9Ro0qK6LU",
                         "playlistId": "PLiETVLquxFqxOaD4dT35ooeG9Ro0qK6LU",
                         "outputFolder": "~/Weekly Recap"
@@ -2508,7 +2449,6 @@
                       {
                         "key": "OSRS_MARKET_ANALYSIS",
                         "active": true,
-                        "name": "OsrsMarketAnalysis",
                         "url": "https://www.youtube.com/channel/UCIi4nY4YuOYUJEg8XLM0vQw",
                         "playlistId": "UUIi4nY4YuOYUJEg8XLM0vQw",
                         "outputFolder": "~/Market Analysis"
@@ -2556,7 +2496,6 @@
                       {
                         "key": "BARDIFY",
                         "active": false,
-                        "name": "Bardify",
                         "url": "https://www.youtube.com/@bardify",
                         "playlistId": "UUFSwyTXM2RPPMpb1MNH3J6A",
                         "outputFolder": "~/All"
@@ -2564,7 +2503,6 @@
                       {
                         "key": "BARDIFY_EVENTS_AND_SITUATIONS",
                         "active": true,
-                        "name": "BardifyEventsAndSituations",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabGmKCuoEptEq_sUSJsX47LT",
                         "playlistId": "PLPkQh2SAuabGmKCuoEptEq_sUSJsX47LT",
                         "outputFolder": "~/Events and Situations"
@@ -2572,7 +2510,6 @@
                       {
                         "key": "BARDIFY_CITIES_AND_VILLAGES",
                         "active": true,
-                        "name": "BardifyCitiesAndVillages",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabE1-0NnCEwoQVnk_B-Cs5C6",
                         "playlistId": "PLPkQh2SAuabE1-0NnCEwoQVnk_B-Cs5C6",
                         "outputFolder": "~/Cities and Villages"
@@ -2580,7 +2517,6 @@
                       {
                         "key": "BARDIFY_DUNGEONS_AND_CRYPTS",
                         "active": true,
-                        "name": "BardifyDungeonsAndCrypts",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabEhQhgoDdOfimLSsud2Dz2L",
                         "playlistId": "PLPkQh2SAuabEhQhgoDdOfimLSsud2Dz2L",
                         "outputFolder": "~/Dungeons and Crypts"
@@ -2588,7 +2524,6 @@
                       {
                         "key": "BARDIFY_TRAVEL",
                         "active": true,
-                        "name": "BardifyTravel",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabF3v05tmrK-hIKwDDjmcHVl",
                         "playlistId": "PLPkQh2SAuabF3v05tmrK-hIKwDDjmcHVl",
                         "outputFolder": "~/Travel"
@@ -2596,7 +2531,6 @@
                       {
                         "key": "BARDIFY_COMBAT",
                         "active": true,
-                        "name": "BardifyCombat",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabExfT0ufQXMtSIIAFvRM5vH",
                         "playlistId": "PLPkQh2SAuabExfT0ufQXMtSIIAFvRM5vH",
                         "outputFolder": "~/Combat"
@@ -2604,7 +2538,6 @@
                       {
                         "key": "BARDIFY_TAVERN",
                         "active": true,
-                        "name": "BardifyTavern",
                         "url": "https://www.youtube.com/playlist?list=PLPkQh2SAuabEi2pGCrbE14Zl-x8yW2EgJ",
                         "playlistId": "PLPkQh2SAuabEi2pGCrbE14Zl-x8yW2EgJ",
                         "outputFolder": "~/Tavern"
@@ -3087,7 +3020,6 @@
                           {
                             "key": "KITBOGA",
                             "active": true,
-                            "name": "Kitboga",
                             "url": "https://www.youtube.com/c/KitbogaShow",
                             "playlistId": "UUm22FAXZMw1BaWeFszZxUKw",
                             "keepClean": true
@@ -3095,14 +3027,12 @@
                           {
                             "key": "KITBOGA_BAITED_S01",
                             "active": true,
-                            "name": "KitbogaBaitedS01",
                             "playlistId": "PLKdaP6lVyupYeTTKinNc67neByoDz2UAT",
                             "playlistFile": "~ - Baited - Season 1.m3u"
                           },
                           {
                             "key": "KITBOGA_BAITED_S02",
                             "active": true,
-                            "name": "KitbogaBaitedS02",
                             "playlistId": "PLKdaP6lVyupZeqk_nSEPvrQJz5PhhvqJl",
                             "playlistFile": "~ - Baited - Season 2.m3u"
                           }
@@ -3111,7 +3041,6 @@
                       {
                         "key": "KITBOGA_HIGHLIGHTS",
                         "active": true,
-                        "name": "KitbogaHighlights",
                         "url": "https://www.youtube.com/channel/UCgmhcAFfPVx_AMSf89HGh_A",
                         "playlistId": "UUgmhcAFfPVx_AMSf89HGh_A",
                         "outputFolder": "~/Kitboga - Highlights"
@@ -3119,7 +3048,6 @@
                       {
                         "key": "KITBOGA_UNCUT",
                         "active": true,
-                        "name": "KitbogaUncut",
                         "url": "https://www.youtube.com/channel/UCWpQycBnpPxyWY6bBhr4Rbw",
                         "playlistId": "UUWpQycBnpPxyWY6bBhr4Rbw",
                         "outputFolder": "~/Kitboga - Uncut"
@@ -3179,7 +3107,6 @@
                       {
                         "key": "WIZARDS_WITH_GUNS",
                         "active": true,
-                        "name": "WizardsWithGuns",
                         "savePlaylist": false,
                         "keepClean": true
                       },
@@ -3191,7 +3118,6 @@
                       {
                         "key": "WIZARDS_WITH_GUNS_WIZARDS_WATCH",
                         "active": true,
-                        "name": "WizardsWithGunsWizardsWatch",
                         "playlistFile": "~ - Wizards Watch.m3u"
                       }
                     ]
@@ -3232,7 +3158,6 @@
                       {
                         "key": "BEST_CUBE",
                         "active": false,
-                        "name": "BestCube",
                         "url": "https://www.youtube.com/channel/UCIGBzvhOm5Hwxs9u_LY2XLQ",
                         "playlistId": "UUIGBzvhOm5Hwxs9u_LY2XLQ",
                         "outputFolder": "~/Best Cube"
@@ -3240,7 +3165,6 @@
                       {
                         "key": "BEST_CUBE_2_OLD",
                         "active": false,
-                        "name": "BestCube2Old",
                         "url": "https://www.youtube.com/channel/UC0s-sfNvOloiNBkCBYlfmUw",
                         "playlistId": "UU0s-sfNvOloiNBkCBYlfmUw",
                         "outputFolder": "~/Best Cube 2 - Old"
@@ -3248,7 +3172,6 @@
                       {
                         "key": "BEST_CUBE_2",
                         "active": true,
-                        "name": "BestCube2",
                         "url": "https://www.youtube.com/@bestcube2.0compilation",
                         "playlistId": "UCFME_plYkldL0IN7QwkLGmg",
                         "outputFolder": "~/Best Cube 2"
@@ -3276,7 +3199,6 @@
                       {
                         "key": "TRAMBOLINO_COMPILATION",
                         "active": false,
-                        "name": "TrambolinoCompilation",
                         "url": "https://www.youtube.com/channel/UCn42HkmbUavCnHhwnvwpl_g",
                         "playlistId": "UUn42HkmbUavCnHhwnvwpl_g",
                         "outputFolder": "~/Trambolino Compilation"
@@ -3284,7 +3206,6 @@
                       {
                         "key": "TRAMBOLINO_COMPILATION_2",
                         "active": false,
-                        "name": "TrambolinoCompilation2",
                         "url": "https://www.youtube.com/channel/UCsfXJ3GUu-6dV2553rpDfdg",
                         "playlistId": "UUsfXJ3GUu-6dV2553rpDfdg",
                         "outputFolder": "~/Trambolino Compilation 2"
@@ -3521,7 +3442,6 @@
                       {
                         "key": "MUSIC_LAB",
                         "active": false,
-                        "name": "MusicLab",
                         "url": "https://www.youtube.com/c/MusicLabChill",
                         "playlistId": "UUwVQIkAtyZzQSA-OY1rsGig",
                         "keepClean": true
@@ -3529,77 +3449,66 @@
                       {
                         "key": "MUSIC_LAB_HACKER",
                         "active": true,
-                        "name": "MusicLabHacker",
                         "playlistId": "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr",
                         "playlistFile": "~ - Hacker Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_WORK",
                         "active": true,
-                        "name": "MusicLabWork",
                         "playlistId": "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3",
                         "playlistFile": "~ - Work Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_CHILLSTEP",
                         "active": true,
-                        "name": "MusicLabChillstep",
                         "playlistId": "PLdE7uo_7KBkeH0adsnxZupMARfGxY6qik",
                         "playlistFile": "~ - Chillstep Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_CHILLOUT",
                         "active": true,
-                        "name": "MusicLabChillout",
                         "playlistId": "PLdE7uo_7KBkeSTmryNClNxUkioFpq3Btx",
                         "playlistFile": "~ - Chillout Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_AMBIENT",
                         "active": true,
-                        "name": "MusicLabAmbient",
                         "playlistId": "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR",
                         "playlistFile": "~ - Ambient Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_LOFI",
                         "active": false,
-                        "name": "MusicLabLoFi",
                         "playlistId": "PLdE7uo_7KBkcywzGlsZ9c6aerJr3tK058",
                         "playlistFile": "~ - Lo-Fi Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_CONTEMPORARY",
                         "active": false,
-                        "name": "MusicLabContemporary",
                         "playlistId": "PLdE7uo_7KBkdg39l-YqG9eXanlNBiSgzf",
                         "playlistFile": "~ - Contemporary Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_STUDY",
                         "active": true,
-                        "name": "MusicLabStudy",
                         "playlistId": "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi",
                         "playlistFile": "~ - Study Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_CHILLHOP",
                         "active": false,
-                        "name": "MusicLabChillhop",
                         "playlistId": "PLdE7uo_7KBkdmK1rCN4D-GO9g79QXqdVd",
                         "playlistFile": "~ - Chillhop Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_ENERGY",
                         "active": true,
-                        "name": "MusicLabEnergy",
                         "playlistId": "PLdE7uo_7KBkcp_XPf2GiTOqUWAdvqM4ap",
                         "playlistFile": "~ - Energy Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_FUTURE_GARAGE",
                         "active": true,
-                        "name": "MusicLabFutureGarage",
                         "playlistId": "PLdE7uo_7KBkdbssGgnnIDm3EnE2gmHyEQ",
                         "playlistFile": "~ - Future Garage Music.m3u"
                       }
@@ -3614,7 +3523,6 @@
                       {
                         "key": "AMBIENT_MUSIC_LAB",
                         "active": false,
-                        "name": "AmbientMusicLab",
                         "url": "https://www.youtube.com/c/MusicLabAmbient",
                         "playlistId": "UUBBnm8129F9JyziLqUR9klQ",
                         "keepClean": true
@@ -3622,56 +3530,48 @@
                       {
                         "key": "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT",
                         "active": true,
-                        "name": "AmbientMusicLabStudyWorkAmbient",
                         "playlistId": "PLxKdVS3c5d24WI6IacsjEAbuB85uP98tg",
                         "playlistFile": "~ - Study Work Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_MEDITATION_AMBIENT",
                         "active": true,
-                        "name": "AmbientMusicLabMeditationAmbient",
                         "playlistId": "PLxKdVS3c5d27_zJ3aKx7gjuVd1c8FetLi",
                         "playlistFile": "~ - Mediation Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_DRONE",
                         "active": true,
-                        "name": "AmbientMusicLabDrone",
                         "playlistId": "PLxKdVS3c5d24glLI8CIAVDGfZ27vYVjVC",
                         "playlistFile": "~ - Drone.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_SPACE_AMBIENT",
                         "active": true,
-                        "name": "AmbientMusicLabSpaceAmbient",
                         "playlistId": "PLxKdVS3c5d27wxD4SeY73zdI_jx9ml5Zl",
                         "playlistFile": "~ - Space Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_NATURE_AMBIENT",
                         "active": true,
-                        "name": "AmbientMusicLabNatureAmbient",
                         "playlistId": "PLxKdVS3c5d27yepk52ZapbxaQ8LRWnnQf",
                         "playlistFile": "~ - Nature Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_MOVIES_AMBIENT",
                         "active": false,
-                        "name": "AmbientMusicLabMoviesAmbient",
                         "playlistId": "PLxKdVS3c5d26OU2eOJ7rrLc2njyMqdHha",
                         "playlistFile": "~ - Movies Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_DARK_AMBIENT",
                         "active": true,
-                        "name": "AmbientMusicLabDarkAmbient",
                         "playlistId": "PLxKdVS3c5d274Be8nLVJX4FrMYiJIC13T",
                         "playlistFile": "~ - Dark Ambient.m3u"
                       },
                       {
                         "key": "AMBIENT_MUSIC_LAB_AMBIENT_MUSIC",
                         "active": true,
-                        "name": "AmbientMusicLabAmbientMusic",
                         "playlistId": "PLxKdVS3c5d25DESvVEOnWihevaXZ-ppsh",
                         "playlistFile": "~ - Ambient Music.m3u"
                       }
@@ -3766,7 +3666,6 @@
                       {
                         "key": "MR_MOM_MUSIC",
                         "active": true,
-                        "name": "MrMomMusic",
                         "playlistFile": "~ - All.m3u"
                       },
                       {
@@ -3819,7 +3718,6 @@
                       {
                         "key": "AIM_TO_HEAD",
                         "active": true,
-                        "name": "AimToHead",
                         "url": "https://www.youtube.com/c/AimToHeadOfficial",
                         "playlistId": "UU1KJEk-EZMmDF9DJKMK5OCQ",
                         "outputFolder": "~/Aim To Head"
@@ -3827,7 +3725,6 @@
                       {
                         "key": "AIM_TO_HEAD_MIX",
                         "active": true,
-                        "name": "AimToHeadMix",
                         "url": "https://www.youtube.com/channel/UCyI1D9N2OvZif9a2JhV_nrA",
                         "playlistId": "UUyI1D9N2OvZif9a2JhV_nrA",
                         "outputFolder": "~/Aim To Head Mix"
@@ -3940,7 +3837,6 @@
                       {
                         "key": "ARIA",
                         "active": true,
-                        "name": "Aria",
                         "url": "https://www.youtube.com/channel/UCn1icliVp7N5EcLosJ-zJXg",
                         "playlistId": "UUn1icliVp7N5EcLosJ-zJXg",
                         "outputFolder": "~/Aria"
@@ -3948,7 +3844,6 @@
                       {
                         "key": "ARIA_NIGHTCORE",
                         "active": true,
-                        "name": "AriaNightcore",
                         "url": "https://www.youtube.com/channel/UCjml6tSyKyS2nYCP1vGScPw",
                         "playlistId": "UUjml6tSyKyS2nYCP1vGScPw",
                         "outputFolder": "~/Aria Nightcore"
@@ -4844,7 +4739,6 @@
               {
                 "key": "SHITTY_FLUTE",
                 "active": true,
-                "name": "ShittyFlute",
                 "url": "https://www.youtube.com/channel/UCHMmLi8z1HbyhTEvfBgXpyg",
                 "playlistId": "UUHMmLi8z1HbyhTEvfBgXpyg",
                 "outputFolder": "~/Shitty Flute"
