@@ -1870,7 +1870,7 @@
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P09",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-EhnMyKrPEbqZQ4Lml8rC3M",
                         "playlistFile": "~ - Belt and Road.m3u"
                       },
@@ -1888,7 +1888,7 @@
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P12",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-H2PEtjiCsfRc-F4Q4SuMkV",
                         "playlistFile": "~ - Forward Thinking.m3u"
                       },
@@ -1930,13 +1930,13 @@
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P19",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-GAo2JVz9WIm2uTD275nA4f",
                         "playlistFile": "~ - C-Suite.m3u"
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P20",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-E5RBtWSXfAC01qVnOAAuDJ",
                         "playlistFile": "~ - Brink.m3u"
                       },
@@ -1948,19 +1948,19 @@
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P22",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-FmfrGN_SHoU5_Jk4bYcgnO",
                         "playlistFile": "~ - Inside....m3u"
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P23",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-FqzYH6ZZpmw2vK0fVjRZYu",
                         "playlistFile": "~ - High Flyers.m3u"
                       },
                       {
                         "key": "ENDEVR_DOCUMENTARY_P24",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLaevADMuI9-GiZ5CwbbyN5wiRFnq6Y89y",
                         "playlistFile": "~ - Game Changers.m3u"
                       }
