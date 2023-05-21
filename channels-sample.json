@@ -147,6 +147,13 @@
                     "outputFolder": "~/Rational Animations"
                   },
                   {
+                    "key": "REAL_SCIENCE",
+                    "active": true,
+                    "url": "https://www.youtube.com/@realscience",
+                    "playlistId": "UU176GAQozKKjhz62H8u9vQQ",
+                    "outputFolder": "~/Real Science"
+                  },
+                  {
                     "key": "DOMAIN_OF_SCIENCE",
                     "active": true,
                     "url": "https://www.youtube.com/c/DomainofScience",
@@ -544,6 +551,13 @@
                     ]
                   },
                   {
+                    "key": "WORKS_BY_DESIGN",
+                    "active": true,
+                    "url": "https://www.youtube.com/@worksbydesign",
+                    "playlistId": "UU0G7e3uCtTyKQy2vZbRaKxg",
+                    "outputFolder": "~/Works by Design"
+                  },
+                  {
                     "key": "THE_POST_APOCALYPTIC_INVENTOR",
                     "active": true,
                     "url": "https://www.youtube.com/c/ThePostApocalypticInventor",
@@ -612,6 +626,13 @@
                     "url": "https://www.youtube.com/c/Mathologer",
                     "playlistId": "UU1_uAIS3r8Vu6JjXWvastJg",
                     "outputFolder": "~/Mathologer"
+                  },
+                  {
+                    "key": "FREYA_HOLMER",
+                    "active": true,
+                    "url": "https://www.youtube.com/@Acegikmo",
+                    "playlistId": "UU7M-Wz4zK8oikt6ATcoTwBA",
+                    "outputFolder": "~/Freya Holmer"
                   }
                 ]
               },
@@ -790,6 +811,13 @@
                     "url": "https://www.youtube.com/c/RobertMilesAI",
                     "playlistId": "UULB7AzTwc6VFZrBsO2ucBMg",
                     "outputFolder": "~/Robert Miles"
+                  },
+                  {
+                    "key": "ARTEM_KIRSANOV",
+                    "active": true,
+                    "url": "https://www.youtube.com/@ArtemKirsanov",
+                    "playlistId": "UUR2uRTQ53V_egXKFflMMaaw",
+                    "outputFolder": "~/Artem Kirsanov"
                   },
                   {
                     "key": "REDUCIBLE",
@@ -971,6 +999,13 @@
                     "url": "https://www.youtube.com/c/HistoryTime",
                     "playlistId": "UUN9v4QG3AQEP3zuRvVs2dAg",
                     "outputFolder": "~/History Time"
+                  },
+                  {
+                    "key": "ODDYSSEY_ANCIENT_HISTORY_DOCUMENTARIES",
+                    "active": true,
+                    "url": "https://www.youtube.com/@odyssey",
+                    "playlistId": "UUV-yCAXMS-nWrHtORuDfSuQ",
+                    "outputFolder": "~/Odyssey - Ancient History Documentaries"
                   },
                   {
                     "key": "VOICES_OF_THE_PAST",
@@ -1248,6 +1283,20 @@
                 ]
               },
               {
+                "key": "LAW",
+                "active": true,
+                "outputFolder": "~/Law",
+                "channels": [
+                  {
+                    "key": "LEGAL_EAGLE",
+                    "active": true,
+                    "url": "https://www.youtube.com/@LegalEagle",
+                    "playlistId": "UUpa-Zb0ZcQjTCPP1Dx_1M8Q",
+                    "outputFolder": "~/Legal Eagle"
+                  }
+                ]
+              },
+              {
                 "key": "NATURE",
                 "active": true,
                 "outputFolder": "~/Nature",
@@ -1342,6 +1391,13 @@
                     "url": "https://www.youtube.com/c/SoupEmporiums-Emporium-Of-Regrettable-Choices",
                     "playlistId": "UU60sV1b2e_EQRDnueRxgiIQ",
                     "outputFolder": "~/Soup Emporium"
+                  },
+                  {
+                    "key": "BOBBY_BROCCOLI",
+                    "active": true,
+                    "url": "https://www.youtube.com/@BobbyBroccoli",
+                    "playlistId": "UUSPLhwvj0gBufjDRzSQb3GQ",
+                    "outputFolder": "~/Bobby Broccoli"
                   },
                   {
                     "key": "DOWN_THE_RABBIT_HOLE",
@@ -2570,8 +2626,7 @@
                     "channels": [
                       {
                         "key": "SGT_502",
-                        "active": true,
-                        "name": "Sgt502",
+                        "active": false,
                         "url": "https://www.youtube.com/@sgt502",
                         "playlistId": "UUV-nybgNQywxb4eqEU9vPzw",
                         "keepClean": true
@@ -2749,6 +2804,237 @@
                         "active": true,
                         "playlistId": "PL1r_AIMp2rEWfAf8dwcbxoJ9tVMZLvb3G",
                         "playlistFile": "~ - Descended Dungeons.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "MANTASTIC_PAD",
+                    "active": true,
+                    "outputFolder": "~/Mantastic PAD",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "MANTASTIC_PAD",
+                        "active": false,
+                        "url": "https://www.youtube.com/@sgt502",
+                        "playlistId": "UUAWU_YF0erYGBiXHKp6-4GA",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P01",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKDR4YtdiAgnoeQMBvBcagI0",
+                        "playlistFile": "~ - New Evolutions & Upgrades"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P02",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKAdrQws7y_Z6fMlsvbis_mQ",
+                        "playlistFile": "~ - Monster Exchange"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P03",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKB0r7W8CVQ0FdVfe5kMJTHy",
+                        "playlistFile": "~ - Hyperion 3p Carries"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P04",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKA-Jr-6xWcYDGPNNURmBihu",
+                        "playlistFile": "~ - PAD News"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P05",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKDsdI8UhZ2LoRb6it5JZHY1",
+                        "playlistFile": "~/Weekday Arenas"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P06",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKBYU62N_gm6Fd-wcgy7k6dx",
+                        "playlistFile": "~/Weekday Arenas"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P07",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKD-uF84rn0E95fubJkn9ipv",
+                        "playlistFile": "~ - [5] Title Challenges"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P08",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCosPrYp_uXxPQM1hbFOq_k",
+                        "playlistFile": "~ - Version Updates"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P09",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKBZYzcI4x2WXco2QruA0RHA",
+                        "playlistFile": "~ - Ruler of Hell's Hall"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P10",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKBKlLa4zgGlYqiM5BBnE2or",
+                        "playlistFile": "~ - Ruler of Hell's Hall"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P11",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKB2FXL6rB1gEntOYYtS99Sk",
+                        "playlistFile": "~ - Question Time"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P12",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKDeLmsZC82Y15xHiHf9SccT",
+                        "playlistFile": "~ - Shura Realm"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P13",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCxk5-Ht5JStwZ0QvOe7EJH",
+                        "playlistFile": "~ - Combo Guides"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P14",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCmmVq7oAxLC78wAba0GNLi",
+                        "playlistFile": "~ - AA3"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P15",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKALb_wYleNWVNJXvVNTtDsU",
+                        "playlistFile": "~ - Streaming Music"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P16",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCEdju5SlXQrzOo9jG6aPCh",
+                        "playlistFile": "~ - Fast Overviews"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P17",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKB12-tzeAp6b5--Z6Zd8O1u",
+                        "playlistFile": "~ - Fast Overviews"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P18",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKD3DRlbJKmpa1XB2G6Ite52",
+                        "playlistFile": "~ - JP"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P19",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKAjHE1W4r80IZH_jsmDkUBq",
+                        "playlistFile": "~ - A Closer Look"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P20",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKA6YrwDnTS75kcmXmKSOjkJ",
+                        "playlistFile": "~ - Team Building Guides"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P21",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKDZayLeTEpt-1x7xXc2La8Z",
+                        "playlistFile": "~ - Chrono Ma - Gia"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P22",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKBxB447sqr1VY4Tz_bCrRLv",
+                        "playlistFile": "~ - S-Rank Clears"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P23",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKCuaFIW3lGwpOJ1lvFH40bc",
+                        "playlistFile": "~ - Fire Emblem Heroes"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P24",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKD9EnFTzAlD1pKLAaU6BtLj",
+                        "playlistFile": "~ - First Impressions"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P25",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKCzT2j9fGe_k5n3N9hEQlsw",
+                        "playlistFile": "~ - Time Limit Descends"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P26",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCyFjgGvztC9ebq66JKWLHy",
+                        "playlistFile": "~ - Ranking Dungeons"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P27",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKDHzZbhkR_YEtrdC-GUuHGQ",
+                        "playlistFile": "~ - Monster Reviews"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P28",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCKdE1Wa4WICEs6oejC8luh",
+                        "playlistFile": "~ - Gameplay Clears"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P29",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKCxUKsQdda5ABVWY3E9Paxg",
+                        "playlistFile": "~ - Collab Reviews"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P30",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKDji-vJMa2AWccFE1kd8Zc4",
+                        "playlistFile": "~ - Rolling"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P31",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKAA2epbxOi1O4vHWJSCFnt4",
+                        "playlistFile": "~ - Meta Snapshots"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P32",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKBdCY0lwtpu9S-na16eRChs",
+                        "playlistFile": "~ - 3P Coop"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P33",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKAqAD13mbLfDjXpz5Zz3VW2",
+                        "playlistFile": "~ - Godfest Reviews"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P34",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKDDcWEdJ_jQSeJHgxCNGyUS",
+                        "playlistFile": "~ - Clears"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P35",
+                        "active": false,
+                        "playlistId": "PL-cH-whl6BKDh3lpZZLOhT0ZZXeH_z_qg",
+                        "playlistFile": "~ - Creature Quest"
+                      },
+                      {
+                        "key": "MANTASTIC_PAD_P36",
+                        "active": true,
+                        "playlistId": "PL-cH-whl6BKB_DAUrGWM2Uc6-oLS6zC6F",
+                        "playlistFile": "~ - Arena 3 Stuff"
                       }
                     ]
                   }
@@ -3007,10 +3293,23 @@
                   },
                   {
                     "key": "SEXY_CUBE",
-                    "active": false,
-                    "url": "https://www.youtube.com/channel/UCI1JjfDCiMyeSnSXtAZL5zg",
-                    "playlistId": "UUI1JjfDCiMyeSnSXtAZL5zg",
-                    "outputFolder": "~/Sexy Cube"
+                    "active": true,
+                    "channels": [
+                      {
+                        "key": "SEXY_CUBE",
+                        "active": false,
+                        "url": "https://www.youtube.com/channel/UCI1JjfDCiMyeSnSXtAZL5zg",
+                        "playlistId": "UUI1JjfDCiMyeSnSXtAZL5zg",
+                        "outputFolder": "~/Sexy Cube"
+                      },
+                      {
+                        "key": "SEXY_CUBE_2",
+                        "active": true,
+                        "url": "https://www.youtube.com/watch?v=wEQBgn5523c&list=PL9pYPSwaEgnONha0XnNw-u7OSSlR7q0N3",
+                        "playlistId": "PL9pYPSwaEgnONha0XnNw-u7OSSlR7q0N3",
+                        "outputFolder": "~/Sexy Cube 2"
+                      }
+                    ]
                   },
                   {
                     "key": "ANIME_CUBE",
@@ -3379,6 +3678,13 @@
                     ]
                   },
                   {
+                    "key": "AMBIENT_MELODIES",
+                    "active": true,
+                    "url": "https://www.youtube.com/@ambientmelodieschillwave",
+                    "playlistId": "UUpmhFxfr1lNsfOWIcRu32Qg",
+                    "outputFolder": "~/Ambient Melodies"
+                  },
+                  {
                     "key": "DREAMHOP_MUSIC",
                     "active": true,
                     "url": "https://www.youtube.com/c/DreamhopMusic",
@@ -3570,6 +3876,13 @@
                     "url": "https://www.youtube.com/@chillbeatphonk",
                     "playlistId": "UU_oeV58JVVXtxxs09oK1dLg",
                     "outputFolder": "~/Chill Beat Phonk"
+                  },
+                  {
+                    "key": "PHONK_BEAT",
+                    "active": true,
+                    "url": "https://www.youtube.com/@PHONKBeat",
+                    "playlistId": "UUvI-KZbebDSQhr8jYYV5E1w",
+                    "outputFolder": "~/Phonk Beat"
                   },
                   {
                     "key": "MIX_SNAKE",
