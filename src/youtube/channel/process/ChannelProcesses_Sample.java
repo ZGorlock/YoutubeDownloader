@@ -570,12 +570,12 @@ public class ChannelProcesses_Sample {
                 break;
             
             case "WIZARDS_WITH_GUNS_SKITS":
-                FilterProcess.notContainsIgnoreCase(channel, videoMap,
+                FilterProcess.containsIgnoreCase(channel, videoMap,
                         "WIZARDS WATCH");
                 break;
             
             case "WIZARDS_WITH_GUNS_WIZARDS_WATCH":
-                FilterProcess.containsIgnoreCase(channel, videoMap,
+                FilterProcess.notContainsIgnoreCase(channel, videoMap,
                         "WIZARDS WATCH");
                 break;
             

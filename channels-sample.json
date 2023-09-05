@@ -421,6 +421,13 @@
                     "url": "https://www.youtube.com/c/CoolWorldsLab",
                     "playlistId": "UUGHZpIpAWJQ-Jy_CeCdXhMA",
                     "outputFolder": "~/Cool Worlds"
+                  },
+                  {
+                    "key": "DR_BECKY",
+                    "active": true,
+                    "url": "https://www.youtube.com/@DrBecky",
+                    "playlistId": "UUYNbYGl89UUowy8oXkipC-Q",
+                    "outputFolder": "~/Dr. Becky"
                   }
                 ]
               },
@@ -545,6 +552,13 @@
                     "url": "https://www.youtube.com/@worksbydesign",
                     "playlistId": "UU0G7e3uCtTyKQy2vZbRaKxg",
                     "outputFolder": "~/Works by Design"
+                  },
+                  {
+                    "key": "BREAKING_TAPS",
+                    "active": true,
+                    "url": "https://www.youtube.com/@BreakingTaps",
+                    "playlistId": "UU06HVrkOL33D5lLnCPjr6NQ",
+                    "outputFolder": "~/Breaking Taps"
                   },
                   {
                     "key": "THE_POST_APOCALYPTIC_INVENTOR",
@@ -819,6 +833,13 @@
                     "url": "https://www.youtube.com/c/CodeBullet",
                     "playlistId": "UU0e3QhIYukixgh5VVpKHH9Q",
                     "outputFolder": "~/Code Bullet"
+                  },
+                  {
+                    "key": "DAVES_GARAGE",
+                    "active": true,
+                    "url": "https://www.youtube.com/@DavesGarage",
+                    "playlistId": "UUNzszbnvQeFzObW0ghk0Ckw",
+                    "outputFolder": "~/Dave's Garage"
                   },
                   {
                     "key": "FIRESHIP",
@@ -1270,6 +1291,13 @@
                     "url": "https://www.youtube.com/@LegalEagle",
                     "playlistId": "UUpa-Zb0ZcQjTCPP1Dx_1M8Q",
                     "outputFolder": "~/Legal Eagle"
+                  },
+                  {
+                    "key": "DR_INSANITY",
+                    "active": true,
+                    "url": "https://www.youtube.com/@DrInsanityCrime",
+                    "playlistId": "UUjnYCUIym8wNRjLtZCc6gNg",
+                    "outputFolder": "~/Dr. Insanity"
                   }
                 ]
               },
@@ -1351,9 +1379,9 @@
                 ]
               },
               {
-                "key": "CONSPIRACY",
+                "key": "ESSAY",
                 "active": true,
-                "outputFolder": "~/Conspiracy",
+                "outputFolder": "~/Essay",
                 "channels": [
                   {
                     "key": "WENDIGOON",
@@ -1377,6 +1405,13 @@
                     "outputFolder": "~/Bobby Broccoli"
                   },
                   {
+                    "key": "OLIVER_LUGG",
+                    "active": true,
+                    "url": "https://www.youtube.com/@OliverLugg",
+                    "playlistId": "PL1xZFxatUbjOvK3390Q2_0OG_BOHYDODh",
+                    "outputFolder": "~/Oliver Lugg"
+                  },
+                  {
                     "key": "DOWN_THE_RABBIT_HOLE",
                     "active": true,
                     "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
@@ -1389,6 +1424,13 @@
                     "url": "https://www.youtube.com/c/Philion",
                     "playlistId": "UUgKJPhVzv8w0VaZFnS_VmaA",
                     "outputFolder": "~/Philon"
+                  },
+                  {
+                    "key": "WENDOVER_PRODUCTIONS",
+                    "active": true,
+                    "url": "https://www.youtube.com/@Wendoverproductions",
+                    "playlistId": "UU9RM-iSvTu1uPJb8X5yp3EQ",
+                    "outputFolder": "~/Wendover Productions"
                   }
                 ]
               },
@@ -2552,6 +2594,13 @@
                 "outputFolder": "~/PaD",
                 "channels": [
                   {
+                    "key": "GUNGHO",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLKQK4FSU8qVj3bjVr3tbCxgNdFRwXTktQ",
+                    "playlistId": "PLKQK4FSU8qVj3bjVr3tbCxgNdFRwXTktQ",
+                    "outputFolder": "~/GungHo"
+                  },
+                  {
                     "key": "SGT_502",
                     "active": true,
                     "outputFolder": "~/sgt502",
@@ -2737,6 +2786,69 @@
                         "active": true,
                         "playlistId": "PL1r_AIMp2rEWfAf8dwcbxoJ9tVMZLvb3G",
                         "playlistFile": "~ - Descended Dungeons.m3u"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "BIRA_PAD",
+                    "active": true,
+                    "outputFolder": "~/BiraPAD",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "BIRA_PAD",
+                        "active": false,
+                        "url": "https://www.youtube.com/@BiraPAD",
+                        "playlistId": "UUTPCOGFP9NxJiv5vVKUlEFA",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "BIRA_PAD_P01",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkjRR7q4YsvbAUwWhMqgwQT9",
+                        "playlistFile": "~ - Descended.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P02",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZki7b3fVQLb2LtPgoBraghQe",
+                        "playlistFile": "~ - Specials.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P03",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkh9KdcsKCwsuJQUeRondQgH",
+                        "playlistFile": "~ - Farming.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P04",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkiN5Yuqqd_ucnxpCKiiVTf1",
+                        "playlistFile": "~ - Shura.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P05",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkhM41iRGGEDCiuuRY_bj9Or",
+                        "playlistFile": "~ - Shura 2.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P06",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkg5qSei6oFirlm_6-Z1WvOM",
+                        "playlistFile": "~ - Shura 3.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P07",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkhgcNQM535HwFeD2jc6agRE",
+                        "playlistFile": "~ - Dimension of the Mystic.m3u"
+                      },
+                      {
+                        "key": "BIRA_PAD_P08",
+                        "active": true,
+                        "playlistId": "PL8cO65MqFZkhQYeUidPnb4s2nxroMJXWt",
+                        "playlistFile": "~ - Unknown Nova.m3u"
                       }
                     ]
                   },
@@ -3112,8 +3224,7 @@
                       },
                       {
                         "key": "WIZARDS_WITH_GUNS_SKITS",
-                        "active": true,
-                        "name": "WizardsWithGunsSkits"
+                        "active": true
                       },
                       {
                         "key": "WIZARDS_WITH_GUNS_WIZARDS_WATCH",
@@ -3225,8 +3336,8 @@
                       },
                       {
                         "key": "SEXY_CUBE_2",
-                        "active": true,
-                        "url": "https://www.youtube.com/watch?v=wEQBgn5523c&list=PL9pYPSwaEgnONha0XnNw-u7OSSlR7q0N3",
+                        "active": false,
+                        "url": "https://www.youtube.com/playlist?list=PL9pYPSwaEgnONha0XnNw-u7OSSlR7q0N3",
                         "playlistId": "PL9pYPSwaEgnONha0XnNw-u7OSSlR7q0N3",
                         "outputFolder": "~/Sexy Cube 2"
                       }
@@ -3417,6 +3528,23 @@
                     "active": true,
                     "playlistId": "PLDb_G8HX8POTwtlz3m3M8cm34weJLpyGE",
                     "playlistFile": "Playlists/Artist/Mr.Kitty/Mr.Kitty - [2020] - -+ [EP].m3u"
+                  }
+                ]
+              },
+              {
+                "key": "INIKO",
+                "active": true,
+                "outputFolder": "Music/Iniko",
+                "keepClean": false,
+                "channels": [
+                  {
+                    "key": "INIKO",
+                    "active": true,
+                    "url": "https://www.youtube.com/channel/UCHJ4ZJQH5xtOir42N2Cw3Pw",
+                    "playlistId": "UUHJ4ZJQH5xtOir42N2Cw3Pw",
+                    "playlistFile": "Playlists/Artist/Iniko/Iniko.m3u",
+                    "reversePlaylist": true,
+                    "keepClean": true
                   }
                 ]
               }
@@ -3662,6 +3790,7 @@
                     "url": "https://www.youtube.com/c/MrMoM",
                     "playlistId": "UUJBpeNOjvbn9rRte3w_Kklg",
                     "outputFolder": "~/Mr Mom Music",
+                    "keepClean": false,
                     "channels": [
                       {
                         "key": "MR_MOM_MUSIC",
@@ -3670,8 +3799,163 @@
                       },
                       {
                         "key": "MR_MOM_MUSIC_NEW",
+                        "active": true
+                      }
+                    ]
+                  },
+                  {
+                    "key": "CLOUD_KID",
+                    "active": true,
+                    "outputFolder": "~/CloudKid",
+                    "keepClean": false,
+                    "channels": [
+                      {
+                        "key": "CLOUD_KID",
                         "active": true,
-                        "name": "MrMomMusicNew"
+                        "url": "https://www.youtube.com/@cloudkid",
+                        "playlistId": "UUSa8IUd1uEjlREMa21I3ZPQ",
+                        "playlistFile": "~ - All.m3u",
+                        "keepClean": true
+                      },
+                      {
+                        "key": "CLOUD_KID_TOP_50",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStcHvU6R_NRVwqpkE1A0AhFj",
+                        "playlistId": "PLM2V-zC1RStcHvU6R_NRVwqpkE1A0AhFj",
+                        "playlistFile": "~ - Top 50"
+                      },
+                      {
+                        "key": "CLOUD_KID_GAMING_MUSIC",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStdE8dOpKnw25qUsSXz-YtTo",
+                        "playlistId": "PLM2V-zC1RStdE8dOpKnw25qUsSXz-YtTo",
+                        "playlistFile": "~ - Gaming Music"
+                      },
+                      {
+                        "key": "CLOUD_KID_BADASS_VILLAIN_VIBES",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RSte1NDzgc4Frt5BUeSRcalty",
+                        "playlistId": "PLM2V-zC1RSte1NDzgc4Frt5BUeSRcalty",
+                        "playlistFile": "~ - Badass Villain Vibes"
+                      },
+                      {
+                        "key": "CLOUD_KID_ROCKTRONIC",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RSte1FfpQsZ4WzHAN30UtQtOq",
+                        "playlistId": "PLM2V-zC1RSte1FfpQsZ4WzHAN30UtQtOq",
+                        "playlistFile": "~ - Rocktronic"
+                      },
+                      {
+                        "key": "CLOUD_KID_CHILL",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RSte9rMMAN_GxAf_6JNjVfp7B",
+                        "playlistId": "PLM2V-zC1RSte9rMMAN_GxAf_6JNjVfp7B",
+                        "playlistFile": "~ - Chill"
+                      },
+                      {
+                        "key": "CLOUD_KID_BANGERS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStejOS8ga_H8ZlRBV_ElU7-L",
+                        "playlistId": "PLM2V-zC1RStejOS8ga_H8ZlRBV_ElU7-L",
+                        "playlistFile": "~ - Bangers"
+                      },
+                      {
+                        "key": "CLOUD_KID_ALTERNATIVE_BEATS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStc-ZWfgx6iyHHOCJK97szyb",
+                        "playlistId": "PLM2V-zC1RStc-ZWfgx6iyHHOCJK97szyb",
+                        "playlistFile": "~ - Alternative Beats"
+                      },
+                      {
+                        "key": "CLOUD_KID_TOP_HITS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStcBIdmdrAMJxUF9aAd9cb1M",
+                        "playlistId": "PLM2V-zC1RStcBIdmdrAMJxUF9aAd9cb1M",
+                        "playlistFile": "~ - Top Hits"
+                      },
+                      {
+                        "key": "CLOUD_KID_HOTTEST_TRACKS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RSteF71pY8mJLhL7C2u01NSXg",
+                        "playlistId": "PLM2V-zC1RSteF71pY8mJLhL7C2u01NSXg",
+                        "playlistFile": "~ - Hottest Tracks"
+                      },
+                      {
+                        "key": "CLOUD_KID_CHILL_YOUR_BASE",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStfbZnPM1VQAYFvvcy6DLUkj",
+                        "playlistId": "PLM2V-zC1RStfbZnPM1VQAYFvvcy6DLUkj",
+                        "playlistFile": "~ - Chill Your Base"
+                      },
+                      {
+                        "key": "CLOUD_KID_GOOD_VIBES",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RSteQ5cnSw0pI0l1uP-rBqypI",
+                        "playlistId": "PLM2V-zC1RSteQ5cnSw0pI0l1uP-rBqypI",
+                        "playlistFile": "~ - Good Vibes"
+                      },
+                      {
+                        "key": "CLOUD_KID_BASEMENT_PARTY",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStf5lzdt6nRQ64mrZ0CebmUj",
+                        "playlistId": "PLM2V-zC1RStf5lzdt6nRQ64mrZ0CebmUj",
+                        "playlistFile": "~ - Basement Party"
+                      },
+                      {
+                        "key": "CLOUD_KID_DEEP_FOCUS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStdSG6g0m9H1fYM_daEM3zfm",
+                        "playlistId": "PLM2V-zC1RStdSG6g0m9H1fYM_daEM3zfm",
+                        "playlistFile": "~ - Deep Focus"
+                      },
+                      {
+                        "key": "CLOUD_KID_CHILL_OUT",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStfhCYI0KkCE5OXLLTrKqLTf",
+                        "playlistId": "PLM2V-zC1RStfhCYI0KkCE5OXLLTrKqLTf",
+                        "playlistFile": "~ - Chill Out"
+                      },
+                      {
+                        "key": "CLOUD_KID_ELECTRIC_SUMMER",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStdJXxIGikOksyYTyIQXJxOz",
+                        "playlistId": "PLM2V-zC1RStdJXxIGikOksyYTyIQXJxOz",
+                        "playlistFile": "~ - Electric Summer"
+                      },
+                      {
+                        "key": "CLOUD_KID_ROCK_ON",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStcg5ddQUBpSj2LRuFKFguvj",
+                        "playlistId": "PLM2V-zC1RStcg5ddQUBpSj2LRuFKFguvj",
+                        "playlistFile": "~ - Rock On"
+                      },
+                      {
+                        "key": "CLOUD_KID_RAINY_DAYS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStdfoQehEQtafRVrDcv4leUa",
+                        "playlistId": "PLM2V-zC1RStdfoQehEQtafRVrDcv4leUa",
+                        "playlistFile": "~ - Rainy Days"
+                      },
+                      {
+                        "key": "CLOUD_KID_SAD_SONGS",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStdD06aMoSbqFoKAGDfcbVY5",
+                        "playlistId": "PLM2V-zC1RStdD06aMoSbqFoKAGDfcbVY5",
+                        "playlistFile": "~ - Sad Songs"
+                      },
+                      {
+                        "key": "CLOUD_KID_WORKOUT",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStcMdnzUMh1yuf_RzILrscuP",
+                        "playlistId": "PLM2V-zC1RStcMdnzUMh1yuf_RzILrscuP",
+                        "playlistFile": "~ - Workout"
+                      },
+                      {
+                        "key": "CLOUD_KID_EAR_CANDY",
+                        "active": true,
+                        "url": "https://www.youtube.com/playlist?list=PLM2V-zC1RStcZBdf6c3OhSHlhlCRaVleU",
+                        "playlistId": "PLM2V-zC1RStcZBdf6c3OhSHlhlCRaVleU",
+                        "playlistFile": "~ - Ear Candy"
                       }
                     ]
                   },
