@@ -60,11 +60,6 @@ public final class LogUtils {
     public static final String NEWLINE = Color.base("");
     
     /**
-     * The width of a divider.
-     */
-    public static final int DIVIDER_WIDTH = 200;
-    
-    /**
      * The width of an indentation.
      */
     public static final int INDENT_WIDTH = 5;
@@ -78,6 +73,41 @@ public final class LogUtils {
      * The hard indentation string.
      */
     public static final String INDENT_HARD = Color.log(" ".repeat(INDENT_WIDTH));
+    
+    /**
+     * The default log level of logs.
+     */
+    public static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.TRACE;
+    
+    /**
+     * The default value of the flag indicating whether a log should be shown in the console.
+     */
+    public static final boolean DEFAULT_LOG_VISIBLE = false;
+    
+    /**
+     * The default log level of log dividers.
+     */
+    public static final LogLevel DEFAULT_DIVIDER_LOG_LEVEL = DEFAULT_LOG_LEVEL;
+    
+    /**
+     * The width of a divider.
+     */
+    public static final int DIVIDER_WIDTH = 200;
+    
+    /**
+     * The default character to use when printing a log divider.
+     */
+    public static final char DEFAULT_DIVIDER_CHAR = '-';
+    
+    /**
+     * The default number of blanks lines to surround a log divider with.
+     */
+    public static final int DEFAULT_DIVIDER_BLANK_LINES = 0;
+    
+    /**
+     * The default value of the flag indicating whether a log divider should be shown in the console.
+     */
+    public static final boolean DEFAULT_DIVIDER_VISIBLE = false;
     
     
     //Enums
@@ -188,22 +218,25 @@ public final class LogUtils {
      * @param visible Whether the log should also be shown in the console.
      */
     public static void log(Logger logger, LogLevel level, String log, boolean visible) {
-        final String msg = (visible ? NEWLINE : "") + log;
+        logger = Optional.ofNullable(logger).orElse(LogUtils.logger);
+        level = Optional.ofNullable(level).orElse(LogLevel.OFF);
+        log = (visible ? NEWLINE : "") + Optional.ofNullable(log).orElse("");
+        
         switch (level) {
             case ERROR:
-                logger.error(msg);
+                logger.error(log);
                 break;
             case WARN:
-                logger.warn(msg);
+                logger.warn(log);
                 break;
             case INFO:
-                logger.info(msg);
+                logger.info(log);
                 break;
             case DEBUG:
-                logger.debug(msg);
+                logger.debug(log);
                 break;
             case TRACE:
-                logger.trace(msg);
+                logger.trace(log);
                 break;
             case OFF:
             default:
@@ -219,7 +252,28 @@ public final class LogUtils {
      * @param log    The log message.
      */
     public static void log(Logger logger, LogLevel level, String log) {
-        log(logger, level, log, false);
+        log(logger, level, log, DEFAULT_LOG_VISIBLE);
+    }
+    
+    /**
+     * Logs a message.
+     *
+     * @param logger  The logger to send the log to.
+     * @param log     The log message.
+     * @param visible Whether the log should also be shown in the console.
+     */
+    public static void log(Logger logger, String log, boolean visible) {
+        log(logger, DEFAULT_LOG_LEVEL, log, visible);
+    }
+    
+    /**
+     * Logs a message.
+     *
+     * @param logger The logger to send the log to.
+     * @param log    The log message.
+     */
+    public static void log(Logger logger, String log) {
+        log(logger, log, DEFAULT_LOG_VISIBLE);
     }
     
     /**
@@ -230,7 +284,7 @@ public final class LogUtils {
      * @param visible Whether the log should also be shown in the console.
      */
     public static void log(LogLevel level, String log, boolean visible) {
-        log(logger, level, log, visible);
+        log(null, DEFAULT_LOG_LEVEL, log, visible);
     }
     
     /**
@@ -240,7 +294,7 @@ public final class LogUtils {
      * @param log   The log message.
      */
     public static void log(LogLevel level, String log) {
-        log(level, log, false);
+        log(level, log, DEFAULT_LOG_VISIBLE);
     }
     
     /**
@@ -248,22 +302,47 @@ public final class LogUtils {
      *
      * @param logger      The logger to send the divider to.
      * @param dividerChar The character that makes up the divider.
-     * @param blankLines  The number of blank lines to surround the divider by.
+     * @param blankLines  The number of blank lines to surround the divider with.
+     * @param visible     Whether the divider should also be shown in the console.
      */
-    public static void logDivider(Logger logger, char dividerChar, int blankLines) {
+    public static void logDivider(Logger logger, char dividerChar, int blankLines, boolean visible) {
         final String margin = StringUtility.repeatString("\n", blankLines);
-        log(logger, LogLevel.TRACE,
-                (margin + StringUtility.repeatString(String.valueOf(dividerChar), DIVIDER_WIDTH) + margin));
+        final String log = (margin + StringUtility.repeatString(String.valueOf(dividerChar), DIVIDER_WIDTH) + margin);
+        
+        log(logger, DEFAULT_DIVIDER_LOG_LEVEL, log, visible);
     }
     
     /**
      * Logs a divider.
      *
+     * @param logger      The logger to send the divider to.
      * @param dividerChar The character that makes up the divider.
-     * @param blankLines  The number of blank lines to surround the divider by.
+     * @param blankLines  The number of blank lines to surround the divider with.
      */
-    public static void logDivider(char dividerChar, int blankLines) {
-        logDivider(logger, dividerChar, blankLines);
+    public static void logDivider(Logger logger, char dividerChar, int blankLines) {
+        logDivider(logger, dividerChar, blankLines, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param logger      The logger to send the divider to.
+     * @param dividerChar The character that makes up the divider.
+     * @param visible     Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(Logger logger, char dividerChar, boolean visible) {
+        logDivider(logger, dividerChar, DEFAULT_DIVIDER_BLANK_LINES, visible);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param logger     The logger to send the divider to.
+     * @param blankLines The number of blank lines to surround the divider with.
+     * @param visible    Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(Logger logger, int blankLines, boolean visible) {
+        logDivider(logger, DEFAULT_DIVIDER_CHAR, blankLines, visible);
     }
     
     /**
@@ -273,7 +352,68 @@ public final class LogUtils {
      * @param dividerChar The character that makes up the divider.
      */
     public static void logDivider(Logger logger, char dividerChar) {
-        logDivider(logger, dividerChar, 0);
+        logDivider(logger, dividerChar, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param logger     The logger to send the divider to.
+     * @param blankLines The number of blank lines to surround the divider with.
+     */
+    public static void logDivider(Logger logger, int blankLines) {
+        logDivider(logger, blankLines, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param logger  The logger to send the divider to.
+     * @param visible Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(Logger logger, boolean visible) {
+        logDivider(logger, DEFAULT_DIVIDER_CHAR, visible);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param dividerChar The character that makes up the divider.
+     * @param blankLines  The number of blank lines to surround the divider with.
+     * @param visible     Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(char dividerChar, int blankLines, boolean visible) {
+        logDivider(null, dividerChar, blankLines, visible);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param dividerChar The character that makes up the divider.
+     * @param blankLines  The number of blank lines to surround the divider with.
+     */
+    public static void logDivider(char dividerChar, int blankLines) {
+        logDivider(dividerChar, blankLines, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param dividerChar The character that makes up the divider.
+     * @param visible     Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(char dividerChar, boolean visible) {
+        logDivider(dividerChar, DEFAULT_DIVIDER_BLANK_LINES, visible);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param blankLines The number of blank lines to surround the divider with.
+     * @param visible    Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(int blankLines, boolean visible) {
+        logDivider(DEFAULT_DIVIDER_CHAR, blankLines, visible);
     }
     
     /**
@@ -282,7 +422,32 @@ public final class LogUtils {
      * @param dividerChar The character that makes up the divider.
      */
     public static void logDivider(char dividerChar) {
-        logDivider(logger, dividerChar);
+        logDivider(dividerChar, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param blankLines The number of blank lines to surround the divider with.
+     */
+    public static void logDivider(int blankLines) {
+        logDivider(blankLines, DEFAULT_DIVIDER_VISIBLE);
+    }
+    
+    /**
+     * Logs a divider.
+     *
+     * @param visible Whether the divider should also be shown in the console.
+     */
+    public static void logDivider(boolean visible) {
+        logDivider(DEFAULT_DIVIDER_CHAR, visible);
+    }
+    
+    /**
+     * Logs a divider.
+     */
+    public static void logDivider() {
+        logDivider(DEFAULT_DIVIDER_VISIBLE);
     }
     
     /**
