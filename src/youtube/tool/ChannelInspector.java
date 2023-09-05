@@ -49,14 +49,24 @@ public class ChannelInspector {
     private static final boolean INSPECT_INFO = true;
     
     /**
+     * A flag indicating whether to inspect the channel playlists.
+     */
+    private static final boolean INSPECT_PLAYLISTS = true;
+    
+    /**
+     * A flag indicating whether to print details about each of the channel playlists.
+     */
+    private static final boolean PRINT_PLAYLIST_DETAILS = false;
+    
+    /**
      * A flag indicating whether to inspect the channel videos.
      */
     private static final boolean INSPECT_VIDEOS = true;
     
     /**
-     * A flag indicating whether to inspect the channel playlists.
+     * A flag indicating whether to print details about each of the channel videos.
      */
-    private static final boolean INSPECT_PLAYLISTS = true;
+    private static final boolean PRINT_VIDEO_DETAILS = false;
     
     
     //Static Fields
@@ -64,7 +74,7 @@ public class ChannelInspector {
     /**
      * The Youtube channel custom url key.
      */
-    private static final String channelCustomUrlKey = "@bbcearth";
+    private static final String channelCustomUrlKey = "@cloudkid";
     
     /**
      * The Youtube channel url.
@@ -106,11 +116,18 @@ public class ChannelInspector {
         toInspect = init(ArrayUtility.getOrNull(args, 0));
         
         logger.debug(Color.log("Inspecting: ") + Color.number(toInspect));
+        
+        LogUtils.logDivider(logger, 1, true);
         logger.debug(LogUtils.NEWLINE);
         
         final ChannelInfo channel = inspectChannelInfo();
-        final List<VideoInfo> videos = inspectChannelVideos();
         final List<PlaylistInfo> playlists = inspectChannelPlaylists();
+        final List<VideoInfo> videos = inspectChannelVideos();
+        
+        printPlaylistDetails(playlists);
+        printVideoDetails(videos);
+        
+        LogUtils.logDivider(logger, 1, true);
         
         logger.debug(Color.log("API Calls: ") + Color.number(Stats.totalApiCalls));
     }
@@ -150,6 +167,7 @@ public class ChannelInspector {
         final ChannelInfo channel = ApiUtils.fetchChannel(toInspect);
         
         logger.debug(Color.base("Info:"));
+        
         printData.accept("Title", channel.getTitle());
         printData.accept("Custom Url Key", channel.getCustomUrlKey());
         printData.accept("Url", channel.getUrl());
@@ -157,6 +175,7 @@ public class ChannelInspector {
         printData.accept("Status", channel.getStatus());
         printData.accept("Description", channel.getDescription());
         printData.accept("Topics", channel.getTopics().getAll().stream().map(EntityDetail::toString).collect(Collectors.joining(System.lineSeparator())));
+        
         logger.debug(LogUtils.NEWLINE);
         
         return channel;
@@ -176,6 +195,7 @@ public class ChannelInspector {
         final long totalDuration = videos.stream().mapToLong(VideoInfo::getDuration).sum();
         
         logger.debug(Color.base("Videos:"));
+        
         printData.accept("Video Count", videos.size());
         printData.accept("Total Length", DateTimeUtility.durationToDurationString(totalDuration, true, false, true));
         printData.accept("Average Length", DateTimeUtility.durationToDurationString((totalDuration / videos.size()), true, false, true));
@@ -183,6 +203,7 @@ public class ChannelInspector {
         printData.accept("Shortest Video", DateTimeUtility.durationToDurationString(videos.stream().mapToLong(VideoInfo::getDuration).min().orElse(0), true, false, true));
         printData.accept("Newest Video", videos.stream().map(VideoInfo::getDate).sorted(Comparator.reverseOrder()).limit(1).findFirst().orElse(null));
         printData.accept("Oldest Video", videos.stream().map(VideoInfo::getDate).sorted().limit(1).findFirst().orElse(null));
+        
         logger.debug(LogUtils.NEWLINE);
         
         return videos;
@@ -201,10 +222,67 @@ public class ChannelInspector {
         final List<PlaylistInfo> playlists = ApiUtils.fetchChannelPlaylists(toInspect);
         
         logger.debug(Color.base("Playlists:"));
+        
         printData.accept("Playlist Count", playlists.size());
+        
         logger.debug(LogUtils.NEWLINE);
         
         return playlists;
+    }
+    
+    /**
+     * Prints details about each of the Youtube channel's playlists.
+     *
+     * @param playlists The list of Playlist Info.
+     */
+    private static void printPlaylistDetails(List<PlaylistInfo> playlists) {
+        if (!PRINT_PLAYLIST_DETAILS) {
+            return;
+        }
+        
+        LogUtils.logDivider(logger, 1, true);
+        logger.debug(LogUtils.NEWLINE);
+        
+        logger.debug(Color.base("Playlist Details:"));
+        
+        for (PlaylistInfo playlist : playlists) {
+            logger.debug(LogUtils.NEWLINE);
+            
+            printData.accept("Title", playlist.getTitle());
+            printData.accept("URL", playlist.getUrl());
+            printData.accept("Playlist ID", playlist.getPlaylistId());
+            printData.accept("Video Count", playlist.getVideoCount());
+        }
+        
+        logger.debug(LogUtils.NEWLINE);
+    }
+    
+    /**
+     * Prints details about each of the Youtube channel's videos.
+     *
+     * @param videos The list of Video Info.
+     */
+    private static void printVideoDetails(List<VideoInfo> videos) {
+        if (!PRINT_VIDEO_DETAILS) {
+            return;
+        }
+        
+        LogUtils.logDivider(logger, 1, true);
+        logger.debug(LogUtils.NEWLINE);
+        
+        logger.debug(Color.base("Video Details:"));
+        
+        for (VideoInfo video : videos) {
+            logger.debug(LogUtils.NEWLINE);
+            
+            printData.accept("Title", video.getTitle());
+            printData.accept("URL", video.getUrl());
+            printData.accept("Video ID", video.getVideoId());
+            printData.accept("Date", video.getDate());
+            printData.accept("Length", video.getDuration());
+        }
+        
+        logger.debug(LogUtils.NEWLINE);
     }
     
 }
