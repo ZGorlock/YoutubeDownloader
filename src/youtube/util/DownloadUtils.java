@@ -171,8 +171,9 @@ public final class DownloadUtils {
         
         final String cmd = Color.exe(ExecutableUtils.Config.executable.getCall()) + Color.log(" ") +
                 Color.log("--output ") + Color.quoteFilePath((video.getDownload().getAbsolutePath() + ".%(ext)s"), true) + Color.log(" ") +
-                Color.log("--geo-bypass --rm-cache-dir " +
-                        (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
+                Color.log("--geo-bypass --rm-cache-dir ") +
+                Color.log(Configurator.Config.neverUseBrowserCookies ? "--no-cookies-from-browser " :
+                          (isRetry ? ("--cookies-from-browser " + Config.browser.toLowerCase() + " ") : "")) +
                 Color.log((audio ? ("--extract-audio --audio-format " + Config.defaultAudioFormat + " ") :
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? ("-f b" + (audio ? "a" : "") + " ") : "")) +
