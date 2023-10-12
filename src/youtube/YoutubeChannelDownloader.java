@@ -34,6 +34,7 @@ import youtube.entity.Channel;
 import youtube.entity.Video;
 import youtube.entity.info.VideoInfo;
 import youtube.state.KeyStore;
+import youtube.state.Report;
 import youtube.state.Stats;
 import youtube.util.ApiUtils;
 import youtube.util.DownloadUtils;
@@ -113,6 +114,7 @@ public class YoutubeChannelDownloader {
         logger.trace(LogUtils.NEWLINE);
         
         KeyStore.saveKeyStore();
+        Report.print();
         Stats.print();
         
         if (LogUtils.Config.printExecutionTime) {
@@ -325,6 +327,7 @@ public class YoutubeChannelDownloader {
                     channel.getState().getSaved().add(videoId);
                     channel.getState().getKeyStore().put(video);
                     
+                    Report.include(video);
                     if (channel.getConfig().isSaveAsAudio()) {
                         Stats.totalAudioDownloads.incrementAndGet();
                         Stats.totalAudioDataDownloaded.addAndGet(video.getOutput().length());

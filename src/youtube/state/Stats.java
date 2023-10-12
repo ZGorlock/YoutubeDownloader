@@ -267,6 +267,7 @@ public final class Stats {
      * Calculates the total data saved from Youtube.
      */
     private static void calculateData() {
+        logger.trace(LogUtils.NEWLINE);
         logger.debug(Color.log("Calculating Stats..."));
         
         final Map<String, Long> fileData = KeyStore.getAllEntries().stream()
