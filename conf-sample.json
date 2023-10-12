@@ -27,8 +27,9 @@
             "stopAt": ""
         },
         "log": {
+            "printChannels": false,
             "printStats": true,
-            "printChannels": false
+            "printReport": false
         },
         "backup": {
             "enableBackups": true,

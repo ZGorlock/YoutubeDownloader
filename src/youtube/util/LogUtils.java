@@ -668,6 +668,11 @@ public final class LogUtils {
         public static final boolean DEFAULT_PRINT_STATS = true;
         
         /**
+         * The default value of the flag indicating whether to print a download report at the end of the run or not.
+         */
+        public static final boolean DEFAULT_PRINT_REPORT = false;
+        
+        /**
          * The default value of the flag indicating whether to print the executable version at the start of the run or not.
          */
         public static final boolean DEFAULT_PRINT_EXE_VERSION = true;
@@ -724,6 +729,11 @@ public final class LogUtils {
          * A flag indicating whether to print statistics at the end of the run or not.
          */
         public static boolean printStats = DEFAULT_PRINT_STATS;
+        
+        /**
+         * A flag indicating whether to print a download report at the end of the run or not.
+         */
+        public static boolean printReport = DEFAULT_PRINT_REPORT;
         
         /**
          * A flag indicating whether to print the executable version at the start of the run or not.
@@ -787,6 +797,11 @@ public final class LogUtils {
                             "log.printStats",
                             "output.printStats"),
                     DEFAULT_PRINT_STATS);
+            printReport = Configurator.getSetting(List.of(
+                            "printReport",
+                            "log.printReport",
+                            "output.printReport"),
+                    DEFAULT_PRINT_REPORT);
             printExeVersion = Configurator.getSetting(List.of(
                             "printExeVersion",
                             "log.printExeVersion",
