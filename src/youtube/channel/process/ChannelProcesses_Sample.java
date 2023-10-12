@@ -340,8 +340,9 @@ public class ChannelProcesses_Sample {
             case "MUSIC_LAB_CHILLHOP":
             case "MUSIC_LAB_ENERGY":
             case "MUSIC_LAB_FUTURE_GARAGE":
+            case "MUSIC_LAB_WAVE":
             case "AMBIENT_MUSIC_LAB":
-            case "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_STUDY_WORK_AMBIENT":
             case "AMBIENT_MUSIC_LAB_MEDITATION_AMBIENT":
             case "AMBIENT_MUSIC_LAB_DRONE":
             case "AMBIENT_MUSIC_LAB_SPACE_AMBIENT":
@@ -603,6 +604,7 @@ public class ChannelProcesses_Sample {
                 FilterProcess.startsWithIgnoreCase(channel, videoMap,
                         "UUID-");
                 FilterProcess.containsIgnoreCase(channel, videoMap, List.of(
+                        "#",
                         "PREVIEW",
                         "SNEAK PEEK",
                         "UNRELEASED MUSIC",
@@ -625,8 +627,9 @@ public class ChannelProcesses_Sample {
             case "MUSIC_LAB_CHILLHOP":
             case "MUSIC_LAB_ENERGY":
             case "MUSIC_LAB_FUTURE_GARAGE":
+            case "MUSIC_LAB_WAVE":
             case "AMBIENT_MUSIC_LAB":
-            case "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT":
+            case "AMBIENT_MUSIC_LAB_STUDY_WORK_AMBIENT":
             case "AMBIENT_MUSIC_LAB_MEDITATION_AMBIENT":
             case "AMBIENT_MUSIC_LAB_DRONE":
             case "AMBIENT_MUSIC_LAB_SPACE_AMBIENT":
@@ -644,6 +647,17 @@ public class ChannelProcesses_Sample {
             case "MR_MOM_MUSIC_NEW":
                 FilterProcess.dateBefore(channel, videoMap,
                         LocalDate.of(2020, Month.JANUARY, 24));
+                break;
+            
+            case "CLOUD_KID_TOP_50":
+            case "CLOUD_KID_GAMING_MUSIC":
+            case "CLOUD_KID_BADASS_VILLAIN_VIBES":
+            case "CLOUD_KID_ROCKTRONIC":
+                channel.getState().getBlocked().addAll(List.of(
+                        "dL87mBMKLn4",
+                        "RpkLAdp5iH8",
+                        "WCpo3RFdPUE",
+                        "8vUc3fiouMo"));
                 break;
             
             

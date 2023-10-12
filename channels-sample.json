@@ -952,13 +952,6 @@
                     "outputFolder": "~/Institute of Human Anatomy"
                   },
                   {
-                    "key": "HEALTHY_GAMER",
-                    "active": true,
-                    "url": "https://www.youtube.com/c/HealthyGamerGG",
-                    "playlistId": "UUlHVl2N3jPEbkNJVx-ItQIQ",
-                    "outputFolder": "~/Healthy Gamer"
-                  },
-                  {
                     "key": "POPPING",
                     "active": false,
                     "outputFolder": "~/Popping",
@@ -986,6 +979,34 @@
                         "playlistFile": "~ - Suri Nguyen.m3u"
                       }
                     ]
+                  }
+                ]
+              },
+              {
+                "key": "PSYCHOLOGY",
+                "active": true,
+                "outputFolder": "~/Psychology",
+                "channels": [
+                  {
+                    "key": "HEALTHY_GAMER",
+                    "active": true,
+                    "url": "https://www.youtube.com/c/HealthyGamerGG",
+                    "playlistId": "UUlHVl2N3jPEbkNJVx-ItQIQ",
+                    "outputFolder": "~/Healthy Gamer"
+                  }
+                ]
+              },
+              {
+                "key": "PHILOSOPHY",
+                "active": true,
+                "outputFolder": "~/Philosophy",
+                "channels": [
+                  {
+                    "key": "JEFFERY_KAPLAN",
+                    "active": true,
+                    "url": "https://www.youtube.com/@jeffreykaplan1",
+                    "playlistId": "UU_hukbByJP7OZ3Xm2tszacQ",
+                    "outputFolder": "~/Jeffery Kaplan"
                   }
                 ]
               },
@@ -1412,6 +1433,13 @@
                     "outputFolder": "~/Oliver Lugg"
                   },
                   {
+                    "key": "CLARK_ELIESON",
+                    "active": true,
+                    "url": "https://www.youtube.com/@ClarkElieson",
+                    "playlistId": "UU06b5TQFFMFZvMakw1QLpQg",
+                    "outputFolder": "~/Clark Elieson"
+                  },
+                  {
                     "key": "DOWN_THE_RABBIT_HOLE",
                     "active": true,
                     "url": "https://www.youtube.com/playlist?list=PLm9GPtnKLH_xb_griZ4Qg4eXLFLeLEO5d",
@@ -1431,6 +1459,13 @@
                     "url": "https://www.youtube.com/@Wendoverproductions",
                     "playlistId": "UU9RM-iSvTu1uPJb8X5yp3EQ",
                     "outputFolder": "~/Wendover Productions"
+                  },
+                  {
+                    "key": "APERTURE",
+                    "active": true,
+                    "url": "https://www.youtube.com/@ApertureThinking",
+                    "playlistId": "UUO5QSoES5yn2Dw7YixDYT5Q",
+                    "outputFolder": "~/Aperture"
                   }
                 ]
               },
@@ -3576,13 +3611,13 @@
                       },
                       {
                         "key": "MUSIC_LAB_HACKER",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLdE7uo_7KBkfAWkk7-Clm18krBuziKQfr",
                         "playlistFile": "~ - Hacker Music.m3u"
                       },
                       {
                         "key": "MUSIC_LAB_WORK",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLdE7uo_7KBkc6L7Bgqzz_Q7q2JN2AqHV3",
                         "playlistFile": "~ - Work Music.m3u"
                       },
@@ -3600,7 +3635,7 @@
                       },
                       {
                         "key": "MUSIC_LAB_AMBIENT",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLdE7uo_7KBketYRDDb8lheUOD4q7U27DR",
                         "playlistFile": "~ - Ambient Music.m3u"
                       },
@@ -3618,7 +3653,7 @@
                       },
                       {
                         "key": "MUSIC_LAB_STUDY",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLdE7uo_7KBkcx8_AcwRjTPiYSauQTQeNi",
                         "playlistFile": "~ - Study Music.m3u"
                       },
@@ -3630,7 +3665,7 @@
                       },
                       {
                         "key": "MUSIC_LAB_ENERGY",
-                        "active": true,
+                        "active": false,
                         "playlistId": "PLdE7uo_7KBkcp_XPf2GiTOqUWAdvqM4ap",
                         "playlistFile": "~ - Energy Music.m3u"
                       },
@@ -3639,6 +3674,12 @@
                         "active": true,
                         "playlistId": "PLdE7uo_7KBkdbssGgnnIDm3EnE2gmHyEQ",
                         "playlistFile": "~ - Future Garage Music.m3u"
+                      },
+                      {
+                        "key": "MUSIC_LAB_WAVE",
+                        "active": true,
+                        "playlistId": "PLdE7uo_7KBkf0gwWO9-qeu-La5vSJPmPc",
+                        "playlistFile": "~ - Wave Music.m3u"
                       }
                     ]
                   },
@@ -3656,7 +3697,7 @@
                         "keepClean": true
                       },
                       {
-                        "key": "AMBIENT_MUSIC_LAB_STUFY_WORK_AMBIENT",
+                        "key": "AMBIENT_MUSIC_LAB_STUDY_WORK_AMBIENT",
                         "active": true,
                         "playlistId": "PLxKdVS3c5d24WI6IacsjEAbuB85uP98tg",
                         "playlistFile": "~ - Study Work Ambient.m3u"
@@ -3814,8 +3855,7 @@
                         "active": true,
                         "url": "https://www.youtube.com/@cloudkid",
                         "playlistId": "UUSa8IUd1uEjlREMa21I3ZPQ",
-                        "playlistFile": "~ - All.m3u",
-                        "keepClean": true
+                        "playlistFile": "~ - All.m3u"
                       },
                       {
                         "key": "CLOUD_KID_TOP_50",
@@ -4064,6 +4104,20 @@
                     "url": "https://www.youtube.com/@PHONKBeat",
                     "playlistId": "UUvI-KZbebDSQhr8jYYV5E1w",
                     "outputFolder": "~/Phonk Beat"
+                  },
+                  {
+                    "key": "PHONK_MAGE",
+                    "active": false,
+                    "url": "https://www.youtube.com/@phonkmage",
+                    "playlistId": "UU7ezZTkMk0itxJR6g38qR6w",
+                    "outputFolder": "~/Phonk Mage"
+                  },
+                  {
+                    "key": "PHONK_SENSEI",
+                    "active": false,
+                    "url": "https://www.youtube.com/@PhonkSensei",
+                    "playlistId": "UU0G9Qb0SX11b_7AcjdkJ9fg",
+                    "outputFolder": "~/Phonk Sensei"
                   },
                   {
                     "key": "MIX_SNAKE",
