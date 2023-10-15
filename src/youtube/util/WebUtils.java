@@ -195,7 +195,9 @@ public final class WebUtils {
                 .filter(id -> !id.isBlank())
                 .map(id -> id.replaceAll("^UU", "UC")).map(id -> id.replaceAll("^@", "/@"))
                 .map(id -> ((id.startsWith("/") ? YOUTUBE_BASE :
-                             id.startsWith("UC") ? CHANNEL_BASE : CHANNEL_CUSTOM_BASE) + id))
+                             id.startsWith("UC") ? CHANNEL_BASE :
+                             id.matches("^\\w+$") ? CHANNEL_CUSTOM_BASE : "") + id))
+                .filter(WebUtils::isChannelUrl)
                 .orElse(null);
     }
     

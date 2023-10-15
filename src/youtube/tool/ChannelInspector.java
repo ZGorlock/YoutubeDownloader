@@ -72,14 +72,19 @@ public class ChannelInspector {
     //Static Fields
     
     /**
+     * The identifier of the Youtube channel to process.
+     */
+    private static final String CHANNEL_IDENTIFIER = "cloudkid";
+    
+    /**
      * The Youtube channel custom url key.
      */
-    private static final String channelCustomUrlKey = "@cloudkid";
+    private static final String channelCustomUrlKey = "@" + CHANNEL_IDENTIFIER;
     
     /**
      * The Youtube channel url.
      */
-    private static final String channelUrl = WebUtils.getChannelUrl(channelCustomUrlKey);
+    private static final String channelUrl = WebUtils.getChannelUrl(CHANNEL_IDENTIFIER);
     
     /**
      * The Youtube channel id.
@@ -89,7 +94,7 @@ public class ChannelInspector {
     /**
      * The Youtube entity id to inspect.
      */
-    private static String toInspect = null;
+    private static String id = null;
     
     
     //Static Functions
@@ -110,12 +115,13 @@ public class ChannelInspector {
     /**
      * Runs the Channel Inspector.
      *
-     * @param args Arguments to the main method.
+     * @param args Arguments to the main method.<br>
+     *             [0] : The Channel identifier; (url, url key, or channel id).
      */
     public static void main(String[] args) {
-        toInspect = init(ArrayUtility.getOrNull(args, 0));
+        id = init(ArrayUtility.getOrNull(args, 0));
         
-        logger.debug(Color.log("Inspecting: ") + Color.number(toInspect));
+        logger.debug(Color.log("Inspecting: ") + Color.number(id));
         
         LogUtils.logDivider(logger, 1, true);
         logger.debug(LogUtils.NEWLINE);
@@ -148,9 +154,9 @@ public class ChannelInspector {
                    (arg.matches("^U[UC].+$")) ? arg.replaceAll("^UU", "UC") :
                    init(WebUtils.getChannelUrl(arg));
         }
-        return (channelId != null) ? init(channelId) :
-               (channelUrl != null) ? init(channelUrl) :
-               (channelCustomUrlKey != null) ? init(channelCustomUrlKey) :
+        return !StringUtility.isNullOrBlank(channelId) ? init(channelId) :
+               !StringUtility.isNullOrBlank(channelUrl) ? init(channelUrl) :
+               !StringUtility.isNullOrBlank(channelCustomUrlKey) ? init(channelCustomUrlKey) :
                null;
     }
     
@@ -164,7 +170,7 @@ public class ChannelInspector {
             return null;
         }
         
-        final ChannelInfo channel = ApiUtils.fetchChannel(toInspect);
+        final ChannelInfo channel = ApiUtils.fetchChannel(id);
         
         logger.debug(Color.base("Info:"));
         
@@ -191,7 +197,7 @@ public class ChannelInspector {
             return null;
         }
         
-        final List<VideoInfo> videos = ApiUtils.fetchChannelVideos(toInspect);
+        final List<VideoInfo> videos = ApiUtils.fetchChannelVideos(id);
         final long totalDuration = videos.stream().mapToLong(VideoInfo::getDuration).sum();
         
         logger.debug(Color.base("Videos:"));
@@ -219,7 +225,7 @@ public class ChannelInspector {
             return null;
         }
         
-        final List<PlaylistInfo> playlists = ApiUtils.fetchChannelPlaylists(toInspect);
+        final List<PlaylistInfo> playlists = ApiUtils.fetchChannelPlaylists(id);
         
         logger.debug(Color.base("Playlists:"));
         
