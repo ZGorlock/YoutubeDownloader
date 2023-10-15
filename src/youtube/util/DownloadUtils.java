@@ -177,8 +177,10 @@ public final class DownloadUtils {
                 Color.log((audio ? ("--extract-audio --audio-format " + Config.defaultAudioFormat + " ") :
                            ((newExe && !Config.preMerged) ? "" : "--format best ")) +
                         (newExe ? ("-f b" + (audio ? "a" : "") + " ") : "")) +
-                Color.log(SponsorBlocker.getCommand(sponsorBlockConfig) + " ") +
-                Color.log(Optional.ofNullable(ExecutableUtils.Config.customFlags).orElse("") + " ") +
+                Color.log(Optional.ofNullable(sponsorBlockConfig).map(SponsorBlocker::getCommand)
+                        .filter(e -> !StringUtility.isNullOrBlank(e)).map(String::trim).map(e -> (e + " ")).orElse("")) +
+                Color.log(Optional.ofNullable(ExecutableUtils.Config.customFlags)
+                        .filter(e -> !StringUtility.isNullOrBlank(e)).map(String::trim).map(e -> (e + " ")).orElse("")) +
                 Color.link(video.getInfo().getUrl());
         
         return performDownload(cmd, video, isRetry);
