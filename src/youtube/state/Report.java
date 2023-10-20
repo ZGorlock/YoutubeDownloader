@@ -103,7 +103,7 @@ public final class Report {
      * Prints a download report about the completed run.
      */
     public static void print() {
-        if (!LogUtils.Config.printReport) {
+        if (!LogUtils.Config.printReport || downloads.isEmpty()) {
             return;
         }
         
