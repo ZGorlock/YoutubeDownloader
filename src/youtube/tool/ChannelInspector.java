@@ -84,7 +84,7 @@ public class ChannelInspector {
     /**
      * The Youtube channel url.
      */
-    private static final String channelUrl = WebUtils.getChannelUrl(CHANNEL_IDENTIFIER);
+    private static final String channelUrl = WebUtils.getChannelUrl(channelCustomUrlKey);
     
     /**
      * The Youtube channel id.
@@ -147,7 +147,6 @@ public class ChannelInspector {
      * @param arg The argument defining the channel id.
      * @return The channel id to inspect.
      */
-    @SuppressWarnings("ConstantValue")
     private static String init(String arg) {
         if (!StringUtility.isNullOrBlank(arg)) {
             return (WebUtils.isYoutubeUrl(arg)) ? WebUtils.getChannelId(arg) :

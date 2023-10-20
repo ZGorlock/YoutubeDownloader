@@ -84,7 +84,7 @@ public final class WebUtils {
     /**
      * The regex pattern for a Youtube channel url.
      */
-    public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^.*/(?:@|(?:c(?:hannel|/@)?|u(?:ser)?)/)(?<channel>\\w+).*$");
+    public static final Pattern CHANNEL_URL_PATTERN = Pattern.compile("^" + Pattern.quote(YOUTUBE_BASE) + "/(?:@|(?:(?:c(?:hannel)?|u(?:ser)?)/))(?<channel>\\w+)(?:[/?#&].*)?$");
     
     
     //Static Fields
@@ -193,7 +193,7 @@ public final class WebUtils {
     public static String getChannelUrl(String channelId) {
         return Optional.ofNullable(channelId)
                 .filter(id -> !id.isBlank())
-                .map(id -> id.replaceAll("^UU", "UC")).map(id -> id.replaceAll("^@", "/@"))
+                .map(id -> id.replaceAll("^@*U[UC]", "UC").replaceAll("^@+(\\w+)$", "/@$1").replaceAll("^@+", ""))
                 .map(id -> ((id.startsWith("/") ? YOUTUBE_BASE :
                              id.startsWith("UC") ? CHANNEL_BASE :
                              id.matches("^\\w+$") ? CHANNEL_CUSTOM_BASE : "") + id))
