@@ -1,71 +1,7 @@
 {
     "YoutubeChannelDownloader": {
-        "executable": "yt-dlp",
-        "location": {
-            "storageDrive": "E:/",
-            "musicDir": "Music/",
-            "videoDir": "Videos/",
-            "browser": "Chrome"
-        },
-        "format": {
-            "preMerged": true
-        },
-        "filter": {
-            "channel": null,
-            "group": null,
-            "startAt": null,
-            "stopAt": null
-        }
     },
     
     "YoutubeDownloader": {
-        "executable": "yt-dlp",
-        "location": {
-            "output": "E:/Downloads/",
-            "browser": "Chrome"
-        },
-        "format": {
-            "asMp3": false,
-            "preMerged": true
-        }
-    },
-    
-    "sponsorBlock": {
-        "enabled": false,
-        "forceGlobally": false,
-        "skipAll": false,
-        "skipSponsor": false,
-        "skipIntro": false,
-        "skipOutro": false,
-        "skipSelfPromo": false,
-        "skipPreview": false,
-        "skipInteraction": false,
-        "skipMusicOffTopic": false
-    },
-    
-    "color": {
-        "enableColors": true,
-        "base": "GREEN",
-        "good": "CYAN",
-        "bad": "RED",
-        "log": "DARK_GREY",
-        "channel": "YELLOW",
-        "video": "PURPLE",
-        "number": "WHITE",
-        "file": "GREY",
-        "exe": "ORANGE",
-        "link": "TEAL",
-        "progressBar": {
-            "base": "GREEN",
-            "good": "CYAN",
-            "bad": "RED"
-        }
-    },
-    
-    "log": {
-        "printExeVersion": true,
-        "logCommand": true,
-        "logWork": false,
-        "showProgressBar": true
     }
 }
