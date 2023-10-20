@@ -52,6 +52,7 @@ public final class Utils {
                 WebUtils.initWeb() &&
                 ApiUtils.initApi() &&
                 ExecutableUtils.initExecutable() &&
+                DownloadUtils.initDownloader() &&
                 BackupUtils.initBackup();
     }
     

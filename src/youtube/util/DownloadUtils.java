@@ -141,7 +141,32 @@ public final class DownloadUtils {
     }
     
     
+    //Static Fields
+    
+    /**
+     * A flag indicating whether the download processor has been loaded yet or not.
+     */
+    private static final AtomicBoolean loaded = new AtomicBoolean(false);
+    
+    
     //Static Methods
+    
+    /**
+     * Initializes the download processor.
+     *
+     * @return Whether the download processor was successfully initialized.
+     */
+    public static boolean initDownloader() {
+        if (loaded.compareAndSet(false, true)) {
+            logger.trace(LogUtils.NEWLINE);
+            logger.debug(Color.log("Initializing Download Processor..."));
+            
+            Config.init();
+            
+            return true;
+        }
+        return false;
+    }
     
     /**
      * Downloads a Youtube Video.
