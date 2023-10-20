@@ -1356,6 +1356,13 @@
                     "outputFolder": "~/History of Earth"
                   },
                   {
+                    "key": "HISTORY_OF_HUMANKIND",
+                    "active": true,
+                    "url": "https://www.youtube.com/@HistoryofHumankind",
+                    "playlistId": "UUh6aABYN8fg7VsFcSUZkC1A",
+                    "outputFolder": "~/History of Humankind"
+                  },
+                  {
                     "key": "PBS_EONS",
                     "active": true,
                     "url": "https://www.youtube.com/c/eons",
@@ -4082,6 +4089,14 @@
                     "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvlkFoIpUgwiL617Wd7ujCuj",
                     "playlistId": "PLjSkQXDlBqvlkFoIpUgwiL617Wd7ujCuj",
                     "outputFolder": "~/Youtube Phonk Favorites",
+                    "reversePlaylist": false
+                  },
+                  {
+                    "key": "SKELER_NIGHTDRIVE",
+                    "active": true,
+                    "url": "https://www.youtube.com/playlist?list=PLjSkQXDlBqvmNMTX3niLJTCl0uVhxKl1w",
+                    "playlistId": "PLjSkQXDlBqvmNMTX3niLJTCl0uVhxKl1w",
+                    "outputFolder": "~/Skeler - NightDrive",
                     "reversePlaylist": false
                   },
                   {
