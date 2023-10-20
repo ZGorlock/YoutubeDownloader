@@ -303,6 +303,7 @@ public final class DownloadUtils {
                             "asAudio",
                             "format.asAudio",
                             "process.format.asAudio",
+                            "process.asAudio",
                             "asMp3",
                             "format.asMp3",
                             "process.format.asMp3"),

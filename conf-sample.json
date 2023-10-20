@@ -7,15 +7,8 @@
             "browser": "Firefox"
         },
         "process": {
-            "executable": "yt-dlp",
-            "customFlags": null,
             "enableCustomRenameProcesses": true,
-            "enableCustomFilterProcesses": true,
-            "format": {
-                "preMerged": true,
-                "defaultVideoFormat": "mp4",
-                "defaultAudioFormat": "mp3"
-            }
+            "enableCustomFilterProcesses": true
         },
         "filter": {
             "enableFiltering": true,
@@ -72,14 +65,7 @@
             "browser": "Firefox"
         },
         "process": {
-            "executable": "yt-dlp",
-            "customArgs": null,
-            "format": {
-                "preMerged": true,
-                "asAudio": false,
-                "defaultVideoFormat": "mp4",
-                "defaultAudioFormat": "mp3"
-            }
+            "asAudio": false
         },
         "flag": {
             "neverUseBrowserCookies": true,
@@ -91,6 +77,16 @@
                 "preventExeAutoUpdate": false,
                 "preventExeVersionCheck": false
             }
+        }
+    },
+    
+    "process": {
+        "executable": "yt-dlp",
+        "customFlags": null,
+        "format": {
+            "preMerged": true,
+            "defaultVideoFormat": "mp4",
+            "defaultAudioFormat": "mp3"
         }
     },
     
