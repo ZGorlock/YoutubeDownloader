@@ -641,15 +641,15 @@ public final class LogUtils {
      * Purges old log files.
      */
     private static void cleanupOldLogs() {
-        if (Optional.ofNullable(Config.daysToKeepLogs).orElse(-1L) < 0) {
-            return;
-        }
-        fetchAllLogsOlderThan(Config.daysToKeepLogs.intValue())
-                .forEach(Filesystem::deleteFile);
+        Optional.ofNullable(Config.daysToKeepLogs).map(Long::intValue)
+                .filter(daysToKeepLogs -> (daysToKeepLogs >= 0))
+                .map(LogUtils::fetchAllLogsOlderThan)
+                .stream().flatMap(Collection::stream)
+                .forEach(FileUtils::delete);
         
         Filesystem.getDirs(LOG_DIR).stream()
                 .filter(Filesystem::directoryIsEmpty)
-                .forEach(Filesystem::deleteDirectory);
+                .forEach(FileUtils::delete);
     }
     
     

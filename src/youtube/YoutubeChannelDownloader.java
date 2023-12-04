@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import commons.access.Desktop;
 import commons.access.Filesystem;
 import commons.access.Internet;
 import commons.time.DateTimeUtility;
@@ -443,9 +442,7 @@ public class YoutubeChannelDownloader {
                         logger.info(Color.base("Deleting: ") + Color.quoteVideoFileName(channelFile));
                         try {
                             Optional.of(channelFile)
-                                    .filter(file -> Configurator.Config.deleteToRecyclingBin ?
-                                                    Desktop.trash(file) :
-                                                    Filesystem.deleteFile(file))
+                                    .filter(FileUtils::delete)
                                     .orElseThrow(() -> new IOException("Error deleting: " + PathUtils.path(channelFile)));
                         } catch (Exception e) {
                             logger.error(Color.bad("Failed to delete: ") + Color.quoteVideoFileName(channelFile), e);

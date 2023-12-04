@@ -296,18 +296,18 @@ public class ChannelState {
                         .flatMap(file -> Stream.of(
                                 new File(new File(Channels.CHANNELS_DATA_DIR.getParentFile(), file.getParentFile().getName()), file.getName()),
                                 new File(file.getParentFile(), file.getName().replaceAll("e?d?\\.(.+)$", "ed.$1"))))
-                        .filter(File::exists)
-                        .forEachOrdered(e -> Optional.of(e)
-                                .map(legacyFile -> cacheFile.exists() ?
-                                                   Filesystem.deleteFile(legacyFile) :
-                                                   Filesystem.moveFile(legacyFile, cacheFile))));
+                        .forEach(legacyFile -> Optional.of(legacyFile)
+                                .filter(File::exists)
+                                .map(file -> cacheFile.exists() ?
+                                             FileUtils.delete(file) :
+                                             Filesystem.moveFile(file, cacheFile))));
         
         Stream.of(getDataFile(), getCallLogFile())
                 .map(cacheFile -> cacheFile.getName().replaceAll("\\..+$", ""))
                 .flatMap(legacyName -> getCacheFiles().stream()
                         .filter(cacheFile -> cacheFile.getName().startsWith(legacyName))
                         .filter(cacheFile -> FileUtils.isFormat(cacheFile.getName(), FileUtils.LIST_FILE_FORMAT)))
-                .forEach(Filesystem::deleteFile);
+                .forEach(FileUtils::delete);
     }
     
     /**

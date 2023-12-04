@@ -325,15 +325,15 @@ public final class BackupUtils {
      * Purges old backup files.
      */
     private static void cleanupOldBackups() {
-        if (Optional.ofNullable(Config.daysToKeepBackups).orElse(-1L) < 0) {
-            return;
-        }
-        fetchAllBackupsOlderThan(Config.daysToKeepBackups.intValue())
-                .forEach(Filesystem::deleteFile);
+        Optional.ofNullable(Config.daysToKeepBackups).map(Long::intValue)
+                .filter(daysToKeepBackups -> (daysToKeepBackups >= 0))
+                .map(BackupUtils::fetchAllBackupsOlderThan)
+                .stream().flatMap(Collection::stream)
+                .forEach(FileUtils::delete);
         
         Filesystem.getDirs(Config.backupDir).stream()
                 .filter(Filesystem::directoryIsEmpty)
-                .forEach(Filesystem::deleteDirectory);
+                .forEach(FileUtils::delete);
     }
     
     

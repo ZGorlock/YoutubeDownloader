@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import commons.access.Desktop;
 import commons.access.Filesystem;
 import commons.lambda.function.checked.CheckedFunction;
 import commons.object.collection.ListUtility;
@@ -258,6 +259,18 @@ public final class FileUtils {
         return Optional.ofNullable(file)
                 .map((CheckedFunction<File, File>) File::getCanonicalFile)
                 .orElse(file);
+    }
+    
+    /**
+     * Deletes or recycles a file.
+     *
+     * @param file The file.
+     * @return Whether the file was successfully deleted or recycled.
+     */
+    public static boolean delete(File file) {
+        return Configurator.Config.deleteToRecyclingBin ?
+               Desktop.trash(file) :
+               Filesystem.delete(file);
     }
     
     /**
